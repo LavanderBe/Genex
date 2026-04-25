@@ -15,7 +15,7 @@ public class User {
         ADMIN,MODERATOR,PLAYER
     }
 
-    public User(String username, String email, String password, String password_hashed, String role, LocalDateTime created_at) {
+    public User(String username, String email, String password_hashed, String role) {
         this.username = username;
         this.email = email;
         this.password_hash = password_hashed;

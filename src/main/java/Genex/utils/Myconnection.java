@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class Myconnection {
     private static Myconnection Instance;
 
-    private String url="jdbc:mysql://localhost:";
+    private String url="jdbc:mysql://localhost:3306/genex";
     private String login="root";
     private String pwd="";
 
