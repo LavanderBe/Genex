@@ -1,4 +1,4 @@
 package Genex.entities;
 
-public class Tounement {
+public class Posts {
 }
