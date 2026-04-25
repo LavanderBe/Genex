@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane fx:id="rootPane"
+           xmlns="http://javafx.com/javafx/23.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Login.Login"
+           stylesheets="@Login.css"
+           prefWidth="1200" prefHeight="800">
+
+    <!-- BACKGROUND -->
+    <Pane fx:id="bgPane" styleClass="bg-container">
+        <ImageView fx:id="bgImage" styleClass="bg-image" preserveRatio="false"/>
+        <Pane styleClass="bg-overlay"/>
+        <Pane styleClass="orb orb-1"/>
+        <Pane styleClass="orb orb-2"/>
+        <Pane styleClass="orb orb-3"/>
+    </Pane>
+
+    <!-- RIGHT LAYOUT -->
+    <HBox alignment="CENTER_RIGHT" spacing="40">
+        <padding>
+            <Insets right="80"/>
+        </padding>
+
+        <!-- PUSH TO RIGHT -->
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- CARD -->
+        <VBox styleClass="glass-card"
+              alignment="CENTER"
+              spacing="10"
+              prefWidth="500"
+              maxWidth="600">
+
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+
+            <Region prefHeight="20"/>
+
+            <!-- TITLE -->
+            <Label text="Se connecter" styleClass="title-label"/>
+
+            <Region prefHeight="20"/>
+
+            <!-- EMAIL -->
+            <VBox spacing="8" styleClass="field-group">
+                <Label text="Adresse Email" styleClass="field-label"/>
+                <StackPane styleClass="input-wrapper">
+                    <TextField fx:id="emailField"
+                               styleClass="input-field"
+                               promptText="exemple@email.com"/>
+                </StackPane>
+                <Label fx:id="emailError" styleClass="error-label"
+                       managed="false" visible="false"/>
+            </VBox>
+
+            <Region prefHeight="10"/>
+
+            <!-- PASSWORD -->
+            <VBox spacing="8" styleClass="field-group">
+                <Label text="Mot de passe" styleClass="field-label"/>
+                <StackPane styleClass="input-wrapper">
+                    <PasswordField fx:id="passwordField"
+                                   styleClass="input-field"
+                                   promptText="••••••••"/>
+                    <TextField fx:id="passwordVisibleField"
+                               styleClass="input-field"
+                               visible="false" managed="false"/>
+                    <Button fx:id="togglePasswordBtn"
+                            styleClass="eye-btn"
+                            text="👁"
+                            onAction="#togglePasswordVisibility"
+                            StackPane.alignment="CENTER_RIGHT">
+                        <StackPane.margin>
+                            <Insets right="10"/>
+                        </StackPane.margin>
+                    </Button>
+                </StackPane>
+                <Label fx:id="passwordError" styleClass="error-label"
+                       managed="false" visible="false"/>
+            </VBox>
+
+            <Region prefHeight="10"/>
+
+            <!-- FORGOT -->
+            <HBox alignment="CENTER_RIGHT">
+                <Hyperlink text="Mot de passe oublié ?"
+                           styleClass="link-text"
+                           onAction="#handleForgotPassword"/>
+            </HBox>
+
+            <Region prefHeight="20"/>
+
+            <!-- BUTTON -->
+            <Button fx:id="loginBtn"
+                    text="Se connecter"
+                    styleClass="primary-btn"
+                    onAction="#handleLogin"
+                    maxWidth="Infinity"
+                    prefHeight="52"/>
+
+            <Region prefHeight="15"/>
+
+            <!-- REGISTER -->
+            <HBox alignment="CENTER" spacing="6">
+                <Label text="Pas de compte ?" styleClass="text-muted"/>
+                <Hyperlink text="S'inscrire"
+                           styleClass="link-text"
+                           onAction="#goToInscription"/>
+            </HBox>
+
+        </VBox>
+    </HBox>
+
+</StackPane>
