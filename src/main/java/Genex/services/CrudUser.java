@@ -52,7 +52,8 @@ public class CrudUser implements ICrud<User> {
 
     @Override
     public void deleteEntity(User user) {
-
+        String requete="DELETE FROM users " +
+                "WHERE (username=?) AND (email=?);";
     }
 
     @Override
