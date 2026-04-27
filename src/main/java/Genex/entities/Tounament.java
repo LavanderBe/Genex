@@ -1,8 +1,13 @@
 package Genex.entities;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tounament {
-    private String TournamentId;
-    private String TournamentName;
+
+    private String tournamentId;
+    private String tournamentName;
     private String game_id;
     private String center_id;
     private String format;
@@ -10,17 +15,26 @@ public class Tounament {
     private LocalDateTime starts_at;
     private LocalDateTime ends_at;
     private double prize_pool;
+    private List<TournamentParticipants> participants;
 
     public enum Format {
         ROUND_ROBIN, SINGLE_ELIM, DOUBLE_ELIM
     }
+
     public enum ParticipantType {
         SOLO, TEAM
     }
-    // Constructor
-    public void Tournament(String name, String game_id, String center_id, String format, String participant_type, LocalDateTime starts_at, LocalDateTime ends_at, double prize_pool) {
 
-        this.TournamentName = name;
+    // Default constructor
+    public Tounament() {
+        this.participants = new ArrayList<>();
+    }
+
+    // Full constructor
+    public Tounament(String name, String game_id, String center_id, String format,
+                     String participant_type, LocalDateTime starts_at,
+                     LocalDateTime ends_at, double prize_pool) {
+        this.tournamentName = name;
         this.game_id = game_id;
         this.center_id = center_id;
         this.format = format;
@@ -28,85 +42,50 @@ public class Tounament {
         this.starts_at = starts_at;
         this.ends_at = ends_at;
         this.prize_pool = prize_pool;
-    }
-    //Getter and Setter methods
-    public String getTournamentId() {
-        return TournamentId;
+        this.participants = new ArrayList<>();
     }
 
-    public void setTournamentId(String tournamentId) {
-        this.TournamentId = tournamentId;
+    // Add participant to the list
+    public void addParticipant(TournamentParticipants participant) {
+        this.participants.add(participant);
     }
 
-    public String getTournamentName() {
-        return TournamentName;
-    }
+    // Getters & Setters
+    public String getTournamentId() { return tournamentId; }
+    public void setTournamentId(String tournamentId) { this.tournamentId = tournamentId; }
 
-    public void setTournamentName(String tournamentName) {
-        this.TournamentName = tournamentName;
-    }
+    public String getTournamentName() { return tournamentName; }
+    public void setTournamentName(String tournamentName) { this.tournamentName = tournamentName; }
 
-    public String getGame_id() {
-        return game_id;
-    }
+    public String getGame_id() { return game_id; }
+    public void setGame_id(String game_id) { this.game_id = game_id; }
 
-    public void setGame_id(String game_id) {
-        this.game_id = game_id;
-    }
+    public String getCenter_id() { return center_id; }
+    public void setCenter_id(String center_id) { this.center_id = center_id; }
 
-    public String getCenter_id() {
-        return center_id;
-    }
+    public String getFormat() { return format; }
+    public void setFormat(String format) { this.format = format; }
 
-    public void setCenter_id(String center_id) {
-        this.center_id = center_id;
-    }
+    public String getParticipant_type() { return participant_type; }
+    public void setParticipant_type(String participant_type) { this.participant_type = participant_type; }
 
-    public String getFormat() {
-        return format;
-    }
+    public LocalDateTime getStarts_at() { return starts_at; }
+    public void setStarts_at(LocalDateTime starts_at) { this.starts_at = starts_at; }
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+    public LocalDateTime getEnds_at() { return ends_at; }
+    public void setEnds_at(LocalDateTime ends_at) { this.ends_at = ends_at; }
 
-    public String getParticipant_type() {
-        return participant_type;
-    }
+    public double getPrize_pool() { return prize_pool; }
+    public void setPrize_pool(double prize_pool) { this.prize_pool = prize_pool; }
 
-    public void setParticipant_type(String participant_type) {
-        this.participant_type = participant_type;
-    }
+    public List<TournamentParticipants> getParticipants() { return participants; }
+    public void setParticipants(List<TournamentParticipants> participants) { this.participants = participants; }
 
-    public LocalDateTime getStarts_at() {
-        return starts_at;
-    }
-
-    public void setStarts_at(LocalDateTime starts_at) {
-        this.starts_at = starts_at;
-    }
-
-    public LocalDateTime getEnds_at() {
-        return ends_at;
-    }
-
-    public void setEnds_at(LocalDateTime ends_at) {
-        this.ends_at = ends_at;
-    }
-
-    public double getPrize_pool() {
-        return prize_pool;
-    }
-
-    public void setPrize_pool(double prize_pool) {
-        this.prize_pool = prize_pool;
-    }
-    // toString method
     @Override
     public String toString() {
         return "Tounament{" +
-                "TournamentId=" + TournamentId +
-                ", TournamentName='" + TournamentName + '\'' +
+                "tournamentId='" + tournamentId + '\'' +
+                ", tournamentName='" + tournamentName + '\'' +
                 ", game_id='" + game_id + '\'' +
                 ", center_id='" + center_id + '\'' +
                 ", format='" + format + '\'' +
@@ -114,6 +93,7 @@ public class Tounament {
                 ", starts_at=" + starts_at +
                 ", ends_at=" + ends_at +
                 ", prize_pool=" + prize_pool +
+                ", participants=" + participants +
                 '}';
     }
 }
