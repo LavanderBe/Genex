@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Genex.Controllers.Budget.BudgetController"
+            stylesheets="@Budget.css"
+            prefWidth="1200" prefHeight="800"
+            styleClass="root-pane">
+
+    <!-- ══ TOP NAV ══════════════════════════════════════════════════════ -->
+    <top>
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+            <Label text="⚡ GENEX" styleClass="nav-brand"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🏠 Sponsors"  styleClass="nav-btn" onAction="#goToSponsors"/>
+            <Button text="💰 Budgets"   styleClass="nav-btn nav-btn-active" disable="true"/>
+        </HBox>
+    </top>
+
+    <!-- ══ MAIN CONTENT ═════════════════════════════════════════════════ -->
+    <center>
+        <HBox spacing="24" styleClass="content-area">
+            <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
+
+            <!-- ── LEFT: Table ─────────────────────────────────────── -->
+            <VBox spacing="14" HBox.hgrow="ALWAYS">
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Gestion des Budgets" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="searchField" styleClass="search-field"
+                               promptText="🔍  Rechercher…" prefWidth="240"/>
+                </HBox>
+
+                <TableView fx:id="budgetTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colCenter"    text="Centre (ID)"   prefWidth="200"/>
+                        <TableColumn fx:id="colSponsor"   text="Sponsor"       prefWidth="140"/>
+                        <TableColumn fx:id="colYear"      text="Année"         prefWidth="70"/>
+                        <TableColumn fx:id="colAllocated" text="Alloué (TND)"  prefWidth="120"/>
+                        <TableColumn fx:id="colSpent"     text="Dépensé (TND)" prefWidth="120"/>
+                        <TableColumn fx:id="colRemaining" text="Restant (TND)" prefWidth="120"/>
+                        <TableColumn fx:id="colActions"   text="Actions"       prefWidth="110"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun budget enregistré" styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- ── RIGHT: Form ─────────────────────────────────────── -->
+            <VBox styleClass="form-card" spacing="14" prefWidth="320" minWidth="300">
+                <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+                <Label fx:id="formTitle" text="Nouveau budget" styleClass="form-title"/>
+
+                <!-- Center ID -->
+                <VBox spacing="6">
+                    <Label text="ID du Centre *" styleClass="field-label"/>
+                    <TextField fx:id="fieldCenterId" styleClass="input-field"
+                               promptText="UUID du centre"/>
+                </VBox>
+
+                <!-- Sponsor -->
+                <VBox spacing="6">
+                    <Label text="Sponsor (optionnel)" styleClass="field-label"/>
+                    <ComboBox fx:id="combSponsor" styleClass="combo-field"
+                              promptText="— Fonds internes —" maxWidth="Infinity"/>
+                </VBox>
+
+                <!-- Fiscal year -->
+                <VBox spacing="6">
+                    <Label text="Année fiscale *" styleClass="field-label"/>
+                    <TextField fx:id="fieldYear" styleClass="input-field" promptText="Ex: 2025"/>
+                </VBox>
+
+                <!-- Allocated -->
+                <VBox spacing="6">
+                    <Label text="Montant alloué (TND) *" styleClass="field-label"/>
+                    <TextField fx:id="fieldAllocated" styleClass="input-field" promptText="Ex: 50000.00"/>
+                </VBox>
+
+                <!-- Spent -->
+                <VBox spacing="6">
+                    <Label text="Montant dépensé (TND)" styleClass="field-label"/>
+                    <TextField fx:id="fieldSpent" styleClass="input-field" promptText="0.00"/>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <HBox spacing="10">
+                    <Button fx:id="btnSave"  text="Enregistrer" styleClass="btn-primary"
+                            onAction="#handleSave"  HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="Annuler"              styleClass="btn-secondary"
+                            onAction="#handleClear" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
+            </VBox>
+
+        </HBox>
+    </center>
+
+</BorderPane>
