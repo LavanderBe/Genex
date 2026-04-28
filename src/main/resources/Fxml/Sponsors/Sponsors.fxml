@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Genex.Controllers.Sponsors.Sponsors"
+            stylesheets="@Sponsors.css"
+            prefWidth="1200" prefHeight="800"
+            styleClass="root-pane">
+
+    <!-- ══ TOP NAV ══════════════════════════════════════════════════════ -->
+    <top>
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+            <Label text="⚡ GENEX" styleClass="nav-brand"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🏠 Sponsors"  styleClass="nav-btn nav-btn-active" disable="true"/>
+            <Button text="💰 Budgets"   styleClass="nav-btn" onAction="#goToBudget"/>
+        </HBox>
+    </top>
+
+    <!-- ══ MAIN CONTENT ═════════════════════════════════════════════════ -->
+    <center>
+        <HBox spacing="24" styleClass="content-area">
+            <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
+
+            <!-- ── LEFT: Table ─────────────────────────────────────── -->
+            <VBox spacing="14" HBox.hgrow="ALWAYS">
+
+                <!-- Header row -->
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Gestion des Sponsors" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="searchField" styleClass="search-field"
+                               promptText="🔍  Rechercher…" prefWidth="240"/>
+                </HBox>
+
+                <!-- Table -->
+                <TableView fx:id="sponsorTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colName"     text="Nom"           prefWidth="180"/>
+                        <TableColumn fx:id="colIndustry" text="Secteur"       prefWidth="150"/>
+                        <TableColumn fx:id="colEmail"    text="Email"         prefWidth="200"/>
+                        <TableColumn fx:id="colWebsite"  text="Site web"      prefWidth="180"/>
+                        <TableColumn fx:id="colActions"  text="Actions"       prefWidth="110"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun sponsor enregistré" styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- ── RIGHT: Form ─────────────────────────────────────── -->
+            <VBox styleClass="form-card" spacing="14" prefWidth="320" minWidth="300">
+                <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+                <Label fx:id="formTitle" text="Nouveau sponsor" styleClass="form-title"/>
+
+                <!-- Name -->
+                <VBox spacing="6">
+                    <Label text="Nom *" styleClass="field-label"/>
+                    <TextField fx:id="fieldName" styleClass="input-field" promptText="Ex: Red Bull"/>
+                </VBox>
+
+                <!-- Industry -->
+                <VBox spacing="6">
+                    <Label text="Secteur" styleClass="field-label"/>
+                    <TextField fx:id="fieldIndustry" styleClass="input-field" promptText="Ex: Energy Drink"/>
+                </VBox>
+
+                <!-- Email -->
+                <VBox spacing="6">
+                    <Label text="Email de contact" styleClass="field-label"/>
+                    <TextField fx:id="fieldEmail" styleClass="input-field" promptText="contact@sponsor.com"/>
+                </VBox>
+
+                <!-- Website -->
+                <VBox spacing="6">
+                    <Label text="Site web" styleClass="field-label"/>
+                    <TextField fx:id="fieldWebsite" styleClass="input-field" promptText="https://…"/>
+                </VBox>
+
+                <!-- Logo URL -->
+                <VBox spacing="6">
+                    <Label text="URL du logo" styleClass="field-label"/>
+                    <TextField fx:id="fieldLogo" styleClass="input-field" promptText="https://…/logo.png"/>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <!-- Buttons -->
+                <HBox spacing="10">
+                    <Button fx:id="btnSave"  text="Enregistrer" styleClass="btn-primary"
+                            onAction="#handleSave"  HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button fx:id="btnClear" text="Annuler"     styleClass="btn-secondary"
+                            onAction="#handleClear" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
+            </VBox>
+
+        </HBox>
+    </center>
+
+</BorderPane>
