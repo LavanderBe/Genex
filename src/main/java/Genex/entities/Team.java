@@ -1,55 +1,51 @@
 package Genex.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Team {
 
-    private String teamId;
-    private String name;
-    private String gameId;
+    private int teamId;
+    private int coachId;
+    private Integer centreId; // nullable
+    private int gameId;
+
+    private String nom;
     private LocalDate foundationDate;
     private String logoImage;
     private String contact;
-    private Status status;
-    private List<Training> trainings; // ← training list
+    private String statut; // actif / inactif
 
-    public enum Status {
-        ACTIVE, INACTIVE, DISBANDED
-    }
+    // Constructors
+    public Team() {}
 
-    // Default constructor
-    public Team() {
-        this.trainings = new ArrayList<>();
-    }
-
-    // Full constructor
-    public Team(String name, String gameId, LocalDate foundationDate,
-                String logoImage, String contact, Status status) {
-        this.name = name;
+    public Team(int coachId, Integer centreId, int gameId, String nom,
+                LocalDate foundationDate, String logoImage,
+                String contact, String statut) {
+        this.coachId = coachId;
+        this.centreId = centreId;
         this.gameId = gameId;
+        this.nom = nom;
         this.foundationDate = foundationDate;
         this.logoImage = logoImage;
         this.contact = contact;
-        this.status = status;
-        this.trainings = new ArrayList<>();
-    }
-
-    // Add training to list
-    public void addTraining(Training training) {
-        this.trainings.add(training);
+        this.statut = statut;
     }
 
     // Getters & Setters
-    public String getTeamId() { return teamId; }
-    public void setTeamId(String teamId) { this.teamId = teamId; }
+    public int getTeamId() { return teamId; }
+    public void setTeamId(int teamId) { this.teamId = teamId; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public int getCoachId() { return coachId; }
+    public void setCoachId(int coachId) { this.coachId = coachId; }
 
-    public String getGameId() { return gameId; }
-    public void setGameId(String gameId) { this.gameId = gameId; }
+    public Integer getCentreId() { return centreId; }
+    public void setCentreId(Integer centreId) { this.centreId = centreId; }
+
+    public int getGameId() { return gameId; }
+    public void setGameId(int gameId) { this.gameId = gameId; }
+
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
 
     public LocalDate getFoundationDate() { return foundationDate; }
     public void setFoundationDate(LocalDate foundationDate) { this.foundationDate = foundationDate; }
@@ -60,23 +56,6 @@ public class Team {
     public String getContact() { return contact; }
     public void setContact(String contact) { this.contact = contact; }
 
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
-
-    public List<Training> getTrainings() { return trainings; }
-    public void setTrainings(List<Training> trainings) { this.trainings = trainings; }
-
-    @Override
-    public String toString() {
-        return "Team{" +
-                "teamId='" + teamId + '\'' +
-                ", name='" + name + '\'' +
-                ", gameId='" + gameId + '\'' +
-                ", foundationDate=" + foundationDate +
-                ", logoImage='" + logoImage + '\'' +
-                ", contact='" + contact + '\'' +
-                ", status=" + status +
-                ", trainings=" + trainings +
-                '}';
-    }
+    public String getStatut() { return statut; }
+    public void setStatut(String statut) { this.statut = statut; }
 }
