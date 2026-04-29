@@ -1,80 +1,123 @@
 package Genex.entities;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Duration;
 
 public class TrainingSession {
 
-    private int sessionId;
-    private int teamId;
-    private int createdBy;
-
-    private String titre;
-    private String type; // scrim, aim_training, strategy, team_practice
-
-    private LocalDateTime sessionDateTime;
-    private int durationMinutes;
-
-    private String locationType; // online / centre
-    private Integer centreId;    // nullable
-    // optional text (discord link, room...)
-
+    private String id;
+    private String teamId;
+    private String title;
+    private Type type;
+    private LocalDateTime sessionDatetime;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private String location;
     private String notes;
-    private String statut; // planifie, en_cours, termine, annule
+    private Status status;
 
-    // Constructors
+    public enum Type {
+        SCRIM, AIM_TRAINING, STRATEGY, TEAM_PRACTICE, OTHER
+    }
+
+    public enum Status {
+        PLANNED, ONGOING, COMPLETED, CANCELLED
+    }
+
+    // Default constructor
     public TrainingSession() {}
 
-    public TrainingSession(int teamId, int createdBy, String titre, String type,
-                           LocalDateTime sessionDateTime, int durationMinutes,
-                           String locationType, Integer centreId,
-                           String notes, String statut) {
-
-        this.teamId = teamId;
-        this.createdBy = createdBy;
-        this.titre = titre;
-        this.type = type;
-        this.sessionDateTime = sessionDateTime;
-        this.durationMinutes = durationMinutes;
-        this.locationType = locationType;
-        this.centreId = centreId;
-
-        this.notes = notes;
-        this.statut = statut;
+    // Full constructor
+    public TrainingSession(String teamId, String title, Type type,
+                           LocalDateTime sessionDatetime, LocalTime startTime,
+                           LocalTime endTime, String location, String notes, Status status) {
+        this.teamId          = teamId;
+        this.title           = title;
+        this.type            = type;
+        this.sessionDatetime = sessionDatetime;
+        this.startTime       = startTime;
+        this.endTime         = endTime;
+        this.location        = location;
+        this.notes           = notes;
+        this.status          = status;
     }
 
     // Getters & Setters
-    public int getSessionId() { return sessionId; }
-    public void setSessionId(int sessionId) { this.sessionId = sessionId; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public int getTeamId() { return teamId; }
-    public void setTeamId(int teamId) { this.teamId = teamId; }
+    public String getTeamId() { return teamId; }
+    public void setTeamId(String teamId) { this.teamId = teamId; }
 
-    public int getCreatedBy() { return createdBy; }
-    public void setCreatedBy(int createdBy) { this.createdBy = createdBy; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getTitre() { return titre; }
-    public void setTitre(String titre) { this.titre = titre; }
+    public Type getType() { return type; }
+    public void setType(Type type) { this.type = type; }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public LocalDateTime getSessionDatetime() { return sessionDatetime; }
+    public void setSessionDatetime(LocalDateTime sessionDatetime) { this.sessionDatetime = sessionDatetime; }
 
-    public LocalDateTime getSessionDateTime() { return sessionDateTime; }
-    public void setSessionDateTime(LocalDateTime sessionDateTime) { this.sessionDateTime = sessionDateTime; }
+    public LocalTime getStartTime() { return startTime; }
+    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
 
-    public int getDurationMinutes() { return durationMinutes; }
-    public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
+    public LocalTime getEndTime() { return endTime; }
+    public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
 
-    public String getLocationType() { return locationType; }
-    public void setLocationType(String locationType) { this.locationType = locationType; }
-
-    public Integer getCentreId() { return centreId; }
-    public void setCentreId(Integer centreId) { this.centreId = centreId; }
-
-
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
 
-    public String getStatut() { return statut; }
-    public void setStatut(String statut) { this.statut = statut; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
+
+    /**
+     * Calculate duration in minutes from start and end time
+     */
+    public int getDurationMinutes() {
+        if (startTime != null && endTime != null) {
+            Duration duration = Duration.between(startTime, endTime);
+            return (int) duration.toMinutes();
+        }
+        return 0;
+    }
+
+    /**
+     * Get formatted duration string (e.g., "2h 30min")
+     */
+    public String getFormattedDuration() {
+        int minutes = getDurationMinutes();
+        if (minutes == 0) return "0 min";
+
+        int hours = minutes / 60;
+        int mins = minutes % 60;
+
+        if (hours > 0 && mins > 0) {
+            return hours + "h " + mins + "min";
+        } else if (hours > 0) {
+            return hours + "h";
+        } else {
+            return mins + "min";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "TrainingSession{" +
+                "id='"               + id               + '\'' +
+                ", teamId='"         + teamId           + '\'' +
+                ", title='"          + title            + '\'' +
+                ", type="            + type                    +
+                ", sessionDatetime=" + sessionDatetime         +
+                ", startTime="       + startTime               +
+                ", endTime="         + endTime                 +
+                ", duration='"       + getFormattedDuration() + '\'' +
+                ", location='"       + location         + '\'' +
+                ", notes='"          + notes            + '\'' +
+                ", status="          + status                  +
+                '}';
+    }
 }

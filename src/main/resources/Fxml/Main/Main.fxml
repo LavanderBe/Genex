@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+
+<HBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Main.MainController" prefHeight="720.0" prefWidth="1280.0" styleClass="root" stylesheets="@Main.css">
+    <children>
+        <!-- SIDEBAR -->
+        <VBox prefWidth="260.0" styleClass="sidebar">
+            <children>
+                <!-- Logo Area -->
+                <VBox styleClass="logo-area" alignment="CENTER">
+                    <children>
+                        <StackPane prefHeight="80.0" prefWidth="80.0">
+                            <children>
+                                <Circle radius="40.0" styleClass="logo-circle" />
+                                <javafx.scene.image.ImageView fitHeight="70.0" fitWidth="70.0" preserveRatio="true">
+                                    <image>
+                                        <javafx.scene.image.Image url="@../../Images/logo.png" />
+                                    </image>
+                                    <clip>
+                                        <Circle radius="35.0" centerX="35.0" centerY="35.0" />
+                                    </clip>
+                                </javafx.scene.image.ImageView>
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+
+                <!-- Navigation Menu -->
+                <VBox spacing="2.0" styleClass="nav-menu">
+                    <children>
+                        <Button fx:id="btnTeams" onAction="#loadTeams" styleClass="sidebar-button" text="Équipes">
+                            <graphic>
+                                <Text styleClass="nav-icon" text="👥" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnFinances" onAction="#loadFinances" styleClass="sidebar-button" text="Finances">
+                            <graphic>
+                                <Text styleClass="nav-icon" text="💰" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnCommunity" onAction="#loadCommunity" styleClass="sidebar-button" text="Communauté">
+                            <graphic>
+                                <Text styleClass="nav-icon" text="💬" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnTutorials" onAction="#loadTutorials" styleClass="sidebar-button" text="Tutoriels">
+                            <graphic>
+                                <Text styleClass="nav-icon" text="📖" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </VBox>
+
+                <!-- Spacer -->
+                <Region VBox.vgrow="ALWAYS" />
+
+                <!-- Footer -->
+                <VBox styleClass="footer">
+                    <children>
+                        <Text styleClass="version-text" text="v2.4.0 | Build 2847" />
+                        <Text styleClass="version-text" text="© 2026 GENEX" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+
+        <!-- MAIN CONTENT AREA -->
+        <VBox HBox.hgrow="ALWAYS">
+            <children>
+                <!-- TOP BAR -->
+                <HBox alignment="CENTER_LEFT" prefHeight="78.0" styleClass="topbar" viewOrder="-1000.0">
+                    <children>
+                        <!-- Search Bar -->
+                        <StackPane styleClass="search-container">
+                            <children>
+                                <TextField fx:id="searchField" promptText="Rechercher joueurs, équipes..." styleClass="search-field" />
+                                <HBox alignment="CENTER_RIGHT" styleClass="search-icon-container">
+                                    <children>
+                                        <Text styleClass="search-icon" text="🔍" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </StackPane>
+
+                        <!-- Spacer -->
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <!-- Notification and User Profile -->
+                        <HBox alignment="CENTER" spacing="28.0" style="-fx-padding: 0 35 0 0;">
+                            <children>
+                                <!-- Notification Button with Badge -->
+                                <StackPane>
+                                    <children>
+                                        <Button fx:id="btnNotification" onAction="#handleNotificationClick" styleClass="notification-button">
+                                            <graphic>
+                                                <Text styleClass="notification-icon" text="🔔" />
+                                            </graphic>
+                                        </Button>
+                                        <!-- Notification Badge -->
+                                        <StackPane fx:id="notificationBadge" styleClass="notification-badge" translateX="12.0" translateY="-12.0" StackPane.alignment="TOP_RIGHT" visible="false">
+                                            <children>
+                                                <Text fx:id="notificationCount" styleClass="notification-badge-text" text="0" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </StackPane>
+
+                                <!-- User Profile -->
+                                <HBox alignment="CENTER" spacing="14.0" styleClass="user-profile">
+                                    <children>
+                                        <VBox alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Text styleClass="user-name" text="Alex Morgan" />
+                                                <Text styleClass="user-role" text="Administrateur" />
+                                            </children>
+                                        </VBox>
+                                        <StackPane styleClass="avatar-container">
+                                            <children>
+                                                <Circle radius="25.0" styleClass="avatar-circle" />
+                                                <Text styleClass="avatar-text" text="AM" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+
+                <!-- CONTENT CONTAINER WITH NOTIFICATION PANEL -->
+                <StackPane VBox.vgrow="ALWAYS">
+                    <children>
+                        <!-- Main Content -->
+                        <StackPane fx:id="contentContainer" styleClass="content-area" pickOnBounds="false" />
+
+                        <!-- Notification Backdrop (blocks clicks when panel is open) -->
+                        <StackPane fx:id="notificationBackdrop" visible="false" managed="false" style="-fx-background-color: rgba(0, 0, 0, 0.3);" onMouseClicked="#closeNotificationPanel" />
+
+                        <!-- Notification Panel (Loaded from external FXML) -->
+                        <StackPane fx:id="notificationPanelContainer" translateX="280.0" StackPane.alignment="CENTER_RIGHT" pickOnBounds="false" maxWidth="280" prefWidth="280" />
+                    </children>
+                </StackPane>
+            </children>
+        </VBox>
+    </children>
+</HBox>

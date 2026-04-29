@@ -1,5 +1,8 @@
 package Genex.Controllers.Login;
 
+import Genex.entities.User;
+import Genex.services.CrudUser;
+import Genex.utils.SessionManager;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -102,13 +105,30 @@ public class Login {
         loginBtn.setText("Connexion...");
         loginBtn.setDisable(true);
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(e -> {
+        // Authenticate user from database
+        CrudUser crudUser = new CrudUser();
+        User authenticatedUser = crudUser.authenticate(email, password);
+
+        if (authenticatedUser != null) {
+            // Store user in session
+            SessionManager.getInstance().setCurrentUser(authenticatedUser);
+
             System.out.println("Connected successfully!");
+            System.out.println("User ID: " + authenticatedUser.getId());
+            System.out.println("Username: " + authenticatedUser.getUsername());
+            System.out.println("Role: " + authenticatedUser.getRole());
+
+            // Navigate to Main interface
+            navigateToMainInterface();
+        } else {
+            // Authentication failed
             loginBtn.setText("Se connecter");
             loginBtn.setDisable(false);
-        });
-        pause.play();
+
+            showError(emailError, "Email ou mot de passe incorrect");
+            showError(passwordError, "Vérifiez vos identifiants");
+            shakeNode(rootPane.lookup(".glass-card"));
+        }
     }
 
     @FXML
@@ -155,6 +175,49 @@ public class Login {
     @FXML
     private void handleForgotPassword() {
         System.out.println("Forgot password clicked");
+    }
+
+    private void navigateToMainInterface() {
+        try {
+            System.out.println("Starting navigation to Main interface...");
+            System.out.println("Loading FXML file...");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Main/Main.fxml"));
+
+            System.out.println("FXML Loader created, loading root...");
+            Parent root = loader.load();
+
+            System.out.println("Root loaded successfully, creating scene...");
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            Scene scene = new Scene(root, 1280, 720);
+            scene.setFill(Color.TRANSPARENT);
+
+            System.out.println("Setting scene and showing stage...");
+            stage.setTitle("GENEX - Plateforme de Gestion");
+            stage.setScene(scene);
+            stage.setMaximized(true); // Maximize for better view
+            stage.show();
+
+            System.out.println("Successfully navigated to Main interface");
+        } catch (IOException e) {
+            System.err.println("ERROR: Failed to navigate to Main interface");
+            e.printStackTrace();
+
+            // Re-enable login button
+            loginBtn.setText("Se connecter");
+            loginBtn.setDisable(false);
+
+            showAlert("Erreur de Navigation", "Impossible d'ouvrir l'interface principale:\n" + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("UNEXPECTED ERROR during navigation");
+            e.printStackTrace();
+
+            // Re-enable login button
+            loginBtn.setText("Se connecter");
+            loginBtn.setDisable(false);
+
+            showAlert("Erreur Inattendue", "Une erreur inattendue s'est produite:\n" + e.getMessage());
+        }
     }
 
 

@@ -1,54 +1,54 @@
 package Genex.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Team {
 
-    private int teamId;
-    private int coachId;
-    private Integer centreId; // nullable
-    private int gameId;
-
-    private String nom;
-    private LocalDate foundationDate;
+    private String id;
+    private String createdBy;
+    private String gameId;
+    private String name;
+    private LocalDate date;
     private String logoImage;
     private String contact;
-    private String statut; // actif / inactif
+    private Status status;
+    private LocalDateTime createdAt;
 
-    // Constructors
+    public enum Status {
+        ACTIVE, INACTIVE
+    }
+
+    // Default constructor
     public Team() {}
 
-    public Team(int coachId, Integer centreId, int gameId, String nom,
-                LocalDate foundationDate, String logoImage,
-                String contact, String statut) {
-        this.coachId = coachId;
-        this.centreId = centreId;
-        this.gameId = gameId;
-        this.nom = nom;
-        this.foundationDate = foundationDate;
+    // Full constructor
+    public Team(String createdBy, String gameId, String name, LocalDate date,
+                String logoImage, String contact, Status status) {
+        this.createdBy = createdBy;
+        this.gameId    = gameId;
+        this.name      = name;
+        this.date      = date;
         this.logoImage = logoImage;
-        this.contact = contact;
-        this.statut = statut;
+        this.contact   = contact;
+        this.status    = status;
     }
 
     // Getters & Setters
-    public int getTeamId() { return teamId; }
-    public void setTeamId(int teamId) { this.teamId = teamId; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public int getCoachId() { return coachId; }
-    public void setCoachId(int coachId) { this.coachId = coachId; }
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 
-    public Integer getCentreId() { return centreId; }
-    public void setCentreId(Integer centreId) { this.centreId = centreId; }
+    public String getGameId() { return gameId; }
+    public void setGameId(String gameId) { this.gameId = gameId; }
 
-    public int getGameId() { return gameId; }
-    public void setGameId(int gameId) { this.gameId = gameId; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
-
-    public LocalDate getFoundationDate() { return foundationDate; }
-    public void setFoundationDate(LocalDate foundationDate) { this.foundationDate = foundationDate; }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 
     public String getLogoImage() { return logoImage; }
     public void setLogoImage(String logoImage) { this.logoImage = logoImage; }
@@ -56,6 +56,24 @@ public class Team {
     public String getContact() { return contact; }
     public void setContact(String contact) { this.contact = contact; }
 
-    public String getStatut() { return statut; }
-    public void setStatut(String statut) { this.statut = statut; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id='"         + id         + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", gameId='"    + gameId    + '\'' +
+                ", name='"      + name      + '\'' +
+                ", date="       + date             +
+                ", logoImage='" + logoImage + '\'' +
+                ", contact='"   + contact   + '\'' +
+                ", status="     + status          +
+                ", createdAt="  + createdAt        +
+                '}';
+    }
 }

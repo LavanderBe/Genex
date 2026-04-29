@@ -1,156 +1,134 @@
 package Genex.services;
 
 import Genex.entities.Team;
-import Genex.interfaces.ICrud;
 import Genex.utils.Myconnection;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CrudTeam implements ICrud<Team> {
+public class CrudTeam {
 
     public CrudTeam() {}
 
-    // ✅ CREATE
-    @Override
-    public void addEntity(Team t) {
-
-        String sql = "INSERT INTO team (coach_id, centre_id, game_id, nom, foundation_date, logo_image, contact, statut) " +
-                "VALUES (?,?,?,?,?,?,?,?,?)";
+    public void addEntity(Team team) {
+        String query = "INSERT INTO teams (created_by, game_id, name, logo_image, contact, status, created_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
-            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(sql);
-
-            pst.setInt(1, t.getCoachId());
-
-            if (t.getCentreId() != null)
-                pst.setInt(2, t.getCentreId());
-            else
-                pst.setNull(2, Types.INTEGER);
-
-            pst.setInt(3, t.getGameId());
-            pst.setString(4, t.getNom());
-            pst.setDate(5, Date.valueOf(t.getFoundationDate()));
-            pst.setString(6, t.getLogoImage());
-            pst.setString(7, t.getContact());
-            pst.setString(8, t.getStatut()); // actif / inactif
-
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, team.getCreatedBy());
+            pst.setString(2, team.getGameId());
+            pst.setString(3, team.getName());
+            pst.setString(4, team.getLogoImage());
+            pst.setString(5, team.getContact());
+            pst.setString(6, team.getStatus() != null ? team.getStatus().name() : null);
+            pst.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             pst.executeUpdate();
-            System.out.println("✅ Team added");
-
+            System.out.println("Team added successfully");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error adding team: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
-    // ✅ UPDATE
-    @Override
-    public void updateEntity(Team t, String id) {
-
-        String sql = "UPDATE team SET nom=?, centre_id=?, game_id=?, logo_image=?, contact=?, statut=? WHERE team_id=?";
+    public void updateEntity(Team team, String id) {
+        String query = "UPDATE teams SET created_by=?, game_id=?, name=?, logo_image=?, contact=?, status=? " +
+                "WHERE id=?";
 
         try {
-            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(sql);
-
-            pst.setString(1, t.getNom());
-
-            if (t.getCentreId() != null)
-                pst.setInt(2, t.getCentreId());
-            else
-                pst.setNull(2, Types.INTEGER);
-
-            pst.setInt(3, t.getGameId());
-            pst.setString(4, t.getLogoImage());
-            pst.setString(5, t.getContact());
-            pst.setString(6, t.getStatut());
-
-            pst.setInt(7, Integer.parseInt(id));
-
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, team.getCreatedBy());
+            pst.setString(2, team.getGameId());
+            pst.setString(3, team.getName());
+            pst.setString(4, team.getLogoImage());
+            pst.setString(5, team.getContact());
+            pst.setString(6, team.getStatus() != null ? team.getStatus().name() : null);
+            pst.setString(7, id);
             pst.executeUpdate();
-            System.out.println("✅ Team updated");
-
+            System.out.println("Team updated successfully");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error updating team: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
-    // ❌ DELETE (soft delete better)
-    @Override
-    public void deleteEntity(Team t) {
-
-        String sql = "UPDATE team SET statut='inactif' WHERE team_id=?";
+    public void deleteEntity(Team team) {
+        String query = "DELETE FROM teams WHERE id=?";
 
         try {
-            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(sql);
-            pst.setInt(1, t.getTeamId());
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, team.getId());
             pst.executeUpdate();
-
-            System.out.println("🗑 Team soft deleted");
-
+            System.out.println("Team deleted successfully");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error deleting team: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
-    // ✅ READ ONE
-    @Override
-    public void getEntity(Team t) {
-
-        String sql = "SELECT * FROM team WHERE team_id=?";
+    public Team getEntity(String id) {
+        String query = "SELECT * FROM teams WHERE id=?";
+        Team team = null;
 
         try {
-            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(sql);
-            pst.setInt(1, t.getTeamId());
-
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, id);
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                t.setCoachId(rs.getInt("coach_id"));
-                t.setCentreId((Integer) rs.getObject("centre_id"));
-                t.setGameId(rs.getInt("game_id"));
-                t.setNom(rs.getString("nom"));
-                t.setFoundationDate(rs.getDate("foundation_date").toLocalDate());
-                t.setLogoImage(rs.getString("logo_image"));
-                t.setContact(rs.getString("contact"));
-                t.setStatut(rs.getString("statut"));
+                team = mapResultSetToTeam(rs);
+                System.out.println("Team loaded: " + team.getName());
             }
-
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error getting team: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+
+        return team;
     }
 
-    // ✅ READ ALL
     public List<Team> getAll() {
-
         List<Team> list = new ArrayList<>();
-        String sql = "SELECT * FROM team";
+        String query = "SELECT * FROM teams ORDER BY created_at DESC";
 
         try {
             Statement st = Myconnection.getInstance().getCnx().createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            ResultSet rs = st.executeQuery(query);
 
             while (rs.next()) {
-                Team t = new Team();
-
-                t.setTeamId(rs.getInt("team_id"));
-                t.setCoachId(rs.getInt("coach_id"));
-                t.setCentreId((Integer) rs.getObject("centre_id"));
-                t.setGameId(rs.getInt("game_id"));
-                t.setNom(rs.getString("nom"));
-                t.setFoundationDate(rs.getDate("foundation_date").toLocalDate());
-                t.setLogoImage(rs.getString("logo_image"));
-                t.setContact(rs.getString("contact"));
-                t.setStatut(rs.getString("statut"));
-
-                list.add(t);
+                Team team = mapResultSetToTeam(rs);
+                list.add(team);
             }
-
+            System.out.println("Loaded " + list.size() + " teams");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error getting all teams: " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
         return list;
+    }
+
+    private Team mapResultSetToTeam(ResultSet rs) throws SQLException {
+        Team team = new Team();
+        team.setId(rs.getString("id"));
+        team.setCreatedBy(rs.getString("created_by"));
+        team.setGameId(rs.getString("game_id"));
+        team.setName(rs.getString("name"));
+        team.setLogoImage(rs.getString("logo_image"));
+        team.setContact(rs.getString("contact"));
+
+        String statusStr = rs.getString("status");
+        if (statusStr != null) {
+            team.setStatus(Team.Status.valueOf(statusStr));
+        }
+
+        Timestamp createdAt = rs.getTimestamp("created_at");
+        if (createdAt != null) {
+            team.setCreatedAt(createdAt.toLocalDateTime());
+        }
+
+        return team;
     }
 }
