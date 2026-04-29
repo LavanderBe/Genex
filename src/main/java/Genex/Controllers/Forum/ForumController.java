@@ -2,16 +2,22 @@ package Genex.Controllers.Forum;
 
 import Genex.entities.Forum;
 import Genex.services.CrudForum;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +26,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ForumController {
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField titleField;
     @FXML
@@ -293,6 +301,29 @@ public class ForumController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void openForum() {
+        // Déjà sur la page Forum.
+    }
+
+    @FXML
+    private void openPosts() {
+        switchScene("/Fxml/Forum/Posts.fxml", "GENEX - Posts");
+    }
+
+    private void switchScene(String fxmlPath, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.setTitle(title);
+            stage.show();
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Navigation impossible", "Impossible d'ouvrir la page demandée.");
+        }
     }
 
     private record ValidationResult(boolean valid, String title, String description, String createdBy, String message) {
