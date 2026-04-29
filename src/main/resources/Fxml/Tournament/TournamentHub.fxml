@@ -15,7 +15,7 @@
       fx:controller="Genex.Controllers.Tournament.TournamentHubController"
       styleClass="tournament-hub" stylesheets="@TournamentHub.css"
       spacing="0" style="-fx-background-color: #0a0a1a;">
-   
+
    <!-- Header Bar -->
    <HBox styleClass="tournament-header" alignment="CENTER_LEFT" spacing="16">
       <children>
@@ -30,12 +30,12 @@
                </HBox>
             </children>
          </StackPane>
-         
+
          <!-- Add Tournament Button -->
          <Button fx:id="btnAddTournament" onAction="#openAddTournamentModal" styleClass="primary-btn" text="➕ Ajouter" />
       </children>
    </HBox>
-   
+
    <!-- Tournament Cards Container -->
    <StackPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a1a;">
       <children>
@@ -47,11 +47,11 @@
                </FlowPane>
             </content>
          </ScrollPane>
-         
+
          <!-- Empty State -->
          <VBox fx:id="emptyState" styleClass="empty-state" alignment="CENTER" spacing="20" visible="false" managed="false" style="-fx-background-color: #0a0a1a;">
          </VBox>
       </children>
    </StackPane>
-   
+
 </VBox>

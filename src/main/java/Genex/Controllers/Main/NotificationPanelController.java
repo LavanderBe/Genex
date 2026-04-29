@@ -33,7 +33,7 @@ public class NotificationPanelController {
 
     public int getUnreadCount() {
         return (int) notificationList.getChildren().stream()
-            .filter(node -> node.getStyleClass().contains("unread"))
-            .count();
+                .filter(node -> node.getStyleClass().contains("unread"))
+                .count();
     }
 }

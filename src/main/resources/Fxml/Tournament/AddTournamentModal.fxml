@@ -15,9 +15,9 @@
 <StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="Genex.Controllers.Tournament.AddTournamentModalController"
            styleClass="modal-backdrop" stylesheets="@AddTournamentModal.css">
-   
+
    <VBox styleClass="modal-container" maxWidth="600">
-      
+
       <!-- Header -->
       <HBox styleClass="modal-header" alignment="CENTER_LEFT">
          <children>
@@ -26,12 +26,12 @@
             <Button fx:id="btnClose" onAction="#closeModal" styleClass="close-btn" text="✕" />
          </children>
       </HBox>
-      
+
       <!-- Form Content -->
       <ScrollPane styleClass="modal-scroll" VBox.vgrow="ALWAYS">
          <content>
             <VBox styleClass="modal-content" spacing="20">
-               
+
                <!-- Tournament Name -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -40,7 +40,7 @@
                      <Text fx:id="errorName" styleClass="error-text" visible="false" managed="false" />
                   </children>
                </VBox>
-               
+
                <!-- Format and Type Row -->
                <HBox spacing="16">
                   <children>
@@ -52,7 +52,7 @@
                            <Text fx:id="errorFormat" styleClass="error-text" visible="false" managed="false" />
                         </children>
                      </VBox>
-                     
+
                      <!-- Participant Type -->
                      <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
                         <children>
@@ -63,7 +63,7 @@
                      </VBox>
                   </children>
                </HBox>
-               
+
                <!-- Game ID and Center ID Row -->
                <HBox spacing="16">
                   <children>
@@ -74,7 +74,7 @@
                            <TextField fx:id="txtGameId" promptText="Ex: GAME001" styleClass="form-input" />
                         </children>
                      </VBox>
-                     
+
                      <!-- Center ID -->
                      <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
                         <children>
@@ -84,7 +84,7 @@
                      </VBox>
                   </children>
                </HBox>
-               
+
                <!-- Dates Row -->
                <HBox spacing="16">
                   <children>
@@ -96,7 +96,7 @@
                            <Text fx:id="errorStartDate" styleClass="error-text" visible="false" managed="false" />
                         </children>
                      </VBox>
-                     
+
                      <!-- End Date -->
                      <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
                         <children>
@@ -107,7 +107,7 @@
                      </VBox>
                   </children>
                </HBox>
-               
+
                <!-- Prize Pool -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -116,11 +116,11 @@
                      <Text fx:id="errorPrizePool" styleClass="error-text" visible="false" managed="false" />
                   </children>
                </VBox>
-               
+
             </VBox>
          </content>
       </ScrollPane>
-      
+
       <!-- Footer Actions -->
       <HBox styleClass="modal-footer" spacing="12" alignment="CENTER_RIGHT">
          <children>
@@ -128,7 +128,7 @@
             <Button fx:id="btnSave" onAction="#saveTournament" styleClass="primary-btn" text="Enregistrer" />
          </children>
       </HBox>
-      
+
    </VBox>
-   
+
 </StackPane>

@@ -1,5 +1,8 @@
 package Genex.Controllers.Login;
 
+import Genex.entities.User;
+import Genex.services.CrudUser;
+import Genex.utils.SessionManager;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -102,14 +105,30 @@ public class Login {
         loginBtn.setText("Connexion...");
         loginBtn.setDisable(true);
 
-        // Simulate login process with animation
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(e -> {
+        // Authenticate user from database
+        CrudUser crudUser = new CrudUser();
+        User authenticatedUser = crudUser.authenticate(email, password);
+
+        if (authenticatedUser != null) {
+            // Store user in session
+            SessionManager.getInstance().setCurrentUser(authenticatedUser);
+
             System.out.println("Connected successfully!");
-            // Navigate to Tournament interface
+            System.out.println("User ID: " + authenticatedUser.getId());
+            System.out.println("Username: " + authenticatedUser.getUsername());
+            System.out.println("Role: " + authenticatedUser.getRole());
+
+            // Navigate to Main interface
             navigateToTournament();
-        });
-        pause.play();
+        } else {
+            // Authentication failed
+            loginBtn.setText("Se connecter");
+            loginBtn.setDisable(false);
+
+            showError(emailError, "Email ou mot de passe incorrect");
+            showError(passwordError, "Vérifiez vos identifiants");
+            shakeNode(rootPane.lookup(".glass-card"));
+        }
     }
 
     @FXML

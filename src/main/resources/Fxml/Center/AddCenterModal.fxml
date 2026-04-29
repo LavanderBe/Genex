@@ -13,9 +13,9 @@
 <StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="Genex.Controllers.Center.AddCenterModalController"
            styleClass="modal-backdrop" stylesheets="@AddCenterModal.css">
-   
+
    <VBox styleClass="modal-container" maxWidth="600">
-      
+
       <!-- Header -->
       <HBox styleClass="modal-header" alignment="CENTER_LEFT">
          <children>
@@ -24,12 +24,12 @@
             <Button fx:id="btnClose" onAction="#closeModal" styleClass="close-btn" text="✕" />
          </children>
       </HBox>
-      
+
       <!-- Form Content -->
       <ScrollPane styleClass="modal-scroll" VBox.vgrow="ALWAYS">
          <content>
             <VBox styleClass="modal-content" spacing="20">
-               
+
                <!-- Center Name -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -38,7 +38,7 @@
                      <Text fx:id="errorName" styleClass="error-text" visible="false" managed="false" />
                   </children>
                </VBox>
-               
+
                <!-- Address -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -47,7 +47,7 @@
                      <Text fx:id="errorAddress" styleClass="error-text" visible="false" managed="false" />
                   </children>
                </VBox>
-               
+
                <!-- City -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -56,7 +56,7 @@
                      <Text fx:id="errorCity" styleClass="error-text" visible="false" managed="false" />
                   </children>
                </VBox>
-               
+
                <!-- Contact Email -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -65,7 +65,7 @@
                      <Text fx:id="errorEmail" styleClass="error-text" visible="false" managed="false" />
                   </children>
                </VBox>
-               
+
                <!-- Map URL -->
                <VBox spacing="8" styleClass="form-group">
                   <children>
@@ -73,11 +73,11 @@
                      <TextField fx:id="txtMapUrl" promptText="Ex: https://maps.google.com/..." styleClass="form-input" />
                   </children>
                </VBox>
-               
+
             </VBox>
          </content>
       </ScrollPane>
-      
+
       <!-- Footer Actions -->
       <HBox styleClass="modal-footer" spacing="12" alignment="CENTER_RIGHT">
          <children>
@@ -85,7 +85,7 @@
             <Button fx:id="btnSave" onAction="#saveCenter" styleClass="primary-btn" text="Enregistrer" />
          </children>
       </HBox>
-      
+
    </VBox>
-   
+
 </StackPane>

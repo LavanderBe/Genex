@@ -27,17 +27,6 @@ public class CrudTournamentParticipant implements ICrud<TournamentParticipants> 
         }
     }
 
-    private boolean teamExists(String teamId) {
-        try {
-            PreparedStatement pst = Myconnection.getInstance().getCnx()
-                    .prepareStatement("SELECT id FROM teams WHERE id=?");
-            pst.setString(1, teamId);
-            return pst.executeQuery().next();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
     // ─── CRUD ─────────────────────────────────────────────────────────────────
 
     @Override
@@ -48,11 +37,8 @@ public class CrudTournamentParticipant implements ICrud<TournamentParticipants> 
             if (!playerExists(p.getParticipantId())) {
                 throw new IllegalArgumentException("Player not found: " + p.getParticipantId());
             }
-        } else if ("TEAM".equals(p.getTournamentType())) {
-            if (!teamExists(p.getParticipantId())) {
-                throw new IllegalArgumentException("Team not found: " + p.getParticipantId());
-            }
         }
+        // Note: Team validation removed - teams no longer exist in this system
 
         String requete = "INSERT INTO tournament_participants " +
                 "(tournament_id, participant_id, seed, status) VALUES (?,?,?,?)";

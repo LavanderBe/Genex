@@ -19,7 +19,7 @@ public class CrudTournament implements ICrud<Tounament> {
     public void addEntity(Tounament t) {
 
         String requete = "INSERT INTO tournaments " +
-                "(name, game_id, center_id, format, participant_type, starts_at, ends_at, prize_pool) " +
+                "(tournament_name, game_id, center_id, format, participant_type, starts_at, ends_at, prize_pool) " +
                 "VALUES (?,?,?,?,?,?,?,?)";
 
         try {
@@ -43,7 +43,7 @@ public class CrudTournament implements ICrud<Tounament> {
     public void updateEntity(Tounament t, String id) {
 
         String requete = "UPDATE tournaments SET " +
-                "name=?, game_id=?, center_id=?, format=?, participant_type=?, " +
+                "tournament_name=?, game_id=?, center_id=?, format=?, participant_type=?, " +
                 "starts_at=?, ends_at=?, prize_pool=? WHERE id=?";
 
         try {
@@ -90,7 +90,7 @@ public class CrudTournament implements ICrud<Tounament> {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                t.setTournamentName(rs.getString("name"));
+                t.setTournamentName(rs.getString("tournament_name"));
                 t.setGame_id(rs.getString("game_id"));
                 t.setCenter_id(rs.getString("center_id"));
                 t.setFormat(rs.getString("format"));
@@ -117,7 +117,7 @@ public class CrudTournament implements ICrud<Tounament> {
             while (rs.next()) {
                 Tounament t = new Tounament();
                 t.setTournamentId(rs.getString("id"));
-                t.setTournamentName(rs.getString("name"));
+                t.setTournamentName(rs.getString("tournament_name"));
                 t.setGame_id(rs.getString("game_id"));
                 t.setCenter_id(rs.getString("center_id"));
                 t.setFormat(rs.getString("format"));

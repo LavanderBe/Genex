@@ -95,43 +95,43 @@ public class TournamentCardController {
     @FXML
     private void handleEdit() {
         System.out.println("Edit tournament: " + (tournament != null ? tournament.getTournamentName() : "null"));
-        
+
         if (tournament == null) return;
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/AddTournamentModal.fxml"));
             Parent modalRoot = loader.load();
-            
+
             // Create modal stage
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL);
             modalStage.initStyle(StageStyle.TRANSPARENT);
             modalStage.setTitle("Modifier le Tournoi");
-            
+
             Scene scene = new Scene(modalRoot);
             scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             modalStage.setScene(scene);
-            
+
             // Get controller and set tournament data
             AddTournamentModalController controller = loader.getController();
             controller.setTournament(tournament);
             controller.setOnSaveCallback(updatedTournament -> {
                 System.out.println("Updating tournament: " + updatedTournament.getTournamentName());
-                
+
                 // Update in database
                 CrudTournament crudTournament = new CrudTournament();
                 crudTournament.updateEntity(updatedTournament, tournament.getTournamentId());
-                
+
                 // Refresh the hub
                 if (onUpdateCallback != null) {
                     onUpdateCallback.run();
                 }
-                
+
                 modalStage.close();
             });
-            
+
             modalStage.showAndWait();
-            
+
         } catch (Exception e) {
             System.err.println("Error opening edit modal");
             e.printStackTrace();
@@ -141,29 +141,29 @@ public class TournamentCardController {
     @FXML
     private void handleDelete() {
         System.out.println("Delete tournament: " + (tournament != null ? tournament.getTournamentName() : "null"));
-        
+
         if (tournament == null) return;
-        
+
         // Show confirmation dialog
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmer la suppression");
         alert.setHeaderText("Supprimer le tournoi \"" + tournament.getTournamentName() + "\" ?");
         alert.setContentText("Cette action est irréversible.");
-        
+
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 // Delete from database
                 CrudTournament crudTournament = new CrudTournament();
                 crudTournament.deleteEntity(tournament);
-                
+
                 System.out.println("Tournament deleted: " + tournament.getTournamentName());
-                
+
                 // Refresh the hub
                 if (onUpdateCallback != null) {
                     onUpdateCallback.run();
                 }
-                
+
             } catch (Exception e) {
                 System.err.println("Error deleting tournament");
                 e.printStackTrace();

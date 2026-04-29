@@ -36,15 +36,10 @@
                   </StackPane>
                </children>
             </VBox>
-            
+
             <!-- Navigation Menu -->
             <VBox spacing="2.0" styleClass="nav-menu">
                <children>
-                  <Button fx:id="btnTeams" onAction="#loadTeams" styleClass="sidebar-button" text="Équipes">
-                     <graphic>
-                        <Text styleClass="nav-icon" text="👥" />
-                     </graphic>
-                  </Button>
                   <Button fx:id="btnTournaments" onAction="#loadTournaments" styleClass="sidebar-button" text="Tournois">
                      <graphic>
                         <Text styleClass="nav-icon" text="🏆" />
@@ -72,10 +67,10 @@
                   </Button>
                </children>
             </VBox>
-            
+
             <!-- Spacer -->
             <Region VBox.vgrow="ALWAYS" />
-            
+
             <!-- Footer -->
             <VBox styleClass="footer">
                <children>
@@ -85,7 +80,7 @@
             </VBox>
          </children>
       </VBox>
-      
+
       <!-- MAIN CONTENT AREA -->
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -103,10 +98,10 @@
                         </HBox>
                      </children>
                   </StackPane>
-                  
+
                   <!-- Spacer -->
                   <Region HBox.hgrow="ALWAYS" />
-                  
+
                   <!-- Notification and User Profile -->
                   <HBox alignment="CENTER" spacing="28.0" style="-fx-padding: 0 35 0 0;">
                      <children>
@@ -126,7 +121,7 @@
                               </StackPane>
                            </children>
                         </StackPane>
-                        
+
                         <!-- User Profile -->
                         <HBox alignment="CENTER" spacing="14.0" styleClass="user-profile">
                            <children>
@@ -148,16 +143,16 @@
                   </HBox>
                </children>
             </HBox>
-            
+
             <!-- CONTENT CONTAINER WITH NOTIFICATION PANEL -->
             <StackPane VBox.vgrow="ALWAYS">
                <children>
                   <!-- Main Content -->
                   <StackPane fx:id="contentContainer" styleClass="content-area" pickOnBounds="false" />
-                  
+
                   <!-- Notification Backdrop (blocks clicks when panel is open) -->
                   <StackPane fx:id="notificationBackdrop" visible="false" managed="false" style="-fx-background-color: rgba(0, 0, 0, 0.3);" onMouseClicked="#closeNotificationPanel" />
-                  
+
                   <!-- Notification Panel (Loaded from external FXML) -->
                   <StackPane fx:id="notificationPanelContainer" translateX="280.0" StackPane.alignment="CENTER_RIGHT" pickOnBounds="false" maxWidth="280" prefWidth="280" />
                </children>

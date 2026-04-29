@@ -26,9 +26,6 @@ public class MainController {
     private TextField searchField;
 
     @FXML
-    private Button btnTeams;
-
-    @FXML
     private Button btnTournaments;
 
     @FXML
@@ -59,10 +56,10 @@ public class MainController {
     @FXML
     public void initialize() {
         System.out.println("MainController initialized");
-        
+
         // Load notification panel
         loadNotificationPanel();
-        
+
         // Don't load any page by default - just show empty content area
         System.out.println("Main interface ready");
     }
@@ -71,27 +68,27 @@ public class MainController {
         try {
             System.out.println("=== Loading notification panel ===");
             System.out.println("Container exists: " + (notificationPanelContainer != null));
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Main/NotificationPanel.fxml"));
             notificationPanel = loader.load();
             notificationPanelController = loader.getController();
-            
+
             System.out.println("Notification panel FXML loaded successfully");
             System.out.println("Panel object: " + (notificationPanel != null));
             System.out.println("Controller: " + (notificationPanelController != null));
-            
+
             // Set close callback
             notificationPanelController.setOnCloseCallback(this::closeNotificationPanel);
-            
+
             // Add to container
             notificationPanelContainer.getChildren().add(notificationPanel);
-            
+
             System.out.println("Panel added to container. Children count: " + notificationPanelContainer.getChildren().size());
-            
+
             // Make it not block mouse events when closed
             notificationPanelContainer.setPickOnBounds(false);
             notificationPanel.setPickOnBounds(true);
-            
+
             System.out.println("Panel container translateX: " + notificationPanelContainer.getTranslateX());
             System.out.println("Panel visible: " + notificationPanel.isVisible());
             System.out.println("=== Notification panel loaded successfully ===");
@@ -99,15 +96,6 @@ public class MainController {
             System.err.println("=== ERROR loading notification panel ===");
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    private void loadTeams() {
-        System.out.println("Loading Teams...");
-        animateButtonClick(btnTeams);
-        setActiveButton(btnTeams);
-        // Don't load any page - just activate the button
-        System.out.println("Teams section - No page loaded yet");
     }
 
     @FXML
@@ -162,7 +150,7 @@ public class MainController {
         System.out.println("Panel container: " + (notificationPanelContainer != null ? "exists" : "null"));
         System.out.println("Panel: " + (notificationPanel != null ? "exists" : "null"));
         System.out.println("Backdrop: " + (notificationBackdrop != null ? "exists" : "null"));
-        
+
         // Add a simple scale animation to show the button was clicked
         javafx.animation.ScaleTransition scale = new javafx.animation.ScaleTransition(Duration.millis(100), btnNotification);
         scale.setToX(0.9);
@@ -170,7 +158,7 @@ public class MainController {
         scale.setCycleCount(2);
         scale.setAutoReverse(true);
         scale.play();
-        
+
         if (isNotificationPanelOpen) {
             System.out.println("Closing notification panel...");
             closeNotificationPanel();
@@ -183,18 +171,18 @@ public class MainController {
     @FXML
     private void closeNotificationPanel() {
         if (!isNotificationPanelOpen || notificationPanelContainer == null) return;
-        
+
         System.out.println("Closing notification panel...");
-        
+
         // Hide backdrop
         if (notificationBackdrop != null) {
             notificationBackdrop.setVisible(false);
             notificationBackdrop.setManaged(false);
         }
-        
+
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), notificationPanelContainer);
         slideOut.setToX(280);
-        
+
         slideOut.setOnFinished(e -> {
             isNotificationPanelOpen = false;
             notificationPanelContainer.setPickOnBounds(false);
@@ -205,27 +193,27 @@ public class MainController {
 
     private void openNotificationPanel() {
         System.out.println("=== openNotificationPanel called ===");
-        
+
         if (isNotificationPanelOpen) {
             System.out.println("Panel already open, skipping");
             return;
         }
-        
+
         if (notificationPanelContainer == null) {
             System.err.println("ERROR: notificationPanelContainer is null!");
             return;
         }
-        
+
         if (notificationPanel == null) {
             System.err.println("ERROR: notificationPanel is null!");
             return;
         }
-        
+
         System.out.println("Starting slide-in animation...");
         System.out.println("Current translateX: " + notificationPanelContainer.getTranslateX());
         System.out.println("Panel visible: " + notificationPanel.isVisible());
         System.out.println("Container visible: " + notificationPanelContainer.isVisible());
-        
+
         // Show backdrop
         if (notificationBackdrop != null) {
             notificationBackdrop.setVisible(true);
@@ -234,20 +222,20 @@ public class MainController {
         } else {
             System.err.println("WARNING: notificationBackdrop is null!");
         }
-        
+
         notificationPanelContainer.setPickOnBounds(true);
-        
+
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), notificationPanelContainer);
         slideIn.setToX(0);
-        
+
         slideIn.setOnFinished(e -> {
             isNotificationPanelOpen = true;
             System.out.println("=== Panel opened! Final translateX: " + notificationPanelContainer.getTranslateX() + " ===");
         });
-        
+
         System.out.println("Playing animation...");
         slideIn.play();
-        
+
         // Update badge
         updateNotificationBadge();
     }
@@ -269,7 +257,7 @@ public class MainController {
         if (button == btnNotification) {
             return;
         }
-        
+
         TranslateTransition transition = new TranslateTransition(Duration.millis(100), button);
         transition.setFromX(0);
         transition.setToX(5);
@@ -282,6 +270,7 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent page = loader.load();
+
             contentContainer.getChildren().clear();
             contentContainer.getChildren().add(page);
             System.out.println("Successfully loaded: " + fxmlPath);
@@ -292,7 +281,6 @@ public class MainController {
     }
 
     private void setActiveButton(Button activeButton) {
-        btnTeams.getStyleClass().remove("sidebar-button-active");
         btnTournaments.getStyleClass().remove("sidebar-button-active");
         btnFinances.getStyleClass().remove("sidebar-button-active");
         btnCommunity.getStyleClass().remove("sidebar-button-active");
@@ -307,16 +295,13 @@ public class MainController {
     }
 
     private void updateIconStyles() {
-        resetIconStyle(btnTeams);
         resetIconStyle(btnTournaments);
         resetIconStyle(btnFinances);
         resetIconStyle(btnCommunity);
         resetIconStyle(btnTutorials);
         resetIconStyle(btnCenters);
 
-        if (btnTeams.getStyleClass().contains("sidebar-button-active")) {
-            setActiveIconStyle(btnTeams);
-        } else if (btnTournaments.getStyleClass().contains("sidebar-button-active")) {
+        if (btnTournaments.getStyleClass().contains("sidebar-button-active")) {
             setActiveIconStyle(btnTournaments);
         } else if (btnFinances.getStyleClass().contains("sidebar-button-active")) {
             setActiveIconStyle(btnFinances);

@@ -76,11 +76,11 @@ public class AddTournamentModalController {
     @FXML
     public void initialize() {
         System.out.println("AddTournamentModalController initialized");
-        
+
         // Populate combo boxes
         comboFormat.getItems().addAll("Round Robin", "Single Elimination", "Double Elimination");
         comboType.getItems().addAll("Solo", "Team");
-        
+
         // Setup validation listeners
         setupValidation();
     }
@@ -98,21 +98,21 @@ public class AddTournamentModalController {
     public void setTournament(Tounament tournament) {
         this.tournamentToEdit = tournament;
         modalTitle.setText("Modifier le Tournoi");
-        
+
         // Fill form with tournament data
         txtName.setText(tournament.getTournamentName());
         comboFormat.setValue(tournament.getFormat());
         comboType.setValue(tournament.getParticipant_type());
         txtGameId.setText(tournament.getGame_id());
         txtCenterId.setText(tournament.getCenter_id());
-        
+
         if (tournament.getStarts_at() != null) {
             dateStart.setValue(tournament.getStarts_at().toLocalDate());
         }
         if (tournament.getEnds_at() != null) {
             dateEnd.setValue(tournament.getEnds_at().toLocalDate());
         }
-        
+
         txtPrizePool.setText(String.valueOf(tournament.getPrize_pool()));
     }
 
@@ -135,13 +135,13 @@ public class AddTournamentModalController {
         try {
             // Create or update tournament
             Tounament tournament = tournamentToEdit != null ? tournamentToEdit : new Tounament();
-            
+
             tournament.setTournamentName(txtName.getText().trim());
             tournament.setFormat(comboFormat.getValue());
             tournament.setParticipant_type(comboType.getValue());
             tournament.setGame_id(txtGameId.getText().trim());
             tournament.setCenter_id(txtCenterId.getText().trim());
-            
+
             // Convert dates to LocalDateTime
             if (dateStart.getValue() != null) {
                 tournament.setStarts_at(LocalDateTime.of(dateStart.getValue(), LocalTime.of(0, 0)));
@@ -149,18 +149,18 @@ public class AddTournamentModalController {
             if (dateEnd.getValue() != null) {
                 tournament.setEnds_at(LocalDateTime.of(dateEnd.getValue(), LocalTime.of(23, 59)));
             }
-            
+
             tournament.setPrize_pool(Double.parseDouble(txtPrizePool.getText().trim()));
-            
+
             System.out.println("Tournament saved: " + tournament.getTournamentName());
-            
+
             // Call callback
             if (onSaveCallback != null) {
                 onSaveCallback.accept(tournament);
             }
-            
+
             closeModal();
-            
+
         } catch (Exception e) {
             System.err.println("Error saving tournament");
             e.printStackTrace();

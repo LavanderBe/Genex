@@ -5,14 +5,14 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Button?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" 
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Center.CenterCardController"
       styleClass="center-card"
       stylesheets="@CenterCard.css"
       spacing="16"
       onMouseClicked="#handleCardClick">
-   
+
    <children>
       <!-- Header -->
       <VBox styleClass="center-card-header" spacing="8">
@@ -22,7 +22,7 @@
             <Text fx:id="centerCity" styleClass="center-city" text="City" />
          </children>
       </VBox>
-      
+
       <!-- Info -->
       <VBox spacing="8">
          <children>
@@ -32,7 +32,7 @@
                   <Text fx:id="centerAddress" styleClass="center-info-value" text="Address" />
                </children>
             </HBox>
-            
+
             <HBox styleClass="center-info-row" spacing="8">
                <children>
                   <Text styleClass="center-info-label" text="✉️" />
@@ -41,7 +41,7 @@
             </HBox>
          </children>
       </VBox>
-      
+
       <!-- Actions -->
       <HBox spacing="8" alignment="CENTER">
          <children>
@@ -51,5 +51,5 @@
          </children>
       </HBox>
    </children>
-   
+
 </VBox>

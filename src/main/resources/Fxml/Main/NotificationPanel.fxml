@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Main.NotificationPanelController"
       styleClass="notification-panel" stylesheets="@NotificationPanel.css">
    <children>
@@ -19,7 +19,7 @@
             <Button fx:id="btnCloseNotifications" onAction="#closePanel" styleClass="close-notification-btn" text="✕" />
          </children>
       </HBox>
-      
+
       <!-- Notifications List -->
       <ScrollPane styleClass="notification-scroll" VBox.vgrow="ALWAYS">
          <content>
