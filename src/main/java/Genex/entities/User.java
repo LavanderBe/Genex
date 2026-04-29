@@ -16,18 +16,18 @@ public class User {
     private String role;
     private LocalDateTime created_at;
 
-    public enum Role {
-        ADMIN,MODERATOR,PLAYER
-    }
+
 
     public User(String username, String email, String password, String role) {
         this.username = username;
         this.email = email;
         this.salt=generateSalt();
-        this.password_hash =hashPassword(password,this.salt); ;
+        this.password_hash =hashPassword(password,this.salt);
         this.role = role;
         this.created_at = LocalDateTime.now();
     }
+
+
 
     private String generateSalt() {
         SecureRandom random = new SecureRandom();
@@ -47,6 +47,7 @@ public class User {
         }
     }
 
+    //verifies if the password is correct if we have the user
     public boolean verifyPassword(String password) {
         return hashPassword(password, this.salt).equals(this.password_hash);
     }
