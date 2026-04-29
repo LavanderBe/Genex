@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
-        Scene scene = new Scene(root, 1200, 800);
-        primaryStage.setTitle("GENEX - Connexion");
+        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Forum/Forum.fxml"));
+        Scene scene = new Scene(root, 1280, 720);
+        primaryStage.setTitle("GENEX - Forum");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
