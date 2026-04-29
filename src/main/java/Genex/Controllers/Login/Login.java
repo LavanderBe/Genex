@@ -102,11 +102,12 @@ public class Login {
         loginBtn.setText("Connexion...");
         loginBtn.setDisable(true);
 
+        // Simulate login process with animation
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         pause.setOnFinished(e -> {
             System.out.println("Connected successfully!");
-            loginBtn.setText("Se connecter");
-            loginBtn.setDisable(false);
+            // Navigate to Tournament interface
+            navigateToTournament();
         });
         pause.play();
     }
@@ -155,6 +156,49 @@ public class Login {
     @FXML
     private void handleForgotPassword() {
         System.out.println("Forgot password clicked");
+    }
+
+    private void navigateToTournament() {
+        try {
+            System.out.println("Starting navigation to Main interface...");
+            System.out.println("Loading FXML file...");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Main/Main.fxml"));
+
+            System.out.println("FXML Loader created, loading root...");
+            Parent root = loader.load();
+
+            System.out.println("Root loaded successfully, creating scene...");
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            Scene scene = new Scene(root, 1280, 720);
+            scene.setFill(Color.TRANSPARENT);
+
+            System.out.println("Setting scene and showing stage...");
+            stage.setTitle("GENEX - Plateforme de Gestion");
+            stage.setScene(scene);
+            stage.setMaximized(true); // Maximize for better view
+            stage.show();
+
+            System.out.println("Successfully navigated to Main interface");
+        } catch (IOException e) {
+            System.err.println("ERROR: Failed to navigate to Main interface");
+            e.printStackTrace();
+
+            // Re-enable login button
+            loginBtn.setText("Se connecter");
+            loginBtn.setDisable(false);
+
+            showAlert("Erreur de Navigation", "Impossible d'ouvrir l'interface principale:\n" + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("UNEXPECTED ERROR during navigation");
+            e.printStackTrace();
+
+            // Re-enable login button
+            loginBtn.setText("Se connecter");
+            loginBtn.setDisable(false);
+
+            showAlert("Erreur Inattendue", "Une erreur inattendue s'est produite:\n" + e.getMessage());
+        }
     }
 
 

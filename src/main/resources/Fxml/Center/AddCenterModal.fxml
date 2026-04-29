@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Center.AddCenterModalController"
+           styleClass="modal-backdrop" stylesheets="@AddCenterModal.css">
+   
+   <VBox styleClass="modal-container" maxWidth="600">
+      
+      <!-- Header -->
+      <HBox styleClass="modal-header" alignment="CENTER_LEFT">
+         <children>
+            <Text fx:id="modalTitle" styleClass="modal-title" text="Nouveau Centre" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnClose" onAction="#closeModal" styleClass="close-btn" text="✕" />
+         </children>
+      </HBox>
+      
+      <!-- Form Content -->
+      <ScrollPane styleClass="modal-scroll" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox styleClass="modal-content" spacing="20">
+               
+               <!-- Center Name -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="Nom du Centre *" />
+                     <TextField fx:id="txtName" promptText="Ex: Gaming Arena Paris" styleClass="form-input" />
+                     <Text fx:id="errorName" styleClass="error-text" visible="false" managed="false" />
+                  </children>
+               </VBox>
+               
+               <!-- Address -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="Adresse *" />
+                     <TextField fx:id="txtAddress" promptText="Ex: 123 Rue de la République" styleClass="form-input" />
+                     <Text fx:id="errorAddress" styleClass="error-text" visible="false" managed="false" />
+                  </children>
+               </VBox>
+               
+               <!-- City -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="Ville *" />
+                     <TextField fx:id="txtCity" promptText="Ex: Paris" styleClass="form-input" />
+                     <Text fx:id="errorCity" styleClass="error-text" visible="false" managed="false" />
+                  </children>
+               </VBox>
+               
+               <!-- Contact Email -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="Email de Contact *" />
+                     <TextField fx:id="txtEmail" promptText="Ex: contact@gamingarena.com" styleClass="form-input" />
+                     <Text fx:id="errorEmail" styleClass="error-text" visible="false" managed="false" />
+                  </children>
+               </VBox>
+               
+               <!-- Map URL -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="URL de la Carte" />
+                     <TextField fx:id="txtMapUrl" promptText="Ex: https://maps.google.com/..." styleClass="form-input" />
+                  </children>
+               </VBox>
+               
+            </VBox>
+         </content>
+      </ScrollPane>
+      
+      <!-- Footer Actions -->
+      <HBox styleClass="modal-footer" spacing="12" alignment="CENTER_RIGHT">
+         <children>
+            <Button fx:id="btnCancel" onAction="#closeModal" styleClass="secondary-btn" text="Annuler" />
+            <Button fx:id="btnSave" onAction="#saveCenter" styleClass="primary-btn" text="Enregistrer" />
+         </children>
+      </HBox>
+      
+   </VBox>
+   
+</StackPane>
