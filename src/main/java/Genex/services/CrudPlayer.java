@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import Genex.entities.Player;
 import Genex.utils.Myconnection;
 
+import java.time.LocalDate;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,18 +16,26 @@ public class CrudPlayer {
     public CrudPlayer() {
     }
 
+    public void addPlayer_admin(Player p){
+        CrudUser cu=new CrudUser();
+        cu.addEntity(p);
+        p.setId(cu.getUser_Id(p.getUsername()));
+        addEntity(p);
+    }
+
     public void addEntity(Player p) {
-        String requete = "INSERT INTO players (first_name, last_name, nickname, cin, date_of_birth, nationality, city) " +
-                "VALUES (,?,?,?,?,?,?,?)";
+        String requete = "INSERT INTO players (first_name, last_name, nickname, cin, date_of_birth, nationality, city,user_id) " +
+                "VALUES (?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1, p.getPrenom());
             pst.setString(2, p.getNom());
             pst.setString(3, p.getNickname());
             pst.setString(4, p.getCin());
-            pst.setDate(5, Date.valueOf(p.getBirthday()));
+            pst.setDate(5,Date.valueOf(p.getBirthday()));
             pst.setString(6, p.getNationality());
             pst.setString(7, p.getCity());
+            pst.setString(8, p.getId());
             pst.executeUpdate();
             System.out.println("player added successfully");
         } catch (SQLException e) {
@@ -77,6 +86,42 @@ public class CrudPlayer {
             throw new RuntimeException(e);
         }
         return players;
+    }
+
+    public boolean check_cin_exists(String cin){
+        String requete = "SELECT * FROM players WHERE cin=?";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,cin);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public boolean check_nickname_exists(String nickname){
+        String requete = "SELECT * FROM players WHERE nickname=?";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,nickname);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

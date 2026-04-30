@@ -110,6 +110,24 @@ public class CrudUser implements ICrud<User> {
         return null;
     }
 
+    public String getUser_Id(String username) {
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE username=?;";
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,username);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                return rs.getString("id");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     //checks if email exists
     public boolean check_email(String email){
         String requete="SELECT email " +

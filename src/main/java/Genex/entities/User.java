@@ -33,6 +33,9 @@ public class User {
         this.created_at = LocalDateTime.now();
     }
 
+    public User() {
+
+    }
 
 
     private String generateSalt() {

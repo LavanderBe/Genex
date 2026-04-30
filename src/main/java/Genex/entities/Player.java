@@ -2,7 +2,7 @@ package Genex.entities;
 
 import java.time.LocalDate;
 
-public class Player {
+public class Player extends User {
     private String id;
     private String prenom;
     private String nom;
@@ -12,9 +12,19 @@ public class Player {
     private String nationality;
     private String city;
 
-
+    public Player(String username, String email, String password, String role, String prenom, String nom, String nickname, String cin, LocalDate birthday, String nationality, String city) {
+        super(username, email, password, role);
+        this.prenom = prenom;
+        this.nom = nom;
+        this.nickname = nickname;
+        this.cin = cin;
+        this.birthday = birthday;
+        this.nationality = nationality;
+        this.city = city;
+    }
 
     public Player(LocalDate birthday, String prenom, String nom, String nickname, String cin, String nationality, String city) {
+        super();
         this.birthday = birthday;
         this.prenom = prenom;
         this.nom = nom;
@@ -25,6 +35,7 @@ public class Player {
     }
 
     public Player() {
+        super();
     }
 
 
