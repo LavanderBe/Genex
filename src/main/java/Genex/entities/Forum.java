@@ -7,6 +7,10 @@ public class Forum {
     private String title;
     private String description;
     private String createdBy;
+    private String category;
+    private String topicStatus;
+    private String moderationStatus;
+    private boolean pinned;
     private LocalDateTime createdAt;
 
     public Forum() {}
@@ -15,6 +19,10 @@ public class Forum {
         this.title = title;
         this.description = description;
         this.createdBy = createdBy;
+        this.category = "General";
+        this.topicStatus = "open";
+        this.moderationStatus = "visible";
+        this.pinned = false;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -29,6 +37,18 @@ public class Forum {
 
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getTopicStatus() { return topicStatus; }
+    public void setTopicStatus(String topicStatus) { this.topicStatus = topicStatus; }
+
+    public String getModerationStatus() { return moderationStatus; }
+    public void setModerationStatus(String moderationStatus) { this.moderationStatus = moderationStatus; }
+
+    public boolean isPinned() { return pinned; }
+    public void setPinned(boolean pinned) { this.pinned = pinned; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

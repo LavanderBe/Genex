@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -79,6 +81,9 @@
                     <Label text="🔍" styleClass="search-icon"/>
                     <TextField fx:id="searchField" promptText="Search forums..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
                 </HBox>
+                <ComboBox fx:id="categoryFilterField" styleClass="modal-combo" prefWidth="150"/>
+                <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="140"/>
+                <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="150"/>
             </HBox>
 
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
@@ -100,6 +105,21 @@
                             </VBox>
                         </HBox>
 
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label text="CATEGORY" styleClass="field-label"/>
+                                <ComboBox fx:id="categoryField" styleClass="modal-combo"/>
+                            </VBox>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label text="TOPIC STATUS" styleClass="field-label"/>
+                                <ComboBox fx:id="topicStatusField" styleClass="modal-combo"/>
+                            </VBox>
+                            <VBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="PINNED" styleClass="field-label"/>
+                                <CheckBox fx:id="pinnedField" text="Pin topic" styleClass="field-label"/>
+                            </VBox>
+                        </HBox>
+
                         <VBox spacing="10">
                             <Label text="DESCRIPTION" styleClass="field-label"/>
                             <TextArea fx:id="descriptionArea" promptText="Forum description..." prefHeight="100"
@@ -110,6 +130,11 @@
                             <Button text="CREATE FORUM" onAction="#handleAddForum" styleClass="submit-button"/>
                             <Button text="UPDATE" onAction="#handleUpdateForum" styleClass="action-button"/>
                             <Button text="DELETE" onAction="#handleDeleteForum" styleClass="action-button"/>
+                            <Button text="PIN/UNPIN" onAction="#handleTogglePin" styleClass="action-button"/>
+                            <Button text="RESOLVED" onAction="#handleMarkResolved" styleClass="action-button"/>
+                            <Button text="REPORT" onAction="#handleReportForum" styleClass="action-button"/>
+                            <Button text="HIDE" onAction="#handleHideForum" styleClass="action-button"/>
+                            <Button text="RESTORE" onAction="#handleRestoreForum" styleClass="action-button"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button text="CLEAR" onAction="#handleClearForm" styleClass="action-button"/>
                         </HBox>

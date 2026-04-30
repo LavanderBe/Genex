@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -79,6 +80,9 @@
                     <Label text="🔍" styleClass="search-icon"/>
                     <TextField fx:id="searchField" promptText="Search posts..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
                 </HBox>
+                <ComboBox fx:id="typeFilterField" styleClass="modal-combo" prefWidth="145"/>
+                <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="145"/>
+                <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="160"/>
             </HBox>
 
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
@@ -105,16 +109,43 @@
                             <TextField fx:id="titleField" promptText="Post title" styleClass="modal-input"/>
                         </VBox>
 
+                        <HBox spacing="20">
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label text="POST TYPE" styleClass="field-label"/>
+                                <ComboBox fx:id="postTypeField" styleClass="modal-combo"/>
+                            </VBox>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label text="STATUS" styleClass="field-label"/>
+                                <ComboBox fx:id="postStatusField" styleClass="modal-combo"/>
+                            </VBox>
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label text="TAG" styleClass="field-label"/>
+                                <TextField fx:id="tagField" promptText="ex: gameplay" styleClass="modal-input"/>
+                            </VBox>
+                        </HBox>
+
                         <VBox spacing="10">
                             <Label text="CONTENT" styleClass="field-label"/>
                             <TextArea fx:id="bodyArea" promptText="Post content..." prefHeight="110"
                                       wrapText="true" styleClass="modal-input"/>
                         </VBox>
 
+                        <VBox spacing="10">
+                            <Label text="VIDEO (OPTIONAL)" styleClass="field-label"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <TextField fx:id="videoPathField" promptText="Aucune vidéo sélectionnée" editable="false" HBox.hgrow="ALWAYS" styleClass="modal-input"/>
+                                <Button text="UPLOAD VIDEO" onAction="#handleSelectVideo" styleClass="action-button"/>
+                                <Button text="CLEAR VIDEO" onAction="#handleClearVideo" styleClass="action-button"/>
+                            </HBox>
+                        </VBox>
+
                         <HBox spacing="12">
                             <Button text="CREATE POST" onAction="#handleAddPost" styleClass="submit-button"/>
                             <Button text="UPDATE" onAction="#handleUpdatePost" styleClass="action-button"/>
                             <Button text="DELETE" onAction="#handleDeletePost" styleClass="action-button"/>
+                            <Button text="REPORT" onAction="#handleReportPost" styleClass="action-button"/>
+                            <Button text="HIDE" onAction="#handleHidePost" styleClass="action-button"/>
+                            <Button text="RESTORE" onAction="#handleRestorePost" styleClass="action-button"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button text="CLEAR" onAction="#handleClearForm" styleClass="action-button"/>
                         </HBox>
