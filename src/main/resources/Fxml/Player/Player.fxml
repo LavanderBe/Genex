@@ -24,7 +24,7 @@
             <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Joueurs" />
             <Region HBox.hgrow="ALWAYS" />
 
-            <Button fx:id="btnAddPlayer" onAction="#addNewPlayer" styleClass="primary-btn" stylesheets="@Player.css" text="+ Nouveau Joueur" />
+            <Button fx:id="btnAddPlayer" onAction="#addNewPlayer" styleClass="action-blue-button" stylesheets="@Player.css" text="+ Nouveau Joueur" />
 
             <TextField fx:id="searchField" prefWidth="250" promptText="Rechercher un joueur..." styleClass="search-field" />
             <Button fx:id="btnSearch" onAction="#searchPlayers" styleClass="icon-btn" text="🔍" />

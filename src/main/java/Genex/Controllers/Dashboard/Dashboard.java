@@ -3,120 +3,66 @@ package Genex.Controllers.Dashboard;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Dashboard implements Initializable {
+public class Dashboard {
 
     // ==================== FXML Fields ====================
-    @FXML private StackPane rootPane;
     @FXML
-    private StackPane contentArea;
+    private AnchorPane contentArea;
 
     @FXML
-    private VBox dashboardContent;
+    private BorderPane mainPane;
 
-    // Sidebar Buttons
     @FXML
-    private Button navDashboard;
-    @FXML
-    private Button navUsers;
-    @FXML
-    private Button navGames;
-    @FXML
-    private Button navPlayers;
-    @FXML
-    private Button navTeams;
-    @FXML
-    private Button navTournaments;
-    @FXML
-    private Button navForum;
-    @FXML
-    private Button navtutorials;
-    @FXML
-    private Button navFinance;
-    @FXML
-    private Button navAccount;
+    private VBox sidebarVbox;
 
-    // ==================== Initialization ====================
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        setActiveButton(navDashboard);
-    }
 
     // ==================== Navigation Methods ====================
-
     @FXML
-    private void navDashboardBtn(ActionEvent event) {
-        setActiveButton(navDashboard);
-        contentArea.getChildren().setAll(dashboardContent);
+    private void navDashboardBtn(ActionEvent event){
+        setActiveButton((Button) event.getSource());
     }
 
     @FXML
-    private void navPlayersBtn(ActionEvent event) {
-        setActiveButton(navPlayers);
-        loadView("/Fxml/Player/Player.fxml");
+    void navPlayerBtn(ActionEvent event) {
+        try {
+            setActiveButton((Button) event.getSource());
+            // 1. Load the new FXML file
+            // Note: Adjust the path if your FXML files are in a different folder
+            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Player/Player.fxml"));
+
+            // 2. Clear the existing content
+            contentArea.getChildren().clear();
+
+            // 3. Add the new content
+            contentArea.getChildren().add(root);
+
+            // 4. Ensure the new content scales to fit the AnchorPane
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error loading FXML: ");
+        }
     }
 
-    @FXML
-    private void navUsersBtn(ActionEvent event) {
-        setActiveButton(navUsers);
-        loadView("/Genex/Views/Users/users.fxml");
-    }
-
-    @FXML
-    private void navGamesBtn(ActionEvent event) {
-        setActiveButton(navGames);
-        loadView("/Genex/Views/Games/games.fxml");
-    }
-
-    @FXML
-    private void navTeamsBtn(ActionEvent event) {
-        setActiveButton(navTeams);
-        loadView("/Genex/Views/Teams/teams.fxml");
-    }
-
-    @FXML
-    private void navTournamentsBtn(ActionEvent event) {
-        setActiveButton(navTournaments);
-        loadView("/Genex/Views/Tournaments/tournaments.fxml");
-    }
-
-    @FXML
-    private void navForumBtn(ActionEvent event) {
-        setActiveButton(navForum);
-        loadView("/Genex/Views/Forum/forum.fxml");
-    }
-
-    @FXML
-    private void navtutorialsBtn(ActionEvent event) {
-        setActiveButton(navtutorials);
-        loadView("/Genex/Views/Tutorials/tutorials.fxml");
-    }
-
-    @FXML
-    private void navFinanceBtn(ActionEvent event) {
-        setActiveButton(navFinance);
-        loadView("/Genex/Views/Finance/finance.fxml");
-    }
-
-    @FXML
-    private void navAccountBtn(ActionEvent event) {
-        setActiveButton(navAccount);
-        loadView("/Genex/Views/Account/account.fxml");
-    }
 
     private void loadView(String fxmlPath) {
         try {
@@ -131,28 +77,30 @@ public class Dashboard implements Initializable {
         }
     }
 
-    private void setActiveButton(Button activeButton) {
-        // Remove active style from all buttons
-        navDashboard.getStyleClass().remove("nav-active");
-        navUsers.getStyleClass().remove("nav-active");
-        navGames.getStyleClass().remove("nav-active");
-        navPlayers.getStyleClass().remove("nav-active");
-        navTeams.getStyleClass().remove("nav-active");
-        navTournaments.getStyleClass().remove("nav-active");
-        navForum.getStyleClass().remove("nav-active");
-        navtutorials.getStyleClass().remove("nav-active");
-        navFinance.getStyleClass().remove("nav-active");
-        navAccount.getStyleClass().remove("nav-active");
 
-        // Add active style to the selected button
-        if (activeButton != null) {
-            activeButton.getStyleClass().add("nav-active");
+
+    private void setActiveButton(Button clickedButton) {
+        // Loop through all nodes in the VBox
+        for (Node node : sidebarVbox.getChildren()) {
+            if (node instanceof Button) {
+                Button btn = (Button) node;
+
+                // Remove the active class and ensure default class is present
+                btn.getStyleClass().remove("nav-button-active");
+                if (!btn.getStyleClass().contains("nav-button")) {
+                    btn.getStyleClass().add("nav-button");
+                }
+            }
         }
+
+        // Apply active class to the clicked button
+        clickedButton.getStyleClass().remove("nav-button");
+        clickedButton.getStyleClass().add("nav-button-active");
     }
 
 
     @FXML
-    private void logout(ActionEvent event) {
+    private void handleLogout(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login/Login.fxml"));
             Parent loginRoot = loader.load();
@@ -174,10 +122,5 @@ public class Dashboard implements Initializable {
         }
     }
 
-    // Optional: New Tournament button
-    @FXML
-    private void newtournement(ActionEvent event) {
-        System.out.println("New Tournament clicked");
-        // You can open a dialog or switch to tournament creation view
-    }
+
 }

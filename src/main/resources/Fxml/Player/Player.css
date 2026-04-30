@@ -134,3 +134,31 @@
     -fx-background-color: rgba(0, 0, 0, 0.75);
     -fx-alignment: center;
 }
+
+/* PRIMARY BLUE BUTTON - CYBER LOOK */
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z"; /* Cuts the corners off */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -2;
+}
+
+/* CANCEL RED BUTTON - EDGY */
+.action-red-button {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z"; /* Opposite cut */
+    -fx-cursor: hand;
+}
+.action-red-button:hover {
+    -fx-background-color: #f54c4c;
+    -fx-translate-y: -2;
+}
