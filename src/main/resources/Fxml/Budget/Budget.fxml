@@ -6,8 +6,8 @@
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.2"
            xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="Genex.Controllers.Sponsors.Sponsors"
-           stylesheets="@Sponsors.css"
+           fx:controller="Genex.Controllers.Budget.BudgetController"
+           stylesheets="@Budget.css"
            prefWidth="1280" prefHeight="800"
            styleClass="root-pane">
 
@@ -28,10 +28,10 @@
                 <padding><Insets bottom="6" left="20"/></padding>
             </Label>
 
-            <Button text="🏆  Sponsors" styleClass="sidebar-btn sidebar-btn-active"
+            <Button text="🏆  Sponsors" styleClass="sidebar-btn"
+                    maxWidth="Infinity" onAction="#goToSponsors"/>
+            <Button text="💰  Budgets"  styleClass="sidebar-btn sidebar-btn-active"
                     maxWidth="Infinity" disable="true"/>
-            <Button text="💰  Budgets"  styleClass="sidebar-btn"
-                    maxWidth="Infinity" onAction="#goToBudget"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 
@@ -52,8 +52,8 @@
             <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
                 <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
                 <VBox spacing="3">
-                    <Label text="Gestion des Sponsors" styleClass="page-title"/>
-                    <Label text="Gérez vos partenaires et sponsors" styleClass="page-subtitle"/>
+                    <Label text="Gestion des Budgets" styleClass="page-title"/>
+                    <Label text="Suivez les budgets par centre et sponsor" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
                 <TextField fx:id="searchField" styleClass="search-field"
@@ -66,57 +66,59 @@
                 <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
                 <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
                     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-                    <Label text="🏆  Total" styleClass="stat-icon-label"/>
+                    <Label text="📋  Total" styleClass="stat-icon-label"/>
                     <Label fx:id="statTotal" text="0" styleClass="stat-number"/>
-                    <Label text="Sponsors" styleClass="stat-label"/>
-                </VBox>
-                <VBox styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
-                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-                    <Label text="🎮  Tournois" styleClass="stat-icon-label"/>
-                    <Label fx:id="statTournament" text="0" styleClass="stat-number"/>
-                    <Label text="Sponsors tournoi" styleClass="stat-label"/>
+                    <Label text="Budgets" styleClass="stat-label"/>
                 </VBox>
                 <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
                     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-                    <Label text="👥  Équipes" styleClass="stat-icon-label"/>
-                    <Label fx:id="statTeam" text="0" styleClass="stat-number"/>
-                    <Label text="Sponsors équipe" styleClass="stat-label"/>
+                    <Label text="✅  Alloué" styleClass="stat-icon-label"/>
+                    <Label fx:id="statAllocated" text="0 TND" styleClass="stat-number"/>
+                    <Label text="Total alloué" styleClass="stat-label"/>
                 </VBox>
                 <VBox styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
                     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-                    <Label text="🏢  Centres" styleClass="stat-icon-label"/>
-                    <Label fx:id="statCenter" text="0" styleClass="stat-number"/>
-                    <Label text="Sponsors centre" styleClass="stat-label"/>
+                    <Label text="💸  Dépensé" styleClass="stat-icon-label"/>
+                    <Label fx:id="statSpent" text="0 TND" styleClass="stat-number"/>
+                    <Label text="Total dépensé" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="💰  Restant" styleClass="stat-icon-label"/>
+                    <Label fx:id="statRemaining" text="0 TND" styleClass="stat-number"/>
+                    <Label text="Total restant" styleClass="stat-label"/>
                 </VBox>
             </HBox>
 
-            <!-- Table + placeholder chart -->
+            <!-- Table + Chart -->
             <HBox spacing="16" VBox.vgrow="ALWAYS">
                 <padding><Insets right="28" bottom="24" left="28"/></padding>
 
                 <!-- Table panel -->
                 <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
-                    <Label text="Liste des sponsors" styleClass="panel-title"/>
-                    <TableView fx:id="sponsorTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <Label text="Liste des budgets" styleClass="panel-title"/>
+                    <TableView fx:id="budgetTable" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <columns>
-                            <TableColumn fx:id="colLogo"     text=""        prefWidth="50"/>
-                            <TableColumn fx:id="colName"     text="Nom"     prefWidth="140"/>
-                            <TableColumn fx:id="colIndustry" text="Secteur" prefWidth="110"/>
-                            <TableColumn fx:id="colType"     text="Type"    prefWidth="130"/>
-                            <TableColumn fx:id="colEmail"    text="Email"   prefWidth="170"/>
-                            <TableColumn fx:id="colActions"  text=""        prefWidth="80"/>
+                            <TableColumn fx:id="colCenter"    text="Centre"        prefWidth="160"/>
+                            <TableColumn fx:id="colSponsor"   text="Sponsor"       prefWidth="130"/>
+                            <TableColumn fx:id="colYear"      text="Année"         prefWidth="65"/>
+                            <TableColumn fx:id="colAllocated" text="Alloué"        prefWidth="110"/>
+                            <TableColumn fx:id="colSpent"     text="Dépensé"       prefWidth="110"/>
+                            <TableColumn fx:id="colRemaining" text="Restant"       prefWidth="110"/>
+                            <TableColumn fx:id="colActions"   text=""              prefWidth="80"/>
                         </columns>
                         <placeholder>
-                            <Label text="Aucun sponsor enregistré" styleClass="table-placeholder"/>
+                            <Label text="Aucun budget enregistré" styleClass="table-placeholder"/>
                         </placeholder>
                     </TableView>
                 </VBox>
 
                 <!-- Chart panel — coming soon -->
                 <VBox styleClass="panel" spacing="10" prefWidth="270" minWidth="250">
-                    <Label text="Répartition par type" styleClass="panel-title"/>
+                    <Label text="Alloué vs Dépensé" styleClass="panel-title"/>
                     <Label text="📊  Graphiques disponibles prochainement"
-                           styleClass="table-placeholder" VBox.vgrow="ALWAYS" wrapText="true"/>
+                           styleClass="table-placeholder" VBox.vgrow="ALWAYS"
+                           wrapText="true"/>
                 </VBox>
             </HBox>
 
@@ -132,7 +134,7 @@
             <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
 
             <HBox alignment="CENTER_LEFT">
-                <Label fx:id="formTitle" text="Nouveau sponsor" styleClass="drawer-title"/>
+                <Label fx:id="formTitle" text="Nouveau budget" styleClass="drawer-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="✕" styleClass="btn-close" onAction="#handleClear"/>
             </HBox>
@@ -141,56 +143,54 @@
                 <VBox.margin><Insets top="12" bottom="16"/></VBox.margin>
             </Separator>
 
-            <!-- Name -->
+            <!-- Center ID -->
             <VBox spacing="6">
                 <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="Nom *" styleClass="field-label"/>
-                <TextField fx:id="fieldName" styleClass="input-field" promptText="Ex: Red Bull"/>
-                <Label fx:id="errName" styleClass="err-label" visible="false" managed="false"/>
+                <Label text="ID du Centre *" styleClass="field-label"/>
+                <TextField fx:id="fieldCenterId" styleClass="input-field" promptText="UUID du centre"/>
+                <Label fx:id="errCenter" styleClass="err-label" visible="false" managed="false"/>
             </VBox>
 
-            <!-- Industry -->
+            <!-- Sponsor -->
             <VBox spacing="6">
                 <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="Secteur" styleClass="field-label"/>
-                <TextField fx:id="fieldIndustry" styleClass="input-field" promptText="Ex: Energy Drink"/>
+                <Label text="Sponsor (optionnel)" styleClass="field-label"/>
+                <ComboBox fx:id="combSponsor" styleClass="combo-field"
+                          promptText="— Fonds internes —" maxWidth="Infinity"/>
             </VBox>
 
-            <!-- Email -->
+            <!-- Fiscal year -->
             <VBox spacing="6">
                 <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="Email de contact" styleClass="field-label"/>
-                <TextField fx:id="fieldEmail" styleClass="input-field" promptText="contact@sponsor.com"/>
-                <Label fx:id="errEmail" styleClass="err-label" visible="false" managed="false"/>
+                <Label text="Année fiscale *" styleClass="field-label"/>
+                <TextField fx:id="fieldYear" styleClass="input-field" promptText="Ex: 2025"/>
+                <Label fx:id="errYear" styleClass="err-label" visible="false" managed="false"/>
             </VBox>
 
-            <!-- Website -->
+            <!-- Allocated -->
             <VBox spacing="6">
                 <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="Site web" styleClass="field-label"/>
-                <TextField fx:id="fieldWebsite" styleClass="input-field" promptText="https://…"/>
+                <Label text="Montant alloué (TND) *" styleClass="field-label"/>
+                <TextField fx:id="fieldAllocated" styleClass="input-field" promptText="Ex: 50000.00"/>
+                <Label fx:id="errAllocated" styleClass="err-label" visible="false" managed="false"/>
+            </VBox>
+
+            <!-- Spent -->
+            <VBox spacing="6">
+                <VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="Montant dépensé (TND)" styleClass="field-label"/>
+                <TextField fx:id="fieldSpent" styleClass="input-field" promptText="0.00"/>
             </VBox>
 
             <!-- Logo file picker -->
             <VBox spacing="6">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="Logo (PNG / JPEG)" styleClass="field-label"/>
+                <VBox.margin><Insets bottom="14"/></VBox.margin>
+                <Label text="Justificatif (PNG / JPEG)" styleClass="field-label"/>
                 <HBox spacing="8" alignment="CENTER_LEFT">
-                    <TextField fx:id="fieldLogo" styleClass="input-field"
+                    <TextField fx:id="fieldDoc" styleClass="input-field"
                                promptText="Choisir un fichier…"
                                editable="false" HBox.hgrow="ALWAYS"/>
-                    <Button text="📁" styleClass="btn-pick" onAction="#handlePickLogo"/>
-                </HBox>
-            </VBox>
-
-            <!-- Sponsor type checkboxes -->
-            <VBox spacing="8">
-                <VBox.margin><Insets bottom="14"/></VBox.margin>
-                <Label text="Type de sponsoring" styleClass="field-label"/>
-                <HBox spacing="16">
-                    <CheckBox fx:id="chkTournament" text="Tournoi"  styleClass="type-check"/>
-                    <CheckBox fx:id="chkTeam"       text="Équipe"   styleClass="type-check"/>
-                    <CheckBox fx:id="chkCenter"     text="Centre"   styleClass="type-check"/>
+                    <Button text="📁" styleClass="btn-pick" onAction="#handlePickDoc"/>
                 </HBox>
             </VBox>
 

@@ -23,20 +23,20 @@
         </dependency>
 
         <dependency>
-            <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>23.0.2</version>
             <scope>compile</scope>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>23.0.2</version>
             <scope>compile</scope>
         </dependency>
+
+
     </dependencies>
     <build>
         <plugins>
