@@ -490,6 +490,16 @@
     -fx-background-color: #666666 !important;
 }
 
+.modal-combo > .list-cell {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: #d6deef !important;
+}
+
+.modal-combo > .list-cell:selected {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: #eef3ff !important;
+}
+
 .modal-combo .list-view {
     -fx-background-color: #161b2e !important;
     -fx-border-color: rgba(255,255,255,0.1) !important;
@@ -505,12 +515,12 @@
 }
 
 .modal-combo .list-cell:hover {
-    -fx-background-color: rgba(30, 136, 229, 0.1) !important;
+    -fx-background-color: rgba(124, 92, 255, 0.16) !important;
     -fx-text-fill: white !important;
 }
 
 .modal-combo .list-cell:selected {
-    -fx-background-color: #1e88e5 !important;
+    -fx-background-color: #7c5cff !important;
     -fx-text-fill: white !important;
 }
 
