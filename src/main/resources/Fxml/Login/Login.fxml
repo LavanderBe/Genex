@@ -1,120 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="rootPane"
-           xmlns="http://javafx.com/javafx/23.0.2"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="Genex.Controllers.Login.Login"
-           stylesheets="@Login.css"
-           prefWidth="1200" prefHeight="800">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1280.0" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Login.Login">
 
     <!-- BACKGROUND -->
     <Pane fx:id="bgPane" styleClass="bg-container">
-        <ImageView fx:id="bgImage" styleClass="bg-image" preserveRatio="false"/>
-        <Pane styleClass="bg-overlay"/>
-        <Pane styleClass="orb orb-1"/>
-        <Pane styleClass="orb orb-2"/>
-        <Pane styleClass="orb orb-3"/>
+        <ImageView fx:id="bgImage" preserveRatio="false" styleClass="bg-image" />
+        <Pane styleClass="bg-overlay" />
+        <Pane styleClass="orb orb-1" />
+        <Pane styleClass="orb orb-2" />
+        <Pane styleClass="orb orb-3" />
     </Pane>
 
+    <HBox alignment="TOP_LEFT" prefHeight="40">
+        <padding>
+            <Insets left="20" top="15" />
+        </padding>
+    </HBox>
     <!-- RIGHT LAYOUT -->
     <HBox alignment="CENTER_RIGHT" spacing="40">
-        <padding>
-            <Insets right="80"/>
-        </padding>
 
-        <!-- PUSH TO RIGHT -->
-        <Region HBox.hgrow="ALWAYS"/>
+        <padding>
+            <Insets right="80" />
+        </padding>
+      <AnchorPane prefHeight="615.0" prefWidth="623.0">
+         <children>
+            <Button id="closeBtn" alignment="TOP_LEFT" layoutX="7.0" layoutY="4.0" mnemonicParsing="false" onAction="#handleClose" opacity="0.85" snapToPixel="false" styleClass="cancel-btn" text="X" />
+            <ImageView fitHeight="324.0" fitWidth="735.0" layoutX="92.0" layoutY="162.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+               <image>
+                  <Image url="@../../Images/logo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+
+              <!-- PUSH TO RIGHT -->
+        <Region HBox.hgrow="ALWAYS" />
 
         <!-- CARD -->
-        <VBox styleClass="glass-card"
-              alignment="CENTER"
-              spacing="10"
-              prefWidth="500"
-              maxWidth="600">
+        <VBox alignment="CENTER" maxWidth="600" prefWidth="500" spacing="10.0" styleClass="glass-card">
 
             <padding>
-                <Insets top="40" right="40" bottom="40" left="40"/>
+                <Insets bottom="40" left="40" right="40" top="40" />
             </padding>
 
-            <Region prefHeight="20"/>
+            <Region prefHeight="20" />
 
             <!-- TITLE -->
-            <Label text="Se connecter" styleClass="title-label"/>
+            <Label styleClass="title-label" text="Se connecter" />
 
-            <Region prefHeight="20"/>
+            <Region prefHeight="20" />
 
             <!-- EMAIL -->
             <VBox spacing="8" styleClass="field-group">
-                <Label text="Adresse Email" styleClass="field-label"/>
+                <Label styleClass="field-label" text="Adresse Email" />
                 <StackPane styleClass="input-wrapper">
-                    <TextField fx:id="emailField"
-                               styleClass="input-field"
-                               promptText="exemple@email.com"/>
+                    <TextField fx:id="emailField" promptText="gamer@email.gg" styleClass="input-field" />
                 </StackPane>
-                <Label fx:id="emailError" styleClass="error-label"
-                       managed="false" visible="false"/>
+                <Label fx:id="emailError" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
-            <Region prefHeight="10"/>
+            <Region prefHeight="10" />
 
             <!-- PASSWORD -->
             <VBox spacing="8" styleClass="field-group">
-                <Label text="Mot de passe" styleClass="field-label"/>
+                <Label styleClass="field-label" text="Mot de passe" />
                 <StackPane styleClass="input-wrapper">
-                    <PasswordField fx:id="passwordField"
-                                   styleClass="input-field"
-                                   promptText="••••••••"/>
-                    <TextField fx:id="passwordVisibleField"
-                               styleClass="input-field"
-                               visible="false" managed="false"/>
-                    <Button fx:id="togglePasswordBtn"
-                            styleClass="eye-btn"
-                            text="👁"
-                            onAction="#togglePasswordVisibility"
-                            StackPane.alignment="CENTER_RIGHT">
+                    <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input-field" />
+                    <TextField fx:id="passwordVisibleField" managed="false" styleClass="input-field" visible="false" />
+                    <Button fx:id="togglePasswordBtn" onAction="#togglePasswordVisibility" styleClass="eye-btn" text="👁" StackPane.alignment="CENTER_RIGHT">
                         <StackPane.margin>
-                            <Insets right="10"/>
+                            <Insets right="10" />
                         </StackPane.margin>
                     </Button>
                 </StackPane>
-                <Label fx:id="passwordError" styleClass="error-label"
-                       managed="false" visible="false"/>
+                <Label fx:id="passwordError" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
-            <Region prefHeight="10"/>
+            <Region prefHeight="10" />
 
             <!-- FORGOT -->
             <HBox alignment="CENTER_RIGHT">
-                <Hyperlink text="Mot de passe oublié ?"
-                           styleClass="link-text"
-                           onAction="#handleForgotPassword"/>
+                <Hyperlink onAction="#handleForgotPassword" styleClass="link-text" text="Mot de passe oublié ?" />
             </HBox>
 
-            <Region prefHeight="20"/>
+            <Region prefHeight="20" />
 
             <!-- BUTTON -->
-            <Button fx:id="loginBtn"
-                    text="Se connecter"
-                    styleClass="primary-btn"
-                    onAction="#handleLogin"
-                    maxWidth="Infinity"
-                    prefHeight="52"/>
+            <Button fx:id="loginBtn" maxWidth="Infinity" onAction="#handleLogin" prefHeight="52" styleClass="primary-btn" text="Se connecter" />
 
-            <Region prefHeight="15"/>
+
+
+            <Region prefHeight="15" />
 
             <!-- REGISTER -->
             <HBox alignment="CENTER" spacing="6">
-                <Label text="Pas de compte ?" styleClass="text-muted"/>
-                <Hyperlink text="S'inscrire"
-                           styleClass="link-text"
-                           onAction="#goToInscription"/>
+                <Label styleClass="text-muted" text="Pas de compte ?" />
+                <Hyperlink onAction="#goToInscription" styleClass="link-text" text="S'inscrire" />
             </HBox>
+         <HBox.margin>
+            <Insets bottom="25.0" top="25.0" />
+         </HBox.margin>
 
         </VBox>
     </HBox>

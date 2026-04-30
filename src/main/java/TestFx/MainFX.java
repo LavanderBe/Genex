@@ -6,15 +6,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.print.attribute.standard.PrinterMakeAndModel;
+
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root);
         primaryStage.setTitle("GENEX - Connexion");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
-    /*hazebaheba*/
+
     public static void main(String[] args) { launch(args); }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Player.PlayerController"
+           styleClass="main-content">
+
+    <VBox spacing="20">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label styleClass="page-title" text="Joueurs" />
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button fx:id="btnAddPlayer" styleClass="primary-btn" text="+ Nouveau Joueur"
+                    onAction="#addNewPlayer" />
+
+            <TextField fx:id="searchField" promptText="Rechercher un joueur..." prefWidth="250"
+                       styleClass="search-field" />
+            <Button fx:id="btnSearch" text="🔍" styleClass="icon-btn" onAction="#searchPlayers"/>
+        </HBox>
+
+        <!-- Players Grid (Card System) -->
+        <ScrollPane fitToWidth="true" vbarPolicy="ALWAYS" hbarPolicy="NEVER" styleClass="scroll-pane">
+            <content>
+                <FlowPane fx:id="playersContainer"
+                          hgap="20" vgap="20"
+                          prefWrapLength="1000"
+                          styleClass="players-grid">
+                    <!-- Cards will be added dynamically here -->
+                </FlowPane>
+            </content>
+        </ScrollPane>
+
+    </VBox>
+
+</StackPane>

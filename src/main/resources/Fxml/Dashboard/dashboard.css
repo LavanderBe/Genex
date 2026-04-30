@@ -1,0 +1,549 @@
+/* ═══════════════════════════════════════════════════
+   dashboard.css  —  Nexus Esports Hub
+   Primary: #1F1E4E  |  Secondary: #8B0D0D
+   ═══════════════════════════════════════════════════ */
+
+.root {
+    -fx-font-family: 'Segoe UI', 'Inter', sans-serif;
+    -fx-background-color: transparent;
+}
+
+/* ──────────────── Background ──────────────── */
+.bg-container {
+    -fx-background-color: #0d0c2e;
+}
+
+.bg-overlay {
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        rgba(10, 10, 40, 0.90),
+        rgba(31, 30, 78, 0.85),
+        rgba(8, 4, 20, 0.95)
+    );
+}
+
+.orb {
+    -fx-background-radius: 50%;
+}
+
+.orb-1 {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, rgba(31, 30, 78, 0.55), transparent);
+    -fx-pref-width: 500;
+    -fx-pref-height: 500;
+    -fx-translate-x: -180;
+    -fx-translate-y: -200;
+    -fx-effect: dropshadow(gaussian, rgba(80, 70, 200, 0.35), 100, 0.2, 0, 0);
+}
+
+.orb-2 {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, rgba(139, 13, 13, 0.3), transparent);
+    -fx-pref-width: 400;
+    -fx-pref-height: 400;
+    -fx-translate-x: 280;
+    -fx-translate-y: 120;
+    -fx-effect: dropshadow(gaussian, rgba(200, 30, 30, 0.25), 80, 0.2, 0, 0);
+}
+
+.orb-3 {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, rgba(60, 50, 140, 0.2), transparent);
+    -fx-pref-width: 300;
+    -fx-pref-height: 300;
+    -fx-translate-x: 80;
+    -fx-translate-y: -250;
+}
+
+/* ──────────────── Sidebar ──────────────── */
+.sidebar {
+    -fx-background-color: rgba(10, 9, 35, 0.82);
+    -fx-border-color: rgba(255, 255, 255, 0.07);
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 20 12 20 12;
+    -fx-pref-width: 230;
+}
+
+.sidebar-logo-area {
+    -fx-padding: 8 8 18 8;
+}
+
+.logo-icon {
+    -fx-background-color: linear-gradient(to bottom right, #3b3a8c, #8B0D0D);
+    -fx-background-radius: 10;
+    -fx-pref-width: 38;
+    -fx-pref-height: 38;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.5), 10, 0.3, 0, 0);
+}
+
+.logo-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 3;
+}
+
+.logo-subtitle {
+    -fx-text-fill: rgba(139, 13, 13, 0.9);
+    -fx-font-size: 8;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 2;
+}
+
+.sidebar-divider {
+    -fx-stroke: rgba(255, 255, 255, 0.08);
+    -fx-stroke-width: 1;
+    -fx-padding: 0 0 6 0;
+}
+
+.nav-section-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.28);
+    -fx-font-size: 9;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 2;
+    -fx-padding: 12 8 4 8;
+}
+
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.55);
+    -fx-font-size: 13;
+    -fx-font-weight: 500;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 14;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.nav-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+}
+
+.nav-active {
+    -fx-background-color: linear-gradient(to right, rgba(31, 30, 78, 0.8), rgba(139, 13, 13, 0.3));
+    -fx-text-fill: white;
+    -fx-border-color: rgba(139, 13, 13, 0.5);
+    -fx-border-width: 0 0 0 3;
+    -fx-border-radius: 0 10 10 0;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.2), 8, 0, 0, 0);
+}
+
+/* Sidebar User Card */
+.sidebar-user-card {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 12;
+}
+
+.user-avatar {
+    -fx-background-color: linear-gradient(to bottom right, #1F1E4E, #8B0D0D);
+    -fx-background-radius: 50%;
+    -fx-pref-width: 36;
+    -fx-pref-height: 36;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+}
+
+.user-avatar-text {
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+}
+
+.user-role {
+    -fx-text-fill: rgba(139, 13, 13, 0.9);
+    -fx-font-size: 11;
+    -fx-font-weight: 500;
+}
+
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-font-size: 14;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-background-radius: 8;
+    -fx-border-width: 0;
+}
+
+.logout-btn:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.2);
+    -fx-text-fill: rgba(255, 100, 100, 0.9);
+}
+
+/* ──────────────── Main Content ──────────────── */
+.main-content {
+    -fx-padding: 24 28 24 24;
+}
+
+/* Top Bar */
+.topbar {
+    -fx-padding: 0 0 4 0;
+}
+
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22;
+    -fx-font-weight: 700;
+}
+
+.page-subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 12;
+}
+
+.search-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 6 12;
+}
+
+.search-icon {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 13;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 13;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+.notif-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 10;
+    -fx-pref-width: 38;
+    -fx-pref-height: 38;
+    -fx-cursor: hand;
+}
+
+.notif-icon {
+    -fx-font-size: 15;
+}
+
+.notif-badge {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 50%;
+    -fx-text-fill: white;
+    -fx-font-size: 8;
+    -fx-font-weight: 700;
+    -fx-pref-width: 14;
+    -fx-pref-height: 14;
+    -fx-alignment: CENTER;
+    -fx-translate-x: 4;
+    -fx-translate-y: -4;
+}
+
+/* ──────────────── Stat Cards ──────────────── */
+.stat-card {
+    -fx-background-color: rgba(15, 14, 45, 0.7);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0.1, 0, 4);
+}
+
+.stat-icon-wrap {
+    -fx-background-radius: 10;
+    -fx-pref-width: 36;
+    -fx-pref-height: 36;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-alignment: CENTER;
+}
+
+.stat-icon-blue  { -fx-background-color: rgba(59, 91, 219, 0.2); }
+.stat-icon-red   { -fx-background-color: rgba(139, 13, 13, 0.2); }
+.stat-icon-gold  { -fx-background-color: rgba(200, 160, 30, 0.2); }
+.stat-icon-green { -fx-background-color: rgba(30, 180, 80, 0.2); }
+
+.stat-icon {
+    -fx-font-size: 16;
+}
+
+.stat-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 12;
+    -fx-font-weight: 500;
+}
+
+.stat-value {
+    -fx-text-fill: white;
+    -fx-font-size: 30;
+    -fx-font-weight: 700;
+}
+
+.stat-trend-up {
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+}
+
+.stat-trend-down {
+    -fx-text-fill: #f87171;
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+}
+
+.stat-trend-text {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 11;
+}
+
+/* ──────────────── Glass Card / Panels ──────────────── */
+.glass-card {
+    -fx-background-color: rgba(15, 14, 45, 0.65);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 30, 0.15, 0, 8);
+}
+
+.panel {
+    -fx-padding: 20;
+}
+
+.panel-title {
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+}
+
+/* ──────────────── Match Items ──────────────── */
+.match-item {
+    -fx-padding: 4 0;
+}
+
+.match-game-tag {
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-size: 10;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+    -fx-padding: 3 8;
+}
+
+.tag-val { -fx-background-color: rgba(255, 70, 85, 0.25); -fx-text-fill: #ff8a94; }
+.tag-cs  { -fx-background-color: rgba(255, 165, 30, 0.2); -fx-text-fill: #ffb347; }
+.tag-lol { -fx-background-color: rgba(100, 180, 255, 0.2); -fx-text-fill: #7ec8f7; }
+
+.live-dot {
+    -fx-text-fill: #ff4444;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+}
+
+.match-meta {
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-font-size: 11;
+}
+
+.team-logo-placeholder {
+    -fx-font-size: 24;
+}
+
+.team-name {
+    -fx-text-fill: rgba(255, 255, 255, 0.75);
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+    -fx-alignment: CENTER;
+}
+
+.match-score {
+    -fx-text-fill: white;
+    -fx-font-size: 22;
+    -fx-font-weight: 800;
+}
+
+.match-score-sub {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 10;
+    -fx-alignment: CENTER;
+}
+
+/* ──────────────── Leaderboard ──────────────── */
+.lb-header {
+    -fx-padding: 6 8;
+}
+
+.lb-rank-h, .lb-name-h, .lb-stat-h {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 10;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}
+
+.lb-row {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 10;
+    -fx-padding: 8;
+}
+
+.lb-row:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+}
+
+.lb-gold   { -fx-border-color: rgba(255, 200, 50, 0.25); -fx-border-radius: 10; -fx-border-width: 1; }
+
+.lb-rank {
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 13;
+    -fx-font-weight: 700;
+}
+
+.lb-avatar {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 50%;
+}
+
+.lb-avatar-gold   { -fx-background-color: linear-gradient(to bottom right, #b8860b, #ffd700); }
+.lb-avatar-silver { -fx-background-color: linear-gradient(to bottom right, #708090, #c0c0c0); }
+.lb-avatar-bronze { -fx-background-color: linear-gradient(to bottom right, #8b4513, #cd853f); }
+
+.lb-avatar-text {
+    -fx-text-fill: white;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+}
+
+.lb-name {
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+}
+
+.lb-team {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 10;
+}
+
+.lb-wl {
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 11;
+    -fx-alignment: CENTER;
+}
+
+.lb-pts {
+    -fx-text-fill: rgba(139, 200, 255, 0.85);
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+    -fx-alignment: CENTER;
+}
+
+/* ──────────────── Tournament Cards ──────────────── */
+.tournament-card {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(255, 255, 255, 0.07);
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+}
+
+.tournament-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(139, 13, 13, 0.3);
+}
+
+.tournament-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+}
+
+.tournament-meta {
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 11;
+}
+
+.tournament-date {
+    -fx-text-fill: rgba(139, 13, 13, 0.9);
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+}
+
+.prize-icon {
+    -fx-font-size: 12;
+}
+
+.prize-label {
+    -fx-text-fill: rgba(255, 200, 60, 0.85);
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+}
+
+.tournament-progress .track {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 4;
+}
+
+.tournament-progress .bar {
+    -fx-background-color: linear-gradient(to right, #1F1E4E, #5c7cfa);
+    -fx-background-radius: 4;
+    -fx-background-insets: 0;
+}
+
+.progress-red .bar {
+    -fx-background-color: linear-gradient(to right, #8B0D0D, #e53935);
+}
+
+/* ──────────────── Shared (from login) ──────────────── */
+.divider-line {
+    -fx-stroke: rgba(255, 255, 255, 0.08);
+    -fx-stroke-width: 1;
+}
+
+.primary-btn {
+    -fx-background-color: linear-gradient(to right, #1F1E4E, #3b5bdb);
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-padding: 9 18;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.4), 10, 0, 0, 3);
+}
+
+.primary-btn:hover {
+    -fx-background-color: linear-gradient(to right, #2a297a, #4c6ef5);
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.6), 14, 0, 0, 5);
+}
+
+.primary-btn:pressed {
+    -fx-background-color: linear-gradient(to right, #161550, #3b5bdb);
+    -fx-translate-y: 1;
+}
+
+.link-text {
+    -fx-text-fill: rgba(139, 13, 13, 0.8);
+    -fx-font-size: 12;
+    -fx-font-weight: 500;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-underline: false;
+    -fx-padding: 0;
+}
+
+.link-text:hover {
+    -fx-text-fill: rgba(200, 50, 50, 1);
+    -fx-underline: true;
+}

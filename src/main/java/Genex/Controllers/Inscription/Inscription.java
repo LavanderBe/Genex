@@ -1,5 +1,8 @@
 package Genex.Controllers.Inscription;
 
+import Genex.entities.User;
+import Genex.services.CrudUser;
+import Genex.services.UserControl;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -24,9 +28,6 @@ public class Inscription {
 
     @FXML
     private Pane bgPane;
-
-    @FXML
-    private Button closeBtn;
 
     @FXML
     private Label confirmPasswordError;
@@ -44,10 +45,10 @@ public class Inscription {
     private TextField emailField;
 
     @FXML
-    private Label nomError;
+    private VBox glassCard;
 
     @FXML
-    private TextField nomField;
+    private Label nomError;
 
     @FXML
     private Label passwordError;
@@ -68,19 +69,10 @@ public class Inscription {
     private Label prenomError;
 
     @FXML
-    private TextField prenomField;
-
-    @FXML
     private StackPane rootPane;
 
     @FXML
     private Button submitBtn;
-
-    @FXML
-    private Label telephoneError;
-
-    @FXML
-    private TextField telephoneField;
 
     @FXML
     private Button toggleConfirmBtn;
@@ -97,13 +89,7 @@ public class Inscription {
     private boolean passwordVisible = false;
     private boolean confirmVisible = false;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-    );
 
-    private static final Pattern PHONE_PATTERN = Pattern.compile(
-            "^(\\+33|0)[1-9](\\d{2}){4}$"
-    );
 
     @FXML
     public void initialize() {
@@ -112,11 +98,14 @@ public class Inscription {
         updatePasswordStrength();
     }
 
+
+
     private void loadBackgroundImage() {
         try {
             Image img = new Image(getClass().getResourceAsStream("/Images/esports-arena.jpg"));
             if (!img.isError()) {
                 bgImage.setImage(img);
+
                 // Bind image dimensions to parent container for responsive resizing
                 bgImage.fitWidthProperty().bind(bgPane.widthProperty());
                 bgImage.fitHeightProperty().bind(bgPane.heightProperty());
@@ -127,21 +116,13 @@ public class Inscription {
     }
 
     private void setupFieldListeners() {
-        prenomField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(prenomError);
-        });
-        nomField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(nomError);
-        });
         usernameField.textProperty().addListener((obs, old, val) -> {
             if (!val.isEmpty()) hideError(usernameError);
         });
         emailField.textProperty().addListener((obs, old, val) -> {
             if (!val.isEmpty()) hideError(emailError);
         });
-        telephoneField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(telephoneError);
-        });
+
         passwordField.textProperty().addListener((obs, old, val) -> {
             if (!val.isEmpty()) hideError(passwordError);
             updatePasswordStrength();
@@ -197,12 +178,11 @@ public class Inscription {
 
             Stage stage = (Stage) rootPane.getScene().getWindow();
             Scene currentScene = stage.getScene();
-            double width = currentScene.getWidth();
-            double height = currentScene.getHeight();
-            Scene scene = new Scene(root, width, height);
+            Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
 
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,23 +200,10 @@ public class Inscription {
     void handleInscription() {
         boolean valid = true;
 
-        String prenom = prenomField.getText().trim();
-        String nom = nomField.getText().trim();
         String username = usernameField.getText().trim();
         String email = emailField.getText().trim();
-        String telephone = telephoneField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
-
-        if (prenom.isEmpty()) {
-            showError(prenomError, "Le prénom est requis");
-            valid = false;
-        }
-
-        if (nom.isEmpty()) {
-            showError(nomError, "Le nom est requis");
-            valid = false;
-        }
 
         if (username.isEmpty()) {
             showError(usernameError, "Le nom d'utilisateur est requis");
@@ -249,16 +216,8 @@ public class Inscription {
         if (email.isEmpty()) {
             showError(emailError, "L'email est requis");
             valid = false;
-        } else if (!EMAIL_PATTERN.matcher(email).matches()) {
+        } else if (!UserControl.isValidEmail(email)) {
             showError(emailError, "Format d'email invalide");
-            valid = false;
-        }
-
-        if (telephone.isEmpty()) {
-            showError(telephoneError, "Le téléphone est requis");
-            valid = false;
-        } else if (!PHONE_PATTERN.matcher(telephone).matches()) {
-            showError(telephoneError, "Format de téléphone invalide");
             valid = false;
         }
 
@@ -278,17 +237,30 @@ public class Inscription {
             valid = false;
         }
 
+        CrudUser cu=new CrudUser();
+        if (cu.check_email(email))
+        {
+            showError(emailError, "Il existe déja un compte avec cet email");
+            valid = false;
+        }
+        if (cu.check_Username(username)){
+            showError(usernameError, "Le nom d'utilisateur est déja pris");
+            valid = false;
+        }
+
         if (!valid) {
             shakeNode(rootPane.lookup(".glass-card"));
             return;
         }
 
-        System.out.println("Inscription attempt: " + email);
+
 
         submitBtn.setText("Inscription...");
         submitBtn.setDisable(true);
-
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        User u=new User(username,email,password,"player");
+        cu.addEntity(u);
+
         pause.setOnFinished(e -> {
             System.out.println("Inscription successful!");
             submitBtn.setText("Créer un compte");

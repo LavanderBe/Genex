@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="rootpane" prefHeight="800" prefWidth="1280" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Dashboard.Dashboard">
+
+    <StackPane styleClass="bg-container">
+        <Region styleClass="orb,orb-1" StackPane.alignment="TOP_LEFT" />
+        <Region styleClass="orb,orb-2" StackPane.alignment="BOTTOM_RIGHT" />
+        <Region styleClass="orb,orb-3" StackPane.alignment="TOP_RIGHT" />
+        <Region styleClass="bg-overlay" />
+    </StackPane>
+
+    <HBox>
+        <!-- ==================== SIDEBAR ==================== -->
+        <VBox minWidth="230" prefWidth="230" spacing="6" styleClass="sidebar">
+            <VBox alignment="CENTER_LEFT" styleClass="sidebar-logo-area">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <GridPane prefHeight="50.0" prefWidth="50.0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <children>
+                            <Region styleClass="logo-icon" />
+                        </children>
+                    </GridPane>
+                    <VBox spacing="0">
+                        <Label styleClass="logo-title" text="Genex" />
+                        <Label styleClass="logo-subtitle" text="ESPORTS HUB" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <Region maxHeight="1" minHeight="1" styleClass="sidebar-divider" />
+
+            <Label styleClass="nav-section-label" text="MENU PRINCIPAL">
+                <VBox.margin><Insets left="15" top="10" /></VBox.margin>
+            </Label>
+
+            <Button fx:id="navDashboard" maxWidth="Infinity" onAction="#navDashboardBtn" styleClass="nav-btn,nav-active" text="  ⊞  Dashboard" />
+
+            <Label styleClass="nav-section-label" text="MANAGEMENT">
+                <VBox.margin><Insets left="15" top="10" /></VBox.margin>
+            </Label>
+
+            <Button fx:id="navUsers" maxWidth="Infinity" onAction="#navUsersBtn" styleClass="nav-btn" text="  ⚙  Utilisateurs" />
+            <Button fx:id="navGames" maxWidth="Infinity" onAction="#navGamesBtn" styleClass="nav-btn" text="  🎮  Jeux" />
+            <Button fx:id="navPlayers" maxWidth="Infinity" onAction="#navPlayersBtn" styleClass="nav-btn" text="  👤  Joueurs" />
+            <Button fx:id="navTeams" maxWidth="Infinity" onAction="#navTeamsBtn" styleClass="nav-btn" text="  🛡  Equipes" />
+            <Button fx:id="navTournaments" maxWidth="Infinity" onAction="#navTournamentsBtn" styleClass="nav-btn" text="  ⚔  Tournois" />
+            <Button fx:id="navForum" maxWidth="Infinity" onAction="#navForumBtn" styleClass="nav-btn" text="  👥  Forums" />
+            <Button fx:id="navtutorials" maxWidth="Infinity" onAction="#navtutorialsBtn" styleClass="nav-btn" text="  📖  Tutoriels" />
+            <Button fx:id="navFinance" maxWidth="Infinity" onAction="#navFinanceBtn" styleClass="nav-btn" text="  📊  Finance" />
+            <Button fx:id="navAccount" maxWidth="Infinity" onAction="#navAccountBtn" styleClass="nav-btn" text="  🔐  Account" />
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <VBox spacing="8" styleClass="sidebar-user-card">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane styleClass="user-avatar">
+                        <Label styleClass="user-avatar-text" text="JD" />
+                    </StackPane>
+                    <VBox spacing="2">
+                        <Label fx:id="adminusername" styleClass="user-name" text="John Doe" />
+                        <Label fx:id="Role" styleClass="user-role" text="Admin" />
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#logout" styleClass="logout-btn" text="⇥" />
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <!-- ==================== MAIN CONTENT AREA ==================== -->
+        <StackPane fx:id="contentArea" styleClass="main-content" HBox.hgrow="ALWAYS">
+
+            <!-- Default Dashboard Content -->
+            <VBox fx:id="dashboardContent" spacing="20">
+                <padding>
+                    <Insets bottom="25" left="25" right="25" top="25" />
+                </padding>
+
+                <!-- Top Bar -->
+                <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+                    <VBox spacing="2">
+                        <Label styleClass="page-title" text="Dashboard" />
+                        <Label fx:id="Welcome_message" styleClass="page-subtitle" text="Bienvenue foulen, voici ce qui se passe" />
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox fx:id="Search" alignment="CENTER_LEFT" spacing="8" styleClass="search-bar">
+                        <Label styleClass="search-icon" text="🔍" />
+                        <TextField prefWidth="200" promptText="Search players, teams…" styleClass="search-field" />
+                    </HBox>
+                    <StackPane styleClass="notif-btn">
+                        <Label styleClass="notif-icon" text="🔔" />
+                        <Label styleClass="notif-badge" text="3" StackPane.alignment="TOP_RIGHT" />
+                    </StackPane>
+                </HBox>
+
+                <!-- Stats Cards -->
+                <HBox spacing="16">
+                    <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <StackPane styleClass="stat-icon-wrap,stat-icon-blue">
+                                <Label styleClass="stat-icon" text="⚔" />
+                            </StackPane>
+                            <Label styleClass="stat-label" text="Active Tournaments" />
+                        </HBox>
+                        <Label fx:id="active_tournement_label" styleClass="stat-value" text="24" />
+                        <HBox alignment="CENTER_LEFT" spacing="4">
+                            <Label fx:id="tournement_percentage" styleClass="stat-trend-up" text="▲ 12%" />
+                            <Label styleClass="stat-trend-text" text="vs last month" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <StackPane styleClass="stat-icon-wrap,stat-icon-red">
+                                <Label styleClass="stat-icon" text="🛡" />
+                            </StackPane>
+                            <Label styleClass="stat-label" text="Registered Teams" />
+                        </HBox>
+                        <Label fx:id="number_of_teams" styleClass="stat-value" text="138" />
+                        <HBox alignment="CENTER_LEFT" spacing="4">
+                            <Label fx:id="team_percentage" styleClass="stat-trend-up" text="▲ 7%" />
+                            <Label styleClass="stat-trend-text" text="vs last month" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <StackPane styleClass="stat-icon-wrap,stat-icon-gold">
+                                <Label styleClass="stat-icon" text="👤" />
+                            </StackPane>
+                            <Label styleClass="stat-label" text="Total Players" />
+                        </HBox>
+                        <Label fx:id="number_of_players" styleClass="stat-value" text="2,841" />
+                        <HBox alignment="CENTER_LEFT" spacing="4">
+                            <Label fx:id="player_percentage" styleClass="stat-trend-up" text="▲ 23%" />
+                            <Label styleClass="stat-trend-text" text="vs last month" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <StackPane styleClass="stat-icon-wrap,stat-icon-green">
+                                <Label styleClass="stat-icon" text="🔴" />
+                            </StackPane>
+                            <Label styleClass="stat-label" text="Live Matches" />
+                        </HBox>
+                        <Label styleClass="stat-value" text="7" />
+                        <HBox alignment="CENTER_LEFT" spacing="4">
+                            <Label styleClass="stat-trend-down" text="▼ 2%" />
+                            <Label styleClass="stat-trend-text" text="vs last week" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <!-- Live Matches + Top Players -->
+                <HBox spacing="16" VBox.vgrow="ALWAYS">
+                    <VBox spacing="14" styleClass="glass-card,panel" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label styleClass="panel-title" text="🔴 Live Matches" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button styleClass="link-text" text="View All" />
+                        </HBox>
+                        <!-- Add your live match content here if you want -->
+                    </VBox>
+
+                    <VBox minWidth="320" spacing="14" styleClass="glass-card,panel">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label styleClass="panel-title" text="🏆 Top Players" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button styleClass="link-text" text="Full List" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <!-- Upcoming Tournaments -->
+                <VBox spacing="14" styleClass="glass-card,panel">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label styleClass="panel-title" text="📅 Upcoming Tournaments" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#newtournement" styleClass="primary-btn" text="+ New Tournament" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </HBox>
+</StackPane>

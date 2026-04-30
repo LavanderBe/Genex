@@ -16,7 +16,13 @@ public class User {
     private String role;
     private LocalDateTime created_at;
 
-
+    public User(String username, String email, String salt, String password_hash, String role) {
+        this.username = username;
+        this.email = email;
+        this.salt = salt;
+        this.password_hash = password_hash;
+        this.role = role;
+    }
 
     public User(String username, String email, String password, String role) {
         this.username = username;
@@ -50,6 +56,14 @@ public class User {
     //verifies if the password is correct if we have the user
     public boolean verifyPassword(String password) {
         return hashPassword(password, this.salt).equals(this.password_hash);
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getId() {

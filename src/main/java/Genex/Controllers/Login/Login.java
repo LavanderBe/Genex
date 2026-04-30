@@ -1,6 +1,11 @@
 package Genex.Controllers.Login;
 
+
+import Genex.entities.User;
+import Genex.services.CrudUser;
 import javafx.animation.*;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,7 +36,7 @@ public class Login {
     @FXML private Button toggleSignUp;
     @FXML private Button toggleSignIn;
     @FXML private ImageView bgImage;
-
+    @FXML private Button btnClose;
     private boolean passwordVisible = false;
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -87,9 +92,6 @@ public class Login {
         if (password.isEmpty()) {
             showError(passwordError, "Le mot de passe est requis");
             valid = false;
-        } else if (password.length() < 6) {
-            showError(passwordError, "Minimum 6 caractères");
-            valid = false;
         }
 
         if (!valid) {
@@ -103,8 +105,37 @@ public class Login {
         loginBtn.setDisable(true);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        CrudUser cu=new CrudUser();
+        if (cu.check_email(email)){
+            User u=cu.getUser_withmail(email);
+            if (u.verifyPassword(password)){
+                //load another dashboard depending on the role and then create a session for the logged user (ask about it)
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
+                Parent root = null;
+                try {
+                    root = loader.load();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Stage stage = (Stage) rootPane.getScene().getWindow();
+                Scene currentScene = stage.getScene();
+                Scene scene = new Scene(root);
+
+                scene.setFill(Color.TRANSPARENT);
+
+                stage.setScene(scene);
+                stage.setMaximized(true);
+                stage.show();
+            }
+            else {
+                showError(passwordError, "L'e-mail ou le mot de passe fourni est incorrect");
+            }
+        }
+        else {
+            showError(passwordError, "L'e-mail ou le mot de passe fourni est incorrect");
+        }
         pause.setOnFinished(e -> {
-            System.out.println("Connected successfully!");
             loginBtn.setText("Se connecter");
             loginBtn.setDisable(false);
         });
@@ -139,12 +170,12 @@ public class Login {
 
             Stage stage = (Stage) rootPane.getScene().getWindow();
             Scene currentScene = stage.getScene();
-            double width = currentScene.getWidth();
-            double height = currentScene.getHeight();
-            Scene scene = new Scene(root, width, height);
+            Scene scene = new Scene(root);
+
             scene.setFill(Color.TRANSPARENT);
 
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,5 +216,10 @@ public class Login {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void handleClose(ActionEvent actionEvent) {
+        Platform.exit();
+        System.exit(0);
     }
 }

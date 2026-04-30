@@ -1,4 +1,4 @@
-.root {
+root {
     -fx-font-family: 'Segoe UI', 'Inter', sans-serif;
     -fx-background-color: transparent;
 }
@@ -204,6 +204,27 @@
 
 .primary-btn:pressed {
     -fx-background-color: linear-gradient(to right, #2f4bb8, #4c6ef5);
+    -fx-translate-y: 1;
+}
+
+
+.cancel-btn {
+    -fx-background-color: linear-gradient(to right, #db3b3b, #fa5c5c);
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 600;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #db3b3b66, 12, 0, 0, 4)
+}
+
+.cancel-btn:hover {
+    -fx-background-color: linear-gradient(to right, #f54c4c, #fc7474);
+    -fx-effect: dropshadow(gaussian, #db3b3b99, 16, 0, 0, 6);
+}
+
+.cancel-btn:pressed {
+    -fx-background-color: linear-gradient(to right, #b82f2f, #f54c4c);
     -fx-translate-y: 1;
 }
 
