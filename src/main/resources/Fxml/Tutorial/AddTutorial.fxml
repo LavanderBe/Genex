@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Genex.Controllers.Tutorial.AddTutorialController"
+      spacing="25" prefWidth="500"
+      styleClass="modal-container"
+      stylesheets="@Tutorial.css">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="NEW TUTORIAL" styleClass="modal-title"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="✕" onAction="#handleClose" styleClass="close-button"/>
+    </HBox>
+
+    <VBox spacing="10">
+        <Label text="TITLE" styleClass="field-label"/>
+        <TextField fx:id="titleField" promptText="e.g. Early Game Roaming" styleClass="modal-input"/>
+    </VBox>
+
+    <VBox spacing="10">
+        <Label text="DESCRIPTION" styleClass="field-label"/>
+        <TextArea fx:id="descArea" promptText="Short summary of the training..." prefHeight="100" wrapText="true" styleClass="modal-input"/>
+    </VBox>
+
+    <HBox spacing="20">
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="CATEGORY" styleClass="field-label"/>
+            <ComboBox fx:id="categoryCombo" promptText="Select Category" styleClass="modal-combo" prefWidth="250"/>
+        </VBox>
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="DIFFICULTY" styleClass="field-label"/>
+            <ComboBox fx:id="difficultyCombo" styleClass="modal-combo" prefWidth="200"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="10">
+        <Label text="VIDEO URL" styleClass="field-label"/>
+        <TextField fx:id="videoUrlField" promptText="https://youtube.com/..." styleClass="modal-input"/>
+    </VBox>
+
+    <Button text="CREATE MODULE" onAction="#handleSave" prefWidth="Infinity" styleClass="submit-button"/>
+</VBox>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Genex.Controllers.Quiz.AddQuizController"
+      spacing="20" prefWidth="550"
+      styleClass="modal-container"
+      stylesheets="@../Tutorial/Tutorial.css">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="NEW QUIZ QUESTION" styleClass="modal-title"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="✕" onAction="#handleClose" styleClass="close-button"/>
+    </HBox>
+
+    <VBox spacing="10">
+        <Label text="LINKED TUTORIAL" styleClass="field-label"/>
+        <ComboBox fx:id="tutorialCombo" promptText="Select Tutorial" styleClass="modal-combo" prefWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="10">
+        <Label text="QUESTION" styleClass="field-label"/>
+        <TextArea fx:id="questionArea" promptText="Enter the question text here..." prefHeight="80" wrapText="true" styleClass="modal-input"/>
+    </VBox>
+
+    <GridPane hgap="20" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="OPTION A" styleClass="field-label"/>
+            <TextField fx:id="optAField" styleClass="modal-input"/>
+        </VBox>
+        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="OPTION B" styleClass="field-label"/>
+            <TextField fx:id="optBField" styleClass="modal-input"/>
+        </VBox>
+        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="OPTION C" styleClass="field-label"/>
+            <TextField fx:id="optCField" styleClass="modal-input"/>
+        </VBox>
+        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="OPTION D" styleClass="field-label"/>
+            <TextField fx:id="optDField" styleClass="modal-input"/>
+        </VBox>
+    </GridPane>
+
+    <VBox spacing="10">
+        <Label text="CORRECT ANSWER" styleClass="field-label"/>
+        <HBox spacing="15">
+            <ToggleButton fx:id="btnA" text="A" styleClass="correct-toggle" prefWidth="100"/>
+            <ToggleButton fx:id="btnB" text="B" styleClass="correct-toggle" prefWidth="100"/>
+            <ToggleButton fx:id="btnC" text="C" styleClass="correct-toggle" prefWidth="100"/>
+            <ToggleButton fx:id="btnD" text="D" styleClass="correct-toggle" prefWidth="100"/>
+        </HBox>
+    </VBox>
+
+    <Button text="SAVE QUESTION" onAction="#handleSave" prefWidth="Infinity" styleClass="submit-button"/>
+</VBox>

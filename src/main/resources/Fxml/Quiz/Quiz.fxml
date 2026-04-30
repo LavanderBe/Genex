@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox fx:id="rootBox" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Genex.Controllers.Quiz.QuizController"
+      styleClass="main-container"
+      stylesheets="@../Tutorial/Tutorial.css">
+
+    <!-- Top Navigation -->
+    <HBox spacing="40" alignment="CENTER_LEFT" styleClass="top-nav" prefHeight="70">
+        <padding><Insets left="40" right="40"/></padding>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <StackPane styleClass="logo-box">
+                <Label text="GG" styleClass="logo-icon"/>
+            </StackPane>
+            <VBox alignment="CENTER_LEFT">
+                <Label text="GENEX COACH" styleClass="nav-brand"/>
+                <Label text="COMMAND CENTER" styleClass="nav-subtitle"/>
+            </VBox>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <HBox spacing="35" alignment="CENTER">
+            <Button text="TUTORIALS" onAction="#goToTutorials" styleClass="nav-link"/>
+            <Button text="QUIZZES" styleClass="nav-link, active-link"/>
+            <Button text="PLAYERS" styleClass="nav-link"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <VBox alignment="CENTER_RIGHT">
+                <Label text="Coach Marcus" styleClass="profile-name"/>
+                <Label text="Head of Strategy" styleClass="profile-role"/>
+            </VBox>
+            <Circle radius="20" styleClass="avatar-circle"/>
+        </HBox>
+    </HBox>
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
+        <VBox spacing="40">
+            <padding><Insets top="50" right="60" bottom="50" left="60"/></padding>
+
+            <!-- Header Section -->
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="📹" style="-fx-text-fill: #1e88e5; -fx-font-size: 14px;"/>
+                    <Label text="CAMPAIGN TRAINING" styleClass="subtitle-label"/>
+                </HBox>
+                <Label text="COACH HUB" styleClass="title-label"/>
+                <Label text="Create and manage strategic quizzes for your roster. Shape the meta." styleClass="header-desc"/>
+            </VBox>
+
+            <!-- Search Bar -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <HBox spacing="15" alignment="CENTER_LEFT" styleClass="search-container" HBox.hgrow="ALWAYS">
+                    <Label text="🔍" style="-fx-text-fill: #444444; -fx-font-size: 18px;"/>
+                    <TextField promptText="Search quizzes..." styleClass="search-input" HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Button text="FILTERS" styleClass="filter-button"/>
+            </HBox>
+
+            <VBox spacing="30">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="QUIZ INVENTORY" styleClass="modal-title" style="-fx-font-size: 28px;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button text="+ ADD QUESTION" onAction="#handleAddQuiz" styleClass="primary-button" style="-fx-padding: 10 20;"/>
+                </HBox>
+                <FlowPane fx:id="quizFlowPane" hgap="30" vgap="30" prefWrapLength="1100" />
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</VBox>
