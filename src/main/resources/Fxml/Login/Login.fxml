@@ -1,126 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1280.0" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Login.Login">
+<StackPane fx:id="rootPane" prefHeight="700.0" prefWidth="1100.0" style="-fx-background-color: black;" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Login.Login">
+    <children>
+        <!-- BACKGROUND VIDEO LAYER -->
+        <MediaView fx:id="mediaView" preserveRatio="false" />
 
-    <!-- BACKGROUND -->
-    <Pane fx:id="bgPane" styleClass="bg-container">
-        <ImageView fx:id="bgImage" preserveRatio="false" styleClass="bg-image" />
-        <Pane styleClass="bg-overlay" />
-        <Pane styleClass="orb orb-1" />
-        <Pane styleClass="orb orb-2" />
-        <Pane styleClass="orb orb-3" />
-    </Pane>
+        <!-- SEMI-TRANSPARENT BLUE OVERLAY (To keep the video from being too distracting) -->
+        <Region />
 
-    <HBox alignment="TOP_LEFT" prefHeight="40">
-        <padding>
-            <Insets left="20" top="15" />
-        </padding>
-    </HBox>
-    <!-- RIGHT LAYOUT -->
-    <HBox alignment="CENTER_RIGHT" spacing="40">
+        <!-- HUD OVERLAY (Static complex lines on top of video) -->
+        <AnchorPane mouseTransparent="true">
+            <children>
+                <Line endX="1100" layoutY="100.0" opacity="0.3" stroke="#1F1E4E" strokeWidth="0.5" />
+                <Line endX="1100" layoutY="600.0" opacity="0.3" stroke="#1F1E4E" strokeWidth="0.5" />
+            </children>
+        </AnchorPane>
 
-        <padding>
-            <Insets right="80" />
-        </padding>
-      <AnchorPane prefHeight="615.0" prefWidth="623.0">
-         <children>
-            <Button id="closeBtn" alignment="TOP_LEFT" layoutX="7.0" layoutY="4.0" mnemonicParsing="false" onAction="#handleClose" opacity="0.85" snapToPixel="false" styleClass="cancel-btn" text="X" />
-            <ImageView fitHeight="324.0" fitWidth="735.0" layoutX="92.0" layoutY="162.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
-               <viewport>
-                  <Rectangle2D />
-               </viewport>
-               <image>
-                  <Image url="@../../Images/logo.png" />
-               </image>
-            </ImageView>
-         </children>
-      </AnchorPane>
+        <!-- MAIN LOGIN SHAPE -->
+        <AnchorPane fx:id="loginCard" maxHeight="500.0" maxWidth="450.0">
+            <children>
+                <!-- COMPLEX POLYGON SHAPE -->
+                <SVGPath fx:id="Card" content="M 0 50 L 50 0 L 400 0 L 450 50 L 450 450 L 400 500 L 50 500 L 0 450 Z" strokeWidth="0.0">
+               <fill>
+                  <LinearGradient endX="0.5592417061611374" endY="0.7819905213270142" startX="0.13744075829383887" startY="0.26066350710900477">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.12156862765550613" green="0.11764705926179886" blue="0.30588236451148987" opacity="0.75" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.009502924047410488" green="0.012500000186264515" blue="0.03947368264198303" opacity="0.8600000143051147" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+               <stroke>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.23879142105579376" green="0.17836257815361023" blue="0.6315789222717285" opacity="0.75" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.12156862765550613" green="0.11764705926179886" blue="0.30588236451148987" opacity="0.8500000238418579" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </stroke></SVGPath>
 
-              <!-- PUSH TO RIGHT -->
-        <Region HBox.hgrow="ALWAYS" />
+                <!-- Red Decorative Cut -->
+                <SVGPath content="M 150 0 L 300 0 L 280 20 L 170 20 Z">
+               <fill>
+                  <RadialGradient centerX="0.4944751381215469" centerY="0.5" radius="0.9310344827586208">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="1.0" opacity="0.7033587694168091" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="0.20000000298023224" blue="0.20000000298023224" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </fill></SVGPath>
 
-        <!-- CARD -->
-        <VBox alignment="CENTER" maxWidth="600" prefWidth="500" spacing="10.0" styleClass="glass-card">
+                <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="60.0" prefWidth="350.0" spacing="35.0">
+                    <children>
+                        <VBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Label style="-fx-letter-spacing: 5px;" text="GENEX" textFill="WHITE">
+                                    <font><Font name="System Bold" size="32.0" /></font>
+                                </Label>
+                        <Label alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefWidth="176.0" style="-fx-font-size: 10px;" text="JOIN THE NEXT GENERATION" textFill="RED">
+                           <font>
+                              <Font size="66.0" />
+                           </font>
+                        </Label>
+                            </children>
+                        </VBox>
 
-            <padding>
-                <Insets bottom="40" left="40" right="40" top="40" />
-            </padding>
+                        <VBox spacing="5.0">
+                            <children>
+                                <TextField fx:id="EmailField" promptText="E-MAIL" styleClass="edgy-input" />
+                                <Label fx:id="Errormail" alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefHeight="15.0" prefWidth="337.0" style="-fx-font-size: 10px;" textFill="RED">
+                           <font>
+                              <Font size="66.0" />
+                           </font></Label>
+                                <PasswordField fx:id="passwordField" promptText="ACCESS_KEY" styleClass="edgy-input" />
+                        <Label fx:id="Errorpassword" alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefHeight="15.0" prefWidth="337.0" style="-fx-font-size: 10px;" textFill="RED">
+                           <font>
+                              <Font size="66.0" />
+                           </font>
+                        </Label>
+                            </children>
+                        </VBox>
 
-            <Region prefHeight="20" />
-
-            <!-- TITLE -->
-            <Label styleClass="title-label" text="Se connecter" />
-
-            <Region prefHeight="20" />
-
-            <!-- EMAIL -->
-            <VBox spacing="8" styleClass="field-group">
-                <Label styleClass="field-label" text="Adresse Email" />
-                <StackPane styleClass="input-wrapper">
-                    <TextField fx:id="emailField" promptText="gamer@email.gg" styleClass="input-field" />
-                </StackPane>
-                <Label fx:id="emailError" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <Region prefHeight="10" />
-
-            <!-- PASSWORD -->
-            <VBox spacing="8" styleClass="field-group">
-                <Label styleClass="field-label" text="Mot de passe" />
-                <StackPane styleClass="input-wrapper">
-                    <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input-field" />
-                    <TextField fx:id="passwordVisibleField" managed="false" styleClass="input-field" visible="false" />
-                    <Button fx:id="togglePasswordBtn" onAction="#togglePasswordVisibility" styleClass="eye-btn" text="👁" StackPane.alignment="CENTER_RIGHT">
-                        <StackPane.margin>
-                            <Insets right="10" />
-                        </StackPane.margin>
-                    </Button>
-                </StackPane>
-                <Label fx:id="passwordError" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <Region prefHeight="10" />
-
-            <!-- FORGOT -->
-            <HBox alignment="CENTER_RIGHT">
-                <Hyperlink onAction="#handleForgotPassword" styleClass="link-text" text="Mot de passe oublié ?" />
-            </HBox>
-
-            <Region prefHeight="20" />
-
-            <!-- BUTTON -->
-            <Button fx:id="loginBtn" maxWidth="Infinity" onAction="#handleLogin" prefHeight="52" styleClass="primary-btn" text="Se connecter" />
-
-
-
-            <Region prefHeight="15" />
-
-            <!-- REGISTER -->
-            <HBox alignment="CENTER" spacing="6">
-                <Label styleClass="text-muted" text="Pas de compte ?" />
-                <Hyperlink onAction="#goToInscription" styleClass="link-text" text="S'inscrire" />
-            </HBox>
-         <HBox.margin>
-            <Insets bottom="25.0" top="25.0" />
-         </HBox.margin>
-
-        </VBox>
-    </HBox>
-
+                        <VBox alignment="CENTER" spacing="15.0">
+                            <children>
+                                <Button fx:id="loginBtn" onAction="#handleSignIn" prefHeight="50.0" prefWidth="250.0" styleClass="edgy-button" text="ACCESS SYSTEM" />
+                                <Hyperlink onAction="#handlesignup" styleClass="edgy-link" text="S'INSCRIRE" />
+                        <Hyperlink onAction="#handleForgotPassword" styleClass="edgy-link" text="MOT DE PASSE OUBLIER" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
 </StackPane>

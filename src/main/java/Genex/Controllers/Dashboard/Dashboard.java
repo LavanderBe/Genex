@@ -102,18 +102,17 @@ public class Dashboard {
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login/Login.fxml"));
-            Parent loginRoot = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
+            Scene scene = new Scene(root);
 
             // Get the current stage
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            Scene loginScene = new Scene(loginRoot);
-            loginScene.setFill(Color.TRANSPARENT);   // if you're using transparent style
 
-            stage.setScene(loginScene);
+
+
+            stage.setScene(scene);
             stage.setMaximized(true);
-            stage.centerOnScreen();           // Optional: nice touch
             stage.show();
 
         } catch (IOException e) {

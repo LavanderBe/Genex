@@ -28,34 +28,33 @@
 
                 <Region HBox.hgrow="ALWAYS" />
 
-                <!-- EDGY SESSION BOX -->
-                <HBox alignment="CENTER" spacing="15.0" styleClass="session-container">
-                    <children>
-                        <VBox alignment="CENTER_LEFT" spacing="2.0">
-                            <children>
-                                <Label style="-fx-font-size: 9px; -fx-text-fill: #8e94af;" text="AUTHORIZED_OPERATOR" />
-                                <Label fx:id="sessionUser" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: white;" text="ADMIN_CHEN" />
-                            </children>
-                        </VBox>
-
-                        <!-- Vertical Divider -->
-                        <Region prefWidth="1.0" style="-fx-background-color: #8B0D0D; -fx-opacity: 0.5;" prefHeight="30.0" />
-
-                        <Button mnemonicParsing="false" onAction="#handleLogout" styleClass="logout-btn">
-                            <graphic>
-                                <SVGPath content="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.4-1.4l2.6-2.6H9v-2h9.2l-2.6-2.6L16 7l5 5z" fill="#ff4d4d" scaleX="0.8" scaleY="0.8" />
-                            </graphic>
-                        </Button>
-                    </children>
-                    <padding>
-                        <Insets left="15.0" right="10.0" />
-                    </padding>
-                </HBox>
-
                 <HBox alignment="CENTER" spacing="20.0">
                     <children>
-                        <Label text="LATENCY: 24MS" textFill="#22c55e" />
-                        <Label text="STATUS: SYSTEM_READY" textFill="#5c7cfa" />
+                        <Label text="PING : 24MS" textFill="#22c55e" />
+      
+                      <!-- EDGY SESSION BOX -->
+                      <HBox alignment="CENTER" spacing="15.0" styleClass="session-container">
+                          <children>
+                              <VBox alignment="CENTER_LEFT" spacing="2.0">
+                                  <children>
+                                      <Label style="-fx-font-size: 9px; -fx-text-fill: #8e94af;" text="AUTHORIZED_OPERATOR" />
+                                      <Label fx:id="sessionUser" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: white;" text="ADMIN_CHEN" />
+                                  </children>
+                              </VBox>
+      
+                              <!-- Vertical Divider -->
+                              <Region prefHeight="30.0" prefWidth="1.0" style="-fx-background-color: #8B0D0D; -fx-opacity: 0.5;" />
+      
+                              <Button mnemonicParsing="false" onAction="#handleLogout" styleClass="logout-btn">
+                                  <graphic>
+                                      <SVGPath content="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.4-1.4l2.6-2.6H9v-2h9.2l-2.6-2.6L16 7l5 5z" fill="#ff4d4d" scaleX="0.8" scaleY="0.8" />
+                                  </graphic>
+                              </Button>
+                          </children>
+                          <padding>
+                              <Insets left="15.0" right="10.0" />
+                          </padding>
+                      </HBox>
                     </children>
                 </HBox>
             </children>
