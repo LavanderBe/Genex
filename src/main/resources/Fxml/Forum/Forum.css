@@ -1,0 +1,385 @@
+.main-container {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255,255,255,0.03) 50%, transparent 50%),
+            linear-gradient(to bottom right, #1f1e4e, #000000);
+    -fx-background-size: 100% 4px, 100% 100%;
+}
+
+.top-nav {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(three-pass-box, #090642, 15, 0, 0, 2);
+}
+
+.logo-box {
+    -fx-background-color: rgba(139, 13, 13, 0.16);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+}
+
+.logo-icon {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-weight: 900;
+    -fx-font-size: 16px;
+}
+
+.nav-brand {
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-font-size: 14px;
+    -fx-letter-spacing: 1px;
+}
+
+.nav-subtitle {
+    -fx-text-fill: #5c7cfa;
+    -fx-font-size: 9px;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.5px;
+}
+
+.nav-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666c8a;
+    -fx-font-size: 11px;
+    -fx-font-weight: 900;
+    -fx-cursor: hand;
+    -fx-padding: 10px 18px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 0 0;
+}
+
+.nav-link:hover {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 4;
+}
+
+.active-link {
+    -fx-background-color: linear-gradient(to right, rgba(139, 13, 13, 0.42), transparent);
+    -fx-text-fill: #ff4d4d;
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 6;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 10, 0, 0, 0);
+}
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 900;
+}
+
+.profile-role {
+    -fx-text-fill: #8e94af;
+    -fx-font-size: 10px;
+}
+
+.avatar-circle {
+    -fx-background-color: rgba(139, 13, 13, 0.1);
+    -fx-background-radius: 50%;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1px;
+    -fx-border-radius: 50%;
+}
+
+.campaign-icon {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 13px;
+    -fx-font-weight: 900;
+}
+
+.subtitle-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #5c7cfa;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1px;
+}
+
+.title-label {
+    -fx-font-weight: 900;
+    -fx-font-size: 50px;
+    -fx-text-fill: white;
+}
+
+.header-desc {
+    -fx-text-fill: #8e94af;
+    -fx-font-size: 15px;
+    -fx-line-spacing: 4px;
+}
+
+.primary-button,
+.submit-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-font-size: 13px;
+    -fx-padding: 14px 24px;
+    -fx-cursor: hand;
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.primary-button:hover,
+.submit-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -1px;
+}
+
+.search-container {
+    -fx-background-color: rgba(0, 0, 0, 0.35);
+    -fx-border-color: rgba(139, 13, 13, 0.5);
+    -fx-border-width: 1px;
+    -fx-padding: 14px 18px;
+}
+
+.search-icon {
+    -fx-text-fill: #5c7cfa;
+}
+
+.search-input {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #6d7390;
+    -fx-font-size: 14px;
+}
+
+.modal-container {
+    -fx-background-color: rgba(0, 0, 0, 0.35);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.2), 20, 0, 0, 0);
+}
+
+.featured-card {
+    -fx-background-color: linear-gradient(to right, rgba(139,13,13,0.28), rgba(21, 24, 44, 0.92));
+    -fx-border-color: rgba(255, 77, 77, 0.42);
+    -fx-border-width: 1px;
+    -fx-padding: 22px;
+}
+
+.featured-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+}
+
+.featured-meta {
+    -fx-text-fill: #bac3df;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.featured-desc {
+    -fx-text-fill: #dce4ff;
+    -fx-font-size: 13px;
+}
+
+.mood-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: 900;
+    -fx-padding: 5px 10px;
+}
+
+.mood-active {
+    -fx-background-color: rgba(255, 96, 96, 0.2);
+    -fx-text-fill: #ff8c8c;
+}
+
+.mood-help {
+    -fx-background-color: rgba(255, 201, 71, 0.2);
+    -fx-text-fill: #ffcf6d;
+}
+
+.mood-strategy {
+    -fx-background-color: rgba(122, 166, 255, 0.2);
+    -fx-text-fill: #93b9ff;
+}
+
+.mood-update {
+    -fx-background-color: rgba(76, 217, 164, 0.2);
+    -fx-text-fill: #70e5ba;
+}
+
+.trend-chip {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-text-fill: #d8deee;
+    -fx-font-size: 11px;
+    -fx-font-weight: 900;
+    -fx-padding: 5px 10px;
+}
+
+.cards-flow {
+    -fx-padding: 4px;
+}
+
+.forum-card {
+    -fx-background-color: rgba(12, 16, 33, 0.88);
+    -fx-border-color: rgba(139, 13, 13, 0.45);
+    -fx-border-width: 1px;
+    -fx-padding: 16px;
+    -fx-cursor: hand;
+}
+
+.forum-card:hover {
+    -fx-border-color: #ff4d4d;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.32), 18, 0, 0, 0);
+    -fx-translate-y: -3px;
+}
+
+.forum-card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+    -fx-font-weight: 900;
+}
+
+.forum-card-desc {
+    -fx-text-fill: #9da9c9;
+    -fx-font-size: 13px;
+}
+
+.forum-card-meta {
+    -fx-text-fill: #7f8ab0;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.modal-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+}
+
+.field-label {
+    -fx-text-fill: #8e94af;
+    -fx-font-size: 10px;
+    -fx-font-weight: 900;
+}
+
+.modal-input {
+    -fx-background-color: #12162c;
+    -fx-text-fill: white;
+    -fx-border-color: rgba(139, 13, 13, 0.55);
+    -fx-border-width: 1px;
+    -fx-padding: 12px;
+    -fx-font-size: 13px;
+}
+
+.modal-input:focused {
+    -fx-border-color: #5c7cfa;
+}
+
+.modal-input.text-area {
+    -fx-padding: 0;
+}
+
+.modal-input.text-area .content,
+.modal-input.text-area .viewport {
+    -fx-background-color: transparent;
+}
+
+.modal-input.text-area .text {
+    -fx-fill: white;
+}
+
+.modal-combo {
+    -fx-background-color: #12162c;
+    -fx-border-color: rgba(139, 13, 13, 0.55);
+    -fx-border-width: 1px;
+    -fx-padding: 4px 10px;
+}
+
+.modal-combo .label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+.modal-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.modal-combo .arrow {
+    -fx-background-color: #5c7cfa;
+}
+
+.modal-combo > .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #dce4ff;
+}
+
+.modal-combo .list-view {
+    -fx-background-color: #12162c;
+    -fx-border-color: rgba(139, 13, 13, 0.65);
+}
+
+.modal-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b7c2e4;
+    -fx-padding: 10px 12px;
+}
+
+.modal-combo .list-cell:hover {
+    -fx-background-color: rgba(92, 124, 250, 0.2);
+    -fx-text-fill: white;
+}
+
+.modal-combo .list-cell:selected {
+    -fx-background-color: rgba(139, 13, 13, 0.45);
+    -fx-text-fill: white;
+}
+
+.action-button {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-text-fill: #9ea7c7;
+    -fx-font-size: 11px;
+    -fx-font-weight: 900;
+    -fx-padding: 8px 14px;
+    -fx-border-color: rgba(139,13,13,0.3);
+    -fx-border-width: 1px;
+}
+
+.action-button:hover {
+    -fx-background-color: rgba(139,13,13,0.35);
+    -fx-text-fill: white;
+}
+
+.table-placeholder {
+    -fx-text-fill: #8189a8;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.custom-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.custom-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.custom-scroll .scroll-bar:vertical,
+.custom-scroll .scroll-bar:horizontal {
+    -fx-background-color: rgba(31, 30, 78, 0.3);
+    -fx-background-radius: 0;
+}
+
+.custom-scroll .scroll-bar .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+
+.custom-scroll .scroll-bar .thumb:hover {
+    -fx-background-color: #ff3333;
+}
+
+.custom-scroll .scroll-bar .track,
+.custom-scroll .scroll-bar .increment-button,
+.custom-scroll .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}

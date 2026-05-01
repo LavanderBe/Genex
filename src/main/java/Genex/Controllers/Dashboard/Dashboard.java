@@ -39,28 +39,14 @@ public class Dashboard {
 
     @FXML
     void navPlayerBtn(ActionEvent event) {
-        try {
-            setActiveButton((Button) event.getSource());
-            // 1. Load the new FXML file
-            // Note: Adjust the path if your FXML files are in a different folder
-            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Player/Player.fxml"));
+        setActiveButton((Button) event.getSource());
+        loadView("/Fxml/Player/Player.fxml");
+    }
 
-            // 2. Clear the existing content
-            contentArea.getChildren().clear();
-
-            // 3. Add the new content
-            contentArea.getChildren().add(root);
-
-            // 4. Ensure the new content scales to fit the AnchorPane
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-
-        } catch (IOException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Error loading FXML: ");
-        }
+    @FXML
+    private void navForumBtn(ActionEvent event) {
+        setActiveButton((Button) event.getSource());
+        loadView("/Fxml/Forum/Forum.fxml");
     }
 
 
@@ -69,11 +55,13 @@ public class Dashboard {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent newView = loader.load();
             contentArea.getChildren().setAll(newView);
+            AnchorPane.setTopAnchor(newView, 0.0);
+            AnchorPane.setBottomAnchor(newView, 0.0);
+            AnchorPane.setLeftAnchor(newView, 0.0);
+            AnchorPane.setRightAnchor(newView, 0.0);
 
         } catch (IOException e) {
-            e.printStackTrace();
-            // You can show an error alert here later
-            System.err.println("Error loading view: " + fxmlPath);
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, "Error loading view: " + fxmlPath, e);
         }
     }
 

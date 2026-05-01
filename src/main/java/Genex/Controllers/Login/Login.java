@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Login {
+    private static final String ACCESS_EMAIL = "admin@genex.local";
+    private static final String ACCESS_PASSWORD = "Genex@2026";
 
     @FXML
     private TextField EmailField;
@@ -112,41 +114,43 @@ public class Login {
         loginBtn.setDisable(true);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        CrudUser cu=new CrudUser();
-        if (cu.check_email(email)){
-            User u=cu.getUser_withmail(email);
-            if (u.verifyPassword(password)){
-                //load another dashboard depending on the role and then create a session for the logged user (ask about it)
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
-                Parent root = null;
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        if (ACCESS_EMAIL.equalsIgnoreCase(email) && ACCESS_PASSWORD.equals(password)) {
+            openDashboard();
+        } else {
+            CrudUser cu = new CrudUser();
+            if (cu.check_email(email)) {
+                User u = cu.getUser_withmail(email);
+                if (u.verifyPassword(password)) {
+                    openDashboard();
+                } else {
+                    showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
                 }
-
-                Stage stage = (Stage) rootPane.getScene().getWindow();
-                Scene currentScene = stage.getScene();
-                Scene scene = new Scene(root);
-
-                scene.setFill(Color.TRANSPARENT);
-
-                stage.setScene(scene);
-                stage.setMaximized(true);
-                stage.show();
-            }
-            else {
+            } else {
                 showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
             }
-        }
-        else {
-            showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
         }
         pause.setOnFinished(e -> {
             loginBtn.setText("Se connecter");
             loginBtn.setDisable(false);
         });
         pause.play();
+    }
+
+    private void openDashboard() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
     }
     @FXML private void handleForgotPassword(ActionEvent event) { /* Recovery logic */ }
     @FXML void handlesignup(ActionEvent event) {}
