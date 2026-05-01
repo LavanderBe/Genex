@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Sponsors/Sponsors.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
         Scene scene = new Scene(root, 1200, 800);
         primaryStage.setTitle("GENEX - Sponsors");
         primaryStage.setScene(scene);
