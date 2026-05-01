@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.2"
+<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/26"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Genex.Controllers.Forum.PostsController"
             prefHeight="720.0" prefWidth="1280.0"
