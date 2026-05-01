@@ -1,242 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="rootPane"
-           xmlns="http://javafx.com/javafx/23.0.2"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="Genex.Controllers.Inscription.Inscription"
-           stylesheets="@Inscription.css"
-           prefWidth="1200" prefHeight="800">
+<StackPane fx:id="rootPane" prefWidth="1226.0" stylesheets="@Inscription.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Inscription.Inscription">
 
     <!-- BACKGROUND -->
     <Pane fx:id="bgPane" styleClass="bg-container">
-        <ImageView fx:id="bgImage" styleClass="bg-image" preserveRatio="false"/>
-        <Pane styleClass="bg-overlay"/>
-        <Pane styleClass="orb orb-1"/>
-        <Pane styleClass="orb orb-2"/>
-        <Pane styleClass="orb orb-3"/>
+        <ImageView fx:id="bgImage" preserveRatio="false" styleClass="bg-image" />
     </Pane>
 
     <!-- RIGHT ALIGNMENT LIKE LOGIN -->
     <HBox alignment="CENTER_RIGHT" spacing="40">
         <padding>
-            <Insets right="80"/>
+            <Insets right="80" />
         </padding>
 
         <!-- PUSH CONTENT RIGHT -->
-        <Region HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS" />
+      <AnchorPane prefHeight="801.0" prefWidth="570.0">
+         <children>
+            <ImageView fitHeight="418.0" fitWidth="561.0" layoutX="-21.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="203.0">
+               <image>
+                  <Image url="@../../Images/logo.png" />
+               </image>
+            </ImageView>
+            <Button id="closeBtn" alignment="TOP_LEFT" layoutX="-1.0" layoutY="-5.0" mnemonicParsing="false" onAction="#handleClose" opacity="0.85" snapToPixel="false" styleClass="cancel-btn" text="X" />
+         </children>
+      </AnchorPane>
 
         <!-- SCROLLABLE GLASS CARD -->
-        <ScrollPane fitToWidth="true"
-                    hbarPolicy="NEVER"
-                    vbarPolicy="AS_NEEDED"
-                    prefWidth="500"
-                    maxHeight="750"
-                    styleClass="scroll-pane">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" minHeight="-Infinity" prefWidth="500" styleClass="scroll-pane" vbarPolicy="AS_NEEDED">
 
             <content>
-                <VBox fx:id="glassCard"
-                      styleClass="glass-card"
-                      alignment="TOP_CENTER"
-                      spacing="0">
+                <VBox fx:id="glassCard" alignment="CENTER" prefHeight="761.0" prefWidth="500.0" spacing="0" styleClass="glass-card">
 
                     <padding>
-                        <Insets top="40" right="40" bottom="40" left="40"/>
+                        <Insets bottom="40" left="40" right="40" top="40" />
                     </padding>
 
-                    <Region prefHeight="20"/>
+                    <Region prefHeight="20" />
 
                     <!-- TITLE -->
-                    <Label text="Créer un compte" styleClass="title-label"/>
+                    <Label styleClass="title-label" text="Créer un compte" />
 
-                    <Region prefHeight="20"/>
+                    <Region prefHeight="20" />
 
                     <!-- PRÉNOM & NOM -->
-                    <HBox spacing="12" alignment="CENTER">
-
+                    <HBox alignment="CENTER" spacing="12">
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
-                            <Label text="Prénom" styleClass="field-label"/>
-                            <StackPane styleClass="input-wrapper">
-                                <TextField fx:id="prenomField"
-                                           styleClass="input-field"
-                                           promptText="Jean"/>
-                            </StackPane>
-                            <Label fx:id="prenomError"
-                                   styleClass="error-label"
-                                   managed="false"
-                                   visible="false"/>
+                            <Label fx:id="prenomError" managed="false" styleClass="error-label" visible="false" />
                         </VBox>
 
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
-                            <Label text="Nom" styleClass="field-label"/>
-                            <StackPane styleClass="input-wrapper">
-                                <TextField fx:id="nomField"
-                                           styleClass="input-field"
-                                           promptText="Dupont"/>
-                            </StackPane>
-                            <Label fx:id="nomError"
-                                   styleClass="error-label"
-                                   managed="false"
-                                   visible="false"/>
+                            <Label fx:id="nomError" managed="false" styleClass="error-label" visible="false" />
                         </VBox>
 
                     </HBox>
 
-                    <Region prefHeight="14"/>
+                    <Region prefHeight="14" />
 
                     <!-- USERNAME -->
                     <VBox spacing="6">
-                        <Label text="Nom d'utilisateur" styleClass="field-label"/>
+                        <Label styleClass="field-label" text="Nom du Compte" />
                         <StackPane styleClass="input-wrapper">
-                            <TextField fx:id="usernameField"
-                                       styleClass="input-field"
-                                       promptText="jean_dupont"/>
+                            <TextField fx:id="usernameField" promptText="jean_dupont" styleClass="input-field" />
                         </StackPane>
-                        <Label fx:id="usernameError"
-                               styleClass="error-label"
-                               managed="false"
-                               visible="false"/>
+                        <Label fx:id="usernameError" managed="false" styleClass="error-label" visible="false" />
                     </VBox>
 
-                    <Region prefHeight="14"/>
+                    <Region prefHeight="14" />
 
                     <!-- EMAIL -->
                     <VBox spacing="6">
-                        <Label text="Adresse Email" styleClass="field-label"/>
+                        <Label styleClass="field-label" text="Adresse Email" />
                         <StackPane styleClass="input-wrapper">
-                            <TextField fx:id="emailField"
-                                       styleClass="input-field"
-                                       promptText="jean@email.com"/>
+                            <TextField fx:id="emailField" promptText="jean@email.com" styleClass="input-field" />
                         </StackPane>
-                        <Label fx:id="emailError"
-                               styleClass="error-label"
-                               managed="false"
-                               visible="false"/>
+                        <Label fx:id="emailError" managed="false" styleClass="error-label" visible="false" />
                     </VBox>
 
-                    <Region prefHeight="14"/>
-
-                    <!-- TELEPHONE -->
-                    <VBox spacing="6">
-                        <Label text="Téléphone" styleClass="field-label"/>
-                        <StackPane styleClass="input-wrapper">
-                            <TextField fx:id="telephoneField"
-                                       styleClass="input-field"
-                                       promptText="+216 12 345 678"/>
-                        </StackPane>
-                        <Label fx:id="telephoneError"
-                               styleClass="error-label"
-                               managed="false"
-                               visible="false"/>
-                    </VBox>
-
-                    <Region prefHeight="14"/>
+                    <Region prefHeight="14" />
 
                     <!-- PASSWORD -->
                     <VBox spacing="6">
-                        <Label text="Mot de passe" styleClass="field-label"/>
+                        <Label styleClass="field-label" text="Mot de passe" />
                         <StackPane styleClass="input-wrapper">
 
-                            <PasswordField fx:id="passwordField"
-                                           styleClass="input-field"
-                                           promptText="••••••••"/>
+                            <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input-field" />
 
-                            <TextField fx:id="passwordVisibleField"
-                                       styleClass="input-field"
-                                       visible="false"
-                                       managed="false"/>
+                            <TextField fx:id="passwordVisibleField" managed="false" styleClass="input-field" visible="false" />
 
-                            <Button fx:id="togglePasswordBtn"
-                                    text="👁"
-                                    styleClass="eye-btn"
-                                    onAction="#togglePasswordVisibility"
-                                    StackPane.alignment="CENTER_RIGHT">
+                            <Button fx:id="togglePasswordBtn" onAction="#togglePasswordVisibility" styleClass="eye-btn" text="👁" StackPane.alignment="CENTER_RIGHT">
                                 <StackPane.margin>
-                                    <Insets right="10"/>
+                                    <Insets right="10" />
                                 </StackPane.margin>
                             </Button>
 
                         </StackPane>
 
-                        <ProgressBar fx:id="passwordStrengthBar"
-                                     prefHeight="4"
-                                     maxWidth="Infinity"
-                                     progress="0"/>
+                        <ProgressBar fx:id="passwordStrengthBar" maxWidth="Infinity" prefHeight="4" progress="0" />
 
-                        <Label fx:id="passwordStrengthLabel"
-                               text="Force du mot de passe"
-                               styleClass="strength-label"/>
+                        <Label fx:id="passwordStrengthLabel" styleClass="strength-label" text="Force du mot de passe" />
 
-                        <Label fx:id="passwordError"
-                               styleClass="error-label"
-                               managed="false"
-                               visible="false"/>
+                        <Label fx:id="passwordError" managed="false" styleClass="error-label" visible="false" />
                     </VBox>
 
-                    <Region prefHeight="14"/>
+                    <Region prefHeight="14" />
 
                     <!-- CONFIRM PASSWORD -->
                     <VBox spacing="6">
-                        <Label text="Confirmer le mot de passe" styleClass="field-label"/>
+                        <Label styleClass="field-label" text="Confirmer le mot de passe" />
                         <StackPane styleClass="input-wrapper">
 
-                            <PasswordField fx:id="confirmPasswordField"
-                                           styleClass="input-field"
-                                           promptText="••••••••"/>
+                            <PasswordField fx:id="confirmPasswordField" promptText="••••••••" styleClass="input-field" />
 
-                            <TextField fx:id="confirmVisibleField"
-                                       styleClass="input-field"
-                                       visible="false"
-                                       managed="false"/>
+                            <TextField fx:id="confirmVisibleField" managed="false" styleClass="input-field" visible="false" />
 
-                            <Button fx:id="toggleConfirmBtn"
-                                    text="👁"
-                                    styleClass="eye-btn"
-                                    onAction="#toggleConfirmVisibility"
-                                    StackPane.alignment="CENTER_RIGHT">
+                            <Button fx:id="toggleConfirmBtn" onAction="#toggleConfirmVisibility" styleClass="eye-btn" text="👁" StackPane.alignment="CENTER_RIGHT">
                                 <StackPane.margin>
-                                    <Insets right="10"/>
+                                    <Insets right="10" />
                                 </StackPane.margin>
                             </Button>
 
                         </StackPane>
 
-                        <Label fx:id="confirmPasswordError"
-                               styleClass="error-label"
-                               managed="false"
-                               visible="false"/>
+                        <Label fx:id="confirmPasswordError" managed="false" styleClass="error-label" visible="false" />
                     </VBox>
 
-                    <Region prefHeight="14"/>
+                    <Region prefHeight="14" />
 
                     <!-- SUBMIT -->
-                    <Button fx:id="submitBtn"
-                            text="Créer un compte"
-                            styleClass="primary-btn"
-                            onAction="#handleInscription"
-                            maxWidth="Infinity"
-                            prefHeight="48"/>
+                    <Button fx:id="submitBtn" maxWidth="Infinity" onAction="#handleInscription" prefHeight="48" styleClass="primary-btn" text="Créer un compte" />
 
-                    <Region prefHeight="18"/>
+                    <Region prefHeight="18.0" />
 
                     <!-- LOGIN LINK -->
                     <HBox alignment="CENTER" spacing="6">
-                        <Label text="Déjà un compte ?" styleClass="text-muted"/>
-                        <Hyperlink text="Se connecter"
-                                   styleClass="link-text"
-                                   onAction="#goToLogin"/>
+                        <Label styleClass="text-muted" text="Déjà un compte ?" />
+                        <Hyperlink onAction="#goToLogin" styleClass="link-text" text="Se connecter" />
                     </HBox>
 
                 </VBox>
             </content>
+         <HBox.margin>
+            <Insets bottom="20.0" top="20.0" />
+         </HBox.margin>
         </ScrollPane>
 
     </HBox>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 
 </StackPane>

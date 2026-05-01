@@ -1,99 +1,108 @@
 package Genex.Controllers.Login;
 
-import javafx.animation.*;
+import Genex.entities.User;
+import Genex.services.CrudUser;
+import Genex.services.UserControl;
+import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
+import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 public class Login {
 
-    @FXML private StackPane rootPane;
-    @FXML private Pane bgPane;
-    @FXML private TextField emailField;
-    @FXML private PasswordField passwordField;
-    @FXML private TextField passwordVisibleField;
-    @FXML private Button togglePasswordBtn;
-    @FXML private Button loginBtn;
-    @FXML private Label emailError;
-    @FXML private Label passwordError;
-    @FXML private Button toggleSignUp;
-    @FXML private Button toggleSignIn;
-    @FXML private ImageView bgImage;
+    @FXML
+    private TextField EmailField;
 
-    private boolean passwordVisible = false;
+    @FXML
+    private PasswordField passwordField;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$"
-    );
+    @FXML
+    private Label Errormail;
+
+    @FXML
+    private Label Errorpassword;
+
+    @FXML
+    private MediaView mediaView;
+
+    @FXML
+    private Button loginBtn;
+
+    @FXML
+    private StackPane rootPane;
 
     @FXML
     public void initialize() {
-        setupFieldListeners();
-        loadBackgroundImage();
-    }
-
-    private void loadBackgroundImage() {
         try {
-            Image img = new Image(getClass().getResourceAsStream("/Images/esports-arena.jpg"));
-            if (!img.isError()) {
-                bgImage.setImage(img);
-                // Bind image dimensions to parent container for responsive resizing
-                bgImage.fitWidthProperty().bind(bgPane.widthProperty());
-                bgImage.fitHeightProperty().bind(bgPane.heightProperty());
+            // 1. Try to get the resource
+            var resource = getClass().getResource("/Videos/Login.mp4");
+
+            if (resource == null) {
+                // This is what is happening now.
+                System.err.println("CRITICAL: Video file not found at /Genex/Videos/background.mp4");
+                // Optionally set a static background color so the app still runs
+                rootPane.setStyle("-fx-background-color: #050508;");
+                return;
             }
+
+            String path = resource.toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+            mediaView.setMediaPlayer(mediaPlayer);
+            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
+            mediaPlayer.setMute(true);
+            mediaPlayer.play();
+
+            // Stretches video to fill screen
+            mediaView.fitWidthProperty().bind(rootPane.widthProperty());
+            mediaView.fitHeightProperty().bind(rootPane.heightProperty());
+
         } catch (Exception e) {
-            bgImage.setVisible(false);
+            System.err.println("Error initializing media: " + e.getMessage());
         }
     }
 
-    private void setupFieldListeners() {
-        emailField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(emailError);
-        });
-        passwordField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(passwordError);
-        });
-        passwordVisibleField.textProperty().addListener((obs, old, val) -> {
-            passwordField.setText(val);
-        });
-    }
+    @FXML private void handleSignIn(ActionEvent event) {
 
-    @FXML
-    private void handleLogin() {
         boolean valid = true;
-        String email = emailField.getText().trim();
+        showError(Errorpassword, "");
+        showError(Errormail, "");
+        String email = EmailField.getText().trim();
         String password = passwordField.getText();
 
         if (email.isEmpty()) {
-            showError(emailError, "L'email est requis");
+            showError(Errormail, "L'email est requis");
             valid = false;
-        } else if (!EMAIL_PATTERN.matcher(email).matches()) {
-            showError(emailError, "Format d'email invalide");
+        } else if (!UserControl.isValidEmail(email)) {
+            showError(Errormail, "Format d'email invalide");
             valid = false;
         }
 
         if (password.isEmpty()) {
-            showError(passwordError, "Le mot de passe est requis");
-            valid = false;
-        } else if (password.length() < 6) {
-            showError(passwordError, "Minimum 6 caractères");
+            showError(Errorpassword, "Le mot de passe est requis");
             valid = false;
         }
 
         if (!valid) {
-            shakeNode(rootPane.lookup(".glass-card"));
+            shakeNode(rootPane.lookup("#loginCard"));
             return;
         }
 
@@ -103,70 +112,49 @@ public class Login {
         loginBtn.setDisable(true);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        CrudUser cu=new CrudUser();
+        if (cu.check_email(email)){
+            User u=cu.getUser_withmail(email);
+            if (u.verifyPassword(password)){
+                //load another dashboard depending on the role and then create a session for the logged user (ask about it)
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
+                Parent root = null;
+                try {
+                    root = loader.load();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Stage stage = (Stage) rootPane.getScene().getWindow();
+                Scene currentScene = stage.getScene();
+                Scene scene = new Scene(root);
+
+                scene.setFill(Color.TRANSPARENT);
+
+                stage.setScene(scene);
+                stage.setMaximized(true);
+                stage.show();
+            }
+            else {
+                showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
+            }
+        }
+        else {
+            showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
+        }
         pause.setOnFinished(e -> {
-            System.out.println("Connected successfully!");
             loginBtn.setText("Se connecter");
             loginBtn.setDisable(false);
         });
         pause.play();
     }
-
-    @FXML
-    private void togglePasswordVisibility() {
-        passwordVisible = !passwordVisible;
-        if (passwordVisible) {
-            passwordVisibleField.setText(passwordField.getText());
-            passwordVisibleField.setVisible(true);
-            passwordVisibleField.setManaged(true);
-            passwordField.setVisible(false);
-            passwordField.setManaged(false);
-            togglePasswordBtn.setText("🙈");
-        } else {
-            passwordField.setText(passwordVisibleField.getText());
-            passwordField.setVisible(true);
-            passwordField.setManaged(true);
-            passwordVisibleField.setVisible(false);
-            passwordVisibleField.setManaged(false);
-            togglePasswordBtn.setText("👁");
-        }
-    }
-
-    @FXML
-    private void goToInscription() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Inscription/Inscription.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            Scene currentScene = stage.getScene();
-            double width = currentScene.getWidth();
-            double height = currentScene.getHeight();
-            Scene scene = new Scene(root, width, height);
-            scene.setFill(Color.TRANSPARENT);
-
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible d'ouvrir la page d'inscription");
-        }
-    }
-
-    @FXML
-    private void handleForgotPassword() {
-        System.out.println("Forgot password clicked");
-    }
-
+    @FXML private void handleForgotPassword(ActionEvent event) { /* Recovery logic */ }
+    @FXML void handlesignup(ActionEvent event) {}
 
     private void showError(Label label, String message) {
         label.setText(message);
         label.setVisible(true);
         label.setManaged(true);
-    }
-
-    private void hideError(Label label) {
-        label.setVisible(false);
-        label.setManaged(false);
     }
 
     private void shakeNode(javafx.scene.Node node) {
@@ -177,13 +165,5 @@ public class Login {
         shake.setCycleCount(8);
         shake.setInterpolator(Interpolator.LINEAR);
         shake.play();
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

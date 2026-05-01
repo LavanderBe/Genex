@@ -1,0 +1,164 @@
+/* ═══════════════════════════════════════════════════
+   players-style.css — Nexus Esports Hub
+   Primary: #1F1E4E | Secondary: #8B0D0D
+   ═══════════════════════════════════════════════════ */
+
+/* Main Container */
+.main-content {
+    -fx-background-color: transparent;
+}
+
+/* Page Title */
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(31, 30, 78, 0.5), 10, 0, 0, 0);
+}
+
+/* ──────────────── Search Bar ──────────────── */
+.search-field {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-padding: 8 15;
+    -fx-font-size: 13;
+}
+
+.search-field:focused {
+    -fx-border-color: rgba(139, 13, 13, 0.7);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+}
+
+.icon-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.icon-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ──────────────── Player Cards ──────────────── */
+.players-grid {
+    -fx-padding: 10 0;
+}
+
+.player-card {
+    -fx-background-color: rgba(15, 14, 45, 0.65);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
+}
+
+.player-card:hover {
+    -fx-background-color: rgba(31, 30, 78, 0.8);
+    -fx-border-color: rgba(139, 13, 13, 0.5);
+    -fx-translate-y: -5;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.3), 20, 0, 0, 8);
+}
+
+.player-card .name-label {
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+
+.player-card .nick-label {
+    -fx-text-fill: #8B0D0D;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1;
+}
+
+.player-card .role-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 12;
+}
+
+/* ──────────────── ScrollPane Styling ──────────────── */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .track {
+    -fx-background-color: transparent;
+}
+
+/* ──────────────── Action Buttons inside Card ──────────────── */
+.card-edit-btn {
+    -fx-background-color: rgba(59, 91, 219, 0.2);
+    -fx-text-fill: #7ec8f7;
+    -fx-background-radius: 8;
+}
+
+.card-edit-btn:hover {
+    -fx-background-color: #3b5bdb;
+    -fx-text-fill: white;
+}
+
+.card-delete-btn {
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-text-fill: #f87171;
+    -fx-background-radius: 8;
+}
+
+.card-delete-btn:hover {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+}
+
+/* ──────────────── Modal Overlay ──────────────── */
+.modal-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+    -fx-alignment: center;
+}
+
+/* PRIMARY BLUE BUTTON - CYBER LOOK */
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z"; /* Cuts the corners off */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -2;
+}
+
+/* CANCEL RED BUTTON - EDGY */
+.action-red-button {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z"; /* Opposite cut */
+    -fx-cursor: hand;
+}
+.action-red-button:hover {
+    -fx-background-color: #f54c4c;
+    -fx-translate-y: -2;
+}

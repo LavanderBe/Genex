@@ -1,0 +1,173 @@
+/* ROOT SETTINGS */
+.main-container {
+    /* Deep Blue to Black Gradient with a subtle Scanline effect */
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255, 255, 255, 0.03) 50%, transparent 50%),
+            linear-gradient(to bottom right, #1F1E4E, #000000);
+    -fx-background-size: 100% 4px, 100% 100%;
+}
+
+/* TOP BAR - HUD STYLE */
+.top-bar {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 2 0;
+    /* Red Bloom Effect */
+    -fx-effect: dropshadow(three-pass-box, #090642, 15, 0, 0, 2);
+}
+
+.title-text {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+}
+
+/* SIDEBAR - ANGULAR HUD DESIGN */
+.sidebar {
+    -fx-background-color: rgba(10, 10, 25, 0.8);
+    -fx-border-color: transparent #8B0D0D transparent transparent;
+    -fx-border-width: 0 3 0 0;
+}
+
+/* NAVIGATION BUTTONS - SLANTED LOOK */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666c8a;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-transition: 0.2s;
+}
+
+.nav-button:hover {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    /* Glitch-like red border on hover */
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 4;
+}
+
+.nav-button-active {
+    -fx-background-color: linear-gradient(to right, rgba(139, 13, 13, 0.4), transparent);
+    -fx-text-fill: #ff4d4d;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 6;
+    /* Red Neon Glow */
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 10, 0, 0, 0);
+}
+
+/* PRIMARY BLUE BUTTON - CYBER LOOK */
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z"; /* Cuts the corners off */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -2;
+}
+
+/* CANCEL RED BUTTON - EDGY */
+.action-red-button {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z"; /* Opposite cut */
+    -fx-cursor: hand;
+}
+.action-red-button:hover {
+    -fx-background-color: #000000;
+    -fx-translate-y: -2;
+}
+
+/* DECORATIVE HUD ELEMENTS */
+.hud-corner {
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2 0 0 2; /* Only top and left */
+}
+
+/* Make the ScrollPane background transparent to show your gradient */
+.edge-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent; /* Essential for ScrollPane */
+    -fx-border-color: transparent;
+}
+
+/* THE SCROLLBAR TRACK (The background of the bar) */
+.edge-scrollpane .scroll-bar:vertical,
+.edge-scrollpane .scroll-bar:horizontal {
+    -fx-background-color: rgba(31, 30, 78, 0.3); /* Dark Blue/Navy tint */
+    -fx-background-radius: 0;
+    -fx-width: 8px; /* Slim bar */
+}
+
+/* THE THUMB (The part you drag) */
+.edge-scrollpane .scroll-bar:vertical .thumb,
+.edge-scrollpane .scroll-bar:horizontal .thumb {
+    -fx-background-color: #8B0D0D; /* Your Red color */
+    -fx-background-radius: 0;
+    -fx-border-color: #ff4d4d; /* Neon highlight */
+    -fx-border-width: 0;
+}
+
+.edge-scrollpane .scroll-bar:vertical .thumb:hover,
+.edge-scrollpane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #ff3333; /* Glow on hover */
+}
+
+/* HIDE SCROLLBAR BUTTONS (Up/Down arrows) */
+.edge-scrollpane .scroll-bar .increment-button,
+.edge-scrollpane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-shape: ""; /* Removes the arrow shape */
+    -fx-padding: 0;
+}
+
+.edge-scrollpane .scroll-bar .increment-arrow,
+.edge-scrollpane .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* Ensure sidebar buttons don't feel "squeezed" */
+.sidebar {
+    -fx-padding: 10 5 10 5;
+    -fx-background-color: transparent; /* Let the ScrollPane show the main background */
+}
+
+/* The Session Rectangle */
+.session-container {
+    -fx-background-color: rgba(139, 13, 13, 0.1); /* Very faint red background */
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1;
+    -fx-min-height: 45px;
+    /* Optional: Add a slight glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.2), 5, 0, 0, 0);
+}
+
+/* Logout Button Inside the Box */
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-border-color: transparent;
+}
+
+.logout-btn:hover {
+    -fx-background-color: rgba(255, 77, 77, 0.1);
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 0.5;
+}
+
+.logout-btn:pressed {
+    -fx-background-color: #ff4d4d;
+}
+
+.logout-btn:pressed SVGPath {
+    -fx-fill: white;
+}
