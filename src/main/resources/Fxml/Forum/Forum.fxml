@@ -30,11 +30,11 @@
 
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <HBox styleClass="logo-box" alignment="CENTER">
-                    <Label text="GG" styleClass="logo-icon"/>
+                    <Label text="GX" styleClass="logo-icon"/>
                 </HBox>
                 <VBox alignment="CENTER_LEFT">
-                    <Label text="GENEX COACH" styleClass="nav-brand"/>
-                    <Label text="COMMAND CENTER" styleClass="nav-subtitle"/>
+                    <Label text="GENEX" styleClass="nav-brand"/>
+                    <Label text="SYSTEM VERSION 2.0.4" styleClass="nav-subtitle"/>
                 </VBox>
             </HBox>
 
@@ -49,8 +49,8 @@
 
             <HBox alignment="CENTER_RIGHT" spacing="15">
                 <VBox alignment="CENTER_RIGHT">
-                    <Label text="Coach Marcus" styleClass="profile-name"/>
-                    <Label text="Head of Strategy" styleClass="profile-role"/>
+                    <Label text="ADMIN_CHEN" styleClass="profile-name"/>
+                    <Label text="AUTHORIZED_OPERATOR" styleClass="profile-role"/>
                 </VBox>
                 <StackPane styleClass="avatar-container">
                     <Region prefWidth="40" prefHeight="40" styleClass="avatar-circle"/>
@@ -67,9 +67,9 @@
                 <VBox spacing="10" HBox.hgrow="ALWAYS">
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="▶" styleClass="campaign-icon"/>
-                        <Label text="COMMUNITY SPACE" styleClass="subtitle-label"/>
+                        <Label text="TERMINAL // COMMUNITY SPACE" styleClass="subtitle-label"/>
                     </HBox>
-                    <Label text="FORUM HUB" styleClass="title-label"/>
+                    <Label text="FORUM MODULE" styleClass="title-label"/>
                     <Label text="Create and manage community discussions. Keep communication clear and your team aligned."
                            styleClass="header-desc"/>
                 </VBox>
