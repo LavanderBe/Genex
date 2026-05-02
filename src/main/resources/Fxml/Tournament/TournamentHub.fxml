@@ -2,56 +2,43 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Genex.Controllers.Tournament.TournamentHubController"
-      styleClass="tournament-hub" stylesheets="@TournamentHub.css"
-      spacing="0" style="-fx-background-color: #0a0a1a;">
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@TournamentHub.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Tournament.TournamentHubController">
 
-   <!-- Header Bar -->
-   <HBox styleClass="tournament-header" alignment="CENTER_LEFT" spacing="16">
-      <children>
-         <!-- Search Bar -->
-         <StackPane styleClass="search-wrapper" HBox.hgrow="ALWAYS">
-            <children>
-               <TextField fx:id="searchField" promptText="Rechercher un tournoi..." styleClass="search-input" />
-               <HBox alignment="CENTER_RIGHT" styleClass="search-icon-box" pickOnBounds="false">
-                  <children>
-                     <Text styleClass="search-icon" text="🔍" />
-                  </children>
-               </HBox>
-            </children>
-         </StackPane>
+    <VBox fx:id="contentArea" spacing="20" stylesheets="@TournamentHub.css">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
 
-         <!-- Add Tournament Button -->
-         <Button fx:id="btnAddTournament" onAction="#openAddTournamentModal" styleClass="primary-btn" text="➕ Ajouter" />
-      </children>
-   </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Tournois" />
+            <Region HBox.hgrow="ALWAYS" />
 
-   <!-- Tournament Cards Container -->
-   <StackPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a1a;">
-      <children>
-         <!-- Cards Scroll -->
-         <ScrollPane styleClass="tournament-scroll" fitToWidth="true" fitToHeight="true" style="-fx-background-color: #0a0a1a; -fx-background: #0a0a1a;">
+            <Button fx:id="btnAddTournament" onAction="#openAddTournamentModal" styleClass="action-blue-button" stylesheets="@TournamentHub.css" text="+ Nouveau Tournoi" />
+
+            <ComboBox fx:id="comboGameFilter" promptText="Tous les jeux" prefWidth="180" styleClass="filter-combo" />
+
+            <TextField fx:id="searchField" prefWidth="250" promptText="Rechercher un tournoi..." styleClass="search-field" />
+            <Button styleClass="icon-btn" text="🔍" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" styleClass="scroll-pane" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
             <content>
-               <FlowPane fx:id="tournamentCardsContainer" styleClass="cards-container" hgap="20" vgap="20" style="-fx-background-color: #0a0a1a; -fx-min-height: 100%;">
-                  <!-- Tournament cards will be added here dynamically in a grid -->
-               </FlowPane>
+                <VBox fx:id="tournamentCardsContainer" spacing="20" styleClass="tournaments-container">
+                    <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
+                        <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun tournoi trouvé" />
+                    </VBox>
+                </VBox>
             </content>
-         </ScrollPane>
+        </ScrollPane>
+    </VBox>
 
-         <!-- Empty State -->
-         <VBox fx:id="emptyState" styleClass="empty-state" alignment="CENTER" spacing="20" visible="false" managed="false" style="-fx-background-color: #0a0a1a;">
-         </VBox>
-      </children>
-   </StackPane>
-
-</VBox>
+</StackPane>

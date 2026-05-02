@@ -1,22 +1,27 @@
 package Genex.Controllers.Tournament;
 
+import Genex.entities.Center;
+import Genex.entities.Game;
 import Genex.entities.Tounament;
+import Genex.services.CrudCenter;
+import Genex.services.CrudGame;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class AddTournamentModalController {
 
     @FXML
-    private Text modalTitle;
+    private Label modalTitle;
 
     @FXML
     private TextField txtName;
@@ -28,10 +33,10 @@ public class AddTournamentModalController {
     private ComboBox<String> comboType;
 
     @FXML
-    private TextField txtGameId;
+    private ComboBox<Game> comboGame;
 
     @FXML
-    private TextField txtCenterId;
+    private ComboBox<Center> comboCenter;
 
     @FXML
     private DatePicker dateStart;
@@ -42,47 +47,105 @@ public class AddTournamentModalController {
     @FXML
     private TextField txtPrizePool;
 
-    @FXML
-    private Button btnClose;
 
-    @FXML
-    private Button btnCancel;
-
-    @FXML
-    private Button btnSave;
 
     // Error labels
     @FXML
-    private Text errorName;
+    private Label errorName;
 
     @FXML
-    private Text errorFormat;
+    private Label errorFormat;
 
     @FXML
-    private Text errorType;
+    private Label errorType;
 
     @FXML
-    private Text errorStartDate;
+    private Label errorGame;
 
     @FXML
-    private Text errorEndDate;
+    private Label errorCenter;
 
     @FXML
-    private Text errorPrizePool;
+    private Label errorStartDate;
+
+    @FXML
+    private Label errorEndDate;
+
+    @FXML
+    private Label errorPrizePool;
 
     private Consumer<Tounament> onSaveCallback;
+    private Runnable onCloseCallback;
     private Tounament tournamentToEdit;
+
+    private CrudGame crudGame = new CrudGame();
+    private CrudCenter crudCenter = new CrudCenter();
 
     @FXML
     public void initialize() {
         System.out.println("AddTournamentModalController initialized");
 
+        // Set default title for new tournament
+        if (modalTitle != null) {
+            modalTitle.setText("NOUVEAU TOURNOI");
+        }
+
         // Populate combo boxes
         comboFormat.getItems().addAll("Round Robin", "Single Elimination", "Double Elimination");
         comboType.getItems().addAll("Solo", "Team");
 
+        // Load games and centers
+        loadGames();
+        loadCenters();
+
         // Setup validation listeners
         setupValidation();
+    }
+
+    private void loadGames() {
+        try {
+            List<Game> games = crudGame.getgames();
+            comboGame.getItems().addAll(games);
+
+            // Set custom string converter to display game name
+            comboGame.setConverter(new StringConverter<Game>() {
+                @Override
+                public String toString(Game game) {
+                    return game != null ? game.getNom() : "";
+                }
+
+                @Override
+                public Game fromString(String string) {
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("Error loading games: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCenters() {
+        try {
+            List<Center> centers = crudCenter.getAll();
+            comboCenter.getItems().addAll(centers);
+
+            // Set custom string converter to display center name and city
+            comboCenter.setConverter(new StringConverter<Center>() {
+                @Override
+                public String toString(Center center) {
+                    return center != null ? center.getName() + " - " + center.getCity() : "";
+                }
+
+                @Override
+                public Center fromString(String string) {
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("Error loading centers: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void setupValidation() {
@@ -90,6 +153,8 @@ public class AddTournamentModalController {
         txtName.textProperty().addListener((obs, old, val) -> hideError(errorName));
         comboFormat.valueProperty().addListener((obs, old, val) -> hideError(errorFormat));
         comboType.valueProperty().addListener((obs, old, val) -> hideError(errorType));
+        comboGame.valueProperty().addListener((obs, old, val) -> hideError(errorGame));
+        comboCenter.valueProperty().addListener((obs, old, val) -> hideError(errorCenter));
         dateStart.valueProperty().addListener((obs, old, val) -> hideError(errorStartDate));
         dateEnd.valueProperty().addListener((obs, old, val) -> hideError(errorEndDate));
         txtPrizePool.textProperty().addListener((obs, old, val) -> hideError(errorPrizePool));
@@ -97,14 +162,36 @@ public class AddTournamentModalController {
 
     public void setTournament(Tounament tournament) {
         this.tournamentToEdit = tournament;
-        modalTitle.setText("Modifier le Tournoi");
+
+        // Change title to "Modifier"
+        if (modalTitle != null) {
+            modalTitle.setText("MODIFIER TOURNOI");
+        }
 
         // Fill form with tournament data
         txtName.setText(tournament.getTournamentName());
         comboFormat.setValue(tournament.getFormat());
         comboType.setValue(tournament.getParticipant_type());
-        txtGameId.setText(tournament.getGame_id());
-        txtCenterId.setText(tournament.getCenter_id());
+
+        // Select the game by ID
+        if (tournament.getGame_id() != null) {
+            for (Game game : comboGame.getItems()) {
+                if (game.getId().equals(tournament.getGame_id())) {
+                    comboGame.setValue(game);
+                    break;
+                }
+            }
+        }
+
+        // Select the center by ID
+        if (tournament.getCenter_id() != null) {
+            for (Center center : comboCenter.getItems()) {
+                if (center.getCenterId().equals(tournament.getCenter_id())) {
+                    comboCenter.setValue(center);
+                    break;
+                }
+            }
+        }
 
         if (tournament.getStarts_at() != null) {
             dateStart.setValue(tournament.getStarts_at().toLocalDate());
@@ -120,10 +207,15 @@ public class AddTournamentModalController {
         this.onSaveCallback = callback;
     }
 
+    public void setOnCloseCallback(Runnable callback) {
+        this.onCloseCallback = callback;
+    }
+
     @FXML
     private void closeModal() {
-        Stage stage = (Stage) btnClose.getScene().getWindow();
-        stage.close();
+        if (onCloseCallback != null) {
+            onCloseCallback.run();
+        }
     }
 
     @FXML
@@ -139,8 +231,8 @@ public class AddTournamentModalController {
             tournament.setTournamentName(txtName.getText().trim());
             tournament.setFormat(comboFormat.getValue());
             tournament.setParticipant_type(comboType.getValue());
-            tournament.setGame_id(txtGameId.getText().trim());
-            tournament.setCenter_id(txtCenterId.getText().trim());
+            tournament.setGame_id(comboGame.getValue().getId());
+            tournament.setCenter_id(comboCenter.getValue().getCenterId());
 
             // Convert dates to LocalDateTime
             if (dateStart.getValue() != null) {
@@ -158,8 +250,6 @@ public class AddTournamentModalController {
             if (onSaveCallback != null) {
                 onSaveCallback.accept(tournament);
             }
-
-            closeModal();
 
         } catch (Exception e) {
             System.err.println("Error saving tournament");
@@ -185,6 +275,18 @@ public class AddTournamentModalController {
         // Validate type
         if (comboType.getValue() == null) {
             showError(errorType, "Le type est requis");
+            valid = false;
+        }
+
+        // Validate game
+        if (comboGame.getValue() == null) {
+            showError(errorGame, "Le jeu est requis");
+            valid = false;
+        }
+
+        // Validate center
+        if (comboCenter.getValue() == null) {
+            showError(errorCenter, "Le centre est requis");
             valid = false;
         }
 
@@ -223,13 +325,13 @@ public class AddTournamentModalController {
         return valid;
     }
 
-    private void showError(Text errorLabel, String message) {
+    private void showError(Label errorLabel, String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
         errorLabel.setManaged(true);
     }
 
-    private void hideError(Text errorLabel) {
+    private void hideError(Label errorLabel) {
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
     }

@@ -1,19 +1,21 @@
 package Genex.Controllers.Tournament;
 
+import Genex.entities.Center;
+import Genex.entities.Game;
 import Genex.entities.Tounament;
+import Genex.services.CrudCenter;
+import Genex.services.CrudGame;
 import Genex.services.CrudTournament;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -22,6 +24,9 @@ public class TournamentCardController {
 
     @FXML
     private Text txtName;
+
+    @FXML
+    private Text txtGame;
 
     @FXML
     private StackPane statusBadge;
@@ -39,6 +44,9 @@ public class TournamentCardController {
     private Text txtDates;
 
     @FXML
+    private Text txtCenter;
+
+    @FXML
     private Button btnView;
 
     @FXML
@@ -49,6 +57,10 @@ public class TournamentCardController {
 
     private Tounament tournament;
     private Runnable onUpdateCallback;
+    private StackPane rootStackPane;
+    private VBox contentArea;
+    private CrudGame crudGame = new CrudGame();
+    private CrudCenter crudCenter = new CrudCenter();
 
     @FXML
     public void initialize() {
@@ -60,24 +72,75 @@ public class TournamentCardController {
         updateCard();
     }
 
+    public void setRootStackPane(StackPane rootStackPane, VBox contentArea) {
+        this.rootStackPane = rootStackPane;
+        this.contentArea = contentArea;
+    }
+
     private void updateCard() {
         if (tournament == null) return;
 
         // Set tournament name
         txtName.setText(tournament.getTournamentName());
 
-        // Set format
-        txtFormat.setText(tournament.getFormat());
+        // Set game name
+        if (tournament.getGame_id() != null) {
+            try {
+                Game game = crudGame.getgames().stream()
+                        .filter(g -> g.getId().equals(tournament.getGame_id()))
+                        .findFirst()
+                        .orElse(null);
+                
+                if (game != null) {
+                    txtGame.setText(game.getNom());
+                } else {
+                    txtGame.setText("Jeu inconnu");
+                }
+            } catch (Exception e) {
+                txtGame.setText("Jeu inconnu");
+                e.printStackTrace();
+            }
+        } else {
+            txtGame.setText("Jeu non spécifié");
+        }
+
+        // Set format with participant type
+        String formatText = tournament.getFormat();
+        if (tournament.getParticipant_type() != null) {
+            formatText += " • " + tournament.getParticipant_type();
+        }
+        txtFormat.setText(formatText);
 
         // Set prize pool
         txtPrize.setText(String.format("%.0f €", tournament.getPrize_pool()));
 
-        // Set dates
+        // Set dates with year
         if (tournament.getStarts_at() != null && tournament.getEnds_at() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
-            String startDate = tournament.getStarts_at().format(formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+            String startDate = tournament.getStarts_at().format(DateTimeFormatter.ofPattern("dd MMM"));
             String endDate = tournament.getEnds_at().format(formatter);
             txtDates.setText(startDate + " - " + endDate);
+        }
+
+        // Set center name and city
+        if (tournament.getCenter_id() != null) {
+            try {
+                Center center = crudCenter.getAll().stream()
+                        .filter(c -> c.getCenterId().equals(tournament.getCenter_id()))
+                        .findFirst()
+                        .orElse(null);
+                
+                if (center != null) {
+                    txtCenter.setText(center.getName() + " - " + center.getCity());
+                } else {
+                    txtCenter.setText("Centre inconnu");
+                }
+            } catch (Exception e) {
+                txtCenter.setText("Centre inconnu");
+                e.printStackTrace();
+            }
+        } else {
+            txtCenter.setText("Centre non spécifié");
         }
 
         // Set status (for now, just set as "ACTIF")
@@ -100,19 +163,22 @@ public class TournamentCardController {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/AddTournamentModal.fxml"));
-            Parent modalRoot = loader.load();
+            Parent editTournamentForm = loader.load();
 
-            // Create modal stage
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initStyle(StageStyle.TRANSPARENT);
-            modalStage.setTitle("Modifier le Tournoi");
+            // 1. Apply Blur effect to the background
+            GaussianBlur blur = new GaussianBlur(15);
+            contentArea.setEffect(blur);
+            contentArea.setDisable(true);
 
-            Scene scene = new Scene(modalRoot);
-            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-            modalStage.setScene(scene);
+            // 2. Wrap the form in a darkening overlay
+            VBox overlay = new VBox(editTournamentForm);
+            overlay.setAlignment(javafx.geometry.Pos.CENTER);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
 
-            // Get controller and set tournament data
+            // 3. Add to the stack
+            rootStackPane.getChildren().add(overlay);
+
+            // 4. Get controller and set tournament data
             AddTournamentModalController controller = loader.getController();
             controller.setTournament(tournament);
             controller.setOnSaveCallback(updatedTournament -> {
@@ -122,15 +188,23 @@ public class TournamentCardController {
                 CrudTournament crudTournament = new CrudTournament();
                 crudTournament.updateEntity(updatedTournament, tournament.getTournamentId());
 
+                // Remove overlay
+                rootStackPane.getChildren().remove(overlay);
+                contentArea.setEffect(null);
+                contentArea.setDisable(false);
+
                 // Refresh the hub
                 if (onUpdateCallback != null) {
                     onUpdateCallback.run();
                 }
-
-                modalStage.close();
             });
 
-            modalStage.showAndWait();
+            // Handle close without saving
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(overlay);
+                contentArea.setEffect(null);
+                contentArea.setDisable(false);
+            });
 
         } catch (Exception e) {
             System.err.println("Error opening edit modal");

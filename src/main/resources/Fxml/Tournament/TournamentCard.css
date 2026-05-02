@@ -1,121 +1,130 @@
 /* ============================================
    GENEX - Tournament Card Stylesheet
-   Square Card Design with Glassmorphism
+   Horizontal Layout Design
    ============================================ */
 
 .tournament-card {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 20;
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-width: 1.5;
-    -fx-border-radius: 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0.3, 0, 6);
+    -fx-background-color: rgba(15, 14, 45, 0.65);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
     -fx-cursor: hand;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
 }
 
 .tournament-card:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-border-color: rgba(100, 120, 255, 0.4);
-    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 30, 0.4, 0, 10);
-    -fx-translate-y: -4;
+    -fx-background-color: rgba(31, 30, 78, 0.8);
+    -fx-border-color: rgba(139, 13, 13, 0.5);
+    -fx-translate-y: -3;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.3), 20, 0, 0, 8);
 }
 
-/* ====================== HEADER ====================== */
-.card-header {
-    -fx-padding: 28 20 20 20;
-    -fx-background-color: linear-gradient(to bottom, rgba(100, 120, 255, 0.15), transparent);
-    -fx-background-radius: 20 20 0 0;
+/* ====================== ICON SECTION ====================== */
+.card-icon-section {
+    -fx-padding: 0 20 0 0;
 }
 
 .tournament-icon-container {
-    -fx-background-color: linear-gradient(to bottom right, rgba(100, 120, 255, 0.3), rgba(150, 100, 255, 0.2));
+    -fx-background-color: rgba(139, 13, 13, 0.2);
     -fx-background-radius: 50%;
-    -fx-min-width: 80;
-    -fx-min-height: 80;
-    -fx-max-width: 80;
-    -fx-max-height: 80;
-    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.5), 20, 0.4, 0, 4);
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+    -fx-border-color: rgba(139, 13, 13, 0.4);
+    -fx-border-width: 2;
+    -fx-border-radius: 50%;
 }
 
 .tournament-icon {
-    -fx-font-size: 40;
+    -fx-font-size: 36;
 }
 
-/* ====================== BODY ====================== */
-.card-body {
-    -fx-padding: 20 20 16 20;
-    -fx-alignment: top-center;
+/* ====================== CONTENT SECTION ====================== */
+.card-content-section {
+    -fx-padding: 0 20 0 0;
 }
 
 .tournament-name {
     -fx-fill: white;
-    -fx-font-size: 18;
+    -fx-font-size: 20;
     -fx-font-weight: 700;
-    -fx-text-alignment: center;
+}
+
+.game-name {
+    -fx-fill: rgba(139, 13, 13, 0.9);
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+    -fx-font-style: italic;
 }
 
 /* Status Badge */
 .status-badge {
-    -fx-background-color: rgba(80, 200, 120, 0.25);
+    -fx-background-color: rgba(34, 197, 94, 0.2);
     -fx-background-radius: 10;
     -fx-padding: 6 16;
-    -fx-border-color: rgba(80, 200, 120, 0.4);
+    -fx-border-color: rgba(34, 197, 94, 0.4);
     -fx-border-width: 1;
     -fx-border-radius: 10;
 }
 
 .status-badge.upcoming {
-    -fx-background-color: rgba(100, 120, 255, 0.25);
-    -fx-border-color: rgba(100, 120, 255, 0.4);
+    -fx-background-color: rgba(92, 124, 250, 0.2);
+    -fx-border-color: rgba(92, 124, 250, 0.4);
 }
 
 .status-badge.finished {
-    -fx-background-color: rgba(150, 150, 150, 0.25);
+    -fx-background-color: rgba(150, 150, 150, 0.2);
     -fx-border-color: rgba(150, 150, 150, 0.4);
 }
 
 .status-text {
-    -fx-fill: #51cf66;
+    -fx-fill: #22c55e;
     -fx-font-size: 11;
     -fx-font-weight: 700;
     -fx-letter-spacing: 0.5;
 }
 
 .status-badge.upcoming .status-text {
-    -fx-fill: #748ffc;
+    -fx-fill: #5c7cfa;
 }
 
 .status-badge.finished .status-text {
     -fx-fill: #adb5bd;
 }
 
-/* Details */
-.detail-row {
-    -fx-background-color: rgba(255, 255, 255, 0.04);
-    -fx-background-radius: 10;
-    -fx-padding: 10 14;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
+/* Details Grid */
+.details-grid {
+    -fx-padding: 8 0;
+}
+
+.detail-item {
+    -fx-padding: 0;
 }
 
 .detail-icon {
-    -fx-font-size: 16;
+    -fx-font-size: 18;
+}
+
+.detail-label {
+    -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 9;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
 }
 
 .detail-value {
-    -fx-fill: rgba(255, 255, 255, 0.85);
+    -fx-fill: rgba(255, 255, 255, 0.95);
     -fx-font-size: 13;
     -fx-font-weight: 600;
 }
 
-/* ====================== FOOTER ====================== */
-.card-footer {
-    -fx-padding: 16 16 18 16;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-width: 1.5 0 0 0;
-    -fx-background-color: rgba(0, 0, 0, 0.15);
-    -fx-background-radius: 0 0 20 20;
+/* ====================== ACTIONS SECTION ====================== */
+.card-actions-section {
+    -fx-padding: 0;
+    -fx-min-width: 120;
 }
 
 /* Action Buttons */
@@ -138,33 +147,23 @@
 }
 
 .view-btn {
-    -fx-background-color: linear-gradient(to right, rgba(100, 120, 255, 0.3), rgba(120, 140, 255, 0.2));
-    -fx-border-color: rgba(100, 120, 255, 0.4);
+    -fx-background-color: rgba(59, 91, 219, 0.2);
+    -fx-border-color: rgba(59, 91, 219, 0.4);
 }
 
 .view-btn:hover {
-    -fx-background-color: linear-gradient(to right, rgba(100, 120, 255, 0.4), rgba(120, 140, 255, 0.3));
-    -fx-border-color: rgba(100, 120, 255, 0.6);
-    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 12, 0.3, 0, 0);
-}
-
-.icon-btn {
-    -fx-min-width: 42;
-    -fx-max-width: 42;
-    -fx-padding: 10;
-    -fx-font-size: 16;
+    -fx-background-color: #3b5bdb;
+    -fx-text-fill: white;
 }
 
 .icon-btn:hover {
     -fx-background-color: rgba(100, 180, 255, 0.2);
     -fx-border-color: rgba(100, 180, 255, 0.4);
-    -fx-effect: dropshadow(gaussian, rgba(100, 180, 255, 0.3), 10, 0.3, 0, 0);
 }
 
 .delete-icon-btn:hover {
-    -fx-background-color: rgba(255, 107, 107, 0.2);
-    -fx-border-color: rgba(255, 107, 107, 0.4);
-    -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.3), 10, 0.3, 0, 0);
+    -fx-background-color: rgba(139, 13, 13, 0.3);
+    -fx-border-color: rgba(139, 13, 13, 0.5);
 }
 
 .action-btn:pressed {
@@ -174,11 +173,9 @@
 
 /* Hover effect on entire card */
 .tournament-card:hover .tournament-icon-container {
-    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.7), 25, 0.5, 0, 6);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-border-color: rgba(139, 13, 13, 0.7);
 }
 
 .tournament-card:hover .tournament-name {
-    -fx-fill: #748ffc;
+    -fx-fill: #8B0D0D;
 }

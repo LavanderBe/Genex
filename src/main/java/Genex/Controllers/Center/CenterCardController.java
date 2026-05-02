@@ -5,30 +5,29 @@ import Genex.services.CrudCenter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
 public class CenterCardController {
 
     @FXML
-    private Text centerName;
+    private Label centerName;
 
     @FXML
-    private Text centerCity;
+    private Label centerCity;
 
     @FXML
-    private Text centerAddress;
+    private Label centerAddress;
 
     @FXML
-    private Text centerEmail;
+    private Label centerEmail;
 
     @FXML
     private Button btnViewMap;
@@ -42,10 +41,17 @@ public class CenterCardController {
     private Center center;
     private Runnable onClickCallback;
     private Runnable onUpdateCallback;
+    private StackPane rootStackPane;
+    private VBox contentArea;
 
     public void setCenter(Center center) {
         this.center = center;
         updateUI();
+    }
+
+    public void setRootStackPane(StackPane rootStackPane, VBox contentArea) {
+        this.rootStackPane = rootStackPane;
+        this.contentArea = contentArea;
     }
 
     private void updateUI() {
@@ -89,19 +95,22 @@ public class CenterCardController {
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Center/AddCenterModal.fxml"));
-            Parent modalRoot = loader.load();
-            
-            // Create modal stage
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initStyle(StageStyle.TRANSPARENT);
-            modalStage.setTitle("Modifier le Centre");
-            
-            Scene scene = new Scene(modalRoot);
-            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-            modalStage.setScene(scene);
-            
-            // Get controller and set center data
+            Parent editCenterForm = loader.load();
+
+            // 1. Apply Blur effect to the background
+            GaussianBlur blur = new GaussianBlur(15);
+            contentArea.setEffect(blur);
+            contentArea.setDisable(true);
+
+            // 2. Wrap the form in a darkening overlay
+            VBox overlay = new VBox(editCenterForm);
+            overlay.setAlignment(javafx.geometry.Pos.CENTER);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
+
+            // 3. Add to the stack
+            rootStackPane.getChildren().add(overlay);
+
+            // 4. Get controller and set center data
             AddCenterModalController controller = loader.getController();
             controller.setCenter(center);
             controller.setOnSaveCallback(updatedCenter -> {
@@ -111,15 +120,23 @@ public class CenterCardController {
                 CrudCenter crudCenter = new CrudCenter();
                 crudCenter.updateEntity(updatedCenter, center.getCenterId());
                 
+                // Remove overlay
+                rootStackPane.getChildren().remove(overlay);
+                contentArea.setEffect(null);
+                contentArea.setDisable(false);
+                
                 // Refresh the hub
                 if (onUpdateCallback != null) {
                     onUpdateCallback.run();
                 }
-                
-                modalStage.close();
             });
-            
-            modalStage.showAndWait();
+
+            // Handle close without saving
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(overlay);
+                contentArea.setEffect(null);
+                contentArea.setDisable(false);
+            });
             
         } catch (Exception e) {
             System.err.println("Error opening edit modal");

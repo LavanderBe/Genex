@@ -2,56 +2,40 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Genex.Controllers.Center.CenterHubController"
-      styleClass="center-hub" stylesheets="@CenterHub.css"
-      spacing="0" style="-fx-background-color: #0a0a1a;">
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@CenterHub.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Center.CenterHubController">
 
-   <!-- Header Bar -->
-   <HBox styleClass="center-header" alignment="CENTER_LEFT" spacing="16">
-      <children>
-         <!-- Search Bar -->
-         <StackPane styleClass="search-wrapper" HBox.hgrow="ALWAYS">
-            <children>
-               <TextField fx:id="searchField" promptText="Rechercher un centre..." styleClass="search-input" />
-               <HBox alignment="CENTER_RIGHT" styleClass="search-icon-box" pickOnBounds="false">
-                  <children>
-                     <Text styleClass="search-icon" text="🔍" />
-                  </children>
-               </HBox>
-            </children>
-         </StackPane>
+    <VBox fx:id="contentArea" spacing="20" stylesheets="@CenterHub.css">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
 
-         <!-- Add Center Button -->
-         <Button fx:id="btnAddCenter" onAction="#openAddCenterModal" styleClass="primary-btn" text="➕ Ajouter" />
-      </children>
-   </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Centres" />
+            <Region HBox.hgrow="ALWAYS" />
 
-   <!-- Center Cards Container -->
-   <StackPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a1a;">
-      <children>
-         <!-- Cards Scroll -->
-         <ScrollPane styleClass="center-scroll" fitToWidth="true" fitToHeight="true" style="-fx-background-color: #0a0a1a; -fx-background: #0a0a1a;">
+            <Button fx:id="btnAddCenter" onAction="#openAddCenterModal" styleClass="action-blue-button" stylesheets="@CenterHub.css" text="+ Nouveau Centre" />
+
+            <TextField fx:id="searchField" prefWidth="250" promptText="Rechercher un centre..." styleClass="search-field" />
+            <Button styleClass="icon-btn" text="🔍" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" styleClass="scroll-pane" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
             <content>
-               <FlowPane fx:id="centerCardsContainer" styleClass="cards-container" hgap="20" vgap="20" style="-fx-background-color: #0a0a1a; -fx-min-height: 100%;">
-                  <!-- Center cards will be added here dynamically in a grid -->
-               </FlowPane>
+                <VBox fx:id="centerCardsContainer" spacing="20" styleClass="centers-container">
+                    <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
+                        <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun centre trouvé" />
+                    </VBox>
+                </VBox>
             </content>
-         </ScrollPane>
+        </ScrollPane>
+    </VBox>
 
-         <!-- Empty State -->
-         <VBox fx:id="emptyState" styleClass="empty-state" alignment="CENTER" spacing="20" visible="false" managed="false" style="-fx-background-color: #0a0a1a;">
-         </VBox>
-      </children>
-   </StackPane>
-
-</VBox>
+</StackPane>

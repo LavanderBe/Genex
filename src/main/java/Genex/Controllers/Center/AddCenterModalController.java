@@ -2,9 +2,8 @@ package Genex.Controllers.Center;
 
 import Genex.entities.Center;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.function.Consumer;
@@ -13,7 +12,7 @@ import java.util.regex.Pattern;
 public class AddCenterModalController {
 
     @FXML
-    private Text modalTitle;
+    private Label modalTitle;
 
     @FXML
     private TextField txtName;
@@ -30,29 +29,23 @@ public class AddCenterModalController {
     @FXML
     private TextField txtMapUrl;
 
-    @FXML
-    private Button btnClose;
 
-    @FXML
-    private Button btnCancel;
-
-    @FXML
-    private Button btnSave;
 
     // Error labels
     @FXML
-    private Text errorName;
+    private Label errorName;
 
     @FXML
-    private Text errorAddress;
+    private Label errorAddress;
 
     @FXML
-    private Text errorCity;
+    private Label errorCity;
 
     @FXML
-    private Text errorEmail;
+    private Label errorEmail;
 
     private Consumer<Center> onSaveCallback;
+    private Runnable onCloseCallback;
     private Center centerToEdit;
 
     // Email validation pattern
@@ -63,6 +56,11 @@ public class AddCenterModalController {
     @FXML
     public void initialize() {
         System.out.println("AddCenterModalController initialized");
+        
+        // Set default title for new center
+        if (modalTitle != null) {
+            modalTitle.setText("NOUVEAU CENTRE");
+        }
         
         // Setup validation listeners
         setupValidation();
@@ -78,7 +76,11 @@ public class AddCenterModalController {
 
     public void setCenter(Center center) {
         this.centerToEdit = center;
-        modalTitle.setText("Modifier le Centre");
+        
+        // Change title to "Modifier"
+        if (modalTitle != null) {
+            modalTitle.setText("MODIFIER CENTRE");
+        }
         
         // Fill form with center data
         txtName.setText(center.getName());
@@ -92,10 +94,15 @@ public class AddCenterModalController {
         this.onSaveCallback = callback;
     }
 
+    public void setOnCloseCallback(Runnable callback) {
+        this.onCloseCallback = callback;
+    }
+
     @FXML
     private void closeModal() {
-        Stage stage = (Stage) btnClose.getScene().getWindow();
-        stage.close();
+        if (onCloseCallback != null) {
+            onCloseCallback.run();
+        }
     }
 
     @FXML
@@ -120,9 +127,7 @@ public class AddCenterModalController {
             if (onSaveCallback != null) {
                 onSaveCallback.accept(center);
             }
-            
-            closeModal();
-            
+
         } catch (Exception e) {
             System.err.println("Error saving center");
             e.printStackTrace();
@@ -162,13 +167,13 @@ public class AddCenterModalController {
         return valid;
     }
 
-    private void showError(Text errorLabel, String message) {
+    private void showError(Label errorLabel, String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
         errorLabel.setManaged(true);
     }
 
-    private void hideError(Text errorLabel) {
+    private void hideError(Label errorLabel) {
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
     }

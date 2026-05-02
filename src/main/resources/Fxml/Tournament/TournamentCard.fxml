@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<HBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Tournament.TournamentCardController"
       styleClass="tournament-card" stylesheets="@TournamentCard.css"
-      spacing="0" prefWidth="280" prefHeight="280">
+      spacing="0" prefWidth="650" prefHeight="180" alignment="CENTER_LEFT">
 
-   <!-- Card Header with Icon and Status -->
-   <HBox styleClass="card-header" alignment="CENTER">
+   <!-- Left Section: Icon -->
+   <VBox styleClass="card-icon-section" alignment="CENTER">
       <children>
          <StackPane styleClass="tournament-icon-container">
             <children>
@@ -22,64 +22,94 @@
             </children>
          </StackPane>
       </children>
-   </HBox>
+   </VBox>
 
-   <!-- Card Body -->
-   <VBox styleClass="card-body" spacing="16" VBox.vgrow="ALWAYS">
+   <!-- Middle Section: Content -->
+   <VBox styleClass="card-content-section" spacing="12" HBox.hgrow="ALWAYS">
       <children>
-         <!-- Tournament Name -->
-         <VBox spacing="6">
+         <!-- Header: Name and Status -->
+         <HBox alignment="CENTER_LEFT" spacing="15">
             <children>
-               <Text fx:id="txtName" styleClass="tournament-name" text="Champions League" textAlignment="CENTER" wrappingWidth="240" />
+               <VBox spacing="4" HBox.hgrow="ALWAYS">
+                  <children>
+                     <Text fx:id="txtName" styleClass="tournament-name" text="Champions League 2026" />
+                     <Text fx:id="txtGame" styleClass="game-name" text="Valorant" />
+                  </children>
+               </VBox>
                <StackPane fx:id="statusBadge" styleClass="status-badge" alignment="CENTER">
                   <children>
                      <Text fx:id="txtStatus" styleClass="status-text" text="ACTIF" />
                   </children>
                </StackPane>
             </children>
-         </VBox>
+         </HBox>
 
-         <!-- Spacer -->
-         <Region VBox.vgrow="ALWAYS" />
-
-         <!-- Key Details -->
-         <VBox spacing="10">
+         <!-- Details Grid -->
+         <HBox spacing="20" styleClass="details-grid">
             <children>
                <!-- Prize Pool -->
-               <HBox spacing="8" alignment="CENTER" styleClass="detail-row">
+               <HBox spacing="8" alignment="CENTER_LEFT" styleClass="detail-item">
                   <children>
                      <Text styleClass="detail-icon" text="💰" />
-                     <Text fx:id="txtPrize" styleClass="detail-value" text="50,000 €" />
+                     <VBox spacing="2">
+                        <children>
+                           <Text styleClass="detail-label" text="PRIZE POOL" />
+                           <Text fx:id="txtPrize" styleClass="detail-value" text="50,000 €" />
+                        </children>
+                     </VBox>
                   </children>
                </HBox>
 
-               <!-- Format -->
-               <HBox spacing="8" alignment="CENTER" styleClass="detail-row">
+               <!-- Format & Type -->
+               <HBox spacing="8" alignment="CENTER_LEFT" styleClass="detail-item">
                   <children>
                      <Text styleClass="detail-icon" text="📋" />
-                     <Text fx:id="txtFormat" styleClass="detail-value" text="Single Elimination" />
+                     <VBox spacing="2">
+                        <children>
+                           <Text styleClass="detail-label" text="FORMAT" />
+                           <Text fx:id="txtFormat" styleClass="detail-value" text="Single Elim • Solo" />
+                        </children>
+                     </VBox>
                   </children>
                </HBox>
 
                <!-- Dates -->
-               <HBox spacing="8" alignment="CENTER" styleClass="detail-row">
+               <HBox spacing="8" alignment="CENTER_LEFT" styleClass="detail-item">
                   <children>
                      <Text styleClass="detail-icon" text="📅" />
-                     <Text fx:id="txtDates" styleClass="detail-value" text="15 - 20 Mai" />
+                     <VBox spacing="2">
+                        <children>
+                           <Text styleClass="detail-label" text="DATES" />
+                           <Text fx:id="txtDates" styleClass="detail-value" text="15 - 20 Mai 2026" />
+                        </children>
+                     </VBox>
                   </children>
                </HBox>
             </children>
-         </VBox>
+         </HBox>
+
+         <!-- Center Location -->
+         <HBox spacing="8" alignment="CENTER_LEFT" styleClass="detail-item">
+            <children>
+               <Text styleClass="detail-icon" text="📍" />
+               <VBox spacing="2">
+                  <children>
+                     <Text styleClass="detail-label" text="CENTRE" />
+                     <Text fx:id="txtCenter" styleClass="detail-value" text="Gaming Arena - Paris" />
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
       </children>
    </VBox>
 
-   <!-- Card Footer with Actions -->
-   <HBox styleClass="card-footer" spacing="8" alignment="CENTER">
+   <!-- Right Section: Actions -->
+   <VBox styleClass="card-actions-section" spacing="10" alignment="CENTER">
       <children>
-         <Button fx:id="btnView" onAction="#handleView" styleClass="action-btn, view-btn" text="Voir" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
-         <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="action-btn, icon-btn" text="✏️" />
-         <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="action-btn, icon-btn, delete-icon-btn" text="🗑️" />
+         <Button fx:id="btnView" onAction="#handleView" styleClass="action-btn, view-btn" text="Voir" prefWidth="100" />
+         <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="action-btn, icon-btn" text="✎" prefWidth="100" />
+         <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="action-btn, icon-btn, delete-icon-btn" text="🗑" prefWidth="100" />
       </children>
-   </HBox>
+   </VBox>
 
-</VBox>
+</HBox>

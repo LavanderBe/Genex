@@ -5,18 +5,21 @@ import Genex.services.CrudCenter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.util.List;
 
 public class CenterHubController {
+
+    @FXML
+    private StackPane rootStackPane;
+
+    @FXML
+    private VBox contentArea;
 
     @FXML
     private TextField searchField;
@@ -25,7 +28,7 @@ public class CenterHubController {
     private Button btnAddCenter;
 
     @FXML
-    private FlowPane centerCardsContainer;
+    private VBox centerCardsContainer;
 
     @FXML
     private VBox emptyState;
@@ -82,33 +85,42 @@ public class CenterHubController {
             System.out.println("Opening Add Center Modal...");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Center/AddCenterModal.fxml"));
-            Parent modalRoot = loader.load();
-            
-            // Create modal stage
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initStyle(StageStyle.TRANSPARENT);
-            modalStage.setTitle("Nouveau Centre");
-            
-            Scene scene = new Scene(modalRoot);
-            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-            modalStage.setScene(scene);
-            
-            // Get controller and set callback
+            Parent addCenterForm = loader.load();
+
+            // 1. Apply Blur effect to the background
+            GaussianBlur blur = new GaussianBlur(15);
+            contentArea.setEffect(blur);
+            contentArea.setDisable(true); // Prevent clicking background items
+
+            // 2. Wrap the form in a darkening overlay (dimmer)
+            VBox overlay = new VBox(addCenterForm);
+            overlay.setAlignment(javafx.geometry.Pos.CENTER);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
+
+            // 3. Add to the stack
+            rootStackPane.getChildren().add(overlay);
+
+            // 4. Pass a "Close" callback to the AddCenterModalController
             AddCenterModalController controller = loader.getController();
             controller.setOnSaveCallback(center -> {
                 System.out.println("Saving center: " + center.getName());
-                
+
                 // Save to database
                 crudCenter.addEntity(center);
-                
-                // Reload centers from database
+
+                // Remove overlay and reload
+                rootStackPane.getChildren().remove(overlay);
+                contentArea.setEffect(null);
+                contentArea.setDisable(false);
                 loadCentersFromDatabase();
-                
-                modalStage.close();
             });
-            
-            modalStage.showAndWait();
+
+            // Also handle close without saving
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(overlay);
+                contentArea.setEffect(null);
+                contentArea.setDisable(false);
+            });
             
         } catch (Exception e) {
             System.err.println("Error opening Add Center Modal");
@@ -144,6 +156,7 @@ public class CenterHubController {
                 
                 CenterCardController cardController = loader.getController();
                 cardController.setCenter(center);
+                cardController.setRootStackPane(rootStackPane, contentArea);
                 
                 // Set callback to reload centers when card is updated/deleted
                 cardController.setOnUpdateCallback(this::loadCentersFromDatabase);
