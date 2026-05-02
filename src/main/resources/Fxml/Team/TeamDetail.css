@@ -1,58 +1,52 @@
-/* ============================================
-   GENEX - Team Detail Page Stylesheet
-   Glassmorphism Dark Theme
-   ============================================ */
+/* ═══════════════════════════════════════════════════
+   Team Detail Stylesheet — Nexus Esports Hub
+   Primary: #1F1E4E | Secondary: #8B0D0D
+   ═══════════════════════════════════════════════════ */
 
-.team-detail {
-    -fx-background-color: #0a0a1a;
-    -fx-padding: 0;
+/* Main Container */
+.main-content {
+    -fx-background-color: transparent;
 }
 
-/* ====================== HEADER ====================== */
-.detail-header {
-    -fx-padding: 32 40 28 40;
-    -fx-background-color: rgba(20, 20, 40, 0.5);
-    -fx-border-color: rgba(255, 255, 255, 0.12);
-    -fx-border-width: 0 0 1.5 0;
+/* Page Title */
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(31, 30, 78, 0.5), 10, 0, 0, 0);
 }
 
+/* ──────────────── Back Button ──────────────── */
 .back-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
     -fx-font-size: 14;
     -fx-font-weight: 600;
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.12);
-    -fx-border-width: 1.5;
-    -fx-border-radius: 12;
-    -fx-cursor: hand;
-    -fx-padding: 10 20;
 }
 
 .back-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.12);
-    -fx-border-color: rgba(100, 120, 255, 0.4);
+    -fx-background-color: rgba(255, 255, 255, 0.15);
 }
 
-.page-title {
-    -fx-fill: white;
-    -fx-font-size: 28;
-    -fx-font-weight: 700;
-}
-
+/* ──────────────── Team Tag ──────────────── */
 .team-tag-large {
-    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-fill: #ff4d4d;
     -fx-font-size: 20;
     -fx-font-weight: 600;
 }
 
+/* ──────────────── Info Cards ──────────────── */
 .info-card {
-    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-color: rgba(15, 14, 45, 0.65);
     -fx-background-radius: 12;
     -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-width: 1;
     -fx-border-radius: 12;
+    -fx-border-width: 1;
     -fx-padding: 16 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
 }
 
 .info-label {
@@ -67,106 +61,70 @@
     -fx-font-weight: 700;
 }
 
-/* ====================== SECTION HEADER ====================== */
-.section-header {
-    -fx-padding: 28 40 20 40;
-    -fx-background-color: transparent;
-}
-
+/* ──────────────── Section Title ──────────────── */
 .section-title {
-    -fx-fill: white;
+    -fx-text-fill: white;
     -fx-font-size: 20;
     -fx-font-weight: 700;
 }
 
-.primary-btn {
-    -fx-background-color: linear-gradient(to right, #3b5bdb, #5c7cfa);
-    -fx-text-fill: white;
-    -fx-font-size: 14;
-    -fx-font-weight: 600;
-    -fx-background-radius: 12;
-    -fx-cursor: hand;
-    -fx-padding: 12 28;
-    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.5), 15, 0.3, 0, 4);
-}
-
-.primary-btn:hover {
-    -fx-background-color: linear-gradient(to right, #4c6ef5, #748ffc);
-    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.7), 20, 0.4, 0, 6);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.primary-btn:pressed {
-    -fx-background-color: linear-gradient(to right, #2f4bb8, #4c6ef5);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-/* ====================== SCROLL PANE ====================== */
-.sessions-scroll {
-    -fx-background-color: #0a0a1a;
-    -fx-background: #0a0a1a;
-    -fx-padding: 0;
-}
-
-.sessions-scroll > .viewport {
-    -fx-background-color: #0a0a1a;
-    -fx-background: #0a0a1a;
-}
-
-.sessions-scroll .scroll-pane {
-    -fx-background-color: #0a0a1a;
-}
-
-.sessions-scroll .scroll-pane > .viewport {
-    -fx-background-color: #0a0a1a;
-}
-
-.sessions-scroll .scroll-pane > .corner {
-    -fx-background-color: #0a0a1a;
-}
-
-.sessions-scroll .content {
-    -fx-background-color: #0a0a1a;
-}
-
-.sessions-scroll > .scroll-bar:vertical {
-    -fx-background-color: #0a0a1a;
-    -fx-pref-width: 10;
-}
-
-.sessions-scroll > .scroll-bar:vertical .track {
-    -fx-background-color: rgba(255, 255, 255, 0.03);
-    -fx-background-radius: 5;
-}
-
-.sessions-scroll > .scroll-bar:vertical .thumb {
-    -fx-background-color: rgba(255, 255, 255, 0.18);
-    -fx-background-radius: 5;
-}
-
-.sessions-scroll > .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.28);
-}
-
-.sessions-scroll > .scroll-bar:vertical .thumb:pressed {
-    -fx-background-color: rgba(100, 120, 255, 0.4);
-}
-
-/* ====================== SESSIONS CONTAINER ====================== */
+/* ──────────────── Sessions Container ──────────────── */
 .sessions-container {
-    -fx-padding: 0 40 40 40;
-    -fx-alignment: TOP_LEFT;
-    -fx-background-color: #0a0a1a;
-    -fx-min-width: 100%;
-    -fx-min-height: 100%;
+    -fx-padding: 10 0;
 }
 
-/* ====================== EMPTY STATE ====================== */
+/* ──────────────── ScrollPane Styling ──────────────── */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .track {
+    -fx-background-color: transparent;
+}
+
+/* PRIMARY BLUE BUTTON - CYBER LOOK */
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -2;
+}
+
+/* CANCEL RED BUTTON - EDGY */
+.action-red-button {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
+    -fx-cursor: hand;
+}
+
+.action-red-button:hover {
+    -fx-background-color: #f54c4c;
+    -fx-translate-y: -2;
+}
+
+/* ──────────────── Empty State ──────────────── */
 .empty-state {
     -fx-padding: 80 40;
-    -fx-background-color: #0a0a1a;
+    -fx-background-color: transparent;
 }
 
 .empty-icon {

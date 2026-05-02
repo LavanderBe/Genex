@@ -51,15 +51,25 @@ public class TeamCardController {
 
     private Team team;
     private Runnable onUpdateCallback;
-    private StackPane contentContainer; // Reference to main content container
+    private javafx.scene.layout.Pane contentContainer; // Reference to main content container
+    private javafx.scene.layout.StackPane rootStackPane; // Reference to root stack pane
+    private javafx.scene.layout.VBox contentArea; // Reference to content area
 
     public void setTeam(Team team) {
         this.team = team;
         updateUI();
     }
 
-    public void setContentContainer(StackPane contentContainer) {
+    public void setContentContainer(javafx.scene.layout.Pane contentContainer) {
         this.contentContainer = contentContainer;
+    }
+
+    public void setRootStackPane(javafx.scene.layout.StackPane rootStackPane) {
+        this.rootStackPane = rootStackPane;
+    }
+
+    public void setContentArea(javafx.scene.layout.VBox contentArea) {
+        this.contentArea = contentArea;
     }
 
     private void updateUI() {
@@ -188,6 +198,62 @@ public class TeamCardController {
 
         if (team == null) return;
 
+        // Check if we have the required references for overlay modal
+        if (rootStackPane != null && contentArea != null) {
+            openEditModalAsOverlay();
+        } else {
+            // Fallback to old window approach
+            openEditModalAsWindow();
+        }
+    }
+
+    private void openEditModalAsOverlay() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTeamModal.fxml"));
+            Parent editTeamForm = loader.load();
+
+            // 1. Apply Blur effect to the background
+            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+            contentArea.setEffect(blur);
+            contentArea.setDisable(true); // Prevent clicking background items
+
+            // 2. Wrap the form in a darkening overlay (dimmer)
+            javafx.scene.layout.VBox overlay = new javafx.scene.layout.VBox(editTeamForm);
+            overlay.setAlignment(javafx.geometry.Pos.CENTER);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
+
+            // 3. Add to the stack
+            rootStackPane.getChildren().add(overlay);
+
+            // 4. Pass a "Close" callback to the AddTeamModalController
+            AddTeamModalController controller = loader.getController();
+            controller.setTeam(team);
+            controller.setOnSaveCallback(updatedTeam -> {
+                System.out.println("Updating team: " + updatedTeam.getName());
+
+                // Update in database
+                CrudTeam crudTeam = new CrudTeam();
+                crudTeam.updateEntity(updatedTeam, team.getId());
+
+                // Refresh the hub
+                if (onUpdateCallback != null) {
+                    onUpdateCallback.run();
+                }
+            });
+
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(overlay); // Remove form
+                contentArea.setEffect(null);                // Remove blur
+                contentArea.setDisable(false);              // Re-enable content
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error opening edit modal");
+            e.printStackTrace();
+        }
+    }
+
+    private void openEditModalAsWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTeamModal.fxml"));
             Parent modalRoot = loader.load();

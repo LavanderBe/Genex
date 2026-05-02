@@ -20,6 +20,12 @@ import java.util.List;
 public class TeamHubController {
 
     @FXML
+    private StackPane rootStackPane;
+
+    @FXML
+    private VBox contentArea;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -28,12 +34,9 @@ public class TeamHubController {
     @FXML
     private FlowPane teamCardsContainer;
 
-    @FXML
-    private VBox emptyState;
-
     private CrudTeam crudTeam;
     private List<Team> allTeams;
-    private StackPane mainContentContainer; // Reference to main content area
+    private javafx.scene.layout.Pane mainContentContainer; // Reference to main content area
 
     @FXML
     public void initialize() {
@@ -50,9 +53,9 @@ public class TeamHubController {
     }
 
     /**
-     * Set the main content container from MainController
+     * Set the main content container from Dashboard
      */
-    public void setContentContainer(StackPane contentContainer) {
+    public void setContentContainer(javafx.scene.layout.Pane contentContainer) {
         this.mainContentContainer = contentContainer;
         System.out.println("Content container set in TeamHubController");
 
@@ -111,9 +114,8 @@ public class TeamHubController {
     }
 
     private void updateEmptyState() {
-        boolean isEmpty = teamCardsContainer.getChildren().isEmpty();
-        emptyState.setVisible(isEmpty);
-        emptyState.setManaged(isEmpty);
+        // Empty state handling removed to match Player interface
+        // Teams will always show in the grid, even if empty
     }
 
     @FXML
@@ -122,19 +124,22 @@ public class TeamHubController {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTeamModal.fxml"));
-            Parent modalRoot = loader.load();
+            Parent addTeamForm = loader.load();
 
-            // Create modal stage
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initStyle(StageStyle.TRANSPARENT);
-            modalStage.setTitle("Ajouter une Équipe");
+            // 1. Apply Blur effect to the background
+            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+            contentArea.setEffect(blur);
+            contentArea.setDisable(true); // Prevent clicking background items
 
-            Scene scene = new Scene(modalRoot);
-            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-            modalStage.setScene(scene);
+            // 2. Wrap the form in a darkening overlay (dimmer)
+            VBox overlay = new VBox(addTeamForm);
+            overlay.setAlignment(javafx.geometry.Pos.CENTER);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
 
-            // Get controller and set callback
+            // 3. Add to the stack
+            rootStackPane.getChildren().add(overlay);
+
+            // 4. Pass a "Close" callback to the AddTeamModalController
             AddTeamModalController controller = loader.getController();
             controller.setOnSaveCallback(newTeam -> {
                 System.out.println("Saving new team: " + newTeam.getName());
@@ -144,11 +149,13 @@ public class TeamHubController {
 
                 // Reload teams
                 loadTeamsFromDatabase();
-
-                modalStage.close();
             });
 
-            modalStage.showAndWait();
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(overlay); // Remove form
+                contentArea.setEffect(null);                // Remove blur
+                contentArea.setDisable(false);              // Re-enable content
+            });
 
         } catch (Exception e) {
             System.err.println("Error opening add team modal");
@@ -194,6 +201,14 @@ public class TeamHubController {
                     System.out.println("✓ Passed content container to card: " + team.getName());
                 } else {
                     System.out.println("✗ No content container to pass to card: " + team.getName());
+                }
+
+                // Pass rootStackPane and contentArea for overlay modals
+                if (rootStackPane != null) {
+                    cardController.setRootStackPane(rootStackPane);
+                }
+                if (contentArea != null) {
+                    cardController.setContentArea(contentArea);
                 }
 
                 // Set callback to reload teams when card is updated/deleted

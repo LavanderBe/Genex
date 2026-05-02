@@ -22,10 +22,16 @@ import java.util.List;
 public class TeamDetailController {
 
     @FXML
+    private StackPane rootStackPane;
+
+    @FXML
+    private VBox contentArea;
+
+    @FXML
     private Button btnBack;
 
     @FXML
-    private Text teamNameTitle;
+    private javafx.scene.control.Label teamNameTitle;
 
     @FXML
     private Text teamTag;
@@ -44,9 +50,6 @@ public class TeamDetailController {
 
     @FXML
     private FlowPane sessionsContainer;
-
-    @FXML
-    private VBox emptyState;
 
     private Team team;
     private CrudTrainingSession crudTrainingSession;
@@ -124,6 +127,14 @@ public class TeamDetailController {
                 TrainingSessionCardController cardController = loader.getController();
                 cardController.setSession(session);
 
+                // Pass rootStackPane and contentArea for overlay modals
+                if (rootStackPane != null) {
+                    cardController.setRootStackPane(rootStackPane);
+                }
+                if (contentArea != null) {
+                    cardController.setContentArea(contentArea);
+                }
+
                 // Set callback to reload sessions when card is updated/deleted
                 cardController.setOnUpdateCallback(this::loadTrainingSessions);
 
@@ -139,9 +150,7 @@ public class TeamDetailController {
     }
 
     private void updateEmptyState() {
-        boolean isEmpty = sessionsContainer.getChildren().isEmpty();
-        emptyState.setVisible(isEmpty);
-        emptyState.setManaged(isEmpty);
+        // Empty state handling removed to match app theme
     }
 
     @FXML
@@ -149,13 +158,15 @@ public class TeamDetailController {
         System.out.println("Navigating back to Team Hub...");
 
         try {
-            // Find the main content container
+            // Find the main content container (AnchorPane)
             javafx.scene.Node node = btnBack;
-            StackPane contentContainer = null;
+            javafx.scene.layout.Pane contentContainer = null;
 
             while (node != null) {
-                if (node instanceof StackPane && node.getId() != null && node.getId().equals("contentContainer")) {
-                    contentContainer = (StackPane) node;
+                if (node instanceof javafx.scene.layout.AnchorPane) {
+                    // Check if this is the main contentArea
+                    contentContainer = (javafx.scene.layout.Pane) node;
+                    System.out.println("Found AnchorPane container");
                     break;
                 }
                 node = node.getParent();
@@ -172,6 +183,15 @@ public class TeamDetailController {
 
                 contentContainer.getChildren().clear();
                 contentContainer.getChildren().add(teamHub);
+                
+                // Set anchors if it's an AnchorPane
+                if (contentContainer instanceof javafx.scene.layout.AnchorPane) {
+                    javafx.scene.layout.AnchorPane anchorPane = (javafx.scene.layout.AnchorPane) contentContainer;
+                    javafx.scene.layout.AnchorPane.setTopAnchor(teamHub, 0.0);
+                    javafx.scene.layout.AnchorPane.setBottomAnchor(teamHub, 0.0);
+                    javafx.scene.layout.AnchorPane.setLeftAnchor(teamHub, 0.0);
+                    javafx.scene.layout.AnchorPane.setRightAnchor(teamHub, 0.0);
+                }
 
                 System.out.println("Successfully navigated back to Team Hub");
             } else {
@@ -206,19 +226,22 @@ public class TeamDetailController {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTrainingSessionModal.fxml"));
-            Parent modalRoot = loader.load();
+            Parent addSessionForm = loader.load();
 
-            // Create modal stage
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initStyle(StageStyle.TRANSPARENT);
-            modalStage.setTitle("Ajouter une Session");
+            // 1. Apply Blur effect to the background
+            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+            contentArea.setEffect(blur);
+            contentArea.setDisable(true); // Prevent clicking background items
 
-            Scene scene = new Scene(modalRoot);
-            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-            modalStage.setScene(scene);
+            // 2. Wrap the form in a darkening overlay (dimmer)
+            VBox overlay = new VBox(addSessionForm);
+            overlay.setAlignment(javafx.geometry.Pos.CENTER);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
 
-            // Get controller and set team ID
+            // 3. Add to the stack
+            rootStackPane.getChildren().add(overlay);
+
+            // 4. Pass a "Close" callback to the AddTrainingSessionModalController
             AddTrainingSessionModalController controller = loader.getController();
             controller.setTeamId(team.getId());
             controller.setOnSaveCallback(newSession -> {
@@ -229,11 +252,13 @@ public class TeamDetailController {
 
                 // Reload sessions
                 loadTrainingSessions();
-
-                modalStage.close();
             });
 
-            modalStage.showAndWait();
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(overlay); // Remove form
+                contentArea.setEffect(null);                // Remove blur
+                contentArea.setDisable(false);              // Re-enable content
+            });
 
         } catch (Exception e) {
             System.err.println("Error opening add session modal");

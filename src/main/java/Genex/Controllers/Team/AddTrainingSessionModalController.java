@@ -5,9 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 public class AddTrainingSessionModalController {
 
     @FXML
-    private Text modalTitle;
+    private Label modalTitle;
 
     @FXML
     private TextField txtTitle;
@@ -46,9 +46,6 @@ public class AddTrainingSessionModalController {
     private TextArea txtNotes;
 
     @FXML
-    private Button btnClose;
-
-    @FXML
     private Button btnCancel;
 
     @FXML
@@ -56,24 +53,25 @@ public class AddTrainingSessionModalController {
 
     // Error labels
     @FXML
-    private Text errorTitle;
+    private Label errorTitle;
 
     @FXML
-    private Text errorType;
+    private Label errorType;
 
     @FXML
-    private Text errorDate;
+    private Label errorDate;
 
     @FXML
-    private Text errorStartTime;
+    private Label errorStartTime;
 
     @FXML
-    private Text errorEndTime;
+    private Label errorEndTime;
 
     @FXML
-    private Text errorStatus;
+    private Label errorStatus;
 
     private Consumer<TrainingSession> onSaveCallback;
+    private Runnable onCloseCallback;
     private TrainingSession sessionToEdit;
     private String teamId;
 
@@ -148,10 +146,15 @@ public class AddTrainingSessionModalController {
         this.onSaveCallback = callback;
     }
 
+    public void setOnCloseCallback(Runnable callback) {
+        this.onCloseCallback = callback;
+    }
+
     @FXML
     private void closeModal() {
-        Stage stage = (Stage) btnClose.getScene().getWindow();
-        stage.close();
+        if (onCloseCallback != null) {
+            onCloseCallback.run();
+        }
     }
 
     @FXML
@@ -299,7 +302,7 @@ public class AddTrainingSessionModalController {
         return valid;
     }
 
-    private void showError(Text errorLabel, String message) {
+    private void showError(Label errorLabel, String message) {
         if (errorLabel != null) {
             errorLabel.setText(message);
             errorLabel.setVisible(true);
@@ -307,7 +310,7 @@ public class AddTrainingSessionModalController {
         }
     }
 
-    private void hideError(Text errorLabel) {
+    private void hideError(Label errorLabel) {
         if (errorLabel != null) {
             errorLabel.setVisible(false);
             errorLabel.setManaged(false);

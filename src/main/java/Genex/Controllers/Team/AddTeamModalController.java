@@ -5,8 +5,8 @@ import Genex.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class AddTeamModalController {
 
     @FXML
-    private Text modalTitle;
+    private Label modalTitle;
 
     @FXML
     private TextField txtName;
@@ -36,13 +36,10 @@ public class AddTeamModalController {
     private Button btnUploadLogo;
 
     @FXML
-    private Text txtLogoFileName;
+    private Label txtLogoFileName;
 
     @FXML
     private ChoiceBox<Team.Status> choiceStatus;
-
-    @FXML
-    private Button btnClose;
 
     @FXML
     private Button btnCancel;
@@ -52,15 +49,16 @@ public class AddTeamModalController {
 
     // Error labels
     @FXML
-    private Text errorName;
+    private Label errorName;
 
     @FXML
-    private Text errorGameId;
+    private Label errorGameId;
 
     @FXML
-    private Text errorContact;
+    private Label errorContact;
 
     private Consumer<Team> onSaveCallback;
+    private Runnable onCloseCallback;
     private Team teamToEdit;
     private String logoImagePath;
 
@@ -157,10 +155,15 @@ public class AddTeamModalController {
         this.onSaveCallback = callback;
     }
 
+    public void setOnCloseCallback(Runnable callback) {
+        this.onCloseCallback = callback;
+    }
+
     @FXML
     private void closeModal() {
-        Stage stage = (Stage) btnClose.getScene().getWindow();
-        stage.close();
+        if (onCloseCallback != null) {
+            onCloseCallback.run();
+        }
     }
 
     @FXML
@@ -200,6 +203,7 @@ public class AddTeamModalController {
                 onSaveCallback.accept(team);
             }
 
+            // Close modal
             closeModal();
 
         } catch (Exception e) {
@@ -232,7 +236,7 @@ public class AddTeamModalController {
         return valid;
     }
 
-    private void showError(Text errorLabel, String message) {
+    private void showError(Label errorLabel, String message) {
         if (errorLabel != null) {
             errorLabel.setText(message);
             errorLabel.setVisible(true);
@@ -240,7 +244,7 @@ public class AddTeamModalController {
         }
     }
 
-    private void hideError(Text errorLabel) {
+    private void hideError(Label errorLabel) {
         if (errorLabel != null) {
             errorLabel.setVisible(false);
             errorLabel.setManaged(false);
