@@ -116,22 +116,41 @@ public class Login {
         if (cu.check_email(email)){
             User u=cu.getUser_withmail(email);
             if (u.verifyPassword(password)){
-                //load another dashboard depending on the role and then create a session for the logged user (ask about it)
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
-                Parent root = null;
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                if (u.getRole().equals("admin"))
+                {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
+                    Parent root = null;
+                    try {
+                        root = loader.load();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Stage stage = (Stage) rootPane.getScene().getWindow();
+                    double width = stage.getScene().getWidth();
+                    double height = stage.getScene().getHeight();
+                    Scene scene = new Scene(root, width, height);
+                    scene.setFill(Color.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.setMaximized(true);
+                    stage.show();
                 }
-                Stage stage = (Stage) rootPane.getScene().getWindow();
-                double width = stage.getScene().getWidth();
-                double height = stage.getScene().getHeight();
-                Scene scene = new Scene(root, width, height);
-                scene.setFill(Color.TRANSPARENT);
-                stage.setScene(scene);
-                stage.setMaximized(true);
-                stage.show();
+                else{
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
+                    Parent root = null;
+                    try {
+                        root = loader.load();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Stage stage = (Stage) rootPane.getScene().getWindow();
+                    double width = stage.getScene().getWidth();
+                    double height = stage.getScene().getHeight();
+                    Scene scene = new Scene(root, width, height);
+                    scene.setFill(Color.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.setMaximized(true);
+                    stage.show();
+                }
             }
             else {
                 showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
