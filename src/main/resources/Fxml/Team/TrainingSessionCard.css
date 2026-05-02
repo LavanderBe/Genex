@@ -1,0 +1,249 @@
+/* ============================================
+   GENEX - Training Session Card Stylesheet
+   Glassmorphism Dark Theme with Colorful Info Boxes
+   ============================================ */
+
+.session-card {
+    -fx-background-color: linear-gradient(to bottom, rgba(25, 25, 50, 0.85), rgba(20, 20, 40, 0.75));
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 18;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 30, 0.3, 0, 6);
+    -fx-padding: 22;
+    -fx-pref-width: 360;
+    -fx-min-width: 360;
+    -fx-max-width: 360;
+}
+
+.session-card:hover {
+    -fx-border-color: rgba(100, 120, 255, 0.4);
+    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 35, 0.4, 0, 8);
+    -fx-translate-y: -3;
+}
+
+/* ====================== HEADER ====================== */
+.session-icon-container {
+    -fx-background-color: linear-gradient(to bottom right, rgba(100, 120, 255, 0.25), rgba(150, 100, 255, 0.15));
+    -fx-background-radius: 14;
+    -fx-min-width: 56;
+    -fx-min-height: 56;
+    -fx-max-width: 56;
+    -fx-max-height: 56;
+    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 15, 0.3, 0, 3);
+}
+
+.session-icon {
+    -fx-font-size: 28;
+}
+
+.session-title {
+    -fx-fill: white;
+    -fx-font-size: 17;
+    -fx-font-weight: 700;
+}
+
+.session-type-label {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5;
+}
+
+/* Status Badge */
+.status-badge {
+    -fx-background-color: rgba(80, 200, 120, 0.2);
+    -fx-background-radius: 12;
+    -fx-padding: 8 14;
+    -fx-border-color: rgba(80, 200, 120, 0.4);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+}
+
+.status-badge.completed {
+    -fx-background-color: rgba(80, 200, 120, 0.25);
+    -fx-border-color: rgba(80, 200, 120, 0.5);
+}
+
+.status-badge.planned {
+    -fx-background-color: rgba(100, 120, 255, 0.2);
+    -fx-border-color: rgba(100, 120, 255, 0.4);
+}
+
+.status-badge.cancelled {
+    -fx-background-color: rgba(255, 107, 107, 0.2);
+    -fx-border-color: rgba(255, 107, 107, 0.4);
+}
+
+.status-text {
+    -fx-fill: #51cf66;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.8;
+}
+
+.status-badge.planned .status-text {
+    -fx-fill: #748ffc;
+}
+
+.status-badge.cancelled .status-text {
+    -fx-fill: #ff6b6b;
+}
+
+/* ====================== INFO BOXES - COLORFUL RECTANGLES ====================== */
+.info-box {
+    -fx-background-radius: 14;
+    -fx-padding: 14 16;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 12, 0.2, 0, 3);
+}
+
+.info-box:hover {
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 16, 0.3, 0, 5);
+}
+
+/* Date Box - Blue/Purple Gradient */
+.info-box-date {
+    -fx-background-color: linear-gradient(to bottom right, rgba(100, 120, 255, 0.25), rgba(120, 100, 255, 0.15));
+    -fx-border-color: rgba(100, 120, 255, 0.4);
+}
+
+/* Time Box - Cyan/Teal Gradient */
+.info-box-time {
+    -fx-background-color: linear-gradient(to bottom right, rgba(34, 211, 238, 0.25), rgba(20, 184, 166, 0.15));
+    -fx-border-color: rgba(34, 211, 238, 0.4);
+}
+
+/* Duration Box - Orange/Amber Gradient */
+.info-box-duration {
+    -fx-background-color: linear-gradient(to bottom right, rgba(251, 146, 60, 0.25), rgba(245, 158, 11, 0.15));
+    -fx-border-color: rgba(251, 146, 60, 0.4);
+}
+
+/* Location Box - Green/Emerald Gradient */
+.info-box-location {
+    -fx-background-color: linear-gradient(to bottom right, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.15));
+    -fx-border-color: rgba(52, 211, 153, 0.4);
+}
+
+.info-box-icon {
+    -fx-font-size: 18;
+}
+
+.info-box-label {
+    -fx-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 10;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}
+
+.info-box-value {
+    -fx-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+}
+
+/* Hover effects for each box */
+.info-box-date:hover {
+    -fx-background-color: linear-gradient(to bottom right, rgba(100, 120, 255, 0.35), rgba(120, 100, 255, 0.25));
+    -fx-border-color: rgba(100, 120, 255, 0.6);
+}
+
+.info-box-time:hover {
+    -fx-background-color: linear-gradient(to bottom right, rgba(34, 211, 238, 0.35), rgba(20, 184, 166, 0.25));
+    -fx-border-color: rgba(34, 211, 238, 0.6);
+}
+
+.info-box-duration:hover {
+    -fx-background-color: linear-gradient(to bottom right, rgba(251, 146, 60, 0.35), rgba(245, 158, 11, 0.25));
+    -fx-border-color: rgba(251, 146, 60, 0.6);
+}
+
+.info-box-location:hover {
+    -fx-background-color: linear-gradient(to bottom right, rgba(52, 211, 153, 0.35), rgba(16, 185, 129, 0.25));
+    -fx-border-color: rgba(52, 211, 153, 0.6);
+}
+
+/* ====================== NOTES ====================== */
+.notes-container {
+    -fx-background-color: rgba(139, 92, 246, 0.12);
+    -fx-background-radius: 12;
+    -fx-padding: 14;
+    -fx-border-color: rgba(139, 92, 246, 0.3);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+}
+
+.notes-icon {
+    -fx-font-size: 16;
+}
+
+.notes-label {
+    -fx-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}
+
+.notes-text {
+    -fx-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-size: 13;
+    -fx-font-weight: 500;
+    -fx-line-spacing: 2;
+}
+
+/* ====================== BUTTONS ====================== */
+.session-btn-edit {
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+    -fx-background-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-cursor: hand;
+    -fx-padding: 12 18;
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.25), rgba(100, 120, 255, 0.2));
+    -fx-text-fill: white;
+    -fx-border-color: rgba(59, 91, 219, 0.5);
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.3), 10, 0.2, 0, 2);
+}
+
+.session-btn-edit:hover {
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.35), rgba(100, 120, 255, 0.3));
+    -fx-border-color: rgba(59, 91, 219, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.5), 15, 0.3, 0, 4);
+}
+
+.session-btn-edit:pressed {
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.2), rgba(100, 120, 255, 0.15));
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
+}
+
+.session-btn-delete {
+    -fx-background-color: rgba(255, 107, 107, 0.2);
+    -fx-text-fill: #ff6b6b;
+    -fx-border-color: rgba(255, 107, 107, 0.5);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-min-width: 48;
+    -fx-max-width: 48;
+    -fx-padding: 12;
+    -fx-cursor: hand;
+    -fx-font-size: 16;
+    -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.3), 10, 0.2, 0, 2);
+}
+
+.session-btn-delete:hover {
+    -fx-background-color: rgba(255, 107, 107, 0.3);
+    -fx-border-color: rgba(255, 107, 107, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.5), 15, 0.3, 0, 4);
+}
+
+.session-btn-delete:pressed {
+    -fx-background-color: rgba(255, 107, 107, 0.15);
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
+}

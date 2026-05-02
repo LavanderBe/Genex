@@ -16,6 +16,5 @@ public class MainFX extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
-    /*hazebaheba*/
     public static void main(String[] args) { launch(args); }
 }
