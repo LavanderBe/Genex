@@ -1,0 +1,134 @@
+/* ============================================
+   GENEX - Center Card Stylesheet
+   Glassmorphism Dark Theme
+   ============================================ */
+
+.center-card {
+    -fx-background-color: rgba(20, 20, 40, 0.7);
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 40, 0.3, 0, 8);
+    -fx-padding: 24;
+    -fx-cursor: hand;
+    -fx-pref-width: 340;
+    -fx-min-width: 340;
+    -fx-max-width: 340;
+    -fx-pref-height: 280;
+}
+
+.center-card:hover {
+    -fx-border-color: rgba(100, 120, 255, 0.4);
+    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 50, 0.4, 0, 12);
+    -fx-translate-y: -4;
+}
+
+.center-card-header {
+    -fx-spacing: 8;
+}
+
+.center-icon {
+    -fx-font-size: 48;
+}
+
+.center-name {
+    -fx-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+.center-city {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 14;
+    -fx-font-weight: 500;
+}
+
+.center-info-row {
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.center-info-label {
+    -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 14;
+}
+
+.center-info-value {
+    -fx-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+}
+
+.card-action-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+}
+
+.card-action-btn:hover {
+    -fx-background-color: rgba(100, 120, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(100, 120, 255, 0.4);
+}
+
+.card-action-btn:pressed {
+    -fx-background-color: rgba(100, 120, 255, 0.15);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.card-action-btn-edit {
+    -fx-background-color: rgba(59, 91, 219, 0.2);
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(59, 91, 219, 0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+}
+
+.card-action-btn-edit:hover {
+    -fx-background-color: rgba(59, 91, 219, 0.3);
+    -fx-border-color: rgba(59, 91, 219, 0.6);
+}
+
+.card-action-btn-edit:pressed {
+    -fx-background-color: rgba(59, 91, 219, 0.15);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.card-action-btn-delete {
+    -fx-background-color: rgba(255, 107, 107, 0.2);
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 107, 107, 0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.card-action-btn-delete:hover {
+    -fx-background-color: rgba(255, 107, 107, 0.3);
+    -fx-border-color: rgba(255, 107, 107, 0.6);
+}
+
+.card-action-btn-delete:pressed {
+    -fx-background-color: rgba(255, 107, 107, 0.15);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}

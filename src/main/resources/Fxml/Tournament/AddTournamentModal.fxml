@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Tournament.AddTournamentModalController"
+           styleClass="modal-backdrop" stylesheets="@AddTournamentModal.css">
+
+   <VBox styleClass="modal-container" maxWidth="600">
+
+      <!-- Header -->
+      <HBox styleClass="modal-header" alignment="CENTER_LEFT">
+         <children>
+            <Text fx:id="modalTitle" styleClass="modal-title" text="Nouveau Tournoi" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnClose" onAction="#closeModal" styleClass="close-btn" text="✕" />
+         </children>
+      </HBox>
+
+      <!-- Form Content -->
+      <ScrollPane styleClass="modal-scroll" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox styleClass="modal-content" spacing="20">
+
+               <!-- Tournament Name -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="Nom du Tournoi *" />
+                     <TextField fx:id="txtName" promptText="Ex: Champions League 2026" styleClass="form-input" />
+                     <Text fx:id="errorName" styleClass="error-text" visible="false" managed="false" />
+                  </children>
+               </VBox>
+
+               <!-- Format and Type Row -->
+               <HBox spacing="16">
+                  <children>
+                     <!-- Format -->
+                     <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Text styleClass="field-label" text="Format *" />
+                           <ComboBox fx:id="comboFormat" promptText="Sélectionner" styleClass="form-combo" maxWidth="Infinity" />
+                           <Text fx:id="errorFormat" styleClass="error-text" visible="false" managed="false" />
+                        </children>
+                     </VBox>
+
+                     <!-- Participant Type -->
+                     <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Text styleClass="field-label" text="Type *" />
+                           <ComboBox fx:id="comboType" promptText="Sélectionner" styleClass="form-combo" maxWidth="Infinity" />
+                           <Text fx:id="errorType" styleClass="error-text" visible="false" managed="false" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+
+               <!-- Game ID and Center ID Row -->
+               <HBox spacing="16">
+                  <children>
+                     <!-- Game ID -->
+                     <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Text styleClass="field-label" text="ID du Jeu" />
+                           <TextField fx:id="txtGameId" promptText="Ex: GAME001" styleClass="form-input" />
+                        </children>
+                     </VBox>
+
+                     <!-- Center ID -->
+                     <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Text styleClass="field-label" text="ID du Centre" />
+                           <TextField fx:id="txtCenterId" promptText="Ex: CENTER001" styleClass="form-input" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+
+               <!-- Dates Row -->
+               <HBox spacing="16">
+                  <children>
+                     <!-- Start Date -->
+                     <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Text styleClass="field-label" text="Date de Début *" />
+                           <DatePicker fx:id="dateStart" promptText="Sélectionner" styleClass="form-date" maxWidth="Infinity" />
+                           <Text fx:id="errorStartDate" styleClass="error-text" visible="false" managed="false" />
+                        </children>
+                     </VBox>
+
+                     <!-- End Date -->
+                     <VBox spacing="8" styleClass="form-group" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Text styleClass="field-label" text="Date de Fin *" />
+                           <DatePicker fx:id="dateEnd" promptText="Sélectionner" styleClass="form-date" maxWidth="Infinity" />
+                           <Text fx:id="errorEndDate" styleClass="error-text" visible="false" managed="false" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+
+               <!-- Prize Pool -->
+               <VBox spacing="8" styleClass="form-group">
+                  <children>
+                     <Text styleClass="field-label" text="Prize Pool (€) *" />
+                     <TextField fx:id="txtPrizePool" promptText="Ex: 50000" styleClass="form-input" />
+                     <Text fx:id="errorPrizePool" styleClass="error-text" visible="false" managed="false" />
+                  </children>
+               </VBox>
+
+            </VBox>
+         </content>
+      </ScrollPane>
+
+      <!-- Footer Actions -->
+      <HBox styleClass="modal-footer" spacing="12" alignment="CENTER_RIGHT">
+         <children>
+            <Button fx:id="btnCancel" onAction="#closeModal" styleClass="secondary-btn" text="Annuler" />
+            <Button fx:id="btnSave" onAction="#saveTournament" styleClass="primary-btn" text="Enregistrer" />
+         </children>
+      </HBox>
+
+   </VBox>
+
+</StackPane>
