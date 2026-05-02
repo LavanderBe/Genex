@@ -100,6 +100,47 @@ public class Dashboard {
         loadView("/Fxml/Dashboard/DashboardHome.fxml");
     }
 
+    @FXML
+    void navTournamentBtn(ActionEvent event) {
+        try {
+            setActiveButton((Button) event.getSource());
+            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Tournament/TournamentHub.fxml"));
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(root);
+
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error loading Tournament Hub: " + ex.getMessage());
+        }
+    }
+
+    @FXML
+    void navCenterBtn(ActionEvent event) {
+        try {
+            setActiveButton((Button) event.getSource());
+            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Center/CenterHub.fxml"));
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(root);
+
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error loading Center Hub: " + ex.getMessage());
+        }
+    }
+
+
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

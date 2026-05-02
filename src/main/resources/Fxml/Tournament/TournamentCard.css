@@ -1,0 +1,228 @@
+/* ============================================
+   GENEX - Tournament Card Stylesheet
+   Horizontal Layout Design
+   ============================================ */
+
+.tournament-card {
+    -fx-background-color: rgba(15, 14, 45, 0.65);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
+}
+
+.tournament-card:hover {
+    -fx-background-color: rgba(31, 30, 78, 0.8);
+    -fx-border-color: rgba(139, 13, 13, 0.5);
+    -fx-translate-y: -3;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.3), 20, 0, 0, 8);
+}
+
+/* ====================== ICON SECTION ====================== */
+.card-icon-section {
+    -fx-padding: 0 20 0 0;
+}
+
+.tournament-icon-container {
+    -fx-background-color: rgba(139, 13, 13, 0.2);
+    -fx-background-radius: 50%;
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+    -fx-border-color: rgba(139, 13, 13, 0.4);
+    -fx-border-width: 2;
+    -fx-border-radius: 50%;
+}
+
+.tournament-icon {
+    -fx-font-size: 36;
+}
+
+/* ====================== CONTENT SECTION ====================== */
+.card-content-section {
+    -fx-padding: 0 20 0 0;
+}
+
+.tournament-name {
+    -fx-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+.game-name {
+    -fx-fill: rgba(139, 13, 13, 0.9);
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+    -fx-font-style: italic;
+}
+
+/* Status Badge */
+.status-badge {
+    -fx-background-color: rgba(34, 197, 94, 0.2);
+    -fx-background-radius: 10;
+    -fx-padding: 6 16;
+    -fx-border-color: rgba(34, 197, 94, 0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+/* State-specific badge colors */
+.status-badge.state-registration-open {
+    -fx-background-color: rgba(34, 197, 94, 0.2);
+    -fx-border-color: rgba(34, 197, 94, 0.4);
+}
+
+.status-badge.state-registration-closed {
+    -fx-background-color: rgba(251, 146, 60, 0.2);
+    -fx-border-color: rgba(251, 146, 60, 0.4);
+}
+
+.status-badge.state-in-progress {
+    -fx-background-color: rgba(59, 130, 246, 0.2);
+    -fx-border-color: rgba(59, 130, 246, 0.4);
+}
+
+.status-badge.state-completed {
+    -fx-background-color: rgba(139, 92, 246, 0.2);
+    -fx-border-color: rgba(139, 92, 246, 0.4);
+}
+
+.status-badge.state-cancelled {
+    -fx-background-color: rgba(239, 68, 68, 0.2);
+    -fx-border-color: rgba(239, 68, 68, 0.4);
+}
+
+.status-text {
+    -fx-fill: #22c55e;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+.status-badge.state-registration-open .status-text {
+    -fx-fill: #22c55e;
+}
+
+.status-badge.state-registration-closed .status-text {
+    -fx-fill: #fb923c;
+}
+
+.status-badge.state-in-progress .status-text {
+    -fx-fill: #3b82f6;
+}
+
+.status-badge.state-completed .status-text {
+    -fx-fill: #8b5cf6;
+}
+
+.status-badge.state-cancelled .status-text {
+    -fx-fill: #ef4444;
+}
+
+/* Legacy classes for backward compatibility */
+.status-badge.upcoming {
+    -fx-background-color: rgba(92, 124, 250, 0.2);
+    -fx-border-color: rgba(92, 124, 250, 0.4);
+}
+
+.status-badge.finished {
+    -fx-background-color: rgba(150, 150, 150, 0.2);
+    -fx-border-color: rgba(150, 150, 150, 0.4);
+}
+
+.status-badge.upcoming .status-text {
+    -fx-fill: #5c7cfa;
+}
+
+.status-badge.finished .status-text {
+    -fx-fill: #adb5bd;
+}
+
+/* Details Grid */
+.details-grid {
+    -fx-padding: 8 0;
+}
+
+.detail-item {
+    -fx-padding: 0;
+}
+
+.detail-icon {
+    -fx-font-size: 18;
+}
+
+.detail-label {
+    -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 9;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+.detail-value {
+    -fx-fill: rgba(255, 255, 255, 0.95);
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+}
+
+/* ====================== ACTIONS SECTION ====================== */
+.card-actions-section {
+    -fx-padding: 0;
+    -fx-min-width: 120;
+}
+
+/* Action Buttons */
+.action-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+}
+
+.action-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+}
+
+.view-btn {
+    -fx-background-color: rgba(59, 91, 219, 0.2);
+    -fx-border-color: rgba(59, 91, 219, 0.4);
+}
+
+.view-btn:hover {
+    -fx-background-color: #3b5bdb;
+    -fx-text-fill: white;
+}
+
+.icon-btn:hover {
+    -fx-background-color: rgba(100, 180, 255, 0.2);
+    -fx-border-color: rgba(100, 180, 255, 0.4);
+}
+
+.delete-icon-btn:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.3);
+    -fx-border-color: rgba(139, 13, 13, 0.5);
+}
+
+.action-btn:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* Hover effect on entire card */
+.tournament-card:hover .tournament-icon-container {
+    -fx-border-color: rgba(139, 13, 13, 0.7);
+}
+
+.tournament-card:hover .tournament-name {
+    -fx-fill: #8B0D0D;
+}

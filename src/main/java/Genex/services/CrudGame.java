@@ -95,6 +95,7 @@ public class CrudGame {
                         rs.getInt("max_players_per_match"),
                         rs.getString("icon_url")
                 );
+                g.setId(rs.getString("id"));
                 games.add(g);
             }
             return games;
