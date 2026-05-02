@@ -45,3 +45,26 @@
             linear-gradient(to bottom right, #1F1E4E, #000000);
     -fx-background-size: 100% 4px, 100% 100%;
 }
+.social-button {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-font-family: "System Bold";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-padding: 8 15;
+    /* This creates a slight "clipped" corner look */
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 100 L 10 100 L 0 90 Z";
+}
+
+.google-btn:hover {
+    -fx-border-color: #ea4335; /* Google Red */
+    -fx-background-color: rgba(234, 67, 53, 0.1);
+    -fx-effect: dropshadow(three-pass-box, rgba(234, 67, 53, 0.4), 10, 0, 0, 0);
+}
+
+.discord-btn:hover {
+    -fx-border-color: #7289da; /* Discord Blurple */
+    -fx-background-color: rgba(114, 137, 218, 0.1);
+    -fx-effect: dropshadow(three-pass-box, rgba(114, 137, 218, 0.4), 10, 0, 0, 0);
+}

@@ -6,6 +6,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -34,11 +35,11 @@
             </children>
         </AnchorPane>
 
-        <!-- MAIN LOGIN SHAPE -->
-        <AnchorPane fx:id="loginCard" maxHeight="500.0" maxWidth="450.0">
+                    <!-- MAIN LOGIN SHAPE -->
+        <AnchorPane fx:id="loginCard" maxHeight="-Infinity" maxWidth="-Infinity" prefWidth="451.0">
             <children>
                 <!-- COMPLEX POLYGON SHAPE -->
-                <SVGPath fx:id="Card" content="M 0 50 L 50 0 L 400 0 L 450 50 L 450 450 L 400 500 L 50 500 L 0 450 Z" strokeWidth="0.0">
+                <SVGPath fx:id="Card" content="M 0 50 L 50 0 L 400 0 L 450 50 L 450 500 L 400 550 L 50 550 L 0 500 Z" strokeWidth="0.0">
                <fill>
                   <LinearGradient endX="0.5592417061611374" endY="0.7819905213270142" startX="0.13744075829383887" startY="0.26066350710900477">
                      <stops>
@@ -70,9 +71,10 @@
                         </Stop>
                      </stops>
                   </LinearGradient>
-               </stroke></SVGPath>
+               </stroke>
+            </SVGPath>
 
-                <!-- Red Decorative Cut -->
+                            <!-- Red Decorative Cut -->
                 <SVGPath content="M 150 0 L 300 0 L 280 20 L 170 20 Z">
                <fill>
                   <RadialGradient centerX="0.4944751381215469" centerY="0.5" radius="0.9310344827586208">
@@ -89,16 +91,19 @@
                         </Stop>
                      </stops>
                   </RadialGradient>
-               </fill></SVGPath>
+               </fill>
+            </SVGPath>
 
-                <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="60.0" prefWidth="350.0" spacing="35.0">
+                            <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="60.0" prefWidth="350.0" spacing="35.0">
                     <children>
                         <VBox alignment="CENTER" spacing="5.0">
                             <children>
                                 <Label style="-fx-letter-spacing: 5px;" text="GENEX" textFill="WHITE">
-                                    <font><Font name="System Bold" size="32.0" /></font>
+                                    <font>
+                              <Font name="System Bold" size="32.0" />
+                           </font>
                                 </Label>
-                        <Label alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefWidth="176.0" style="-fx-font-size: 10px;" text="JOIN THE NEXT GENERATION" textFill="RED">
+                        <Label alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefWidth="176.0" style="-fx-font-size: 10px;" text="PROTOCOLE D'AUTHENTIFICATION" textFill="RED">
                            <font>
                               <Font size="66.0" />
                            </font>
@@ -106,13 +111,14 @@
                             </children>
                         </VBox>
 
-                        <VBox spacing="5.0">
+                                    <VBox spacing="5.0">
                             <children>
                                 <TextField fx:id="EmailField" promptText="E-MAIL" styleClass="edgy-input" />
                                 <Label fx:id="Errormail" alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefHeight="15.0" prefWidth="337.0" style="-fx-font-size: 10px;" textFill="RED">
                            <font>
                               <Font size="66.0" />
-                           </font></Label>
+                           </font>
+                        </Label>
                                 <PasswordField fx:id="passwordField" promptText="ACCESS_KEY" styleClass="edgy-input" />
                         <Label fx:id="Errorpassword" alignment="CENTER" contentDisplay="CENTER" opacity="0.93" prefHeight="15.0" prefWidth="337.0" style="-fx-font-size: 10px;" textFill="RED">
                            <font>
@@ -121,12 +127,18 @@
                         </Label>
                             </children>
                         </VBox>
-
+                        <VBox alignment="CENTER" spacing="10">
+                             <Button fx:id="loginBtn" onAction="#handleSignIn" prefHeight="50.0" prefWidth="250.0" styleClass="edgy-button" text="ACCÉDER AU SYSTÈME" />
+                            <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="SE CONNECTER VIA" textFill="#555588" />
+                            <HBox alignment="CENTER" spacing="15">
+                                <Button onAction="#handleGoogleLogin" prefWidth="120.0" styleClass="social-button, google-btn" text="GOOGLE" />
+                                <Button onAction="#handleDiscordLogin" prefWidth="120.0" styleClass="social-button, discord-btn" text="DISCORD" />
+                            </HBox>
+                        </VBox>
                         <VBox alignment="CENTER" spacing="15.0">
                             <children>
-                                <Button fx:id="loginBtn" onAction="#handleSignIn" prefHeight="50.0" prefWidth="250.0" styleClass="edgy-button" text="ACCESS SYSTEM" />
                                 <Hyperlink onAction="#handlesignup" styleClass="edgy-link" text="S'INSCRIRE" />
-                        <Hyperlink onAction="#handleForgotPassword" styleClass="edgy-link" text="MOT DE PASSE OUBLIER" />
+                        <Hyperlink onAction="#handleForgotPassword" styleClass="edgy-link" text="MOT DE PASSE OUBLIER ?" />
                             </children>
                         </VBox>
                     </children>

@@ -124,13 +124,11 @@ public class Login {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
                 Stage stage = (Stage) rootPane.getScene().getWindow();
-                Scene currentScene = stage.getScene();
-                Scene scene = new Scene(root);
-
+                double width = stage.getScene().getWidth();
+                double height = stage.getScene().getHeight();
+                Scene scene = new Scene(root, width, height);
                 scene.setFill(Color.TRANSPARENT);
-
                 stage.setScene(scene);
                 stage.setMaximized(true);
                 stage.show();
@@ -149,7 +147,20 @@ public class Login {
         pause.play();
     }
     @FXML private void handleForgotPassword(ActionEvent event) { /* Recovery logic */ }
-    @FXML void handlesignup(ActionEvent event) {}
+    @FXML void handlesignup(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Inscription/Inscription.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void showError(Label label, String message) {
         label.setText(message);
@@ -158,12 +169,27 @@ public class Login {
     }
 
     private void shakeNode(javafx.scene.Node node) {
-        TranslateTransition shake = new TranslateTransition(Duration.millis(50), node);
-        shake.setFromX(0);
-        shake.setByX(8);
-        shake.setAutoReverse(true);
-        shake.setCycleCount(8);
-        shake.setInterpolator(Interpolator.LINEAR);
-        shake.play();
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
+        tt.setFromX(0);
+        tt.setByX(10);
+        tt.setAutoReverse(true);
+        tt.setCycleCount(6);
+        node.setRotate(0.5);
+        tt.setOnFinished(e -> {
+            node.setTranslateX(0);
+            node.setRotate(0);});
+        tt.play();
+    }
+    @FXML
+    private void handleGoogleLogin(ActionEvent event) {
+        System.out.println("Initiating Google OAuth...");
+        // Logic:
+        // 1. Open Browser: Desktop.getDesktop().browse(new URI("google_auth_url"));
+        // 2. Start a temporary local server to catch the callback token
+    }
+
+    @FXML
+    private void handleDiscordLogin(ActionEvent event) {
+        System.out.println("Initiating Discord OAuth...");
     }
 }
