@@ -22,47 +22,56 @@
 
     <VBox spacing="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <HBox alignment="CENTER" prefHeight="80.0" styleClass="top-nav">
-            <HBox alignment="CENTER" spacing="16">
-                <Button text="FORUM" styleClass="nav-link" onAction="#openForum"/>
-                <Button text="POSTS" styleClass="nav-link, active-link" onAction="#openPosts"/>
+            <HBox alignment="CENTER" spacing="0">
+                <Button text="▶ FORUM" styleClass="nav-link" onAction="#openForum"/>
+                <Button text="▶ POSTS" styleClass="nav-link, active-link" onAction="#openPosts"/>
             </HBox>
         </HBox>
 
-        <VBox spacing="30.0" VBox.vgrow="ALWAYS">
+        <VBox spacing="32.0" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="40" right="60" bottom="40" left="60"/>
             </padding>
 
-            <HBox alignment="CENTER_LEFT">
-                <VBox spacing="10" HBox.hgrow="ALWAYS">
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="▶" styleClass="campaign-icon"/>
-                        <Label text="TERMINAL // COMMUNITY SPACE" styleClass="subtitle-label"/>
-                    </HBox>
-                    <Label text="POSTS MODULE" styleClass="title-label"/>
-                    <Label text="Create and manage forum posts with the same workflow and visual style."
-                           styleClass="header-desc"/>
-                </VBox>
-                <Button text="+ NEW POST" styleClass="primary-button" onAction="#handleClearForm"/>
-            </HBox>
+            <!-- Header Section -->
+            <VBox spacing="8">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="▶" styleClass="campaign-icon"/>
+                    <Label text="TERMINAL // COMMUNITY SPACE" styleClass="subtitle-label"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="POSTS MODULE" styleClass="title-label"/>
+                        <Label text="Create and manage forum posts with the same workflow and visual style."
+                               styleClass="header-desc"/>
+                    </VBox>
+                    <Button text="+ NEW POST" styleClass="primary-button" onAction="#handleClearForm"/>
+                </HBox>
+            </VBox>
 
-            <HBox alignment="CENTER_LEFT" spacing="20">
+            <!-- Search and Filters -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
                 <HBox alignment="CENTER_LEFT" styleClass="search-container" HBox.hgrow="ALWAYS">
                     <Label text="🔍" styleClass="search-icon"/>
                     <TextField fx:id="searchField" promptText="Search posts..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
                 </HBox>
-                <ComboBox fx:id="typeFilterField" styleClass="modal-combo" prefWidth="145"/>
-                <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="145"/>
-                <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="160"/>
+                <ComboBox fx:id="typeFilterField" styleClass="modal-combo" prefWidth="145" promptText="Type"/>
+                <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="145" promptText="Status"/>
+                <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="160" promptText="Moderation"/>
             </HBox>
 
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
-                <FlowPane hgap="30" vgap="30" prefWrapLength="1000">
-                    <VBox spacing="16" prefWidth="1000" styleClass="modal-container">
+                <VBox spacing="24" styleClass="cards-container">
+                    <padding>
+                        <Insets top="8" right="8" bottom="8" left="8"/>
+                    </padding>
+
+                    <!-- Post Management Card -->
+                    <VBox spacing="18" styleClass="modal-container">
                         <padding>
                             <Insets top="24" right="24" bottom="24" left="24"/>
                         </padding>
-                        <Label text="POST MANAGEMENT" styleClass="modal-title"/>
+                        <Label text="✍ POST MANAGEMENT" styleClass="modal-title"/>
 
                         <HBox spacing="20">
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
@@ -105,26 +114,30 @@
                             <Label text="VIDEO (OPTIONAL)" styleClass="field-label"/>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <TextField fx:id="videoPathField" promptText="Aucune vidéo sélectionnée" editable="false" HBox.hgrow="ALWAYS" styleClass="modal-input"/>
-                                <Button text="UPLOAD VIDEO" onAction="#handleSelectVideo" styleClass="action-button"/>
-                                <Button text="CLEAR VIDEO" onAction="#handleClearVideo" styleClass="action-button"/>
+                                <Button text="📁 UPLOAD" onAction="#handleSelectVideo" styleClass="action-button"/>
+                                <Button text="✕ CLEAR" onAction="#handleClearVideo" styleClass="action-button"/>
                             </HBox>
                         </VBox>
 
-                        <HBox spacing="12">
-                            <Button text="CREATE POST" onAction="#handleAddPost" styleClass="submit-button"/>
-                            <Button text="UPDATE" onAction="#handleUpdatePost" styleClass="action-button"/>
-                            <Button text="DELETE" onAction="#handleDeletePost" styleClass="action-button"/>
-                            <Button text="REPORT" onAction="#handleReportPost" styleClass="action-button"/>
-                            <Button text="HIDE" onAction="#handleHidePost" styleClass="action-button"/>
-                            <Button text="RESTORE" onAction="#handleRestorePost" styleClass="action-button"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button text="✓ CREATE" onAction="#handleAddPost" styleClass="submit-button"/>
+                            <Button text="↻ UPDATE" onAction="#handleUpdatePost" styleClass="action-button"/>
+                            <Button text="✕ DELETE" onAction="#handleDeletePost" styleClass="action-button"/>
+                            <Button text="⚠ REPORT" onAction="#handleReportPost" styleClass="action-button"/>
+                            <Button text="👁 HIDE" onAction="#handleHidePost" styleClass="action-button"/>
+                            <Button text="↺ RESTORE" onAction="#handleRestorePost" styleClass="action-button"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Button text="CLEAR" onAction="#handleClearForm" styleClass="action-button"/>
+                            <Button text="✖ CLEAR" onAction="#handleClearForm" styleClass="action-button"/>
                         </HBox>
                     </VBox>
 
-                    <VBox prefWidth="1000" spacing="12" styleClass="featured-card">
-                        <Label text="FEATURED POST" styleClass="field-label"/>
-                        <HBox alignment="CENTER_LEFT" spacing="10">
+                    <!-- Featured Post Card -->
+                    <VBox spacing="14" styleClass="featured-card">
+                        <padding>
+                            <Insets top="18" right="18" bottom="18" left="18"/>
+                        </padding>
+                        <Label text="⭐ FEATURED POST" styleClass="field-label"/>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label fx:id="featuredTitleLabel" text="No post yet" styleClass="featured-title"/>
                             <Label fx:id="featuredMoodLabel" text="🔥 ACTIVE" styleClass="mood-badge mood-active"/>
                             <Region HBox.hgrow="ALWAYS"/>
@@ -134,10 +147,12 @@
                         <Label fx:id="featuredDescLabel" text="Create your first post to see it highlighted here." styleClass="featured-desc"/>
                     </VBox>
 
-                    <ScrollPane fitToWidth="true" prefWidth="1000" prefHeight="360" styleClass="custom-scroll">
-                        <FlowPane fx:id="postCardsContainer" prefWrapLength="980" hgap="18" vgap="18" styleClass="cards-flow"/>
-                    </ScrollPane>
-                </FlowPane>
+                    <!-- Posts List -->
+                    <VBox spacing="16" prefWidth="1000">
+                        <Label text="📝 ALL POSTS" styleClass="field-label"/>
+                        <FlowPane fx:id="postCardsContainer" prefWrapLength="980" hgap="16" vgap="16" styleClass="cards-flow"/>
+                    </VBox>
+                </VBox>
             </ScrollPane>
         </VBox>
     </VBox>
