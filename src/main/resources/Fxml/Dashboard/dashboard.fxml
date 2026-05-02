@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
@@ -30,7 +31,17 @@
 
                 <HBox alignment="CENTER" spacing="20.0">
                     <children>
-                        <Label text="PING : 24MS" textFill="#22c55e" />
+                  <HBox alignment="CENTER" spacing="8.0">
+                     <children>
+                        <Label style="-fx-font-size: 10px;" text="PING:" textFill="#444466" />
+                        <Label text="24MS" textFill="#22c55e">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Circle fx:id="pingDot" fill="#22c55e" radius="3.0" />
+                     </children>
+                  </HBox>
       
                       <!-- EDGY SESSION BOX -->
                       <HBox alignment="CENTER" spacing="15.0" styleClass="session-container">
@@ -95,7 +106,7 @@
                         <Button contentDisplay="TOP" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button" text="TOURNOIS">
                             <graphic><SVGPath content="M19.33 3.12c-.39-.39-1.02-.39-1.41 0L12.5 8.54 11.09 7.13c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.41 1.41-5.66 5.66-2.12-2.12c-.39-.39-1.02-.39-1.41 0l-.71.71c-.39.39-.39 1.02 0 1.41l2.12 2.12-1.41 1.41c-.39.39-.39 1.02 0 1.41l.71.71c.39.39 1.02.39 1.41 0l1.41-1.41 2.12 2.12c.39.39 1.02.39 1.41 0l.71-.71c.39-.39.39-1.02 0-1.41l-2.12-2.12 5.66-5.66 1.41 1.41c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.41-1.41 5.42-5.42c.39-.39.39-1.02 0-1.41l-.71-.71zM4.67 3.12c.39-.39 1.02-.39 1.41 0l5.42 5.42-1.41 1.41c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.41-1.41 5.66 5.66 2.12-2.12c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-2.12 2.12 1.41 1.41c.39.39.39 1.02 0 1.41l-.71.71c-.39.39-1.02.39-1.41 0l-1.41-1.41-2.12 2.12c-.39.39-1.02.39-1.41 0l-.71-.71c-.39-.39-.39-1.02 0-1.41l2.12-2.12-5.66-5.66-1.41 1.41c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.41-1.41L3.96 3.83c-.39-.39-.39-1.02 0-1.41l.71-.71z" fill="#8B0D0D" /></graphic>
                         </Button>
-                        <Button contentDisplay="TOP" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button" text="FINANCES" onAction="#navFinancesBtn">
+                        <Button contentDisplay="TOP" onAction="#navFinancesBtn" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button" text="FINANCES">
                             <graphic>
                                 <SVGPath content="M9.5 3C11.9853 3 14 7.02944 14 12M9.5 3C7.01472 3 5 7.02944 5 12C5 16.9706 7.01472 21 9.5 21M9.5 3H15C17.2091 3 19 7.02944 19 12M14 12C14 16.9706 11.9853 21 9.5 21M14 12H19M9.5 21H15C17.2091 21 19 16.9706 19 12M18.3264 17H13.2422M18.3264 7H13.2422M9.5 8C10.3284 8 11 9.79086 11 12C11 14.2091 10.3284 16 9.5 16C8.67157 16 8 14.2091 8 12C8 9.79086 8.67157 8 9.5 8Z" fill="#8B0D0D" />
                             </graphic>

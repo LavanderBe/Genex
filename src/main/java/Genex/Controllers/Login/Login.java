@@ -165,7 +165,7 @@ public class Login {
         });
         pause.play();
     }
-    @FXML private void handleForgotPassword(ActionEvent event) { /* Recovery logic */ }
+    @FXML private void handleForgotPassword(ActionEvent event) {  }
     @FXML void handlesignup(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Inscription/Inscription.fxml"));

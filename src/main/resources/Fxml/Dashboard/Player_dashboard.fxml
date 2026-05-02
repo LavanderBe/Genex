@@ -27,7 +27,7 @@
               </Button>
                 <VBox alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="title-text" text="GENEX // PLAYER" textFill="#8B0D0D">
+                        <Label styleClass="title-text" text="GENEX " textFill="#8B0D0D">
                             <font><Font name="Impact" size="26.0" /></font>
                         </Label>
                         <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="LINK_STATUS: STABLE" textFill="#5c7cfa" />
@@ -59,7 +59,7 @@
                                         <Circle fill="#1F1E4E" radius="14.0" stroke="#8B0D0D" />
                                         <VBox alignment="CENTER_LEFT">
                                             <children>
-                                                <Label fx:id="sessionUser" text="NEO_PLAYER" textFill="WHITE">
+                                                <Label fx:id="sessionUser" text="placeholder" textFill="WHITE">
                                                     <font><Font name="System Bold" size="13.0" /></font>
                                                 </Label>
                                                 <Label style="-fx-font-size: 8px;" text="OPERATOR_LEVEL 12" textFill="#8B0D0D" />
@@ -92,17 +92,17 @@
                         <VBox alignment="TOP_CENTER" prefHeight="620.0" prefWidth="148.0" spacing="10.0" styleClass="sidebar">
                             <children>
                                 <Region prefHeight="20.0" />
-                                <Button contentDisplay="TOP" onAction="#showMain" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button-active" text="MAIN MENU">
+                                <Button contentDisplay="TOP" onAction="#showMain" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button-active" text="MENU PRINCIPAL">
                                     <graphic><SVGPath content="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="#8B0D0D" /></graphic>
                                 </Button>
-                                <Button contentDisplay="TOP" onAction="#showTeams" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TEAMS">
-                                    <graphic><SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#8B0D0D" /></graphic>
+                                <Button contentDisplay="TOP" onAction="#showTeams" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="EQUIPES">
+                                    <graphic><SVGPath content="M4.35009 13.3929L8 16L11.6499 13.3929C13.7523 11.8912 15 9.46667 15 6.88306V3L8 0L1 3V6.88306C1 9.46667 2.24773 11.8912 4.35009 13.3929Z" fill="#8B0D0D" /></graphic>
                                 </Button>
-                                <Button contentDisplay="TOP" onAction="#showTournaments" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TOURNAMENTS">
-                                    <graphic><SVGPath content="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 10.63 21 8.55 21 8V7c0-1.1-.9-2-2-2z" fill="#8B0D0D" /></graphic>
+                                <Button contentDisplay="TOP" onAction="#showTournaments" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TOURNOIS">
+                                    <graphic><SVGPath content="M19.33 3.12c-.39-.39-1.02-.39-1.41 0L12.5 8.54 11.09 7.13c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.41 1.41-5.66 5.66-2.12-2.12c-.39-.39-1.02-.39-1.41 0l-.71.71c-.39.39-.39 1.02 0 1.41l2.12 2.12-1.41 1.41c-.39.39-.39 1.02 0 1.41l.71.71c.39.39 1.02.39 1.41 0l1.41-1.41 2.12 2.12c.39.39 1.02.39 1.41 0l.71-.71c.39-.39.39-1.02 0-1.41l-2.12-2.12 5.66-5.66 1.41 1.41c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.41-1.41 5.42-5.42c.39-.39.39-1.02 0-1.41l-.71-.71zM4.67 3.12c.39-.39 1.02-.39 1.41 0l5.42 5.42-1.41 1.41c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.41-1.41 5.66 5.66 2.12-2.12c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-2.12 2.12 1.41 1.41c.39.39.39 1.02 0 1.41l-.71.71c-.39.39-1.02.39-1.41 0l-1.41-1.41-2.12 2.12c-.39.39-1.02.39-1.41 0l-.71-.71c-.39-.39-.39-1.02 0-1.41l2.12-2.12-5.66-5.66-1.41 1.41c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.41-1.41L3.96 3.83c-.39-.39-.39-1.02 0-1.41l.71-.71z" fill="#8B0D0D" /></graphic>
                                 </Button>
-                                <Button contentDisplay="TOP" onAction="#showTutorials" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TUTORIALS">
-                                    <graphic><SVGPath content="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#8B0D0D" /></graphic>
+                                <Button contentDisplay="TOP" onAction="#showTutorials" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TUTORIELS">
+                                    <graphic><SVGPath content="M12 10.4V20M12 10.4C12 8.15979 12 7.03969 11.564 6.18404C11.1805 5.43139 10.5686 4.81947 9.81596 4.43597C8.96031 4 7.84021 4 5.6 4H4.6C4.03995 4 3.75992 4 3.54601 4.10899C3.35785 4.20487 3.20487 4.35785 3.10899 4.54601C3 4.75992 3 5.03995 3 5.6V16.4C3 16.9601 3 17.2401 3.10899 17.454C3.20487 17.6422 3.35785 17.7951 3.54601 17.891C3.75992 18 4.03995 18 4.6 18H7.54668C8.08687 18 8.35696 18 8.61814 18.0466C8.84995 18.0879 9.0761 18.1563 9.29191 18.2506C9.53504 18.3567 9.75977 18.5065 10.2092 18.8062L12 20M12 10.4C12 8.15979 12 7.03969 12.436 6.18404C12.8195 5.43139 13.4314 4.81947 14.184 4.43597C15.0397 4 16.1598 4 18.4 4H19.4C19.9601 4 20.2401 4 20.454 4.10899C20.6422 4.20487 20.7951 4.35785 20.891 4.54601C21 4.75992 21 5.03995 21 5.6V16.4C21 16.9601 21 17.2401 20.891 17.454C20.7951 17.6422 20.6422 17.7951 20.454 17.891C20.2401 18 19.9601 18 19.4 18H16.4533C15.9131 18 15.643 18 15.3819 18.0466C15.15 18.0879 14.9239 18.1563 14.7081 18.2506C14.465 18.3567 14.2402 18.5065 13.7908 18.8062L12 20" fill="#8B0D0D" /></graphic>
                                 </Button>
                                 <Button contentDisplay="TOP" onAction="#showForums" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="FORUMS">
                                     <graphic><SVGPath content="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="#8B0D0D" /></graphic>
@@ -110,8 +110,8 @@
 
                                 <Region prefHeight="50.0" prefWidth="132.0" VBox.vgrow="ALWAYS" />
 
-                                <Button contentDisplay="TOP" onAction="#showProfile" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="PROFILE">
-                                    <graphic><SVGPath content="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#8B0D0D" /></graphic>
+                                <Button contentDisplay="TOP" onAction="#showProfile" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="PROFIL">
+                                    <graphic><SVGPath content="M28.8,30.1c-0.6-3-2.9-5.4-5.9-6.2c-1.6-0.4-2.7-1.7-2.9-3.2c1.1-0.8,1.9-1.9,2.4-3.1c0.9-0.5,1.5-1.5,1.5-2.6v-2v-1V6c0-3.3-2.7-6-6-6c-1.8,0-3.5,0.8-4.6,2.2C10.2,2.9,8,5.7,8,9v3v1v2c0,1.1,0.7,2.1,1.6,2.6c0.5,1.2,1.3,2.3,2.4,3c-0.2,1.6-1.4,2.9-3,3.3c-3,0.8-5.2,3.1-5.8,6.1c-0.1,0.5,0,0.9,0.3,1.3C3.8,31.8,4.2,32,4.7,32h22.7c0.5,0,0.9-0.2,1.2-0.6C28.8,31.1,28.9,30.6,28.8,30.1z M11,16c-0.6,0-1-0.4-1-1v-2v-1c0-0.6,0.4-1,1-1h10c0.6,0,1,0.4,1,1v1v2c0,0.6-0.4,1-1,1c-1.4,0-2.7-0.2-3.8-0.7C16.8,15.1,16.4,15,16,15s-0.8,0.1-1.2,0.3C13.7,15.8,12.4,16,11,16z" fill="#8B0D0D" /></graphic>
                                 </Button>
                             </children>
                         </VBox>
@@ -132,8 +132,8 @@
                         </Label>
                         <HBox spacing="20.0">
                             <children>
-                                <Button prefHeight="50.0" prefWidth="200.0" styleClass="action-confirm-btn" text="JOIN MATCH" />
-                                <Button prefHeight="50.0" prefWidth="150.0" styleClass="action-cancel-btn" text="ABORT" />
+                                <Button prefHeight="50.0" prefWidth="200.0" styleClass="action-confirm-btn" text="placeholder" />
+                                <Button prefHeight="50.0" prefWidth="150.0" styleClass="action-cancel-btn" text="placeholder" />
                             </children>
                         </HBox>
                     </children>

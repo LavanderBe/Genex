@@ -31,12 +31,7 @@ public class PlayerDashboard {
 
     @FXML
     public void initialize() {
-        // 1. Set User from Session
-       // if (UserSession.getInstance() != null) {
-       //     sessionUser.setText(UserSession.getInstance().getUser().getNom().toUpperCase());
-        //}
-
-        // 2. Start Ping Pulse Animation
+        //gotta make a usersessionclass and replace the profile topleft thing with the current user
         startPingAnimation();
     }
 
@@ -45,10 +40,9 @@ public class PlayerDashboard {
         TranslateTransition slide = new TranslateTransition(Duration.millis(300), sidebarContainer);
 
         if (isSidebarVisible) {
-            // Slide Out
             slide.setToX(-180);
             slide.setOnFinished(e -> {
-                mainPane.setLeft(null); // Remove from layout so center expands
+                mainPane.setLeft(null);
                 isSidebarVisible = false;
             });
         } else {
@@ -76,7 +70,6 @@ public class PlayerDashboard {
         showProfile();
     }
 
-    // --- NAVIGATION LOGIC ---
     @FXML private void showMain() { loadModule("PlayerMain.fxml"); }
     @FXML private void showTeams() { loadModule("PlayerTeams.fxml"); }
     @FXML private void showTournaments() { loadModule("PlayerTournaments.fxml"); }
@@ -86,7 +79,6 @@ public class PlayerDashboard {
 
     private void loadModule(String fxmlName) {
         try {
-            // This replaces the content in the center area
             Parent module = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/Modules/" + fxmlName));
             contentArea.getChildren().setAll(module);
         } catch (IOException e) {
@@ -96,6 +88,7 @@ public class PlayerDashboard {
 
     @FXML
     private void handleLogout(ActionEvent event) {
+        //gotta make a user session class for better security will work on that later on
        // UserSession.getInstance().cleanUserSession();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));

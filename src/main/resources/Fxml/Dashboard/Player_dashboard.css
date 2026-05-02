@@ -9,10 +9,10 @@
 
 /* --- TOP BAR HUD --- */
 .top-bar {
-    -fx-background-color: rgba(0, 0, 0, 0.8);
+    -fx-background-color: rgba(0, 0, 0, 0.7);
     -fx-border-color: #8B0D0D;
     -fx-border-width: 0 0 2 0;
-    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.3), 15, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #090642, 15, 0, 0, 2);
 }
 
 /* --- ASYMMETRIC PROFILE PLATE --- */

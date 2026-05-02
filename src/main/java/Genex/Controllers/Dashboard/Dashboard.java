@@ -1,5 +1,6 @@
 package Genex.Controllers.Dashboard;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,9 +26,27 @@ public class Dashboard {
     @FXML private AnchorPane contentArea;
     @FXML private BorderPane mainPane;
     @FXML private VBox       sidebarVbox;
+    @FXML private Circle pingDot;
 
     /** ComboBox inside the Finance content area for page selection */
     @FXML private ComboBox<String> financePageSelector;
+
+
+
+    @FXML
+    public void initialize() {
+        //gotta make a usersessionclass and replace the profile topleft thing with the current user
+        startPingAnimation();
+    }
+
+    private void startPingAnimation() {
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), pingDot);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.3);
+        fade.setCycleCount(FadeTransition.INDEFINITE);
+        fade.setAutoReverse(true);
+        fade.play();
+    }
 
     // ==================== Navigation Methods ====================
 
