@@ -8,127 +8,83 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1"
+<HBox xmlns="http://javafx.com/javafx/11.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Team.TrainingSessionCardController"
       styleClass="session-card"
       stylesheets="@TrainingSessionCard.css"
-      spacing="16">
+      spacing="16"
+      alignment="CENTER_LEFT">
 
     <children>
-        <!-- Header with Title and Status Badge -->
-        <HBox alignment="CENTER_LEFT" spacing="12">
+        <!-- Left Section: Icon and Title -->
+        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
             <children>
-                <!-- Icon Container -->
-                <StackPane styleClass="session-icon-container">
-                    <children>
-                        <Text styleClass="session-icon" text="🏋️" />
-                    </children>
-                </StackPane>
-
-                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <VBox spacing="4" minWidth="150">
                     <children>
                         <Text fx:id="sessionTitle" styleClass="session-title" text="Session Title" />
                         <Text fx:id="sessionType" styleClass="session-type-label" text="TEAM_PRACTICE" />
                     </children>
                 </VBox>
+            </children>
+        </HBox>
 
+        <!-- Middle Section: Info Boxes in a Row -->
+        <HBox spacing="10" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+            <children>
+                <!-- Date Box -->
+                <VBox styleClass="info-box" spacing="4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text styleClass="info-box-label" text="DATE" />
+                        <Text fx:id="sessionDate" styleClass="info-box-value" text="29/04/2026" />
+                    </children>
+                </VBox>
+
+                <!-- Time Box -->
+                <VBox styleClass="info-box" spacing="4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text styleClass="info-box-label" text="HORAIRE" />
+                        <Text fx:id="sessionDuration" styleClass="info-box-value" text="14:00 - 19:00" />
+                    </children>
+                </VBox>
+
+                <!-- Duration Box -->
+                <VBox styleClass="info-box" spacing="4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text styleClass="info-box-label" text="DURÉE" />
+                        <Text fx:id="sessionDurationText" styleClass="info-box-value" text="2h 00min" />
+                    </children>
+                </VBox>
+
+                <!-- Location Box -->
+                <VBox styleClass="info-box" spacing="4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text styleClass="info-box-label" text="LIEU" />
+                        <Text fx:id="sessionLocation" styleClass="info-box-value" text="Terrain A" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Right Section: Status and Actions -->
+        <VBox spacing="10" alignment="CENTER" HBox.hgrow="NEVER">
+            <children>
                 <!-- Status Badge -->
                 <StackPane fx:id="statusBadge" styleClass="status-badge">
                     <children>
                         <Text fx:id="sessionStatus" styleClass="status-text" text="PLANNED" />
                     </children>
                 </StackPane>
-            </children>
-        </HBox>
 
-        <!-- Info Boxes Grid - Colorful Rectangles -->
-        <VBox spacing="10">
-            <children>
-                <!-- Row 1: Date and Time -->
-                <HBox spacing="10">
+                <!-- Actions -->
+                <HBox spacing="8" alignment="CENTER">
                     <children>
-                        <!-- Date Box -->
-                        <VBox styleClass="info-box, info-box-date" spacing="6" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="8" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Text styleClass="info-box-icon" text="📅" />
-                                        <Text styleClass="info-box-label" text="DATE" />
-                                    </children>
-                                </HBox>
-                                <Text fx:id="sessionDate" styleClass="info-box-value" text="29/04/2026" />
-                            </children>
-                        </VBox>
-
-                        <!-- Time Box -->
-                        <VBox styleClass="info-box, info-box-time" spacing="6" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="8" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Text styleClass="info-box-icon" text="⏰" />
-                                        <Text styleClass="info-box-label" text="HORAIRE" />
-                                    </children>
-                                </HBox>
-                                <Text fx:id="sessionDuration" styleClass="info-box-value" text="14:00 - 16:00" />
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
-
-                <!-- Row 2: Duration and Location -->
-                <HBox spacing="10">
-                    <children>
-                        <!-- Duration Box -->
-                        <VBox styleClass="info-box, info-box-duration" spacing="6" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="8" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Text styleClass="info-box-icon" text="⏱️" />
-                                        <Text styleClass="info-box-label" text="DURÉE" />
-                                    </children>
-                                </HBox>
-                                <Text fx:id="sessionDurationText" styleClass="info-box-value" text="2h 00min" />
-                            </children>
-                        </VBox>
-
-                        <!-- Location Box -->
-                        <VBox styleClass="info-box, info-box-location" spacing="6" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="8" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Text styleClass="info-box-icon" text="📍" />
-                                        <Text styleClass="info-box-label" text="LIEU" />
-                                    </children>
-                                </HBox>
-                                <Text fx:id="sessionLocation" styleClass="info-box-value" text="Terrain A" />
-                            </children>
-                        </VBox>
+                        <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="session-btn-edit" text="Modifier" />
+                        <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="session-btn-delete" text="×" />
                     </children>
                 </HBox>
             </children>
         </VBox>
-
-        <!-- Notes Preview (Collapsible) -->
-        <VBox fx:id="notesContainer" styleClass="notes-container" spacing="8" managed="false" visible="false">
-            <children>
-                <HBox spacing="8" alignment="CENTER_LEFT">
-                    <children>
-                        <Text styleClass="notes-icon" text="📝" />
-                        <Text styleClass="notes-label" text="NOTES" />
-                    </children>
-                </HBox>
-                <Text fx:id="sessionNotes" styleClass="notes-text" text="Notes content..." wrappingWidth="280" />
-            </children>
-        </VBox>
-
-        <!-- Actions -->
-        <HBox spacing="10" alignment="CENTER">
-            <children>
-                <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="session-btn-edit" text="✏️ Modifier" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
-                <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="session-btn-delete" text="🗑️" />
-            </children>
-        </HBox>
     </children>
 
-</VBox>
+</HBox>

@@ -1,6 +1,7 @@
 package Genex.Controllers.Team;
 
 import Genex.entities.TrainingSession;
+import Genex.services.CrudTrainingSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class AddTrainingSessionModalController {
@@ -212,28 +214,61 @@ public class AddTrainingSessionModalController {
         }
 
         try {
+            // Parse date and time first for conflict check
+            LocalDate date = dateSession.getValue();
+            LocalTime startTime = LocalTime.parse(txtStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime endTime = LocalTime.parse(txtEndTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+            LocalDateTime dateTime = LocalDateTime.of(date, startTime);
+
+            // Check for time conflicts
+            CrudTrainingSession crudSession = new CrudTrainingSession();
+            String excludeId = sessionToEdit != null ? sessionToEdit.getId() : null;
+            
+            boolean hasConflict = crudSession.hasTimeConflict(teamId, dateTime, startTime, endTime, excludeId);
+            
+            if (hasConflict) {
+                // Get conflicting sessions to show details
+                List<TrainingSession> conflicts = crudSession.getConflictingSessions(teamId, dateTime, startTime, endTime, excludeId);
+                
+                StringBuilder conflictMessage = new StringBuilder("⚠️ Conflit d'horaire détecté!\n\n");
+                conflictMessage.append("Session(s) en conflit:\n");
+                
+                for (TrainingSession conflict : conflicts) {
+                    conflictMessage.append("• ").append(conflict.getTitle())
+                            .append(" (").append(conflict.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")))
+                            .append(" - ").append(conflict.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")))
+                            .append(")\n");
+                }
+                
+                conflictMessage.append("\nVeuillez choisir un autre horaire.");
+                
+                showError(errorStartTime, "Conflit d'horaire!");
+                showError(errorEndTime, conflictMessage.toString());
+                
+                // Show alert dialog
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("Conflit d'horaire");
+                alert.setHeaderText("Une session existe déjà à cet horaire");
+                alert.setContentText(conflictMessage.toString());
+                alert.showAndWait();
+                
+                return; // Don't save
+            }
+
             // Create or update session
             TrainingSession session = sessionToEdit != null ? sessionToEdit : new TrainingSession();
 
             session.setTitle(txtTitle.getText().trim());
             session.setType(choiceType.getValue());
-
-            // Parse date and time
-            LocalDate date = dateSession.getValue();
-            LocalTime startTime = LocalTime.parse(txtStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
-            LocalTime endTime = LocalTime.parse(txtEndTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
-
-            LocalDateTime dateTime = LocalDateTime.of(date, startTime);
             session.setSessionDatetime(dateTime);
             session.setStartTime(startTime);
             session.setEndTime(endTime);
-
             session.setStatus(choiceStatus.getValue());
             session.setLocation(txtLocation.getText().trim());
             session.setNotes(txtNotes.getText().trim());
             session.setTeamId(teamId);
 
-            System.out.println("Session saved: " + session.getTitle());
+            System.out.println("✓ No conflicts - Session saved: " + session.getTitle());
             System.out.println("Duration: " + session.getFormattedDuration());
 
             // Call callback

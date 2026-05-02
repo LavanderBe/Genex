@@ -1,7 +1,9 @@
 package Genex.Controllers.Team;
 
+import Genex.entities.Game;
 import Genex.entities.Team;
 import Genex.entities.TrainingSession;
+import Genex.services.CrudGame;
 import Genex.services.CrudTrainingSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -77,9 +79,10 @@ public class TeamDetailController {
                 teamTag.setText("");
             }
 
-            // Display game ID
+            // Display game name
             if (team.getGameId() != null) {
-                teamGame.setText("Game ID: " + team.getGameId());
+                String gameName = getGameNameById(team.getGameId());
+                teamGame.setText(gameName != null ? gameName : "Unknown Game");
             } else {
                 teamGame.setText("");
             }
@@ -151,6 +154,20 @@ public class TeamDetailController {
 
     private void updateEmptyState() {
         // Empty state handling removed to match app theme
+    }
+
+    private String getGameNameById(String gameId) {
+        try {
+            CrudGame crudGame = new CrudGame();
+            for (Game game : crudGame.getgames()) {
+                if (game.getId() != null && game.getId().equals(gameId)) {
+                    return game.getNom();
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching game name: " + e.getMessage());
+        }
+        return null;
     }
 
     @FXML

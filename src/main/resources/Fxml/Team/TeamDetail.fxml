@@ -29,21 +29,21 @@
         <!-- Team Info Cards -->
         <HBox spacing="20">
             <children>
-                <VBox styleClass="info-card" spacing="8">
+                <VBox spacing="8" styleClass="info-card">
                     <children>
                         <Text styleClass="info-label" text="Jeu" />
                         <Text fx:id="teamGame" styleClass="info-value" text="Game Name" />
                     </children>
                 </VBox>
 
-                <VBox styleClass="info-card" spacing="8">
+                <VBox spacing="8" styleClass="info-card">
                     <children>
-                        <Text styleClass="info-label" text="Type" />
+                        <Text styleClass="info-label" text="Contact" />
                         <Text fx:id="teamType" styleClass="info-value" text="Type" />
                     </children>
                 </VBox>
 
-                <VBox styleClass="info-card" spacing="8">
+                <VBox spacing="8" styleClass="info-card">
                     <children>
                         <Text styleClass="info-label" text="Fondée le" />
                         <Text fx:id="teamFounded" styleClass="info-value" text="Date" />

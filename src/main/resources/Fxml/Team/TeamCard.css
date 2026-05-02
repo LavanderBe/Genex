@@ -1,15 +1,15 @@
 /* ============================================
    GENEX - Team Card Stylesheet
-   HUD/Cyber Theme - Synced with Dashboard
+   Glassmorphism Dark Theme - Matches Main Theme
    ============================================ */
 
 .team-card {
-    -fx-background-color: rgba(0, 0, 0, 0.5);
-    -fx-background-radius: 0;
-    -fx-border-color: #8B0D0D;
-    -fx-border-radius: 0;
+    -fx-background-color: rgba(30, 30, 60, 0.6);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 18;
     -fx-border-width: 1.5;
-    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.4), 20, 0.3, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 25, 0.3, 0, 4);
     -fx-padding: 24;
     -fx-cursor: hand;
     -fx-pref-width: 340;
@@ -19,10 +19,10 @@
 }
 
 .team-card:hover {
-    -fx-border-color: #ff4d4d;
-    -fx-background-color: rgba(139, 13, 13, 0.15);
-    -fx-effect: dropshadow(gaussian, rgba(255, 77, 77, 0.6), 25, 0.5, 0, 6);
-    -fx-translate-y: -4;
+    -fx-border-color: rgba(100, 120, 255, 0.5);
+    -fx-background-color: rgba(35, 35, 70, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 30, 0.4, 0, 6);
+    -fx-translate-y: -3;
 }
 
 .team-card-header {
@@ -36,9 +36,10 @@
 }
 
 .team-logo-circle {
-    -fx-fill: rgba(139, 13, 13, 0.2);
-    -fx-stroke: #8B0D0D;
+    -fx-fill: linear-gradient(to bottom right, rgba(100, 120, 255, 0.25), rgba(150, 100, 255, 0.15));
+    -fx-stroke: rgba(100, 120, 255, 0.4);
     -fx-stroke-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(100, 120, 255, 0.4), 15, 0.3, 0, 3);
 }
 
 .team-logo-image {
@@ -56,7 +57,7 @@
 }
 
 .team-tag {
-    -fx-fill: #ff4d4d;
+    -fx-fill: #748ffc;
     -fx-font-size: 14;
     -fx-font-weight: 500;
 }
@@ -78,74 +79,80 @@
 }
 
 .card-action-btn {
-    -fx-background-color: rgba(139, 13, 13, 0.3);
-    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.25), rgba(100, 120, 255, 0.2));
+    -fx-text-fill: white;
     -fx-font-size: 12;
     -fx-font-weight: 600;
-    -fx-background-radius: 0;
-    -fx-border-color: #8B0D0D;
-    -fx-border-width: 1;
-    -fx-border-radius: 0;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(59, 91, 219, 0.5);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
     -fx-cursor: hand;
-    -fx-padding: 8 16;
+    -fx-padding: 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.3), 10, 0.2, 0, 2);
 }
 
 .card-action-btn:hover {
-    -fx-background-color: rgba(139, 13, 13, 0.5);
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.35), rgba(100, 120, 255, 0.3));
     -fx-text-fill: white;
-    -fx-border-color: #ff4d4d;
+    -fx-border-color: rgba(59, 91, 219, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.5), 15, 0.3, 0, 4);
 }
 
 .card-action-btn:pressed {
-    -fx-background-color: rgba(139, 13, 13, 0.7);
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.2), rgba(100, 120, 255, 0.15));
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
 }
 
 .card-action-btn-edit {
-    -fx-background-color: rgba(139, 13, 13, 0.3);
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.25), rgba(100, 120, 255, 0.2));
     -fx-text-fill: white;
     -fx-font-size: 12;
     -fx-font-weight: 600;
-    -fx-background-radius: 0;
-    -fx-border-color: #8B0D0D;
-    -fx-border-width: 1;
-    -fx-border-radius: 0;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(59, 91, 219, 0.5);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
     -fx-cursor: hand;
-    -fx-padding: 8 16;
+    -fx-padding: 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.3), 10, 0.2, 0, 2);
 }
 
 .card-action-btn-edit:hover {
-    -fx-background-color: rgba(139, 13, 13, 0.5);
-    -fx-border-color: #ff4d4d;
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.35), rgba(100, 120, 255, 0.3));
+    -fx-border-color: rgba(59, 91, 219, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.5), 15, 0.3, 0, 4);
 }
 
 .card-action-btn-edit:pressed {
-    -fx-background-color: rgba(139, 13, 13, 0.7);
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
+    -fx-background-color: linear-gradient(to right, rgba(59, 91, 219, 0.2), rgba(100, 120, 255, 0.15));
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
 }
 
 .card-action-btn-delete {
-    -fx-background-color: rgba(255, 77, 77, 0.3);
-    -fx-text-fill: #ff4d4d;
-    -fx-font-size: 14;
-    -fx-font-weight: 600;
-    -fx-background-radius: 0;
-    -fx-border-color: #ff4d4d;
-    -fx-border-width: 1;
-    -fx-border-radius: 0;
+    -fx-background-color: rgba(255, 107, 107, 0.2);
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 20;
+    -fx-font-weight: normal;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 107, 107, 0.5);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
     -fx-cursor: hand;
-    -fx-padding: 8 12;
+    -fx-padding: 10 14;
+    -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.3), 10, 0.2, 0, 2);
 }
 
 .card-action-btn-delete:hover {
-    -fx-background-color: rgba(255, 77, 77, 0.5);
-    -fx-border-color: #ff3333;
+    -fx-background-color: rgba(255, 107, 107, 0.3);
+    -fx-border-color: rgba(255, 107, 107, 0.7);
+    -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.5), 15, 0.3, 0, 4);
 }
 
 .card-action-btn-delete:pressed {
-    -fx-background-color: rgba(255, 77, 77, 0.7);
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
+    -fx-background-color: rgba(255, 107, 107, 0.15);
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
 }

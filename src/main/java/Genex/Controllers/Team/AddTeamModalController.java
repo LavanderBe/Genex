@@ -1,6 +1,8 @@
 package Genex.Controllers.Team;
 
+import Genex.entities.Game;
 import Genex.entities.Team;
+import Genex.services.CrudGame;
 import Genex.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class AddTeamModalController {
@@ -27,7 +31,7 @@ public class AddTeamModalController {
     private TextField txtName;
 
     @FXML
-    private TextField txtGameId;
+    private ChoiceBox<Game> choiceGame;
 
     @FXML
     private TextField txtContact;
@@ -66,6 +70,9 @@ public class AddTeamModalController {
     public void initialize() {
         System.out.println("AddTeamModalController initialized");
 
+        // Load games into choice box
+        loadGames();
+
         // Setup status choice box
         if (choiceStatus != null) {
             choiceStatus.getItems().addAll(Team.Status.values());
@@ -76,10 +83,44 @@ public class AddTeamModalController {
         setupValidation();
     }
 
+    private void loadGames() {
+        if (choiceGame != null) {
+            try {
+                CrudGame crudGame = new CrudGame();
+                List<Game> games = crudGame.getgames();
+                
+                choiceGame.getItems().addAll(games);
+                
+                // Set custom string converter to display game name
+                choiceGame.setConverter(new StringConverter<Game>() {
+                    @Override
+                    public String toString(Game game) {
+                        return game != null ? game.getNom() : "";
+                    }
+
+                    @Override
+                    public Game fromString(String string) {
+                        return null; // Not needed for ChoiceBox
+                    }
+                });
+                
+                // Select first game by default if available
+                if (!games.isEmpty()) {
+                    choiceGame.setValue(games.get(0));
+                }
+                
+                System.out.println("Loaded " + games.size() + " games");
+            } catch (Exception e) {
+                System.err.println("Error loading games: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void setupValidation() {
         // Clear errors on input
         if (txtName != null) txtName.textProperty().addListener((obs, old, val) -> hideError(errorName));
-        if (txtGameId != null) txtGameId.textProperty().addListener((obs, old, val) -> hideError(errorGameId));
+        if (choiceGame != null) choiceGame.valueProperty().addListener((obs, old, val) -> hideError(errorGameId));
         if (txtContact != null) txtContact.textProperty().addListener((obs, old, val) -> hideError(errorContact));
     }
 
@@ -135,7 +176,17 @@ public class AddTeamModalController {
 
         // Fill form with team data
         txtName.setText(team.getName());
-        txtGameId.setText(team.getGameId());
+        
+        // Select the game in the choice box
+        if (team.getGameId() != null && choiceGame != null) {
+            for (Game game : choiceGame.getItems()) {
+                if (game.getId().equals(team.getGameId())) {
+                    choiceGame.setValue(game);
+                    break;
+                }
+            }
+        }
+        
         txtContact.setText(team.getContact());
 
         if (team.getLogoImage() != null && !team.getLogoImage().isEmpty()) {
@@ -184,7 +235,13 @@ public class AddTeamModalController {
             Team team = teamToEdit != null ? teamToEdit : new Team();
 
             team.setName(txtName.getText().trim());
-            team.setGameId(txtGameId.getText().trim());
+            
+            // Get selected game ID
+            Game selectedGame = choiceGame.getValue();
+            if (selectedGame != null) {
+                team.setGameId(selectedGame.getId());
+            }
+            
             team.setContact(txtContact.getText().trim());
             team.setLogoImage(logoImagePath); // Use uploaded file path
             team.setStatus(choiceStatus.getValue());
@@ -222,7 +279,7 @@ public class AddTeamModalController {
         }
 
         // Validate game ID
-        if (txtGameId.getText().trim().isEmpty()) {
+        if (choiceGame.getValue() == null) {
             showError(errorGameId, "Le jeu est requis");
             valid = false;
         }

@@ -34,10 +34,10 @@
                 <Label fx:id="errorName" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
-            <!-- Game ID -->
+            <!-- Game -->
             <Label text="Jeu" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <TextField fx:id="txtGameId" promptText="1 (Game ID)" />
+                <ChoiceBox fx:id="choiceGame" prefWidth="Infinity" />
                 <Label fx:id="errorGameId" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 

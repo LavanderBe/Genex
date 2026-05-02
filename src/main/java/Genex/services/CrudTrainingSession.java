@@ -115,6 +115,99 @@ public class CrudTrainingSession {
         }
     }
 
+    /**
+     * Check if there's a time conflict with existing sessions for the same team on the same date
+     * @param teamId The team ID
+     * @param sessionDate The date of the session
+     * @param startTime The start time
+     * @param endTime The end time
+     * @param excludeSessionId Optional session ID to exclude (for updates)
+     * @return true if there's a conflict, false otherwise
+     */
+    public boolean hasTimeConflict(String teamId, LocalDateTime sessionDate, 
+                                   java.time.LocalTime startTime, java.time.LocalTime endTime, 
+                                   String excludeSessionId) {
+        String query = "SELECT COUNT(*) as conflict_count FROM training_sessions " +
+                "WHERE team_id = ? " +
+                "AND DATE(session_datetime) = DATE(?) " +
+                "AND id != ? " +
+                "AND (" +
+                "  (start_time <= ? AND end_time > ?) OR " +  // New session starts during existing
+                "  (start_time < ? AND end_time >= ?) OR " +  // New session ends during existing
+                "  (start_time >= ? AND end_time <= ?)" +     // New session wraps existing
+                ")";
+        
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, teamId);
+            pst.setTimestamp(2, Timestamp.valueOf(sessionDate));
+            pst.setString(3, excludeSessionId != null ? excludeSessionId : "");
+            
+            // Check all overlap scenarios
+            pst.setTime(4, Time.valueOf(startTime));
+            pst.setTime(5, Time.valueOf(startTime));
+            pst.setTime(6, Time.valueOf(endTime));
+            pst.setTime(7, Time.valueOf(endTime));
+            pst.setTime(8, Time.valueOf(startTime));
+            pst.setTime(9, Time.valueOf(endTime));
+            
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                int conflictCount = rs.getInt("conflict_count");
+                if (conflictCount > 0) {
+                    System.out.println("⚠️ Time conflict detected! " + conflictCount + " conflicting session(s) found.");
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            System.err.println("Error checking time conflict: " + e.getMessage());
+            e.printStackTrace();
+            return false; // In case of error, allow the operation
+        }
+    }
+
+    /**
+     * Get conflicting sessions for display to user
+     */
+    public List<TrainingSession> getConflictingSessions(String teamId, LocalDateTime sessionDate,
+                                                        java.time.LocalTime startTime, java.time.LocalTime endTime,
+                                                        String excludeSessionId) {
+        List<TrainingSession> conflicts = new ArrayList<>();
+        String query = "SELECT * FROM training_sessions " +
+                "WHERE team_id = ? " +
+                "AND DATE(session_datetime) = DATE(?) " +
+                "AND id != ? " +
+                "AND (" +
+                "  (start_time <= ? AND end_time > ?) OR " +
+                "  (start_time < ? AND end_time >= ?) OR " +
+                "  (start_time >= ? AND end_time <= ?)" +
+                ")";
+        
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, teamId);
+            pst.setTimestamp(2, Timestamp.valueOf(sessionDate));
+            pst.setString(3, excludeSessionId != null ? excludeSessionId : "");
+            pst.setTime(4, Time.valueOf(startTime));
+            pst.setTime(5, Time.valueOf(startTime));
+            pst.setTime(6, Time.valueOf(endTime));
+            pst.setTime(7, Time.valueOf(endTime));
+            pst.setTime(8, Time.valueOf(startTime));
+            pst.setTime(9, Time.valueOf(endTime));
+            
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                TrainingSession session = mapResultSetToSession(rs);
+                conflicts.add(session);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting conflicting sessions: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return conflicts;
+    }
+
     private TrainingSession mapResultSetToSession(ResultSet rs) throws SQLException {
         TrainingSession session = new TrainingSession();
         session.setId(rs.getString("id"));

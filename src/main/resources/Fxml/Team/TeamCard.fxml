@@ -30,7 +30,7 @@
                             </clip>
                         </ImageView>
                         <!-- Fallback icon if no logo -->
-                        <Text fx:id="teamIconFallback" styleClass="team-icon" text="👥" visible="false" />
+                        <Text fx:id="teamIconFallback" styleClass="team-icon" text="▶" visible="false" />
                     </children>
                 </StackPane>
 
@@ -44,14 +44,14 @@
             <children>
                 <HBox styleClass="team-info-row" spacing="8">
                     <children>
-                        <Text styleClass="team-info-label" text="🎮" />
+                        <Text styleClass="team-info-label" text="Jeu:" />
                         <Text fx:id="teamGame" styleClass="team-info-value" text="Game" />
                     </children>
                 </HBox>
 
                 <HBox styleClass="team-info-row" spacing="8">
                     <children>
-                        <Text styleClass="team-info-label" text="📋" />
+                        <Text styleClass="team-info-label" text="Contact:" />
                         <Text fx:id="teamType" styleClass="team-info-value" text="Type" />
                     </children>
                 </HBox>
@@ -61,9 +61,9 @@
         <!-- Actions -->
         <HBox spacing="8" alignment="CENTER">
             <children>
-                <Button fx:id="btnView" onAction="#handleView" styleClass="card-action-btn" text="👁️ Voir" />
-                <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="card-action-btn-edit" text="✏️ Modifier" />
-                <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="card-action-btn-delete" text="🗑️" />
+                <Button fx:id="btnView" onAction="#handleView" styleClass="card-action-btn" text="Voir" />
+                <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="card-action-btn-edit" text="Modifier" />
+                <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="card-action-btn-delete" text="×" />
             </children>
         </HBox>
     </children>

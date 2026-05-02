@@ -114,14 +114,16 @@ public class TrainingSessionCardController {
                 sessionLocation.setText("Non spécifié");
             }
 
-            // Notes (optional)
-            if (session.getNotes() != null && !session.getNotes().trim().isEmpty()) {
-                sessionNotes.setText(session.getNotes());
-                notesContainer.setVisible(true);
-                notesContainer.setManaged(true);
-            } else {
-                notesContainer.setVisible(false);
-                notesContainer.setManaged(false);
+            // Notes (optional) - only if the fields exist in FXML
+            if (notesContainer != null && sessionNotes != null) {
+                if (session.getNotes() != null && !session.getNotes().trim().isEmpty()) {
+                    sessionNotes.setText(session.getNotes());
+                    notesContainer.setVisible(true);
+                    notesContainer.setManaged(true);
+                } else {
+                    notesContainer.setVisible(false);
+                    notesContainer.setManaged(false);
+                }
             }
         }
     }
