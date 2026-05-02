@@ -143,10 +143,48 @@ public class TournamentCardController {
             txtCenter.setText("Centre non spécifié");
         }
 
-        // Set status (for now, just set as "ACTIF")
-        txtStatus.setText("ACTIF");
-        statusBadge.getStyleClass().removeAll("upcoming", "finished");
-        // You can add logic here to determine status based on dates
+        // Set state badge
+        updateStateBadge();
+    }
+
+    private void updateStateBadge() {
+        if (tournament == null || tournament.getState() == null) {
+            txtStatus.setText("INCONNU");
+            statusBadge.getStyleClass().removeAll("state-registration-open", "state-registration-closed", 
+                    "state-in-progress", "state-completed", "state-cancelled");
+            return;
+        }
+
+        try {
+            Tounament.TournamentState state = Tounament.TournamentState.valueOf(tournament.getState());
+            txtStatus.setText(state.getDisplayName().toUpperCase());
+            
+            // Remove all state classes first
+            statusBadge.getStyleClass().removeAll("state-registration-open", "state-registration-closed", 
+                    "state-in-progress", "state-completed", "state-cancelled");
+            
+            // Add appropriate state class
+            switch (state) {
+                case REGISTRATION_OPEN:
+                    statusBadge.getStyleClass().add("state-registration-open");
+                    break;
+                case REGISTRATION_CLOSED:
+                    statusBadge.getStyleClass().add("state-registration-closed");
+                    break;
+                case IN_PROGRESS:
+                    statusBadge.getStyleClass().add("state-in-progress");
+                    break;
+                case COMPLETED:
+                    statusBadge.getStyleClass().add("state-completed");
+                    break;
+                case CANCELLED:
+                    statusBadge.getStyleClass().add("state-cancelled");
+                    break;
+            }
+        } catch (IllegalArgumentException e) {
+            txtStatus.setText("INCONNU");
+            System.err.println("Invalid tournament state: " + tournament.getState());
+        }
     }
 
     @FXML

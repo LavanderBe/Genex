@@ -19,8 +19,8 @@ public class CrudTournament implements ICrud<Tounament> {
     public void addEntity(Tounament t) {
 
         String requete = "INSERT INTO tournaments " +
-                "(tournament_name, game_id, center_id, format, participant_type, starts_at, ends_at, prize_pool) " +
-                "VALUES (?,?,?,?,?,?,?,?)";
+                "(tournament_name, game_id, center_id, format, participant_type, starts_at, ends_at, prize_pool, state) " +
+                "VALUES (?,?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
@@ -32,6 +32,7 @@ public class CrudTournament implements ICrud<Tounament> {
             pst.setString(6, t.getStarts_at().toString());
             pst.setString(7, t.getEnds_at().toString());
             pst.setDouble(8, t.getPrize_pool());
+            pst.setString(9, t.getState() != null ? t.getState() : Tounament.TournamentState.REGISTRATION_OPEN.name());
             pst.executeUpdate();
             System.out.println("Tournament added successfully");
         } catch (SQLException e) {
@@ -44,7 +45,7 @@ public class CrudTournament implements ICrud<Tounament> {
 
         String requete = "UPDATE tournaments SET " +
                 "tournament_name=?, game_id=?, center_id=?, format=?, participant_type=?, " +
-                "starts_at=?, ends_at=?, prize_pool=? WHERE id=?";
+                "starts_at=?, ends_at=?, prize_pool=?, state=? WHERE id=?";
 
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
@@ -56,7 +57,8 @@ public class CrudTournament implements ICrud<Tounament> {
             pst.setString(6, t.getStarts_at().toString());
             pst.setString(7, t.getEnds_at().toString());
             pst.setDouble(8, t.getPrize_pool());
-            pst.setString(9, id);
+            pst.setString(9, t.getState());
+            pst.setString(10, id);
             pst.executeUpdate();
             System.out.println("Tournament updated successfully");
         } catch (SQLException e) {
@@ -98,6 +100,7 @@ public class CrudTournament implements ICrud<Tounament> {
                 t.setStarts_at(rs.getTimestamp("starts_at").toLocalDateTime());
                 t.setEnds_at(rs.getTimestamp("ends_at").toLocalDateTime());
                 t.setPrize_pool(rs.getDouble("prize_pool"));
+                t.setState(rs.getString("state"));
                 System.out.println("Tournament loaded");
             }
         } catch (SQLException e) {
@@ -125,6 +128,7 @@ public class CrudTournament implements ICrud<Tounament> {
                 t.setStarts_at(rs.getTimestamp("starts_at").toLocalDateTime());
                 t.setEnds_at(rs.getTimestamp("ends_at").toLocalDateTime());
                 t.setPrize_pool(rs.getDouble("prize_pool"));
+                t.setState(rs.getString("state"));
                 list.add(t);
             }
         } catch (SQLException e) {

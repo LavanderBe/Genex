@@ -39,6 +39,9 @@ public class AddTournamentModalController {
     private ComboBox<Center> comboCenter;
 
     @FXML
+    private ComboBox<String> comboState;
+
+    @FXML
     private DatePicker dateStart;
 
     @FXML
@@ -64,6 +67,9 @@ public class AddTournamentModalController {
 
     @FXML
     private Label errorCenter;
+
+    @FXML
+    private Label errorState;
 
     @FXML
     private Label errorStartDate;
@@ -93,6 +99,13 @@ public class AddTournamentModalController {
         // Populate combo boxes
         comboFormat.getItems().addAll("Round Robin", "Single Elimination", "Double Elimination");
         comboType.getItems().addAll("Solo", "Team");
+        
+        // Populate state combo box
+        for (Tounament.TournamentState state : Tounament.TournamentState.values()) {
+            comboState.getItems().add(state.getDisplayName());
+        }
+        // Set default state to REGISTRATION_OPEN
+        comboState.setValue(Tounament.TournamentState.REGISTRATION_OPEN.getDisplayName());
 
         // Load games and centers
         loadGames();
@@ -155,6 +168,7 @@ public class AddTournamentModalController {
         comboType.valueProperty().addListener((obs, old, val) -> hideError(errorType));
         comboGame.valueProperty().addListener((obs, old, val) -> hideError(errorGame));
         comboCenter.valueProperty().addListener((obs, old, val) -> hideError(errorCenter));
+        comboState.valueProperty().addListener((obs, old, val) -> hideError(errorState));
         dateStart.valueProperty().addListener((obs, old, val) -> hideError(errorStartDate));
         dateEnd.valueProperty().addListener((obs, old, val) -> hideError(errorEndDate));
         txtPrizePool.textProperty().addListener((obs, old, val) -> hideError(errorPrizePool));
@@ -201,6 +215,16 @@ public class AddTournamentModalController {
         }
 
         txtPrizePool.setText(String.valueOf(tournament.getPrize_pool()));
+        
+        // Set state
+        if (tournament.getState() != null) {
+            try {
+                Tounament.TournamentState state = Tounament.TournamentState.valueOf(tournament.getState());
+                comboState.setValue(state.getDisplayName());
+            } catch (IllegalArgumentException e) {
+                comboState.setValue(Tounament.TournamentState.REGISTRATION_OPEN.getDisplayName());
+            }
+        }
     }
 
     public void setOnSaveCallback(Consumer<Tounament> callback) {
@@ -243,6 +267,15 @@ public class AddTournamentModalController {
             }
 
             tournament.setPrize_pool(Double.parseDouble(txtPrizePool.getText().trim()));
+            
+            // Set state - convert display name back to enum name
+            String stateDisplayName = comboState.getValue();
+            for (Tounament.TournamentState state : Tounament.TournamentState.values()) {
+                if (state.getDisplayName().equals(stateDisplayName)) {
+                    tournament.setState(state.name());
+                    break;
+                }
+            }
 
             System.out.println("Tournament saved: " + tournament.getTournamentName());
 
@@ -287,6 +320,12 @@ public class AddTournamentModalController {
         // Validate center
         if (comboCenter.getValue() == null) {
             showError(errorCenter, "Le centre est requis");
+            valid = false;
+        }
+
+        // Validate state
+        if (comboState.getValue() == null) {
+            showError(errorState, "L'état est requis");
             valid = false;
         }
 

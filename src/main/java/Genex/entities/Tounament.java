@@ -15,6 +15,7 @@ public class Tounament {
     private LocalDateTime starts_at;
     private LocalDateTime ends_at;
     private double prize_pool;
+    private String state;
     private List<TournamentParticipants> participants;
 
     public enum Format {
@@ -23,6 +24,24 @@ public class Tounament {
 
     public enum ParticipantType {
         SOLO, TEAM
+    }
+
+    public enum TournamentState {
+        REGISTRATION_OPEN("Inscription Ouverte"),
+        REGISTRATION_CLOSED("Inscription Fermée"),
+        IN_PROGRESS("En Cours"),
+        COMPLETED("Terminé"),
+        CANCELLED("Annulé");
+
+        private final String displayName;
+
+        TournamentState(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     // Default constructor
@@ -42,6 +61,7 @@ public class Tounament {
         this.starts_at = starts_at;
         this.ends_at = ends_at;
         this.prize_pool = prize_pool;
+        this.state = TournamentState.REGISTRATION_OPEN.name();
         this.participants = new ArrayList<>();
     }
 
@@ -78,6 +98,9 @@ public class Tounament {
     public double getPrize_pool() { return prize_pool; }
     public void setPrize_pool(double prize_pool) { this.prize_pool = prize_pool; }
 
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
+
     public List<TournamentParticipants> getParticipants() { return participants; }
     public void setParticipants(List<TournamentParticipants> participants) { this.participants = participants; }
 
@@ -93,6 +116,7 @@ public class Tounament {
                 ", starts_at=" + starts_at +
                 ", ends_at=" + ends_at +
                 ", prize_pool=" + prize_pool +
+                ", state='" + state + '\'' +
                 ", participants=" + participants +
                 '}';
     }

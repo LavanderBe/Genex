@@ -70,6 +70,60 @@
     -fx-border-radius: 10;
 }
 
+/* State-specific badge colors */
+.status-badge.state-registration-open {
+    -fx-background-color: rgba(34, 197, 94, 0.2);
+    -fx-border-color: rgba(34, 197, 94, 0.4);
+}
+
+.status-badge.state-registration-closed {
+    -fx-background-color: rgba(251, 146, 60, 0.2);
+    -fx-border-color: rgba(251, 146, 60, 0.4);
+}
+
+.status-badge.state-in-progress {
+    -fx-background-color: rgba(59, 130, 246, 0.2);
+    -fx-border-color: rgba(59, 130, 246, 0.4);
+}
+
+.status-badge.state-completed {
+    -fx-background-color: rgba(139, 92, 246, 0.2);
+    -fx-border-color: rgba(139, 92, 246, 0.4);
+}
+
+.status-badge.state-cancelled {
+    -fx-background-color: rgba(239, 68, 68, 0.2);
+    -fx-border-color: rgba(239, 68, 68, 0.4);
+}
+
+.status-text {
+    -fx-fill: #22c55e;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+.status-badge.state-registration-open .status-text {
+    -fx-fill: #22c55e;
+}
+
+.status-badge.state-registration-closed .status-text {
+    -fx-fill: #fb923c;
+}
+
+.status-badge.state-in-progress .status-text {
+    -fx-fill: #3b82f6;
+}
+
+.status-badge.state-completed .status-text {
+    -fx-fill: #8b5cf6;
+}
+
+.status-badge.state-cancelled .status-text {
+    -fx-fill: #ef4444;
+}
+
+/* Legacy classes for backward compatibility */
 .status-badge.upcoming {
     -fx-background-color: rgba(92, 124, 250, 0.2);
     -fx-border-color: rgba(92, 124, 250, 0.4);
@@ -78,13 +132,6 @@
 .status-badge.finished {
     -fx-background-color: rgba(150, 150, 150, 0.2);
     -fx-border-color: rgba(150, 150, 150, 0.4);
-}
-
-.status-text {
-    -fx-fill: #22c55e;
-    -fx-font-size: 11;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 0.5;
 }
 
 .status-badge.upcoming .status-text {

@@ -63,28 +63,36 @@
                 <Label fx:id="errorCenter" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
-            <!-- Start Date -->
-            <Label text="Date de Début" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <!-- State -->
+            <Label text="État" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <ComboBox fx:id="comboState" promptText="Sélectionner l'état" prefWidth="Infinity" />
+                <Label fx:id="errorState" managed="false" styleClass="error-label" visible="false" />
+            </VBox>
+
+            <!-- Start Date -->
+            <Label text="Date de Début" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                 <DatePicker fx:id="dateStart" prefWidth="Infinity" />
                 <Label fx:id="errorStartDate" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
             <!-- End Date -->
-            <Label text="Date de Fin" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <Label text="Date de Fin" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="7">
                 <DatePicker fx:id="dateEnd" prefWidth="Infinity" />
                 <Label fx:id="errorEndDate" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
             <!-- Prize Pool -->
-            <Label text="Prize Pool (€)" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <Label text="Prize Pool (€)" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="8">
                 <TextField fx:id="txtPrizePool" promptText="50000" />
                 <Label fx:id="errorPrizePool" managed="false" styleClass="error-label" visible="false" />
             </VBox>
 
             <rowConstraints>
+                <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
