@@ -55,21 +55,26 @@ public class Dashboard {
         setActiveButton((Button) event.getSource());
         restoreDefaultContent();
     }
+    private void loadModule(String fxmlFile) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Node node = loader.load();
+            contentArea.getChildren().clear();
+            AnchorPane.setTopAnchor(node, 0.0);
+            AnchorPane.setBottomAnchor(node, 0.0);
+            AnchorPane.setLeftAnchor(node, 0.0);
+            AnchorPane.setRightAnchor(node, 0.0);
+            contentArea.getChildren().add(node);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     void navPlayerBtn(ActionEvent event) {
-        try {
-            setActiveButton((Button) event.getSource());
-            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Player/Player.fxml"));
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-        } catch (IOException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        setActiveButton((Button) event.getSource());
+        loadModule("/Fxml/Player/Player.fxml");
     }
 
     /**

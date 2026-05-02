@@ -147,7 +147,6 @@
                             </children>
                         </AnchorPane>
                     </children>
-                    <padding><Insets bottom="50.0" right="30.0" /></padding>
                 </AnchorPane>
             </content>
         </ScrollPane>

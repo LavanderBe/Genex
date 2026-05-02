@@ -79,7 +79,7 @@ public class PlayerDashboard {
 
     private void loadModule(String fxmlName) {
         try {
-            Parent module = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/Modules/" + fxmlName));
+            Parent module = FXMLLoader.load(getClass().getResource(fxmlName));
             contentArea.getChildren().setAll(module);
         } catch (IOException e) {
             System.err.println("Module not found: " + fxmlName);
