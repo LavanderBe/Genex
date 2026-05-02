@@ -14,14 +14,15 @@ public class CrudSponsor implements ICrud<Sponsor> {
 
     @Override
     public void addEntity(Sponsor s) {
-        String sql = "INSERT INTO sponsors (id, name, logo_url, website_url, industry, contact_email, created_at) " +
-                     "VALUES (UUID(), ?, ?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO sponsors (id, name, logo_url, website_url, industry, contact_email, sponsor_type, created_at) " +
+                     "VALUES (UUID(), ?, ?, ?, ?, ?, ?, NOW())";
         try (PreparedStatement pst = cnx.prepareStatement(sql)) {
             pst.setString(1, s.getName());
-            pst.setString(2, s.getLogoUrl());
-            pst.setString(3, s.getWebsiteUrl());
-            pst.setString(4, s.getIndustry());
-            pst.setString(5, s.getContactEmail());
+            pst.setString(2, nullIfBlank(s.getLogoUrl()));
+            pst.setString(3, nullIfBlank(s.getWebsiteUrl()));
+            pst.setString(4, nullIfBlank(s.getIndustry()));
+            pst.setString(5, nullIfBlank(s.getContactEmail()));
+            pst.setString(6, nullIfBlank(s.getSponsorType()));
             pst.executeUpdate();
             System.out.println("Sponsor added: " + s.getName());
         } catch (SQLException e) {
@@ -31,14 +32,15 @@ public class CrudSponsor implements ICrud<Sponsor> {
 
     @Override
     public void updateEntity(Sponsor s, String id) {
-        String sql = "UPDATE sponsors SET name=?, logo_url=?, website_url=?, industry=?, contact_email=? WHERE id=?";
+        String sql = "UPDATE sponsors SET name=?, logo_url=?, website_url=?, industry=?, contact_email=?, sponsor_type=? WHERE id=?";
         try (PreparedStatement pst = cnx.prepareStatement(sql)) {
             pst.setString(1, s.getName());
-            pst.setString(2, s.getLogoUrl());
-            pst.setString(3, s.getWebsiteUrl());
-            pst.setString(4, s.getIndustry());
-            pst.setString(5, s.getContactEmail());
-            pst.setString(6, id);
+            pst.setString(2, nullIfBlank(s.getLogoUrl()));
+            pst.setString(3, nullIfBlank(s.getWebsiteUrl()));
+            pst.setString(4, nullIfBlank(s.getIndustry()));
+            pst.setString(5, nullIfBlank(s.getContactEmail()));
+            pst.setString(6, nullIfBlank(s.getSponsorType()));
+            pst.setString(7, id);
             pst.executeUpdate();
             System.out.println("Sponsor updated: " + id);
         } catch (SQLException e) {
@@ -60,7 +62,6 @@ public class CrudSponsor implements ICrud<Sponsor> {
 
     @Override
     public void getEntity(Sponsor s) {
-        // single fetch by id — result printed; use getAll() for UI
         String sql = "SELECT * FROM sponsors WHERE id=?";
         try (PreparedStatement pst = cnx.prepareStatement(sql)) {
             pst.setString(1, s.getId());
@@ -94,7 +95,12 @@ public class CrudSponsor implements ICrud<Sponsor> {
         s.setWebsiteUrl(rs.getString("website_url"));
         s.setIndustry(rs.getString("industry"));
         s.setContactEmail(rs.getString("contact_email"));
+        s.setSponsorType(rs.getString("sponsor_type")); // may be null for old rows
         Timestamp ts = rs.getTimestamp("created_at");
         if (ts != null) s.setCreatedAt(ts.toLocalDateTime());
+    }
+
+    private String nullIfBlank(String val) {
+        return (val == null || val.isBlank()) ? null : val;
     }
 }

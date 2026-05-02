@@ -11,6 +11,7 @@ public class Sponsor {
     private String industry;
     private String contactEmail;
     private LocalDateTime createdAt;
+    private String sponsorType; // "Tournoi", "Équipe", "Centre" or combinations
 
     // Constructeur par défaut
     public Sponsor() {}
@@ -93,6 +94,14 @@ public class Sponsor {
 
     public static String generateId() {
         return UUID.randomUUID().toString();
+    }
+
+    public String getSponsorType() {
+        return sponsorType;
+    }
+
+    public void setSponsorType(String sponsorType) {
+        this.sponsorType = sponsorType;
     }
 
     @Override
