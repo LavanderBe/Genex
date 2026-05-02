@@ -1,3 +1,82 @@
+/* Inherits from your main-container variables */
+
+.module-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+}
+
+/* SEARCH FIELD */
+.cyber-field {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: #1F1E4E;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666c8a;
+    -fx-padding: 8;
+    -fx-border-width: 1;
+}
+
+.cyber-field:focused {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.2), 10, 0, 0, 0);
+}
+
+/* GAME CARD DESIGN */
+.game-card {
+    -fx-background-color: rgba(10, 10, 25, 0.8);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-transition: 0.3s;
+}
+
+.game-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-translate-y: -5;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.3), 15, 0, 0, 0);
+}
+
+.game-image-placeholder {
+    -fx-background-color: linear-gradient(to bottom right, #1F1E4E, #050508);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* MINI BUTTONS FOR CARDS */
+.card-btn-blue {
+    -fx-background-color: transparent;
+    -fx-border-color: #5c7cfa;
+    -fx-text-fill: #5c7cfa;
+    -fx-font-size: 9px;
+    -fx-font-family: "Arial Black";
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.card-btn-blue:hover {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+}
+
+.card-btn-red {
+    -fx-background-color: transparent;
+    -fx-border-color: #ff5252;
+    -fx-text-fill: #ff5252;
+    -fx-font-size: 9px;
+    -fx-font-family: "Arial Black";
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.card-btn-red:hover {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+}
+
+/* HUD CORNER FOR CARDS */
+.hud-corner {
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2 0 0 2;
+}
 /* ROOT SETTINGS */
 .main-container {
     /* Deep Blue to Black Gradient with a subtle Scanline effect */

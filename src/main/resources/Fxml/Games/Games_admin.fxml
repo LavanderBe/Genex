@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: transparent;" stylesheets="@Games_admin.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Games.Games">
+    <children>
+        <!-- HUD CONTAINER -->
+        <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <children>
+
+                <!-- HEADER SECTION -->
+                <HBox alignment="BOTTOM_LEFT" spacing="15.0">
+                    <children>
+                        <VBox>
+                            <children>
+                                <Label styleClass="module-title" text="DATABASE // GAMES_CATALOG" textFill="WHITE">
+                                    <font><Font name="System Bold" size="28.0" /></font>
+                                </Label>
+                                <Label text="DIRECT_LINK_ESTABLISHED // SELECT_ENTRY" textFill="#5c7cfa" style="-fx-font-size: 10px; -fx-letter-spacing: 2px;" />
+                            </children>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER" spacing="10.0" styleClass="search-box">
+                            <children>
+                                <TextField fx:id="searchField" promptText="FILTER_BY_NAME..." styleClass="cyber-field" />
+                                <Button mnemonicParsing="false" styleClass="action-blue-button" text="SEARCH" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+
+                <!-- ACTION BAR -->
+                <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-padding: 10 0;">
+                    <children>
+                        <Button mnemonicParsing="false" styleClass="action-blue-button" text="+ REGISTER_NEW_GAME" />
+                        <Button mnemonicParsing="false" styleClass="action-red-button" text="TERMINATE_ALL" />
+                    </children>
+                </HBox>
+
+                <!-- GAMES GRID -->
+                <ScrollPane fitToWidth="true" styleClass="edge-scrollpane" VBox.vgrow="ALWAYS">
+                    <content>
+                        <FlowPane fx:id="gamesGrid" hgap="20.0" vgap="20.0" style="-fx-background-color: transparent;">
+                            <children>
+
+                                <!-- EXAMPLE GAME CARD 1 -->
+                                <VBox prefHeight="220.0" prefWidth="280.0" styleClass="game-card">
+                                    <children>
+                                        <AnchorPane prefHeight="130.0" styleClass="game-image-placeholder">
+                                            <children>
+                                                <Label text="VALORANT" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" textFill="WHITE" style="-fx-font-weight: bold;"/>
+                                                <Region prefHeight="20.0" prefWidth="20.0" styleClass="hud-corner" AnchorPane.leftAnchor="-1" AnchorPane.topAnchor="-1" />
+                                            </children>
+                                        </AnchorPane>
+                                        <VBox spacing="5.0" style="-fx-padding: 10;">
+                                            <children>
+                                                <Label text="GENRE: TACTICAL FPS" textFill="#666c8a" style="-fx-font-size: 10px;" />
+                                                <HBox spacing="10">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" styleClass="card-btn-blue" text="STATS" />
+                                                        <Button mnemonicParsing="false" styleClass="card-btn-red" text="DELETE" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <!-- EXAMPLE GAME CARD 2 -->
+                                <VBox prefHeight="220.0" prefWidth="280.0" styleClass="game-card">
+                                    <children>
+                                        <AnchorPane prefHeight="130.0" styleClass="game-image-placeholder">
+                                            <children>
+                                                <Label text="LEAGUE OF LEGENDS" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" textFill="WHITE" style="-fx-font-weight: bold;"/>
+                                                <Region prefHeight="20.0" prefWidth="20.0" styleClass="hud-corner" AnchorPane.leftAnchor="-1" AnchorPane.topAnchor="-1" />
+                                            </children>
+                                        </AnchorPane>
+                                        <VBox spacing="5.0" style="-fx-padding: 10;">
+                                            <children>
+                                                <Label text="GENRE: MOBA" textFill="#666c8a" style="-fx-font-size: 10px;" />
+                                                <HBox spacing="10">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" styleClass="card-btn-blue" text="STATS" />
+                                                        <Button mnemonicParsing="false" styleClass="card-btn-red" text="DELETE" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                            </children>
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

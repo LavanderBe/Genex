@@ -71,6 +71,7 @@
     -fx-cursor: hand;
 }
 .action-confirm-btn:hover {
+    -fx-translate-y: -2;
     -fx-background-color: #7d97ff;
     -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
 }
@@ -84,6 +85,7 @@
     -fx-cursor: hand;
 }
 .action-cancel-btn:hover {
+    -fx-translate-y: -2;
     -fx-background-color: #ff7676;
     -fx-effect: dropshadow(three-pass-box, #FF5252, 15, 0, 0, 0);
 }
