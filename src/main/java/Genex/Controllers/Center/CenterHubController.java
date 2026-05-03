@@ -63,11 +63,11 @@ public class CenterHubController {
             // Show all centers
             displayCenters(allCenters);
         } else {
-            // Filter centers by name or city
+            // Filter centers by name or city - using startsWith for more precise filtering
             String search = searchText.toLowerCase();
             List<Center> filtered = allCenters.stream()
-                .filter(c -> c.getName().toLowerCase().contains(search) || 
-                            c.getCity().toLowerCase().contains(search))
+                .filter(c -> c.getName().toLowerCase().startsWith(search) || 
+                            c.getCity().toLowerCase().startsWith(search))
                 .toList();
             displayCenters(filtered);
         }
@@ -82,25 +82,15 @@ public class CenterHubController {
     @FXML
     private void openAddCenterModal() {
         try {
-            System.out.println("Opening Add Center Modal...");
+            System.out.println("Opening Add Center Drawer...");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Center/AddCenterModal.fxml"));
-            Parent addCenterForm = loader.load();
+            StackPane drawerOverlay = loader.load();
 
-            // 1. Apply Blur effect to the background
-            GaussianBlur blur = new GaussianBlur(15);
-            contentArea.setEffect(blur);
-            contentArea.setDisable(true); // Prevent clicking background items
+            // Add drawer overlay to the stack
+            rootStackPane.getChildren().add(drawerOverlay);
 
-            // 2. Wrap the form in a darkening overlay (dimmer)
-            VBox overlay = new VBox(addCenterForm);
-            overlay.setAlignment(javafx.geometry.Pos.CENTER);
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
-
-            // 3. Add to the stack
-            rootStackPane.getChildren().add(overlay);
-
-            // 4. Pass a "Close" callback to the AddCenterModalController
+            // Get controller and set callbacks
             AddCenterModalController controller = loader.getController();
             controller.setOnSaveCallback(center -> {
                 System.out.println("Saving center: " + center.getName());
@@ -108,22 +98,18 @@ public class CenterHubController {
                 // Save to database
                 crudCenter.addEntity(center);
 
-                // Remove overlay and reload
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                // Remove drawer overlay and reload
+                rootStackPane.getChildren().remove(drawerOverlay);
                 loadCentersFromDatabase();
             });
 
-            // Also handle close without saving
+            // Handle close without saving
             controller.setOnCloseCallback(() -> {
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                rootStackPane.getChildren().remove(drawerOverlay);
             });
             
         } catch (Exception e) {
-            System.err.println("Error opening Add Center Modal");
+            System.err.println("Error opening Add Center Drawer");
             e.printStackTrace();
         }
     }

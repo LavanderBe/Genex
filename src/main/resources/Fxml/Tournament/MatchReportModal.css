@@ -1,0 +1,165 @@
+/* ═══════════════════════════════════════════════════
+   Match Report Modal - Polygon Theme
+   ═══════════════════════════════════════════════════ */
+
+.modal-container {
+    -fx-background-color: linear-gradient(to bottom right, #1a1a3e, #2d2d5f);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(124, 111, 255, 0.3);
+    -fx-border-radius: 15;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 30, 0, 0, 10);
+}
+
+/* ─── Title ──────────────────────────────────────────────────────────── */
+
+.modal-title {
+    -fx-fill: white;
+    -fx-font-size: 24;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}
+
+.match-info-text {
+    -fx-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+}
+
+/* ─── Player Sections ────────────────────────────────────────────────── */
+
+.player-section {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.player-icon {
+    -fx-font-size: 28;
+}
+
+.player-name-large {
+    -fx-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+
+.score-label {
+    -fx-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+}
+
+/* ─── Score ComboBox ─────────────────────────────────────────────────── */
+
+.score-combo {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.score-combo .list-cell {
+    -fx-background-color: #2d2d5f;
+    -fx-text-fill: white;
+}
+
+.score-combo .list-cell:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.3);
+}
+
+.score-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.score-combo .arrow {
+    -fx-background-color: #7c6fff;
+}
+
+/* ─── VS Divider ─────────────────────────────────────────────────────── */
+
+.vs-divider {
+    -fx-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 2;
+}
+
+/* ─── Winner Section ─────────────────────────────────────────────────── */
+
+.winner-section {
+    -fx-background-color: rgba(124, 111, 255, 0.1);
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: rgba(124, 111, 255, 0.3);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.winner-label {
+    -fx-fill: #7c6fff;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}
+
+.winner-radio {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+}
+
+.winner-radio .radio {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #7c6fff;
+    -fx-border-width: 2;
+}
+
+.winner-radio:selected .radio {
+    -fx-background-color: #7c6fff;
+}
+
+.winner-radio .dot {
+    -fx-background-color: white;
+}
+
+/* ─── Action Buttons ─────────────────────────────────────────────────── */
+
+.btn-cancel {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 100 0 L 110 10 L 110 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1;
+}
+
+.btn-cancel:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-translate-y: -2;
+}
+
+.btn-submit {
+    -fx-background-color: linear-gradient(to right, #10b981, #059669);
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 100 0 L 110 10 L 110 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.4), 12, 0, 0, 4);
+}
+
+.btn-submit:hover {
+    -fx-background-color: linear-gradient(to right, #34d399, #10b981);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.6), 16, 0, 0, 6);
+}

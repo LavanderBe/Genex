@@ -80,6 +80,8 @@ public class CrudPlayer {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 Player p = new Player(rs.getDate("date_of_birth").toLocalDate(),rs.getString("first_name"),rs.getString("last_name"),rs.getString("nickname"), rs.getString("cin"),rs.getString("nationality"),rs.getString("city"));
+                // Set the user_id as the player's ID (user_id is the primary key in players table)
+                p.setId(rs.getString("user_id"));
                 players.add(p);
             }
         } catch (SQLException e) {

@@ -43,6 +43,7 @@ public class TournamentHubController {
     private CrudTournament crudTournament;
     private CrudGame crudGame;
     private List<Tounament> allTournaments;
+    private boolean showOnlyMyTournaments = false;
 
     @FXML
     public void initialize() {
@@ -51,6 +52,9 @@ public class TournamentHubController {
         // Initialize CRUD services
         crudTournament = new CrudTournament();
         crudGame = new CrudGame();
+
+        // Setup role-based UI
+        setupRoleBasedUI();
 
         // Load games for filter
         loadGamesFilter();
@@ -63,6 +67,35 @@ public class TournamentHubController {
 
         // Load tournaments from database
         loadTournamentsFromDatabase();
+    }
+
+    private void setupRoleBasedUI() {
+        // Get current user from session
+        Genex.entities.User currentUser = Genex.utils.SessionManager.getInstance().getCurrentUser();
+        
+        if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
+            // Player: Change button to "Mes Tournois"
+            btnAddTournament.setText("Mes Tournois");
+            btnAddTournament.setOnAction(event -> toggleMyTournaments());
+        } else {
+            // Admin: Keep "Nouveau Tournoi" button
+            btnAddTournament.setText("+ Nouveau Tournoi");
+            btnAddTournament.setOnAction(event -> openAddTournamentModal());
+        }
+    }
+
+    private void toggleMyTournaments() {
+        showOnlyMyTournaments = !showOnlyMyTournaments;
+        
+        if (showOnlyMyTournaments) {
+            btnAddTournament.setText("Tous les Tournois");
+            btnAddTournament.getStyleClass().add("active-filter");
+        } else {
+            btnAddTournament.setText("Mes Tournois");
+            btnAddTournament.getStyleClass().remove("active-filter");
+        }
+        
+        filterTournaments();
     }
 
     private void loadGamesFilter() {
@@ -118,17 +151,28 @@ public class TournamentHubController {
 
         List<Tounament> filtered = allTournaments.stream()
                 .filter(t -> {
-                    // Filter by search text
+                    // Filter by search text - using startsWith for more precise filtering
                     boolean matchesSearch = searchText == null || searchText.trim().isEmpty() ||
-                            t.getTournamentName().toLowerCase().contains(searchText.toLowerCase()) ||
-                            t.getFormat().toLowerCase().contains(searchText.toLowerCase());
+                            t.getTournamentName().toLowerCase().startsWith(searchText.toLowerCase()) ||
+                            t.getFormat().toLowerCase().startsWith(searchText.toLowerCase());
 
                     // Filter by game
                     boolean matchesGame = selectedGame == null || 
                             "ALL".equals(selectedGame.getId()) ||
                             (t.getGame_id() != null && t.getGame_id().equals(selectedGame.getId()));
 
-                    return matchesSearch && matchesGame;
+                    // Filter by player's joined tournaments (if player and filter active)
+                    boolean matchesMyTournaments = true;
+                    if (showOnlyMyTournaments) {
+                        Genex.entities.User currentUser = Genex.utils.SessionManager.getInstance().getCurrentUser();
+                        if (currentUser != null) {
+                            String playerId = currentUser.getId();
+                            Genex.services.CrudTournamentParticipant crudParticipant = new Genex.services.CrudTournamentParticipant();
+                            matchesMyTournaments = crudParticipant.isPlayerParticipating(t.getTournamentId(), playerId);
+                        }
+                    }
+
+                    return matchesSearch && matchesGame && matchesMyTournaments;
                 })
                 .toList();
 
@@ -144,25 +188,15 @@ public class TournamentHubController {
     @FXML
     private void openAddTournamentModal() {
         try {
-            System.out.println("Opening Add Tournament Modal...");
+            System.out.println("Opening Add Tournament Drawer...");
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/AddTournamentModal.fxml"));
-            Parent addTournamentForm = loader.load();
+            StackPane drawerOverlay = loader.load();
 
-            // 1. Apply Blur effect to the background
-            GaussianBlur blur = new GaussianBlur(15);
-            contentArea.setEffect(blur);
-            contentArea.setDisable(true); // Prevent clicking background items
+            // Add drawer overlay to the stack
+            rootStackPane.getChildren().add(drawerOverlay);
 
-            // 2. Wrap the form in a darkening overlay (dimmer)
-            VBox overlay = new VBox(addTournamentForm);
-            overlay.setAlignment(javafx.geometry.Pos.CENTER);
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
-
-            // 3. Add to the stack
-            rootStackPane.getChildren().add(overlay);
-
-            // 4. Pass a "Close" callback to the AddTournamentModalController
+            // Get controller and set callbacks
             AddTournamentModalController controller = loader.getController();
             controller.setOnSaveCallback(tournament -> {
                 System.out.println("Saving tournament: " + tournament.getTournamentName());
@@ -170,22 +204,18 @@ public class TournamentHubController {
                 // Save to database
                 crudTournament.addEntity(tournament);
 
-                // Remove overlay and reload
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                // Remove drawer overlay and reload
+                rootStackPane.getChildren().remove(drawerOverlay);
                 loadTournamentsFromDatabase();
             });
 
-            // Also handle close without saving
+            // Handle close without saving
             controller.setOnCloseCallback(() -> {
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                rootStackPane.getChildren().remove(drawerOverlay);
             });
 
         } catch (Exception e) {
-            System.err.println("Error opening Add Tournament Modal");
+            System.err.println("Error opening Add Tournament Drawer");
             e.printStackTrace();
         }
     }

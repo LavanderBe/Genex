@@ -6,107 +6,124 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" prefHeight="650" prefWidth="550" styleClass="scroll-pane" stylesheets="@AddTournamentModal.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Tournament.AddTournamentModalController">
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Tournament.AddTournamentModalController"
+           styleClass="overlay-bg" stylesheets="@AddTournamentModal.css"
+           alignment="CENTER_RIGHT">
 
-    <VBox spacing="20" styleClass="dialog-root">
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" StackPane.alignment="CENTER_RIGHT">
         <padding>
-            <Insets bottom="30" left="40" right="40" top="30" />
+            <Insets top="28" right="28" bottom="28" left="28" />
         </padding>
 
-        <Label styleClass="dialog-title" text="Tournoi" fx:id="modalTitle" />
-
-        <GridPane hgap="20" vgap="15">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="35" />
-                <ColumnConstraints percentWidth="65" />
-            </columnConstraints>
-
-            <!-- Tournament Name -->
-            <Label text="Nom du Tournoi" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <TextField fx:id="txtName" promptText="Champions League 2026" />
-                <Label fx:id="errorName" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Format -->
-            <Label text="Format" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <ComboBox fx:id="comboFormat" promptText="Sélectionner" prefWidth="Infinity" />
-                <Label fx:id="errorFormat" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Type -->
-            <Label text="Type" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <ComboBox fx:id="comboType" promptText="Sélectionner" prefWidth="Infinity" />
-                <Label fx:id="errorType" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Game -->
-            <Label text="Jeu" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <ComboBox fx:id="comboGame" promptText="Sélectionner un jeu" prefWidth="Infinity" />
-                <Label fx:id="errorGame" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Center -->
-            <Label text="Centre" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <ComboBox fx:id="comboCenter" promptText="Sélectionner un centre" prefWidth="Infinity" />
-                <Label fx:id="errorCenter" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- State -->
-            <Label text="État" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
-                <ComboBox fx:id="comboState" promptText="Sélectionner l'état" prefWidth="Infinity" />
-                <Label fx:id="errorState" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Start Date -->
-            <Label text="Date de Début" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
-                <DatePicker fx:id="dateStart" prefWidth="Infinity" />
-                <Label fx:id="errorStartDate" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- End Date -->
-            <Label text="Date de Fin" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="7">
-                <DatePicker fx:id="dateEnd" prefWidth="Infinity" />
-                <Label fx:id="errorEndDate" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Prize Pool -->
-            <Label text="Prize Pool (€)" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="8">
-                <TextField fx:id="txtPrizePool" promptText="50000" />
-                <Label fx:id="errorPrizePool" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
-        </GridPane>
-
-        <HBox alignment="CENTER_RIGHT" spacing="15">
-            <Button onAction="#closeModal" styleClass="secondary-btn" text="Annuler" />
-            <Button onAction="#saveTournament" styleClass="primary-btn" text="Créer Tournoi" />
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="modalTitle" text="Nouveau tournoi" styleClass="drawer-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="✕" styleClass="btn-close" onAction="#closeModal" />
         </HBox>
+
+        <Separator styleClass="drawer-sep">
+            <VBox.margin>
+                <Insets top="12" bottom="16" />
+            </VBox.margin>
+        </Separator>
+
+        <!-- Scrollable Form -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+            <VBox spacing="14">
+                
+                <!-- Tournament Name -->
+                <VBox spacing="6">
+                    <Label text="NOM DU TOURNOI *" styleClass="field-label" />
+                    <TextField fx:id="txtName" styleClass="input-field" promptText="Champions League 2026" />
+                    <Label fx:id="errorName" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Format -->
+                <VBox spacing="6">
+                    <Label text="FORMAT *" styleClass="field-label" />
+                    <ComboBox fx:id="comboFormat" styleClass="input-field" promptText="Sélectionner" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorFormat" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Type -->
+                <VBox spacing="6">
+                    <Label text="TYPE *" styleClass="field-label" />
+                    <ComboBox fx:id="comboType" styleClass="input-field" promptText="Sélectionner" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorType" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Game -->
+                <VBox spacing="6">
+                    <Label text="JEU *" styleClass="field-label" />
+                    <ComboBox fx:id="comboGame" styleClass="input-field" promptText="Sélectionner un jeu" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorGame" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Center -->
+                <VBox spacing="6">
+                    <Label text="CENTRE *" styleClass="field-label" />
+                    <ComboBox fx:id="comboCenter" styleClass="input-field" promptText="Sélectionner un centre" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorCenter" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- State -->
+                <VBox spacing="6">
+                    <Label text="ÉTAT *" styleClass="field-label" />
+                    <ComboBox fx:id="comboState" styleClass="input-field" promptText="Sélectionner l'état" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorState" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Max Players -->
+                <VBox spacing="6">
+                    <Label text="NOMBRE MAX DE JOUEURS *" styleClass="field-label" />
+                    <ComboBox fx:id="comboMaxPlayers" styleClass="input-field" promptText="Sélectionner" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorMaxPlayers" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Start Date -->
+                <VBox spacing="6">
+                    <Label text="DATE DE DÉBUT *" styleClass="field-label" />
+                    <DatePicker fx:id="dateStart" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorStartDate" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- End Date -->
+                <VBox spacing="6">
+                    <Label text="DATE DE FIN *" styleClass="field-label" />
+                    <DatePicker fx:id="dateEnd" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorEndDate" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Prize Pool -->
+                <VBox spacing="6">
+                    <Label text="PRIZE POOL (€) *" styleClass="field-label" />
+                    <TextField fx:id="txtPrizePool" styleClass="input-field" promptText="50000" />
+                    <Label fx:id="errorPrizePool" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveTournament" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+            <Button text="ANNULER" styleClass="btn-secondary" onAction="#closeModal" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+        </HBox>
+
     </VBox>
-</ScrollPane>
+
+</StackPane>

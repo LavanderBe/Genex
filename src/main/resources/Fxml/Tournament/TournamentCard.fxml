@@ -38,7 +38,7 @@
                </VBox>
                <StackPane fx:id="statusBadge" styleClass="status-badge" alignment="CENTER">
                   <children>
-                     <Text fx:id="txtStatus" styleClass="status-text" text="ACTIF" />
+                     <Text fx:id="txtStatus" styleClass="status-text" text="ACTIF • 12/32" />
                   </children>
                </StackPane>
             </children>

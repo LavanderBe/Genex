@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Tournament.MatchReportModalController"
+      styleClass="modal-container" stylesheets="@MatchReportModal.css"
+      spacing="25" alignment="CENTER" prefWidth="450" prefHeight="400">
+   <padding>
+      <Insets top="30" right="30" bottom="30" left="30" />
+   </padding>
+   
+   <children>
+      <!-- Modal Title -->
+      <Text styleClass="modal-title" text="REPORTER LE RÉSULTAT" />
+      
+      <!-- Match Info -->
+      <VBox spacing="10" alignment="CENTER">
+         <children>
+            <Text fx:id="txtMatchInfo" styleClass="match-info-text" text="Round 1 - Match 1" />
+         </children>
+      </VBox>
+      
+      <!-- Player 1 Section -->
+      <VBox spacing="12" styleClass="player-section">
+         <children>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <children>
+                  <Text styleClass="player-icon" text="👤" />
+                  <Text fx:id="txtPlayer1Name" styleClass="player-name-large" text="Player 1" />
+               </children>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <children>
+                  <Text styleClass="score-label" text="Score:" />
+                  <ComboBox fx:id="cmbPlayer1Score" styleClass="score-combo" prefWidth="80" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      
+      <!-- VS Divider -->
+      <Text styleClass="vs-divider" text="VS" />
+      
+      <!-- Player 2 Section -->
+      <VBox spacing="12" styleClass="player-section">
+         <children>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <children>
+                  <Text styleClass="player-icon" text="👤" />
+                  <Text fx:id="txtPlayer2Name" styleClass="player-name-large" text="Player 2" />
+               </children>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <children>
+                  <Text styleClass="score-label" text="Score:" />
+                  <ComboBox fx:id="cmbPlayer2Score" styleClass="score-combo" prefWidth="80" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      
+      <!-- Winner Selection -->
+      <VBox spacing="12" styleClass="winner-section">
+         <children>
+            <Text styleClass="winner-label" text="GAGNANT:" />
+            <fx:define>
+               <ToggleGroup fx:id="winnerGroup" />
+            </fx:define>
+            <RadioButton fx:id="radioPlayer1" styleClass="winner-radio" text="Player 1" toggleGroup="$winnerGroup" />
+            <RadioButton fx:id="radioPlayer2" styleClass="winner-radio" text="Player 2" toggleGroup="$winnerGroup" />
+         </children>
+      </VBox>
+      
+      <!-- Action Buttons -->
+      <HBox spacing="15" alignment="CENTER">
+         <children>
+            <Button fx:id="btnCancel" onAction="#handleCancel" styleClass="btn-cancel" text="ANNULER" />
+            <Button fx:id="btnSubmit" onAction="#handleSubmit" styleClass="btn-submit" text="VALIDER" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

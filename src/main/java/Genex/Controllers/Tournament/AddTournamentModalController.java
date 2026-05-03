@@ -42,6 +42,9 @@ public class AddTournamentModalController {
     private ComboBox<String> comboState;
 
     @FXML
+    private ComboBox<Integer> comboMaxPlayers;
+
+    @FXML
     private DatePicker dateStart;
 
     @FXML
@@ -72,6 +75,9 @@ public class AddTournamentModalController {
     private Label errorState;
 
     @FXML
+    private Label errorMaxPlayers;
+
+    @FXML
     private Label errorStartDate;
 
     @FXML
@@ -99,6 +105,10 @@ public class AddTournamentModalController {
         // Populate combo boxes
         comboFormat.getItems().addAll("Round Robin", "Single Elimination", "Double Elimination");
         comboType.getItems().addAll("Solo", "Team");
+        
+        // Populate max players combo box
+        comboMaxPlayers.getItems().addAll( 8, 16, 32, 64);
+        comboMaxPlayers.setValue(32); // Default value
         
         // Populate state combo box
         for (Tounament.TournamentState state : Tounament.TournamentState.values()) {
@@ -169,6 +179,7 @@ public class AddTournamentModalController {
         comboGame.valueProperty().addListener((obs, old, val) -> hideError(errorGame));
         comboCenter.valueProperty().addListener((obs, old, val) -> hideError(errorCenter));
         comboState.valueProperty().addListener((obs, old, val) -> hideError(errorState));
+        comboMaxPlayers.valueProperty().addListener((obs, old, val) -> hideError(errorMaxPlayers));
         dateStart.valueProperty().addListener((obs, old, val) -> hideError(errorStartDate));
         dateEnd.valueProperty().addListener((obs, old, val) -> hideError(errorEndDate));
         txtPrizePool.textProperty().addListener((obs, old, val) -> hideError(errorPrizePool));
@@ -215,6 +226,11 @@ public class AddTournamentModalController {
         }
 
         txtPrizePool.setText(String.valueOf(tournament.getPrize_pool()));
+        
+        // Set max players
+        if (tournament.getMaxPlayers() > 0) {
+            comboMaxPlayers.setValue(tournament.getMaxPlayers());
+        }
         
         // Set state
         if (tournament.getState() != null) {
@@ -267,6 +283,9 @@ public class AddTournamentModalController {
             }
 
             tournament.setPrize_pool(Double.parseDouble(txtPrizePool.getText().trim()));
+            
+            // Set max players
+            tournament.setMaxPlayers(comboMaxPlayers.getValue());
             
             // Set state - convert display name back to enum name
             String stateDisplayName = comboState.getValue();
@@ -326,6 +345,12 @@ public class AddTournamentModalController {
         // Validate state
         if (comboState.getValue() == null) {
             showError(errorState, "L'état est requis");
+            valid = false;
+        }
+
+        // Validate max players
+        if (comboMaxPlayers.getValue() == null) {
+            showError(errorMaxPlayers, "Le nombre max de joueurs est requis");
             valid = false;
         }
 

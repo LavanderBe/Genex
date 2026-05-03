@@ -19,7 +19,7 @@ public class CrudTournamentParticipant implements ICrud<TournamentParticipants> 
     private boolean playerExists(String playerId) {
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx()
-                    .prepareStatement("SELECT id FROM players WHERE id=?");
+                    .prepareStatement("SELECT user_id FROM players WHERE user_id=?");
             pst.setString(1, playerId);
             return pst.executeQuery().next();
         } catch (SQLException e) {
@@ -138,5 +138,59 @@ public class CrudTournamentParticipant implements ICrud<TournamentParticipants> 
         }
 
         return list;
+    }
+
+    // Check if a player is already participating in a tournament
+    public boolean isPlayerParticipating(String tournamentId, String playerId) {
+        String requete = "SELECT COUNT(*) FROM tournament_participants WHERE tournament_id=? AND participant_id=?";
+
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, tournamentId);
+            pst.setString(2, playerId);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    // Get participant count for a tournament
+    public int getParticipantCount(String tournamentId) {
+        String requete = "SELECT COUNT(*) FROM tournament_participants WHERE tournament_id=?";
+
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, tournamentId);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return 0;
+    }
+
+    // Remove a player from a tournament
+    public void removePlayerFromTournament(String tournamentId, String playerId) {
+        String requete = "DELETE FROM tournament_participants WHERE tournament_id=? AND participant_id=?";
+
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, tournamentId);
+            pst.setString(2, playerId);
+            pst.executeUpdate();
+            System.out.println("Player removed from tournament successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
