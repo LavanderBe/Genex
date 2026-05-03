@@ -1,6 +1,7 @@
 package Genex.Controllers.Dashboard;
 
 //import Genex.services.UserSession;
+import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -31,7 +32,7 @@ public class PlayerDashboard {
 
     @FXML
     public void initialize() {
-        //gotta make a usersessionclass and replace the profile topleft thing with the current user
+        sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername().toUpperCase());
         startPingAnimation();
     }
 

@@ -1,5 +1,6 @@
 package Genex.Controllers.Dashboard;
 
+import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -27,6 +29,7 @@ public class Dashboard {
     @FXML private BorderPane mainPane;
     @FXML private VBox       sidebarVbox;
     @FXML private Circle pingDot;
+    @FXML private Label sessionUser;
 
     /** ComboBox inside the Finance content area for page selection */
     @FXML private ComboBox<String> financePageSelector;
@@ -36,6 +39,7 @@ public class Dashboard {
     @FXML
     public void initialize() {
         //gotta make a usersessionclass and replace the profile topleft thing with the current user
+        sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername().toUpperCase());
         startPingAnimation();
     }
 
