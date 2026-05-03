@@ -139,7 +139,11 @@ public class Dashboard {
             System.err.println("Error loading Center Hub: " + ex.getMessage());
         }
     }
-
+    @FXML
+    private void navForumBtn(ActionEvent event) {
+        setActiveButton((Button) event.getSource());
+        loadView("/Fxml/Forum/Forum.fxml");
+    }
 
     private void loadView(String fxmlPath) {
         try {
