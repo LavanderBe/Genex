@@ -76,6 +76,7 @@ public class PlayerDashboard {
     @FXML private void showTutorials() { loadModule("PlayerTutorials.fxml"); }
     @FXML private void showForums() { loadModule("PlayerForums.fxml"); }
     @FXML private void showProfile() { loadModule("PlayerProfile.fxml"); }
+    @FXML private void showBoutique() {loadModule("Boutique.fxml");}
 
     private void loadModule(String fxmlName) {
         try {
