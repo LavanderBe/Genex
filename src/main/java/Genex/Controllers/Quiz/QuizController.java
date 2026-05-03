@@ -125,15 +125,13 @@ public class QuizController implements Initializable {
         if (tabTutorial == null || tabQuiz == null) {
             return;
         }
+        tabTutorial.getStyleClass().removeAll("tab-active", "tab-inactive");
+        tabQuiz.getStyleClass().removeAll("tab-active", "tab-inactive");
         if (tutorialActive) {
-            tabTutorial.getStyleClass().remove("tab-inactive");
             tabTutorial.getStyleClass().add("tab-active");
-            tabQuiz.getStyleClass().remove("tab-active");
             tabQuiz.getStyleClass().add("tab-inactive");
         } else {
-            tabQuiz.getStyleClass().remove("tab-inactive");
             tabQuiz.getStyleClass().add("tab-active");
-            tabTutorial.getStyleClass().remove("tab-active");
             tabTutorial.getStyleClass().add("tab-inactive");
         }
     }

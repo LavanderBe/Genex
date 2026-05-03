@@ -6,7 +6,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Quiz.AddQuizController"
       styleClass="dialog-root"
-      stylesheets="@Tutorial.css"
+      stylesheets="@../Tutorial/Tutorial.css"
       spacing="0"
       prefWidth="560">
 

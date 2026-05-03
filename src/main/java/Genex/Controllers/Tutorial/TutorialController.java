@@ -59,9 +59,9 @@ public class TutorialController implements Initializable {
         tutorialSection.setManaged(true);
         quizSection.setVisible(false);
         quizSection.setManaged(false);
-        tabTutorial.getStyleClass().remove("tab-inactive");
+        tabTutorial.getStyleClass().removeAll("tab-active", "tab-inactive");
         tabTutorial.getStyleClass().add("tab-active");
-        tabQuiz.getStyleClass().remove("tab-active");
+        tabQuiz.getStyleClass().removeAll("tab-active", "tab-inactive");
         tabQuiz.getStyleClass().add("tab-inactive");
     }
 
@@ -71,9 +71,9 @@ public class TutorialController implements Initializable {
         tutorialSection.setManaged(false);
         quizSection.setVisible(true);
         quizSection.setManaged(true);
-        tabQuiz.getStyleClass().remove("tab-inactive");
+        tabQuiz.getStyleClass().removeAll("tab-active", "tab-inactive");
         tabQuiz.getStyleClass().add("tab-active");
-        tabTutorial.getStyleClass().remove("tab-active");
+        tabTutorial.getStyleClass().removeAll("tab-active", "tab-inactive");
         tabTutorial.getStyleClass().add("tab-inactive");
     }
 

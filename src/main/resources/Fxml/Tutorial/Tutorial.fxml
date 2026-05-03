@@ -18,27 +18,29 @@
     </VBox>
 
     <!-- TAB SWITCHER -->
-    <HBox styleClass="tab-switcher" prefHeight="55">
-        <padding><Insets left="40" right="40"/></padding>
-        <Button fx:id="tabTutorial" text="TRAINING_MODULES" styleClass="tab-active"
-                onAction="#showTutorialTab" prefWidth="200" prefHeight="55"/>
-        <Button fx:id="tabQuiz" text="TACTICAL_QUIZZES" styleClass="tab-inactive"
-                onAction="#showQuizTab" prefWidth="200" prefHeight="55"/>
-    </HBox>
+    <StackPane styleClass="tab-switcher-wrap">
+        <padding><Insets top="10" right="40" bottom="10" left="40"/></padding>
+        <HBox styleClass="tab-switcher" prefHeight="60" maxWidth="520" alignment="CENTER" spacing="10">
+            <Button fx:id="tabTutorial" text="TRAINING_MODULES" styleClass="tab-active"
+                    onAction="#showTutorialTab" prefWidth="250" prefHeight="48"/>
+            <Button fx:id="tabQuiz" text="TACTICAL_QUIZZES" styleClass="tab-inactive"
+                    onAction="#showQuizTab" prefWidth="250" prefHeight="48"/>
+        </HBox>
+    </StackPane>
 
     <!-- SCROLLABLE CONTENT -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-scrollpane" hbarPolicy="NEVER">
+    <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" styleClass="edge-scrollpane" hbarPolicy="NEVER">
         <content>
-            <VBox spacing="0">
+            <VBox spacing="0" styleClass="content-root">
 
                 <!-- ===== TUTORIAL SECTION ===== -->
-                <VBox fx:id="tutorialSection" spacing="20">
+                <VBox fx:id="tutorialSection" spacing="20" styleClass="content-section">
                     <padding><Insets top="25" right="40" bottom="30" left="40"/></padding>
 
                     <!-- Section header row -->
-                    <HBox alignment="CENTER_LEFT" spacing="15">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-toolbar">
                         <!-- Left accent + title -->
-                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
                             <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
                             <VBox spacing="2">
                                 <Label text="TRAINING MODULES" styleClass="section-title"/>
@@ -46,16 +48,20 @@
                             </VBox>
                         </HBox>
 
-                        <!-- Search -->
-                        <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
-                            <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
-                            <TextField fx:id="searchTutorialField" promptText="SEARCH DATA..."
-                                       styleClass="search-field" onAction="#onSearchTutorial"
-                                       HBox.hgrow="ALWAYS"/>
-                        </HBox>
+                        <Region HBox.hgrow="ALWAYS" />
 
-                        <!-- Add button -->
-                        <Button text="+ NEW MODULE" styleClass="add-btn" onAction="#openAddTutorial"/>
+                        <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="toolbar-actions">
+                            <!-- Search -->
+                            <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
+                                <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
+                                <TextField fx:id="searchTutorialField" promptText="SEARCH DATA..."
+                                           styleClass="search-field" onAction="#onSearchTutorial"
+                                           HBox.hgrow="ALWAYS"/>
+                            </HBox>
+
+                            <!-- Add button -->
+                            <Button text="+ NEW MODULE" styleClass="add-btn-blue" onAction="#openAddTutorial"/>
+                        </HBox>
                     </HBox>
 
                     <!-- Cards FlowPane -->
@@ -63,12 +69,12 @@
                 </VBox>
 
                 <!-- ===== QUIZ SECTION ===== -->
-                <VBox fx:id="quizSection" spacing="20" visible="false" managed="false">
+                <VBox fx:id="quizSection" spacing="20" visible="false" managed="false" styleClass="content-section">
                     <padding><Insets top="25" right="40" bottom="30" left="40"/></padding>
 
                     <!-- Section header row -->
-                    <HBox alignment="CENTER_LEFT" spacing="15">
-                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-toolbar">
+                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
                             <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
                             <VBox spacing="2">
                                 <Label text="QUIZ INVENTORY" styleClass="section-title"/>
@@ -76,14 +82,18 @@
                             </VBox>
                         </HBox>
 
-                        <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
-                            <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
-                            <TextField fx:id="searchQuizField" promptText="SCAN QUESTIONS..."
-                                       styleClass="search-field" onAction="#onSearchQuiz"
-                                       HBox.hgrow="ALWAYS"/>
-                        </HBox>
+                        <Region HBox.hgrow="ALWAYS" />
 
-                        <Button text="+ ADD QUESTION" styleClass="add-btn-blue" onAction="#openAddQuiz"/>
+                        <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="toolbar-actions">
+                            <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
+                                <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
+                                <TextField fx:id="searchQuizField" promptText="SCAN QUESTIONS..."
+                                           styleClass="search-field" onAction="#onSearchQuiz"
+                                           HBox.hgrow="ALWAYS"/>
+                            </HBox>
+
+                            <Button text="+ ADD QUESTION" styleClass="add-btn-blue" onAction="#openAddQuiz"/>
+                        </HBox>
                     </HBox>
 
                     <!-- Empty state -->

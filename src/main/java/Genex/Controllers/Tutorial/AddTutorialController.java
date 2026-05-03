@@ -65,6 +65,22 @@ public class AddTutorialController implements Initializable {
             showAlert("VALIDATION ERROR", "Tactical title is required.");
             return;
         }
+        if (description.isEmpty()) {
+            showAlert("VALIDATION ERROR", "Briefing data is required.");
+            return;
+        }
+        if (category == null || category.isBlank()) {
+            showAlert("VALIDATION ERROR", "Please select a sector.");
+            return;
+        }
+        if (difficulty == null || difficulty.isBlank()) {
+            showAlert("VALIDATION ERROR", "Please select an intensity.");
+            return;
+        }
+        if (videoUrl.isEmpty()) {
+            showAlert("VALIDATION ERROR", "Intel source URL is required.");
+            return;
+        }
 
         Tutorial tutorial = new Tutorial();
         tutorial.setTitle(title);

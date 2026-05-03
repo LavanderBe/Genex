@@ -125,6 +125,10 @@ public class AddQuizController implements Initializable {
             showAlert("VALIDATION ERROR", "Tactical query is required.");
             return;
         }
+        if (optA.isEmpty() || optB.isEmpty() || optC.isEmpty() || optD.isEmpty()) {
+            showAlert("VALIDATION ERROR", "All response options (A-D) are required.");
+            return;
+        }
 
         Quiz quiz = new Quiz();
         quiz.setTutorialId(selectedTutorial.getId());

@@ -5,12 +5,12 @@
 
 /* ── ROOT ── */
 .tutorial-root {
-    -fx-background-color: #0a0a0a;
+    -fx-background-color: transparent;
 }
 
 /* ── HEADER ── */
 .tutorial-header {
-    -fx-background-color: #0a0a0a;
+    -fx-background-color: rgba(0, 0, 0, 0.65);
     -fx-border-color: transparent transparent #8B0D0D transparent;
     -fx-border-width: 0 0 1 0;
 }
@@ -31,40 +31,47 @@
 }
 
 /* ── TAB SWITCHER ── */
+.tab-switcher-wrap {
+    -fx-background-color: transparent;
+}
+
 .tab-switcher {
-    -fx-background-color: #111111;
-    -fx-border-color: transparent transparent #222 transparent;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-color: rgba(10, 10, 25, 0.85);
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 1;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 4 6 4 6;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.25), 10, 0, 0, 2);
 }
 
 .tab-active {
-    -fx-background-color: #8B0D0D;
+    -fx-background-color: linear-gradient(to bottom, #8B0D0D, #5f0b0b);
     -fx-text-fill: white;
     -fx-font-family: "Courier New";
     -fx-font-weight: bold;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-letter-spacing: 2px;
     -fx-cursor: hand;
     -fx-border-color: transparent;
-    -fx-background-radius: 0;
+    -fx-background-radius: 999;
 }
 
 .tab-inactive {
     -fx-background-color: transparent;
-    -fx-text-fill: #666;
+    -fx-text-fill: #8e94af;
     -fx-font-family: "Courier New";
     -fx-font-weight: bold;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-letter-spacing: 2px;
     -fx-cursor: hand;
-    -fx-border-color: #333;
-    -fx-border-width: 0 0 0 1;
-    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-background-radius: 999;
 }
 
 .tab-inactive:hover {
-    -fx-text-fill: #aaa;
-    -fx-background-color: #1a1a1a;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(92, 124, 250, 0.12);
 }
 
 /* ── SECTION HEADER ── */
@@ -142,10 +149,10 @@
 /* ── SCROLLPANE ── */
 .edge-scrollpane {
     -fx-background-color: transparent;
-    -fx-background: #0a0a0a;
+    -fx-background: transparent;
 }
 .edge-scrollpane > .viewport {
-    -fx-background-color: #0a0a0a;
+    -fx-background-color: transparent;
 }
 .edge-scrollpane .scroll-bar:vertical {
     -fx-background-color: #111;
@@ -165,8 +172,8 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0, 0, 2);
 }
 .tutorial-card:hover {
-    -fx-border-color: #8B0D0D;
-    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 12, 0, 0, 0);
+    -fx-border-color: #5c7cfa66;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.18), 12, 0, 0, 0);
 }
 
 .card-image-pane {
@@ -262,11 +269,12 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 6, 0, 0, 1);
 }
 .quiz-card:hover {
-    -fx-border-color: #5c7cfa44;
+    -fx-border-color: #5c7cfa66;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.18), 12, 0, 0, 0);
 }
 
 .quiz-linked-label {
-    -fx-text-fill: #8B0D0D;
+    -fx-text-fill: #5c7cfa;
     -fx-font-family: "Courier New";
     -fx-font-size: 10px;
     -fx-font-weight: bold;
@@ -329,7 +337,7 @@
 /* ── DIALOG ── */
 .dialog-root {
     -fx-background-color: #0f0f0f;
-    -fx-border-color: #8B0D0D;
+    -fx-border-color: #2a2a2a;
     -fx-border-width: 1;
 }
 
@@ -369,7 +377,7 @@
 .close-btn:hover { -fx-text-fill: #ff4d4d; }
 
 .field-label {
-    -fx-text-fill: #8B0D0D;
+    -fx-text-fill: #5c7cfa;
     -fx-font-family: "Courier New";
     -fx-font-size: 10px;
     -fx-font-weight: bold;
@@ -389,7 +397,7 @@
     -fx-prompt-text-fill: #333;
 }
 .dialog-field:focused {
-    -fx-border-color: #8B0D0D;
+    -fx-border-color: #5c7cfa;
 }
 
 .dialog-textarea {
@@ -404,7 +412,7 @@
     -fx-prompt-text-fill: #333;
 }
 .dialog-textarea:focused {
-    -fx-border-color: #8B0D0D;
+    -fx-border-color: #5c7cfa;
 }
 .dialog-textarea .content {
     -fx-background-color: #0a0a0a;
@@ -429,9 +437,9 @@
 }
 .dialog-combo .list-view {
     -fx-background-color: #0a0a0a;
-    -fx-border-color: #8B0D0D;
+    -fx-border-color: #5c7cfa;
 }
-.dialog-combo .arrow-button { -fx-background-color: #8B0D0D; }
+.dialog-combo .arrow-button { -fx-background-color: #5c7cfa; }
 .dialog-combo .arrow { -fx-background-color: white; }
 
 /* Answer toggle buttons */
@@ -447,9 +455,9 @@
     -fx-background-radius: 0;
 }
 .answer-toggle:selected {
-    -fx-background-color: #8B0D0D;
+    -fx-background-color: #5c7cfa;
     -fx-text-fill: white;
-    -fx-border-color: #8B0D0D;
+    -fx-border-color: #5c7cfa;
 }
 .answer-toggle:hover:selected {
     -fx-border-color: #666;
@@ -483,3 +491,68 @@
     -fx-cursor: hand;
 }
 .abort-btn:hover { -fx-text-fill: white; -fx-border-color: #555; }
+
+/* Keep tab content height stable to avoid jumpy layout */
+.content-section {
+    -fx-min-height: 650px;
+}
+
+.content-root {
+    -fx-background-color: transparent;
+}
+
+.section-toolbar {
+    -fx-background-color: rgba(10, 10, 25, 0.7);
+    -fx-border-color: #1a1a1a;
+    -fx-border-width: 1;
+    -fx-padding: 12 14 12 14;
+}
+
+.toolbar-actions .search-box {
+    -fx-background-color: rgba(0, 0, 0, 0.35);
+    -fx-border-color: #2a2a2a;
+}
+
+.toolbar-actions .add-btn,
+.toolbar-actions .add-btn-blue {
+    -fx-padding: 9 16 9 16;
+}
+
+/* Icon buttons */
+.card-edit-btn,
+.card-delete-btn {
+    -fx-background-color: rgba(0,0,0,0.2);
+    -fx-border-width: 1;
+    -fx-padding: 6 8 6 8;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-cursor: hand;
+}
+
+.card-edit-btn {
+    -fx-border-color: #5c7cfa;
+}
+
+.card-delete-btn {
+    -fx-border-color: #ff4d4d;
+}
+
+.card-edit-btn:hover {
+    -fx-background-color: rgba(92,124,250,0.15);
+}
+
+.card-delete-btn:hover {
+    -fx-background-color: rgba(255,77,77,0.15);
+}
+
+.icon-pen {
+    -fx-fill: #5c7cfa;
+    -fx-scale-x: 0.85;
+    -fx-scale-y: 0.85;
+}
+
+.icon-trash {
+    -fx-fill: #ff4d4d;
+    -fx-scale-x: 0.85;
+    -fx-scale-y: 0.85;
+}
