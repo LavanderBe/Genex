@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Tutorial.TutorialController"
+      styleClass="tutorial-root"
+      stylesheets="@Tutorial.css"
+      spacing="0">
+
+    <!-- HEADER -->
+    <VBox styleClass="tutorial-header" spacing="4">
+        <padding><Insets top="30" right="40" bottom="20" left="40"/></padding>
+        <Label text="TERMINAL // TUTORIALS" styleClass="page-main-title"/>
+        <Label text="TACTICAL ANALYSIS &amp; TRAINING PROTOCOLS" styleClass="page-subtitle"/>
+    </VBox>
+
+    <!-- TAB SWITCHER -->
+    <HBox styleClass="tab-switcher" prefHeight="55">
+        <padding><Insets left="40" right="40"/></padding>
+        <Button fx:id="tabTutorial" text="TRAINING_MODULES" styleClass="tab-active"
+                onAction="#showTutorialTab" prefWidth="200" prefHeight="55"/>
+        <Button fx:id="tabQuiz" text="TACTICAL_QUIZZES" styleClass="tab-inactive"
+                onAction="#showQuizTab" prefWidth="200" prefHeight="55"/>
+    </HBox>
+
+    <!-- SCROLLABLE CONTENT -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-scrollpane" hbarPolicy="NEVER">
+        <content>
+            <VBox spacing="0">
+
+                <!-- ===== TUTORIAL SECTION ===== -->
+                <VBox fx:id="tutorialSection" spacing="20">
+                    <padding><Insets top="25" right="40" bottom="30" left="40"/></padding>
+
+                    <!-- Section header row -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <!-- Left accent + title -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                            <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
+                            <VBox spacing="2">
+                                <Label text="TRAINING MODULES" styleClass="section-title"/>
+                                <Label text="STRATEGIC DEPLOYMENT PHASE" styleClass="section-subtitle"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Search -->
+                        <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
+                            <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
+                            <TextField fx:id="searchTutorialField" promptText="SEARCH DATA..."
+                                       styleClass="search-field" onAction="#onSearchTutorial"
+                                       HBox.hgrow="ALWAYS"/>
+                        </HBox>
+
+                        <!-- Add button -->
+                        <Button text="+ NEW MODULE" styleClass="add-btn" onAction="#openAddTutorial"/>
+                    </HBox>
+
+                    <!-- Cards FlowPane -->
+                    <FlowPane fx:id="tutorialCardsPane" hgap="20" vgap="20" prefWrapLength="1000"/>
+                </VBox>
+
+                <!-- ===== QUIZ SECTION ===== -->
+                <VBox fx:id="quizSection" spacing="20" visible="false" managed="false">
+                    <padding><Insets top="25" right="40" bottom="30" left="40"/></padding>
+
+                    <!-- Section header row -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="ALWAYS">
+                            <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
+                            <VBox spacing="2">
+                                <Label text="QUIZ INVENTORY" styleClass="section-title"/>
+                                <Label text="TACTICAL EVALUATION PROTOCOL" styleClass="section-subtitle"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
+                            <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
+                            <TextField fx:id="searchQuizField" promptText="SCAN QUESTIONS..."
+                                       styleClass="search-field" onAction="#onSearchQuiz"
+                                       HBox.hgrow="ALWAYS"/>
+                        </HBox>
+
+                        <Button text="+ ADD QUESTION" styleClass="add-btn-blue" onAction="#openAddQuiz"/>
+                    </HBox>
+
+                    <!-- Empty state -->
+                    <VBox fx:id="emptyQuizLabel" alignment="CENTER" spacing="15" prefHeight="300"
+                          styleClass="empty-state-box">
+                        <Label text="?" styleClass="empty-icon"/>
+                        <Label text="NO PROTOCOLS DETECTED" styleClass="empty-text"/>
+                    </VBox>
+
+                    <!-- Quiz FlowPane -->
+                    <FlowPane fx:id="quizCardsPane" hgap="20" vgap="20" prefWrapLength="1100"/>
+                </VBox>
+
+            </VBox>
+        </content>
+    </ScrollPane>
+</VBox>

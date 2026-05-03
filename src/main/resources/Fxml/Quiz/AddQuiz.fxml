@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Quiz.AddQuizController"
+      styleClass="dialog-root"
+      stylesheets="@Tutorial.css"
+      spacing="0"
+      prefWidth="560">
+
+    <!-- Header -->
+    <HBox styleClass="dialog-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+        <Label fx:id="dialogTitle" text="NEW PROTOCOL ENTRY" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="close-btn" onAction="#handleAbort"/>
+    </HBox>
+
+    <VBox spacing="18" styleClass="dialog-body">
+        <padding><Insets top="24" right="28" bottom="10" left="28"/></padding>
+
+        <!-- Linked Tutorial -->
+        <VBox spacing="6">
+            <Label text="LINKED STRATEGY MODULE" styleClass="field-label"/>
+            <ComboBox fx:id="tutorialCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Question -->
+        <VBox spacing="6">
+            <Label text="TACTICAL QUERY" styleClass="field-label"/>
+            <TextArea fx:id="questionField" promptText="ENTER QUERY DATA..." styleClass="dialog-textarea"
+                      prefHeight="90" wrapText="true"/>
+        </VBox>
+
+        <!-- Options 2x2 grid -->
+        <GridPane hgap="16" vgap="12">
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="5">
+                <Label text="RESPONSE A" styleClass="field-label"/>
+                <TextField fx:id="optionAField" styleClass="dialog-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="5">
+                <Label text="RESPONSE B" styleClass="field-label"/>
+                <TextField fx:id="optionBField" styleClass="dialog-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="5">
+                <Label text="RESPONSE C" styleClass="field-label"/>
+                <TextField fx:id="optionCField" styleClass="dialog-field"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="5">
+                <Label text="RESPONSE D" styleClass="field-label"/>
+                <TextField fx:id="optionDField" styleClass="dialog-field"/>
+            </VBox>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+        </GridPane>
+
+        <!-- Correct Answer Toggle -->
+        <VBox spacing="8">
+            <Label text="VALIDATED OUTCOME" styleClass="field-label"/>
+            <HBox spacing="10">
+                <ToggleButton fx:id="answerA" text="A" styleClass="answer-toggle" prefWidth="90" prefHeight="48"/>
+                <ToggleButton fx:id="answerB" text="B" styleClass="answer-toggle" prefWidth="90" prefHeight="48"/>
+                <ToggleButton fx:id="answerC" text="C" styleClass="answer-toggle" prefWidth="90" prefHeight="48"/>
+                <ToggleButton fx:id="answerD" text="D" styleClass="answer-toggle" prefWidth="90" prefHeight="48"/>
+            </HBox>
+        </VBox>
+    </VBox>
+
+    <!-- Footer -->
+    <HBox spacing="12" styleClass="dialog-footer" alignment="CENTER_LEFT">
+        <padding><Insets top="16" right="28" bottom="24" left="28"/></padding>
+        <Button text="SAVE PROTOCOL" styleClass="save-btn" onAction="#handleSave" prefWidth="220"/>
+        <Button text="ABORT" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
+    </HBox>
+</VBox>
