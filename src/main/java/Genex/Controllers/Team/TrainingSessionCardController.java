@@ -134,16 +134,11 @@ public class TrainingSessionCardController {
 
         if (session == null) return;
 
-        // Call the inline form in TeamDetailController (like Sponsors)
+        // Call the modal in TeamDetailController (like Tournament)
         if (teamDetailController != null) {
-            teamDetailController.openEditSessionForm(session);
+            teamDetailController.openEditSessionModal(session);
         } else {
-            // Fallback to old modal approach if controller not set
-            if (rootStackPane != null && contentArea != null) {
-                openEditModalAsOverlay();
-            } else {
-                openEditModalAsWindow();
-            }
+            System.err.println("TeamDetailController not set!");
         }
     }
 

@@ -5,7 +5,6 @@ import Genex.entities.Team;
 import Genex.services.CrudGame;
 import Genex.utils.SessionManager;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,181 +22,113 @@ import java.util.function.Consumer;
 
 public class AddTeamModalController {
 
-    @FXML
-    private Label modalTitle;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private ChoiceBox<Game> choiceGame;
-
-    @FXML
-    private TextField txtContact;
-
-    @FXML
-    private Button btnUploadLogo;
-
-    @FXML
-    private Label txtLogoFileName;
-
-    @FXML
-    private ChoiceBox<Team.Status> choiceStatus;
-
-    @FXML
-    private Button btnCancel;
-
-    @FXML
-    private Button btnSave;
+    @FXML private Label modalTitle;
+    @FXML private TextField txtName;
+    @FXML private ChoiceBox<Game> choiceGame;
+    @FXML private TextField txtContact;
+    @FXML private TextField txtLogoFileName;
+    @FXML private ChoiceBox<Team.Status> choiceStatus;
 
     // Error labels
-    @FXML
-    private Label errorName;
-
-    @FXML
-    private Label errorGameId;
-
-    @FXML
-    private Label errorContact;
+    @FXML private Label errorName;
+    @FXML private Label errorGameId;
+    @FXML private Label errorContact;
 
     private Consumer<Team> onSaveCallback;
     private Runnable onCloseCallback;
     private Team teamToEdit;
     private String logoImagePath;
 
+    private CrudGame crudGame = new CrudGame();
+
     @FXML
     public void initialize() {
         System.out.println("AddTeamModalController initialized");
 
-        // Load games into choice box
+        // Set default title
+        if (modalTitle != null) {
+            modalTitle.setText("NOUVELLE ÉQUIPE");
+        }
+
+        // Load games
         loadGames();
 
         // Setup status choice box
-        if (choiceStatus != null) {
-            choiceStatus.getItems().addAll(Team.Status.values());
-            choiceStatus.setValue(Team.Status.ACTIVE);
-        }
+        setupStatusChoiceBox();
 
         // Setup validation listeners
         setupValidation();
     }
 
     private void loadGames() {
-        if (choiceGame != null) {
-            try {
-                CrudGame crudGame = new CrudGame();
-                List<Game> games = crudGame.getgames();
-                
-                choiceGame.getItems().addAll(games);
-                
-                // Set custom string converter to display game name
-                choiceGame.setConverter(new StringConverter<Game>() {
-                    @Override
-                    public String toString(Game game) {
-                        return game != null ? game.getNom() : "";
-                    }
+        try {
+            List<Game> games = crudGame.getgames();
+            choiceGame.getItems().addAll(games);
 
-                    @Override
-                    public Game fromString(String string) {
-                        return null; // Not needed for ChoiceBox
-                    }
-                });
-                
-                // Select first game by default if available
-                if (!games.isEmpty()) {
-                    choiceGame.setValue(games.get(0));
+            // Set custom string converter
+            choiceGame.setConverter(new StringConverter<Game>() {
+                @Override
+                public String toString(Game game) {
+                    return game != null ? game.getNom() : "";
                 }
-                
-                System.out.println("Loaded " + games.size() + " games");
-            } catch (Exception e) {
-                System.err.println("Error loading games: " + e.getMessage());
-                e.printStackTrace();
+
+                @Override
+                public Game fromString(String string) {
+                    return null;
+                }
+            });
+
+            if (!games.isEmpty()) {
+                choiceGame.setValue(games.get(0));
             }
+        } catch (Exception e) {
+            System.err.println("Error loading games: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    private void setupStatusChoiceBox() {
+        choiceStatus.getItems().addAll(Team.Status.values());
+        choiceStatus.setValue(Team.Status.ACTIVE);
     }
 
     private void setupValidation() {
-        // Clear errors on input
-        if (txtName != null) txtName.textProperty().addListener((obs, old, val) -> hideError(errorName));
-        if (choiceGame != null) choiceGame.valueProperty().addListener((obs, old, val) -> hideError(errorGameId));
-        if (txtContact != null) txtContact.textProperty().addListener((obs, old, val) -> hideError(errorContact));
-    }
-
-    @FXML
-    private void handleUploadLogo() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir un logo");
-
-        // Set extension filters
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"),
-                new FileChooser.ExtensionFilter("Tous les fichiers", "*.*")
-        );
-
-        // Show open file dialog
-        Stage stage = (Stage) btnUploadLogo.getScene().getWindow();
-        File selectedFile = fileChooser.showOpenDialog(stage);
-
-        if (selectedFile != null) {
-            try {
-                // Create uploads directory if it doesn't exist
-                Path uploadsDir = Paths.get("uploads", "team-logos");
-                Files.createDirectories(uploadsDir);
-
-                // Generate unique filename
-                String fileName = System.currentTimeMillis() + "_" + selectedFile.getName();
-                Path targetPath = uploadsDir.resolve(fileName);
-
-                // Copy file to uploads directory
-                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-                // Store the relative path
-                logoImagePath = "uploads/team-logos/" + fileName;
-
-                // Update UI
-                txtLogoFileName.setText(selectedFile.getName());
-                txtLogoFileName.setStyle("-fx-fill: #4ade80;"); // Green color for success
-
-                System.out.println("Logo uploaded: " + logoImagePath);
-
-            } catch (IOException e) {
-                System.err.println("Error uploading logo: " + e.getMessage());
-                txtLogoFileName.setText("Erreur lors du téléchargement");
-                txtLogoFileName.setStyle("-fx-fill: #ff6b6b;"); // Red color for error
-                e.printStackTrace();
-            }
-        }
+        txtName.textProperty().addListener((obs, old, val) -> hideError(errorName));
+        choiceGame.valueProperty().addListener((obs, old, val) -> hideError(errorGameId));
+        txtContact.textProperty().addListener((obs, old, val) -> hideError(errorContact));
     }
 
     public void setTeam(Team team) {
         this.teamToEdit = team;
-        modalTitle.setText("Modifier l'Équipe");
 
-        // Fill form with team data
+        // Change title
+        if (modalTitle != null) {
+            modalTitle.setText("MODIFIER L'ÉQUIPE");
+        }
+
+        // Fill form
         txtName.setText(team.getName());
-        
-        // Select the game in the choice box
-        if (team.getGameId() != null && choiceGame != null) {
-            for (Game game : choiceGame.getItems()) {
-                if (game.getId().equals(team.getGameId())) {
-                    choiceGame.setValue(game);
+        txtContact.setText(team.getContact() != null ? team.getContact() : "");
+
+        // Select game
+        if (team.getGameId() != null) {
+            for (Game g : choiceGame.getItems()) {
+                if (g.getId().equals(team.getGameId())) {
+                    choiceGame.setValue(g);
                     break;
                 }
             }
         }
-        
-        txtContact.setText(team.getContact());
 
-        if (team.getLogoImage() != null && !team.getLogoImage().isEmpty()) {
-            logoImagePath = team.getLogoImage();
-            // Extract filename from path
-            String fileName = Paths.get(team.getLogoImage()).getFileName().toString();
-            txtLogoFileName.setText(fileName);
-            txtLogoFileName.setStyle("-fx-fill: #4ade80;");
-        }
-
+        // Select status
         if (team.getStatus() != null) {
             choiceStatus.setValue(team.getStatus());
+        }
+
+        // Logo
+        if (team.getLogoImage() != null && !team.getLogoImage().isEmpty()) {
+            logoImagePath = team.getLogoImage();
+            txtLogoFileName.setText(Paths.get(team.getLogoImage()).getFileName().toString());
         }
     }
 
@@ -218,39 +148,53 @@ public class AddTeamModalController {
     }
 
     @FXML
+    private void handleUploadLogo() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Choisir un logo");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+        
+        // Get stage from any node
+        Stage stage = (Stage) txtName.getScene().getWindow();
+        File file = fc.showOpenDialog(stage);
+        
+        if (file != null) {
+            try {
+                Path dir = Paths.get("uploads", "team-logos");
+                Files.createDirectories(dir);
+                String fileName = System.currentTimeMillis() + "_" + file.getName();
+                Files.copy(file.toPath(), dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+                logoImagePath = "uploads/team-logos/" + fileName;
+                txtLogoFileName.setText(file.getName());
+            } catch (Exception e) {
+                txtLogoFileName.setText("Erreur upload");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
     private void saveTeam() {
         if (!validateForm()) {
             return;
         }
 
         try {
-            // Check if user is logged in
-            if (!SessionManager.getInstance().isLoggedIn()) {
-                System.err.println("Error: No user logged in!");
-                showError(errorName, "Session expirée. Veuillez vous reconnecter.");
-                return;
-            }
-
-            // Create or update team
             Team team = teamToEdit != null ? teamToEdit : new Team();
 
             team.setName(txtName.getText().trim());
             
-            // Get selected game ID
             Game selectedGame = choiceGame.getValue();
             if (selectedGame != null) {
                 team.setGameId(selectedGame.getId());
             }
             
             team.setContact(txtContact.getText().trim());
-            team.setLogoImage(logoImagePath); // Use uploaded file path
+            team.setLogoImage(logoImagePath);
             team.setStatus(choiceStatus.getValue());
 
-            // Set createdBy from logged-in user
             if (teamToEdit == null) {
-                String currentUserId = SessionManager.getInstance().getCurrentUserId();
-                team.setCreatedBy(currentUserId);
-                System.out.println("Setting createdBy to: " + currentUserId);
+                String userId = SessionManager.getInstance().getCurrentUserId();
+                team.setCreatedBy(userId);
             }
 
             System.out.println("Team saved: " + team.getName());
@@ -259,9 +203,6 @@ public class AddTeamModalController {
             if (onSaveCallback != null) {
                 onSaveCallback.accept(team);
             }
-
-            // Close modal
-            closeModal();
 
         } catch (Exception e) {
             System.err.println("Error saving team");
@@ -272,19 +213,16 @@ public class AddTeamModalController {
     private boolean validateForm() {
         boolean valid = true;
 
-        // Validate name
         if (txtName.getText().trim().isEmpty()) {
             showError(errorName, "Le nom est requis");
             valid = false;
         }
 
-        // Validate game ID
         if (choiceGame.getValue() == null) {
             showError(errorGameId, "Le jeu est requis");
             valid = false;
         }
 
-        // Validate contact
         if (txtContact.getText().trim().isEmpty()) {
             showError(errorContact, "Le contact est requis");
             valid = false;
@@ -294,17 +232,13 @@ public class AddTeamModalController {
     }
 
     private void showError(Label errorLabel, String message) {
-        if (errorLabel != null) {
-            errorLabel.setText(message);
-            errorLabel.setVisible(true);
-            errorLabel.setManaged(true);
-        }
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
     }
 
     private void hideError(Label errorLabel) {
-        if (errorLabel != null) {
-            errorLabel.setVisible(false);
-            errorLabel.setManaged(false);
-        }
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
     }
 }

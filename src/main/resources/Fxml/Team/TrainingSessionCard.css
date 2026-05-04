@@ -12,6 +12,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 25, 0.15, 0, 4);
     -fx-padding: 20;
     -fx-pref-width: 100%;
+    -fx-max-width: Infinity;
     -fx-min-height: 120;
 }
 
@@ -148,21 +149,22 @@
     -fx-line-spacing: 2;
 }
 
-/* ====================== BUTTONS — Rounded (matching Sponsors table buttons) ====================== */
+/* ====================== BUTTONS — Polygon ====================== */
 .session-btn-edit {
     -fx-background-color: rgba(92, 124, 250, 0.15);
     -fx-text-fill: #748ffc;
-    -fx-background-radius: 7;
-    -fx-border-color: rgba(92, 124, 250, 0.3);
-    -fx-border-radius: 7;
-    -fx-border-width: 1;
-    -fx-font-size: 13px;
-    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 80 0 L 90 10 L 90 35 L 10 35 L 0 25 Z";
     -fx-cursor: hand;
+    -fx-padding: 8 18;
 }
 
 .session-btn-edit:hover {
     -fx-background-color: rgba(92, 124, 250, 0.3);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
 }
 
 .session-btn-edit:pressed {
@@ -172,18 +174,19 @@
 .session-btn-delete {
     -fx-background-color: rgba(255, 80, 80, 0.12);
     -fx-text-fill: #ff6b6b;
-    -fx-background-radius: 7;
-    -fx-border-color: rgba(255, 80, 80, 0.3);
-    -fx-border-radius: 7;
-    -fx-border-width: 1;
-    -fx-font-size: 13px;
-    -fx-padding: 6 12;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 90 0 L 90 25 L 80 35 L 0 35 L 0 10 Z";
     -fx-cursor: hand;
+    -fx-padding: 8 14;
     -fx-min-width: 40;
 }
 
 .session-btn-delete:hover {
     -fx-background-color: rgba(255, 80, 80, 0.28);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
 }
 
 .session-btn-delete:pressed {

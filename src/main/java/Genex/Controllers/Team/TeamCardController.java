@@ -183,6 +183,15 @@ public class TeamCardController {
                 System.out.println("✓ Loading team detail in SAME WINDOW...");
                 contentContainer.getChildren().clear();
                 contentContainer.getChildren().add(detailRoot);
+                
+                // Anchor to fill the container
+                if (contentContainer instanceof javafx.scene.layout.AnchorPane) {
+                    javafx.scene.layout.AnchorPane.setTopAnchor(detailRoot, 0.0);
+                    javafx.scene.layout.AnchorPane.setBottomAnchor(detailRoot, 0.0);
+                    javafx.scene.layout.AnchorPane.setLeftAnchor(detailRoot, 0.0);
+                    javafx.scene.layout.AnchorPane.setRightAnchor(detailRoot, 0.0);
+                }
+                
                 System.out.println("✓ Team detail loaded successfully in same window!");
             } else {
                 // Fallback: Open in new window (old behavior)
@@ -215,16 +224,11 @@ public class TeamCardController {
 
         if (team == null) return;
 
-        // Call the inline form in TeamHubController (like Sponsors)
+        // Call the drawer in TeamHubController (like Tournament)
         if (teamHubController != null) {
-            teamHubController.openEditForm(team);
+            teamHubController.openEditDrawer(team);
         } else {
-            // Fallback to old modal approach if controller not set
-            if (rootStackPane != null && contentArea != null) {
-                openEditModalAsOverlay();
-            } else {
-                openEditModalAsWindow();
-            }
+            System.err.println("TeamHubController not set!");
         }
     }
 

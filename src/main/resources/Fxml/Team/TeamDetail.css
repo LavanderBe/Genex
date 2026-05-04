@@ -15,22 +15,21 @@
     -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.4), 10, 0, 0, 0);
 }
 
-/* ──────────────── Back Button ──────────────── */
+/* ──────────────── Back Button — Polygon ──────────────── */
 .back-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-text-fill: rgba(255, 255, 255, 0.65);
-    -fx-font-size: 14px;
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 10;
-    -fx-border-width: 1;
-    -fx-padding: 8 16;
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
+    -fx-padding: 8 20;
     -fx-cursor: hand;
 }
 
 .back-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-text-fill: white;
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-translate-y: -1;
 }
 
 .back-btn:pressed {

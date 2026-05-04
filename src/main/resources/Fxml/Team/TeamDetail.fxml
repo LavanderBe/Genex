@@ -2,17 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
@@ -21,156 +15,52 @@
            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="Genex.Controllers.Team.TeamDetailController">
 
-    <HBox spacing="0" VBox.vgrow="ALWAYS">
+    <VBox fx:id="contentArea" spacing="20">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
 
-        <!-- ══ LEFT: Sessions list ═══════════════════════════════════ -->
-        <VBox fx:id="contentArea" spacing="20" HBox.hgrow="ALWAYS">
-            <padding>
-                <Insets bottom="25" left="25" right="25" top="25" />
-            </padding>
+        <!-- Header: back + team name -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Button fx:id="btnBack" onAction="#handleBack" styleClass="back-btn" text="← Retour" />
+            <Label fx:id="teamNameTitle" styleClass="page-title" text="Team Name" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Text fx:id="teamTag" styleClass="team-tag-large" text="[TAG]" />
+        </HBox>
 
-            <!-- Header: back + team name -->
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <Button fx:id="btnBack" onAction="#handleBack" styleClass="back-btn" text="← Retour" />
-                <Label fx:id="teamNameTitle" styleClass="page-title" text="Team Name" />
-                <Region HBox.hgrow="ALWAYS" />
-                <Text fx:id="teamTag" styleClass="team-tag-large" text="[TAG]" />
-            </HBox>
-
-            <!-- Team info cards -->
-            <HBox spacing="20">
-                <VBox spacing="8" styleClass="info-card">
-                    <Text styleClass="info-label" text="Jeu" />
-                    <Text fx:id="teamGame" styleClass="info-value" text="Game Name" />
-                </VBox>
-                <VBox spacing="8" styleClass="info-card">
-                    <Text styleClass="info-label" text="Contact" />
-                    <Text fx:id="teamType" styleClass="info-value" text="Type" />
-                </VBox>
-                <VBox spacing="8" styleClass="info-card">
-                    <Text styleClass="info-label" text="Fondée le" />
-                    <Text fx:id="teamFounded" styleClass="info-value" text="Date" />
-                </VBox>
-            </HBox>
-
-            <!-- Sessions header -->
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label styleClass="section-title" text="📅 Séances d'Entraînement" />
-                <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="btnAddSession" onAction="#toggleSessionForm"
-                        styleClass="action-blue-button" text="＋  AJOUTER" />
-            </HBox>
-
-            <!-- Sessions list -->
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-                        style="-fx-background-color: transparent;"
-                        styleClass="scroll-pane" vbarPolicy="ALWAYS"
-                        VBox.vgrow="ALWAYS">
-                <content>
-                    <FlowPane fx:id="sessionsContainer" hgap="20"
-                              prefWrapLength="900" styleClass="sessions-container" vgap="20" />
-                </content>
-            </ScrollPane>
-        </VBox>
-
-        <!-- ══ RIGHT: Inline session form card (Finance style) ═══════ -->
-        <VBox fx:id="sessionFormPanel" styleClass="form-card" spacing="14"
-              prefWidth="340" minWidth="320" managed="false" visible="false">
-            <padding>
-                <Insets bottom="28" left="24" right="24" top="28" />
-            </padding>
-
-            <!-- Form title + close -->
-            <HBox alignment="CENTER_LEFT">
-                <Label fx:id="sessionFormTitle" styleClass="form-title" text="Nouvelle session" />
-                <Region HBox.hgrow="ALWAYS" />
-                <Button onAction="#toggleSessionForm" styleClass="btn-close" text="✕" />
-            </HBox>
-
-            <Separator styleClass="drawer-sep" />
-
-            <!-- Titre -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="TITRE *" />
-                <TextField fx:id="txtTitle" styleClass="input-field"
-                           promptText="Entraînement Stratégique" />
-                <Label fx:id="errorTitle" managed="false" styleClass="err-label" visible="false" />
+        <!-- Team info cards -->
+        <HBox spacing="20">
+            <VBox spacing="8" styleClass="info-card">
+                <Text styleClass="info-label" text="Jeu" />
+                <Text fx:id="teamGame" styleClass="info-value" text="Game Name" />
             </VBox>
-
-            <!-- Type -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="TYPE" />
-                <ChoiceBox fx:id="choiceType" maxWidth="Infinity" styleClass="input-field" />
-                <Label fx:id="errorType" managed="false" styleClass="err-label" visible="false" />
+            <VBox spacing="8" styleClass="info-card">
+                <Text styleClass="info-label" text="Contact" />
+                <Text fx:id="teamType" styleClass="info-value" text="Type" />
             </VBox>
-
-            <!-- Statut -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="STATUT" />
-                <ChoiceBox fx:id="choiceStatus" maxWidth="Infinity" styleClass="input-field" />
-                <Label fx:id="errorStatus" managed="false" styleClass="err-label" visible="false" />
+            <VBox spacing="8" styleClass="info-card">
+                <Text styleClass="info-label" text="Fondée le" />
+                <Text fx:id="teamFounded" styleClass="info-value" text="Date" />
             </VBox>
+        </HBox>
 
-            <!-- Date -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="DATE *" />
-                <DatePicker fx:id="dateSession" maxWidth="Infinity" styleClass="input-field" />
-                <Label fx:id="errorDate" managed="false" styleClass="err-label" visible="false" />
-            </VBox>
+        <!-- Sessions header -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label styleClass="section-title" text="📅 Séances d'Entraînement" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnAddSession" onAction="#openAddSessionModal"
+                    styleClass="action-blue-button" text="＋  AJOUTER" />
+        </HBox>
 
-            <!-- Heure début -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="HEURE DÉBUT *" />
-                <HBox spacing="6" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtStartTime" styleClass="input-field"
-                               promptText="HH:MM" HBox.hgrow="ALWAYS" />
-                    <VBox spacing="3">
-                        <Button text="▲" styleClass="time-btn" onAction="#incrementStartTime" />
-                        <Button text="▼" styleClass="time-btn" onAction="#decrementStartTime" />
-                    </VBox>
-                </HBox>
-                <Label fx:id="errorStartTime" managed="false" styleClass="err-label" visible="false" />
-            </VBox>
-
-            <!-- Heure fin -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="HEURE FIN *" />
-                <HBox spacing="6" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtEndTime" styleClass="input-field"
-                               promptText="HH:MM" HBox.hgrow="ALWAYS" />
-                    <VBox spacing="3">
-                        <Button text="▲" styleClass="time-btn" onAction="#incrementEndTime" />
-                        <Button text="▼" styleClass="time-btn" onAction="#decrementEndTime" />
-                    </VBox>
-                </HBox>
-                <Label fx:id="errorEndTime" managed="false" styleClass="err-label" visible="false" />
-            </VBox>
-
-            <!-- Lieu -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="LIEU" />
-                <TextField fx:id="txtLocation" styleClass="input-field"
-                           promptText="Salle d'entraînement" />
-            </VBox>
-
-            <!-- Notes -->
-            <VBox spacing="6">
-                <Label styleClass="field-label" text="NOTES" />
-                <TextArea fx:id="txtNotes" styleClass="input-field"
-                          promptText="Notes additionnelles…" wrapText="true" prefRowCount="3" />
-            </VBox>
-
-            <Region VBox.vgrow="ALWAYS" />
-
-            <!-- Buttons -->
-            <HBox spacing="10">
-                <Button fx:id="btnSaveSession" onAction="#saveSession" styleClass="primary-btn"
-                        text="ENREGISTRER" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
-                <Button onAction="#cancelSessionForm" styleClass="secondary-btn"
-                        text="ANNULER" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
-            </HBox>
-        </VBox>
-
-    </HBox>
+        <!-- Sessions list -->
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent;"
+                    styleClass="scroll-pane" vbarPolicy="ALWAYS"
+                    VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="sessionsContainer" spacing="15" styleClass="sessions-container" />
+            </content>
+        </ScrollPane>
+    </VBox>
 
 </StackPane>

@@ -5,76 +5,90 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" prefHeight="550" prefWidth="550" styleClass="scroll-pane" stylesheets="@AddTeamModal.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Team.AddTeamModalController">
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Team.AddTeamModalController"
+           styleClass="overlay-bg" stylesheets="@AddTeamModal.css"
+           alignment="CENTER_RIGHT">
 
-    <VBox spacing="20" styleClass="dialog-root">
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" StackPane.alignment="CENTER_RIGHT">
         <padding>
-            <Insets bottom="30" left="40" right="40" top="30" />
+            <Insets top="28" right="28" bottom="28" left="28" />
         </padding>
 
-        <Label fx:id="modalTitle" styleClass="dialog-title" text="NOUVELLE ÉQUIPE" />
-
-        <GridPane hgap="20" vgap="15">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="35" />
-                <ColumnConstraints percentWidth="65" />
-            </columnConstraints>
-
-            <!-- Team Name -->
-            <Label text="Nom de l'Équipe" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <TextField fx:id="txtName" promptText="Team Vitality" />
-                <Label fx:id="errorName" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Game -->
-            <Label text="Jeu" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <ChoiceBox fx:id="choiceGame" prefWidth="Infinity" />
-                <Label fx:id="errorGameId" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Contact -->
-            <Label text="Contact" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <TextField fx:id="txtContact" promptText="contact@team.com" />
-                <Label fx:id="errorContact" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Logo Image -->
-            <Label text="Logo" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="8">
-                <HBox spacing="12" alignment="CENTER_LEFT">
-                    <Button fx:id="btnUploadLogo" onAction="#handleUploadLogo" styleClass="upload-btn" text="📁 Choisir" />
-                    <Label fx:id="txtLogoFileName" styleClass="file-name-label" text="Aucun fichier" />
-                </HBox>
-            </VBox>
-
-            <!-- Status -->
-            <Label text="Statut" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <ChoiceBox fx:id="choiceStatus" prefWidth="Infinity" />
-            </VBox>
-
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
-        </GridPane>
-
-        <HBox alignment="CENTER_RIGHT" spacing="15">
-            <Button fx:id="btnCancel" onAction="#closeModal" styleClass="secondary-btn" text="Annuler" />
-            <Button fx:id="btnSave" onAction="#saveTeam" styleClass="primary-btn" text="Créer Équipe" />
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="modalTitle" text="Nouvelle équipe" styleClass="drawer-title" />
+            <Region HBox.hgrow="ALWAYS" />
         </HBox>
+
+        <Separator styleClass="drawer-sep">
+            <VBox.margin>
+                <Insets top="12" bottom="16" />
+            </VBox.margin>
+        </Separator>
+
+        <!-- Scrollable Form -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+            <VBox spacing="14">
+                
+                <!-- Team Name -->
+                <VBox spacing="6">
+                    <Label text="NOM *" styleClass="field-label" />
+                    <TextField fx:id="txtName" styleClass="input-field" promptText="Ex: Team Vitality" />
+                    <Label fx:id="errorName" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Game -->
+                <VBox spacing="6">
+                    <Label text="JEU *" styleClass="field-label" />
+                    <ChoiceBox fx:id="choiceGame" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorGameId" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Contact -->
+                <VBox spacing="6">
+                    <Label text="CONTACT *" styleClass="field-label" />
+                    <TextField fx:id="txtContact" styleClass="input-field" promptText="contact@team.com" />
+                    <Label fx:id="errorContact" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Logo -->
+                <VBox spacing="6">
+                    <Label text="LOGO (PNG / JPEG)" styleClass="field-label" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtLogoFileName" styleClass="input-field" 
+                                   promptText="Aucun fichier sélectionné" editable="false" HBox.hgrow="ALWAYS" />
+                        <Button text="📁" styleClass="btn-pick" onAction="#handleUploadLogo" />
+                    </HBox>
+                </VBox>
+
+                <!-- Status -->
+                <VBox spacing="6">
+                    <Label text="STATUT" styleClass="field-label" />
+                    <ChoiceBox fx:id="choiceStatus" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveTeam" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+            <Button text="ANNULER" styleClass="btn-secondary" onAction="#closeModal" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+        </HBox>
+
     </VBox>
-</ScrollPane>
+
+</StackPane>

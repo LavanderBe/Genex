@@ -6,110 +6,120 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" prefHeight="650" prefWidth="550" styleClass="scroll-pane" stylesheets="@AddTrainingSessionModal.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Team.AddTrainingSessionModalController">
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Team.AddTrainingSessionModalController"
+           styleClass="overlay-bg" stylesheets="@AddTrainingSessionModal.css"
+           alignment="CENTER_RIGHT">
 
-    <VBox spacing="20" styleClass="dialog-root">
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" StackPane.alignment="CENTER_RIGHT">
         <padding>
-            <Insets bottom="30" left="40" right="40" top="30" />
+            <Insets top="28" right="28" bottom="28" left="28" />
         </padding>
 
-        <Label fx:id="modalTitle" styleClass="dialog-title" text="NOUVELLE SESSION" />
-
-        <GridPane hgap="20" vgap="15">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="35" />
-                <ColumnConstraints percentWidth="65" />
-            </columnConstraints>
-
-            <!-- Session Title -->
-            <Label text="Titre" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <TextField fx:id="txtTitle" promptText="Entraînement Stratégique" />
-                <Label fx:id="errorTitle" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Type -->
-            <Label text="Type" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <ChoiceBox fx:id="choiceType" prefWidth="Infinity" />
-                <Label fx:id="errorType" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Status -->
-            <Label text="Statut" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <ChoiceBox fx:id="choiceStatus" prefWidth="Infinity" />
-                <Label fx:id="errorStatus" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Date -->
-            <Label text="Date" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <DatePicker fx:id="dateSession" prefWidth="Infinity" />
-                <Label fx:id="errorDate" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Start Time -->
-            <Label text="Heure Début" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <HBox spacing="4" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtStartTime" promptText="HH:MM" HBox.hgrow="ALWAYS" />
-                    <VBox spacing="2">
-                        <Button text="▲" styleClass="time-btn" onAction="#incrementStartTime" />
-                        <Button text="▼" styleClass="time-btn" onAction="#decrementStartTime" />
-                    </VBox>
-                </HBox>
-                <Label fx:id="errorStartTime" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- End Time -->
-            <Label text="Heure Fin" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
-                <HBox spacing="4" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtEndTime" promptText="HH:MM" HBox.hgrow="ALWAYS" />
-                    <VBox spacing="2">
-                        <Button text="▲" styleClass="time-btn" onAction="#incrementEndTime" />
-                        <Button text="▼" styleClass="time-btn" onAction="#decrementEndTime" />
-                    </VBox>
-                </HBox>
-                <Label fx:id="errorEndTime" managed="false" styleClass="error-label" visible="false" />
-            </VBox>
-
-            <!-- Location -->
-            <Label text="Lieu" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
-                <TextField fx:id="txtLocation" promptText="Salle d'entraînement" />
-            </VBox>
-
-            <!-- Notes -->
-            <Label text="Notes" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="7">
-                <TextArea fx:id="txtNotes" promptText="Notes additionnelles..." wrapText="true" prefRowCount="3" />
-            </VBox>
-
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
-        </GridPane>
-
-        <HBox alignment="CENTER_RIGHT" spacing="15">
-            <Button fx:id="btnCancel" onAction="#closeModal" styleClass="secondary-btn" text="Annuler" />
-            <Button fx:id="btnSave" onAction="#saveSession" styleClass="primary-btn" text="Créer Session" />
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="modalTitle" text="Nouvelle session" styleClass="drawer-title" />
+            <Region HBox.hgrow="ALWAYS" />
         </HBox>
+
+        <Separator styleClass="drawer-sep">
+            <VBox.margin>
+                <Insets top="12" bottom="16" />
+            </VBox.margin>
+        </Separator>
+
+        <!-- Scrollable Form -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+            <VBox spacing="14">
+                
+                <!-- Title -->
+                <VBox spacing="6">
+                    <Label text="TITRE *" styleClass="field-label" />
+                    <TextField fx:id="txtTitle" styleClass="input-field" promptText="Entraînement Stratégique" />
+                    <Label fx:id="errorTitle" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Type -->
+                <VBox spacing="6">
+                    <Label text="TYPE *" styleClass="field-label" />
+                    <ChoiceBox fx:id="choiceType" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorType" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Status -->
+                <VBox spacing="6">
+                    <Label text="STATUT *" styleClass="field-label" />
+                    <ChoiceBox fx:id="choiceStatus" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorStatus" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Date -->
+                <VBox spacing="6">
+                    <Label text="DATE *" styleClass="field-label" />
+                    <DatePicker fx:id="dateSession" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorDate" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Start Time -->
+                <VBox spacing="6">
+                    <Label text="HEURE DÉBUT *" styleClass="field-label" />
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtStartTime" styleClass="input-field" promptText="HH:MM" HBox.hgrow="ALWAYS" />
+                        <VBox spacing="3">
+                            <Button text="▲" styleClass="time-btn" onAction="#incrementStartTime" />
+                            <Button text="▼" styleClass="time-btn" onAction="#decrementStartTime" />
+                        </VBox>
+                    </HBox>
+                    <Label fx:id="errorStartTime" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- End Time -->
+                <VBox spacing="6">
+                    <Label text="HEURE FIN *" styleClass="field-label" />
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtEndTime" styleClass="input-field" promptText="HH:MM" HBox.hgrow="ALWAYS" />
+                        <VBox spacing="3">
+                            <Button text="▲" styleClass="time-btn" onAction="#incrementEndTime" />
+                            <Button text="▼" styleClass="time-btn" onAction="#decrementEndTime" />
+                        </VBox>
+                    </HBox>
+                    <Label fx:id="errorEndTime" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Location -->
+                <VBox spacing="6">
+                    <Label text="LIEU" styleClass="field-label" />
+                    <TextField fx:id="txtLocation" styleClass="input-field" promptText="Salle d'entraînement" />
+                </VBox>
+
+                <!-- Notes -->
+                <VBox spacing="6">
+                    <Label text="NOTES" styleClass="field-label" />
+                    <TextArea fx:id="txtNotes" styleClass="input-field" promptText="Notes additionnelles..." wrapText="true" prefRowCount="3" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveSession" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+            <Button text="ANNULER" styleClass="btn-secondary" onAction="#closeModal" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+        </HBox>
+
     </VBox>
-</ScrollPane>
+
+</StackPane>
