@@ -60,6 +60,27 @@ public class CrudPosts implements ICrud<Posts> {
     @Override
     public void getEntity(Posts post) {}
 
+    public List<Posts> getAllPosts() {
+        List<Posts> posts = new ArrayList<>();
+        String requete = "SELECT * FROM posts ORDER BY created_at DESC";
+        try {
+            Statement st = Myconnection.getInstance().getCnx().createStatement();
+            ResultSet rs = st.executeQuery(requete);
+            while (rs.next()) {
+                Posts p = new Posts();
+                p.setId(rs.getString("id"));
+                p.setForumId(rs.getString("forum_id"));
+                p.setAuthorId(rs.getString("author_id"));
+                p.setTitle(rs.getString("title"));
+                p.setBody(rs.getString("body"));
+                posts.add(p);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return posts;
+    }
+
     public List<Posts> getPostsByForum(String forumId) {
         List<Posts> posts = new ArrayList<>();
         String requete = "SELECT * FROM posts WHERE forum_id=?";
