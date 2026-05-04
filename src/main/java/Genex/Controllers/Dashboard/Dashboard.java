@@ -186,4 +186,22 @@ public class Dashboard {
             System.err.println("Error loading Login screen: " + e.getMessage());
         }
     }
+
+    @FXML
+    void navTutorialBtn(ActionEvent event) {
+        try {
+            setActiveButton((Button) event.getSource());
+            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Tutorial/Tutorial.fxml"));
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+        } catch (IOException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error loading Tutorial view.");
+        }
+    }
 }
+

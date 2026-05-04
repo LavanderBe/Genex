@@ -9,13 +9,14 @@ import javafx.stage.Stage;
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
+        // UPDATED: Load dashboard.fxml directly (lowercase as you requested)
+        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("GENEX");
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
-    /*hazebaheba*/
+
     public static void main(String[] args) { launch(args); }
 }
