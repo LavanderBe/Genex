@@ -41,16 +41,17 @@ public class TeamDetailController {
     @FXML private FlowPane sessionsContainer;
 
     // ── Right form panel ────────────────────────────────────────────
-    @FXML private Label formTitle;
-    @FXML private TextField fieldTitle;
+    @FXML private VBox sessionFormPanel;
+    @FXML private Label sessionFormTitle;
+    @FXML private TextField txtTitle;
     @FXML private ChoiceBox<TrainingSession.Type> choiceType;
     @FXML private ChoiceBox<TrainingSession.Status> choiceStatus;
     @FXML private DatePicker dateSession;
-    @FXML private TextField fieldStartTime;
-    @FXML private TextField fieldEndTime;
-    @FXML private TextField fieldLocation;
-    @FXML private TextArea fieldNotes;
-    @FXML private Button btnSave;
+    @FXML private TextField txtStartTime;
+    @FXML private TextField txtEndTime;
+    @FXML private TextField txtLocation;
+    @FXML private TextArea txtNotes;
+    @FXML private Button btnSaveSession;
 
     // ── State ───────────────────────────────────────────────────────
     private Team team;
@@ -70,48 +71,65 @@ public class TeamDetailController {
         loadTrainingSessions();
     }
 
-    // ── Form actions ─────────────────────────────────────────────────
+    // ── Form panel toggle ────────────────────────────────────────────
     @FXML
-    private void handleClear() {
+    private void toggleSessionForm() {
+        boolean nowVisible = !sessionFormPanel.isVisible();
+        sessionFormPanel.setVisible(nowVisible);
+        sessionFormPanel.setManaged(nowVisible);
+        if (!nowVisible) clearSessionForm();
+    }
+
+    @FXML
+    private void cancelSessionForm() {
+        sessionFormPanel.setVisible(false);
+        sessionFormPanel.setManaged(false);
+        clearSessionForm();
+    }
+
+    private void clearSessionForm() {
         sessionToEdit = null;
-        if (fieldTitle != null) fieldTitle.clear();
-        if (fieldStartTime != null) fieldStartTime.clear();
-        if (fieldEndTime != null) fieldEndTime.clear();
-        if (fieldLocation != null) fieldLocation.clear();
-        if (fieldNotes != null) fieldNotes.clear();
+        if (txtTitle != null) txtTitle.clear();
+        if (txtStartTime != null) txtStartTime.clear();
+        if (txtEndTime != null) txtEndTime.clear();
+        if (txtLocation != null) txtLocation.clear();
+        if (txtNotes != null) txtNotes.clear();
         if (dateSession != null) dateSession.setValue(null);
         if (choiceType != null && !choiceType.getItems().isEmpty())
             choiceType.setValue(TrainingSession.Type.TEAM_PRACTICE);
         if (choiceStatus != null && !choiceStatus.getItems().isEmpty())
             choiceStatus.setValue(TrainingSession.Status.PLANNED);
-        if (formTitle != null) formTitle.setText("Nouvelle session");
-        if (btnSave != null) btnSave.setText("Enregistrer");
+        if (sessionFormTitle != null) sessionFormTitle.setText("Nouvelle session");
+        if (btnSaveSession != null) btnSaveSession.setText("ENREGISTRER");
     }
 
     // ── Called by TrainingSessionCardController to open edit mode ────
     public void openEditSessionForm(TrainingSession session) {
         sessionToEdit = session;
-        formTitle.setText("Modifier la session");
-        btnSave.setText("Enregistrer");
+        sessionFormTitle.setText("Modifier la session");
+        btnSaveSession.setText("ENREGISTRER");
 
-        fieldTitle.setText(session.getTitle());
+        txtTitle.setText(session.getTitle());
         if (session.getType() != null) choiceType.setValue(session.getType());
         if (session.getStatus() != null) choiceStatus.setValue(session.getStatus());
         if (session.getSessionDatetime() != null)
             dateSession.setValue(session.getSessionDatetime().toLocalDate());
         if (session.getStartTime() != null)
-            fieldStartTime.setText(session.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            txtStartTime.setText(session.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
         if (session.getEndTime() != null)
-            fieldEndTime.setText(session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")));
-        if (session.getLocation() != null) fieldLocation.setText(session.getLocation());
-        if (session.getNotes() != null) fieldNotes.setText(session.getNotes());
+            txtEndTime.setText(session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+        if (session.getLocation() != null) txtLocation.setText(session.getLocation());
+        if (session.getNotes() != null) txtNotes.setText(session.getNotes());
+
+        sessionFormPanel.setVisible(true);
+        sessionFormPanel.setManaged(true);
     }
 
     // ── Time buttons ─────────────────────────────────────────────────
-    @FXML private void incrementStartTime() { adjustTime(fieldStartTime, 15); }
-    @FXML private void decrementStartTime() { adjustTime(fieldStartTime, -15); }
-    @FXML private void incrementEndTime()   { adjustTime(fieldEndTime, 15); }
-    @FXML private void decrementEndTime()   { adjustTime(fieldEndTime, -15); }
+    @FXML private void incrementStartTime() { adjustTime(txtStartTime, 15); }
+    @FXML private void decrementStartTime() { adjustTime(txtStartTime, -15); }
+    @FXML private void incrementEndTime()   { adjustTime(txtEndTime, 15); }
+    @FXML private void decrementEndTime()   { adjustTime(txtEndTime, -15); }
 
     private void adjustTime(TextField field, int minutes) {
         try {
@@ -128,12 +146,12 @@ public class TeamDetailController {
 
     // ── Save session ─────────────────────────────────────────────────
     @FXML
-    private void handleSave() {
+    private void saveSession() {
         if (!validateSessionForm()) return;
         try {
             LocalDate date = dateSession.getValue();
-            LocalTime start = LocalTime.parse(fieldStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
-            LocalTime end   = LocalTime.parse(fieldEndTime.getText().trim(),   DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime start = LocalTime.parse(txtStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime end   = LocalTime.parse(txtEndTime.getText().trim(),   DateTimeFormatter.ofPattern("HH:mm"));
             LocalDateTime dt = LocalDateTime.of(date, start);
 
             String excludeId = sessionToEdit != null ? sessionToEdit.getId() : null;
@@ -154,27 +172,27 @@ public class TeamDetailController {
             }
 
             TrainingSession session = sessionToEdit != null ? sessionToEdit : new TrainingSession();
-            session.setTitle(fieldTitle.getText().trim());
+            session.setTitle(txtTitle.getText().trim());
             session.setType(choiceType.getValue());
             session.setSessionDatetime(dt);
             session.setStartTime(start);
             session.setEndTime(end);
             session.setStatus(choiceStatus.getValue());
-            session.setLocation(fieldLocation.getText().trim());
-            session.setNotes(fieldNotes.getText().trim());
+            session.setLocation(txtLocation.getText().trim());
+            session.setNotes(txtNotes.getText().trim());
             session.setTeamId(team.getId());
 
             if (sessionToEdit == null) crudTrainingSession.addSession(session);
             else                       crudTrainingSession.updateSession(session);
 
-            handleClear();
+            cancelSessionForm();
             loadTrainingSessions();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     private boolean validateSessionForm() {
         boolean valid = true;
-        if (fieldTitle.getText().trim().isEmpty()) {
+        if (txtTitle.getText().trim().isEmpty()) {
             showAlert("Validation", "Le titre est requis");
             valid = false;
         }
@@ -182,24 +200,24 @@ public class TeamDetailController {
             showAlert("Validation", "La date est requise");
             valid = false;
         }
-        if (fieldStartTime.getText().trim().isEmpty()) {
+        if (txtStartTime.getText().trim().isEmpty()) {
             showAlert("Validation", "L'heure de début est requise");
             valid = false;
         } else {
-            try { LocalTime.parse(fieldStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm")); }
+            try { LocalTime.parse(txtStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm")); }
             catch (Exception e) {
                 showAlert("Validation", "Format d'heure invalide (HH:MM)");
                 valid = false;
             }
         }
-        if (fieldEndTime.getText().trim().isEmpty()) {
+        if (txtEndTime.getText().trim().isEmpty()) {
             showAlert("Validation", "L'heure de fin est requise");
             valid = false;
         } else {
             try {
-                LocalTime end = LocalTime.parse(fieldEndTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
-                if (!fieldStartTime.getText().trim().isEmpty()) {
-                    LocalTime start = LocalTime.parse(fieldStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+                LocalTime end = LocalTime.parse(txtEndTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+                if (!txtStartTime.getText().trim().isEmpty()) {
+                    LocalTime start = LocalTime.parse(txtStartTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
                     if (!end.isAfter(start)) {
                         showAlert("Validation", "L'heure de fin doit être après l'heure de début");
                         valid = false;

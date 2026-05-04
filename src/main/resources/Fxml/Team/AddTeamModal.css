@@ -1,69 +1,73 @@
-/* ═══════════════════════════════════════════════════
-   Add Team Modal — Sponsors Design Language
-   Purple/Violet Theme
-   ═══════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   Add Team Modal — Dark Esports Theme (matching Sponsors)
+   ══════════════════════════════════════════════════════════════ */
 
-/* Main Container Background */
-.dialog-root {
-    -fx-background-color: rgba(20, 20, 40, 0.65);
+.modal-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+    -fx-alignment: CENTER;
+}
+
+.modal-container {
+    -fx-background-color: #12122a;
     -fx-background-radius: 18;
     -fx-border-color: rgba(255, 255, 255, 0.1);
     -fx-border-radius: 18;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 30, 0.15, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 40, 0.3, 0, 10);
+    -fx-padding: 32;
+    -fx-spacing: 20;
+    -fx-pref-width: 500;
+    -fx-max-width: 500;
 }
 
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
-    -fx-border-color: transparent;
-}
-
-.scroll-pane .viewport {
-    -fx-background-color: transparent;
-}
-
-/* Title Styling */
-.dialog-title {
+/* ── Header ────────────────────────────────────────────────────── */
+.modal-title {
     -fx-text-fill: white;
-    -fx-font-size: 24;
-    -fx-font-weight: 800;
-    -fx-padding: 0 0 10 0;
-    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.5), 10, 0, 0, 0);
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
 }
 
-/* Form Labels */
-.label {
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-font-size: 18px;
+    -fx-border-width: 0;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.15);
+    -fx-text-fill: #ff6b6b;
+}
+
+/* ── Form Fields ───────────────────────────────────────────────── */
+.field-label {
     -fx-text-fill: rgba(255, 255, 255, 0.6);
     -fx-font-size: 12px;
     -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5;
 }
 
-/* Input Fields (TextField, ChoiceBox) */
-.text-field, .choice-box {
+.input-field {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-background-radius: 10;
     -fx-border-color: rgba(255, 255, 255, 0.08);
     -fx-border-radius: 10;
     -fx-border-width: 1;
-    -fx-padding: 10 12;
     -fx-text-fill: white;
     -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
     -fx-font-size: 13px;
+    -fx-padding: 10 12;
 }
 
-.text-field:hover, .choice-box:hover {
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-}
-
-.text-field:focused, .choice-box:focused {
+.input-field:focused {
     -fx-border-color: rgba(124, 111, 255, 0.55);
     -fx-background-color: rgba(255, 255, 255, 0.07);
     -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.18), 8, 0, 0, 0);
 }
 
-/* ChoiceBox Specific */
 .choice-box {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-background-radius: 10;
@@ -72,158 +76,83 @@
     -fx-border-width: 1;
 }
 
-.choice-box:hover {
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-background-color: rgba(255, 255, 255, 0.07);
+.choice-box .label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
 }
 
 .choice-box:focused {
     -fx-border-color: rgba(124, 111, 255, 0.55);
     -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.18), 8, 0, 0, 0);
 }
 
-.choice-box .label {
-    -fx-text-fill: white;
-    -fx-padding: 8 12;
+/* ── Error Labels ──────────────────────────────────────────────── */
+.err-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 2 0 0 4;
 }
 
-.choice-box .arrow {
-    -fx-background-color: rgba(255, 255, 255, 0.5);
-}
-
-.choice-box:hover .arrow {
-    -fx-background-color: rgba(255, 255, 255, 0.7);
-}
-
-/* ChoiceBox Dropdown Popup */
-.choice-box .context-menu {
-    -fx-background-color: #1a1a35;
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(124, 111, 255, 0.3);
-    -fx-border-radius: 10;
-    -fx-border-width: 1.5;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 30, 0.4, 0, 8);
-    -fx-padding: 8;
-}
-
-.choice-box .menu-item {
-    -fx-background-color: transparent;
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
-    -fx-padding: 10 16;
-    -fx-background-radius: 6;
-}
-
-.choice-box .menu-item:focused {
-    -fx-background-color: rgba(124, 111, 255, 0.25);
-    -fx-text-fill: white;
-}
-
-.choice-box .menu-item:hover {
-    -fx-background-color: rgba(124, 111, 255, 0.2);
-    -fx-text-fill: white;
-}
-
-/* Additional popup styling */
-.choice-box-popup .list-view {
-    -fx-background-color: #1a1a35;
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(124, 111, 255, 0.3);
-    -fx-border-width: 1.5;
-    -fx-border-radius: 10;
-}
-
-.choice-box-popup .list-cell {
-    -fx-background-color: transparent;
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
-    -fx-padding: 10 16;
-}
-
-.choice-box-popup .list-cell:filled:hover {
-    -fx-background-color: rgba(124, 111, 255, 0.2);
-    -fx-text-fill: white;
-}
-
-.choice-box-popup .list-cell:filled:selected {
-    -fx-background-color: rgba(124, 111, 255, 0.35);
-    -fx-text-fill: white;
-}
-
-/* Upload Button — Polygon */
-.upload-btn {
+/* ── Upload Button ─────────────────────────────────────────────── */
+.btn-pick {
     -fx-background-color: rgba(124, 111, 255, 0.15);
     -fx-text-fill: #a89fff;
-    -fx-font-size: 12px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 0 0 L 80 0 L 90 10 L 90 35 L 10 35 L 0 25 Z";
-    -fx-padding: 6 16;
+    -fx-background-radius: 8;
     -fx-cursor: hand;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-border-width: 0;
 }
 
-.upload-btn:hover {
+.btn-pick:hover {
     -fx-background-color: rgba(124, 111, 255, 0.3);
     -fx-text-fill: white;
-    -fx-translate-y: -1;
 }
 
-/* File Name Label */
-.file-name-label {
-    -fx-text-fill: rgba(255, 255, 255, 0.5);
-    -fx-font-size: 12;
-    -fx-font-style: italic;
-}
-
-/* Error Labels */
-.error-label {
-    -fx-text-fill: #ff6b6b;
-    -fx-font-size: 11;
-    -fx-font-weight: 600;
-    -fx-padding: 2 0 0 5;
-}
-
-/* Primary Button — Polygon */
+/* ── Action Buttons ────────────────────────────────────────────── */
 .primary-btn {
-    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
+    -fx-background-color: #d32f2f;
     -fx-text-fill: white;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
-    -fx-padding: 11 24;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 11 0;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.5), 14, 0, 0, 4);
+    -fx-border-width: 0;
 }
 
 .primary-btn:hover {
-    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
-    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.8), 18, 0, 0, 6);
-    -fx-translate-y: -2;
+    -fx-background-color: #e53935;
 }
 
 .primary-btn:pressed {
     -fx-translate-y: 1;
-    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+    -fx-background-color: #c62828;
 }
 
-/* Secondary/Cancel Button — Polygon */
 .secondary-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-text-fill: rgba(255, 255, 255, 0.75);
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
-    -fx-padding: 11 24;
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 11 0;
     -fx-cursor: hand;
 }
 
 .secondary-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-text-fill: white;
-    -fx-translate-y: -2;
 }
 
 .secondary-btn:pressed {
     -fx-translate-y: 1;
+}
+
+/* ── Separator ─────────────────────────────────────────────────── */
+.drawer-sep {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
 }

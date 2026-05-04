@@ -1,11 +1,10 @@
-/* ═══════════════════════════════════════════════════
-   Team Detail Stylesheet — Nexus Esports Hub
-   Sponsors Design Language — Purple/Violet Theme
-   ═══════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   Team Detail — Dark Esports Theme (matching Sponsors exactly)
+   ══════════════════════════════════════════════════════════════ */
 
 /* Main Container */
 .main-content {
-    -fx-background-color: transparent;
+    -fx-background-color: #0d0d1a;
 }
 
 /* Page Title */
@@ -16,21 +15,22 @@
     -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.4), 10, 0, 0, 0);
 }
 
-/* ──────────────── Back Button — Polygon ──────────────── */
+/* ──────────────── Back Button ──────────────── */
 .back-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-text-fill: white;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
-    -fx-padding: 8 20;
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
     -fx-cursor: hand;
 }
 
 .back-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.18);
-    -fx-translate-y: -1;
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
 }
 
 .back-btn:pressed {
@@ -106,51 +106,26 @@
     -fx-padding: 0;
 }
 
-/* ──────────────── Add Button — Polygon ──────────────── */
+/* ──────────────── Add Button (matching Sponsors) ──────────────── */
 .action-blue-button {
     -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
     -fx-text-fill: white;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
-    -fx-padding: 10 24;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.5), 14, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.4), 12, 0, 0, 4);
 }
 
 .action-blue-button:hover {
     -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
-    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.8), 18, 0, 0, 6);
-    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.6), 16, 0, 0, 6);
 }
 
 .action-blue-button:pressed {
     -fx-translate-y: 1;
     -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
-}
-
-/* ──────────────── Delete/Cancel Button — Polygon ──────────────── */
-.action-red-button {
-    -fx-background-color: #ff5252;
-    -fx-text-fill: white;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
-    -fx-padding: 10 24;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.5), 14, 0, 0, 4);
-}
-
-.action-red-button:hover {
-    -fx-background-color: #ff6b6b;
-    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.8), 18, 0, 0, 6);
-    -fx-translate-y: -2;
-}
-
-.action-red-button:pressed {
-    -fx-translate-y: 1;
 }
 
 /* ──────────────── Empty State ──────────────── */
@@ -169,12 +144,11 @@
     -fx-font-weight: 600;
 }
 
-/* ══ Finance-style inline form card ══════════════════════════════ */
+/* ══ Finance-style inline form card (DARK) ══════════════════════ */
 .form-card {
-    -fx-background-color: rgba(20, 20, 40, 0.95);
-    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-background-color: #12122a;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
     -fx-border-width: 0 0 0 1;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 30, 0.2, -4, 0);
 }
 
 .form-title {
@@ -187,6 +161,7 @@
     -fx-text-fill: rgba(255, 255, 255, 0.6);
     -fx-font-size: 12px;
     -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5;
 }
 
 .input-field {
@@ -219,29 +194,31 @@
 }
 
 .btn-close {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-color: transparent;
     -fx-text-fill: rgba(255, 255, 255, 0.5);
     -fx-background-radius: 6;
     -fx-cursor: hand;
     -fx-padding: 4 8;
-    -fx-font-size: 13px;
+    -fx-font-size: 16px;
+    -fx-border-width: 0;
 }
 
 .btn-close:hover {
-    -fx-background-color: rgba(255, 80, 80, 0.2);
+    -fx-background-color: rgba(255, 80, 80, 0.15);
     -fx-text-fill: #ff6b6b;
 }
 
-/* Time increment buttons — polygon */
+/* Time increment buttons */
 .time-btn {
     -fx-background-color: rgba(124, 111, 255, 0.15);
     -fx-text-fill: #a89fff;
-    -fx-font-size: 9px;
-    -fx-font-weight: 700;
-    -fx-shape: "M 0 0 L 22 0 L 26 4 L 26 16 L 4 16 L 0 12 Z";
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 6;
     -fx-cursor: hand;
-    -fx-padding: 2 6;
+    -fx-padding: 4 8;
     -fx-min-width: 28;
+    -fx-border-width: 0;
 }
 
 .time-btn:hover {
@@ -249,46 +226,43 @@
     -fx-text-fill: white;
 }
 
-/* Primary save button — polygon */
+/* Primary save button (solid red like Sponsors "Enregistrar") */
 .primary-btn {
-    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
+    -fx-background-color: #d32f2f;
     -fx-text-fill: white;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
-    -fx-padding: 11 24;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 11 0;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.5), 14, 0, 0, 4);
+    -fx-border-width: 0;
 }
 
 .primary-btn:hover {
-    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
-    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.8), 18, 0, 0, 6);
-    -fx-translate-y: -2;
+    -fx-background-color: #e53935;
 }
 
 .primary-btn:pressed {
     -fx-translate-y: 1;
-    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+    -fx-background-color: #c62828;
 }
 
-/* Secondary cancel button — polygon */
+/* Secondary cancel button */
 .secondary-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-text-fill: rgba(255, 255, 255, 0.75);
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
-    -fx-padding: 11 24;
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 11 0;
     -fx-cursor: hand;
 }
 
 .secondary-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-text-fill: white;
-    -fx-translate-y: -2;
 }
 
 .secondary-btn:pressed {
