@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -45,6 +46,14 @@
                         <Label text="Créez et gérez les publications du forum avec le même workflow et le même style visuel."
                                styleClass="header-desc"/>
                     </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="weather-widget">
+                        <padding>
+                            <Insets top="6" right="10" bottom="6" left="10"/>
+                        </padding>
+                        <ImageView fx:id="weatherIconView" fitHeight="22" fitWidth="22" preserveRatio="true"/>
+                        <Label fx:id="weatherLabel" text="🌡 Chargement météo..." styleClass="featured-meta, weather-text" maxWidth="220" textOverrun="ELLIPSIS"/>
+                        <Button text="↻" onAction="#handleRefreshHeaderData" styleClass="action-button, weather-refresh-button"/>
+                    </HBox>
                     <Button text="+ NOUVEAU POST" styleClass="primary-button" onAction="#handleClearForm"/>
                 </HBox>
             </VBox>
@@ -59,6 +68,19 @@
                 <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="145" promptText="Statut"/>
                 <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="160" promptText="Modération"/>
             </HBox>
+
+            <VBox spacing="10">
+                <Label text="📰 FEED NEWS GAMING" styleClass="field-label"/>
+                <ScrollPane fitToHeight="false" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                            minHeight="190.0" prefHeight="190.0" maxHeight="190.0"
+                            styleClass="custom-scroll, news-feed-scroll">
+                    <HBox fx:id="newsFeedContainer" spacing="14" styleClass="news-feed-row">
+                        <padding>
+                            <Insets top="6" right="6" bottom="6" left="6"/>
+                        </padding>
+                    </HBox>
+                </ScrollPane>
+            </VBox>
 
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
                 <VBox spacing="24" styleClass="cards-container">

@@ -2,6 +2,9 @@ package Genex.Controllers.Forum;
 
 import Genex.entities.Posts;
 import Genex.services.CrudPosts;
+import Genex.services.NewsService;
+import Genex.services.TemperatureService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +17,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -28,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 
 public class PostsController {
 
@@ -68,9 +75,17 @@ public class PostsController {
     @FXML
     private Label featuredDescLabel;
     @FXML
+    private Label weatherLabel;
+    @FXML
+    private ImageView weatherIconView;
+    @FXML
+    private HBox newsFeedContainer;
+    @FXML
     private FlowPane postCardsContainer;
 
     private final CrudPosts crudPosts = new CrudPosts();
+    private final TemperatureService temperatureService = new TemperatureService();
+    private final NewsService newsService = new NewsService();
     private final List<Posts> posts = new ArrayList<>();
     private String selectedPostId;
 
@@ -90,6 +105,7 @@ public class PostsController {
         setupListeners();
         loadPosts();
         clearFormFields();
+        loadHeaderInfo();
     }
 
     @FXML
@@ -114,6 +130,11 @@ public class PostsController {
     @FXML
     private void handleClearForm(ActionEvent event) {
         clearFormFields();
+    }
+
+    @FXML
+    private void handleRefreshHeaderData(ActionEvent event) {
+        loadHeaderInfo();
     }
 
     @FXML
@@ -210,6 +231,152 @@ public class PostsController {
         typeFilterField.setValue("TOUS");
         statusFilterField.setValue("TOUS");
         moderationFilterField.setValue("TOUS");
+    }
+
+    private void loadHeaderInfo() {
+        loadTemperature();
+        loadNews();
+    }
+
+    private void loadTemperature() {
+        weatherLabel.setText("🌡 Chargement météo...");
+        weatherIconView.setImage(null);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                TemperatureService.TemperatureSnapshot snapshot = temperatureService.getCurrentForTunis();
+                Image weatherImage = new Image(temperatureService.iconUrlForCode(snapshot.weatherCode()), true);
+                Platform.runLater(() -> {
+                    weatherLabel.setText(temperatureService.formatForUi(snapshot));
+                    weatherIconView.setImage(weatherImage);
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                Platform.runLater(() -> {
+                    weatherLabel.setText("🌡 Météo indisponible");
+                    weatherIconView.setImage(null);
+                });
+            } catch (IOException | IllegalStateException e) {
+                Platform.runLater(() -> {
+                    weatherLabel.setText("🌡 Météo indisponible");
+                    weatherIconView.setImage(null);
+                });
+            }
+        });
+    }
+
+    private void loadNews() {
+        newsFeedContainer.getChildren().clear();
+        newsFeedContainer.getChildren().add(buildLoadingNewsCard());
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                List<NewsService.NewsItem> items = newsService.getGamingFeed(4);
+                Platform.runLater(() -> {
+                    renderNewsFeed(items);
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                Platform.runLater(() -> {
+                    renderNewsError();
+                });
+            } catch (IOException | IllegalStateException e) {
+                Platform.runLater(() -> {
+                    renderNewsError();
+                });
+            }
+        });
+    }
+
+    private void renderNewsFeed(List<NewsService.NewsItem> items) {
+        newsFeedContainer.getChildren().clear();
+        for (NewsService.NewsItem item : items) {
+            newsFeedContainer.getChildren().add(createNewsCard(item));
+        }
+    }
+
+    private VBox buildLoadingNewsCard() {
+        VBox card = new VBox(8);
+        card.getStyleClass().addAll("forum-card", "news-card");
+        card.setPrefWidth(260);
+        card.setMinHeight(150);
+        card.setMaxHeight(150);
+        card.setPadding(new Insets(14));
+
+        Label title = new Label("Chargement des actualités...");
+        title.getStyleClass().add("forum-card-title");
+        title.setWrapText(true);
+
+        Label meta = new Label("Source: Reddit r/gaming");
+        meta.getStyleClass().add("forum-card-meta");
+        card.getChildren().addAll(title, meta);
+        return card;
+    }
+
+    private void renderNewsError() {
+        newsFeedContainer.getChildren().clear();
+        VBox card = new VBox(8);
+        card.getStyleClass().addAll("forum-card", "news-card");
+        card.setPrefWidth(260);
+        card.setMinHeight(150);
+        card.setMaxHeight(150);
+        card.setPadding(new Insets(14));
+
+        Label title = new Label("Flux news indisponible.");
+        title.getStyleClass().add("forum-card-title");
+        title.setWrapText(true);
+
+        Label meta = new Label("Réessayez avec ↻");
+        meta.getStyleClass().add("forum-card-meta");
+        card.getChildren().addAll(title, meta);
+        newsFeedContainer.getChildren().add(card);
+    }
+
+    private VBox createNewsCard(NewsService.NewsItem item) {
+        VBox card = new VBox(8);
+        card.getStyleClass().addAll("forum-card", "news-card");
+        card.setPrefWidth(260);
+        card.setMinHeight(150);
+        card.setMaxHeight(150);
+        card.setPadding(new Insets(12));
+
+        Node mediaNode = createNewsMediaNode(item.imageUrl());
+
+        Label title = new Label(item.title());
+        title.getStyleClass().addAll("forum-card-title", "news-title");
+        title.setWrapText(true);
+        title.setMaxWidth(236);
+
+        Label meta = new Label(item.source());
+        meta.getStyleClass().add("forum-card-meta");
+
+        card.getChildren().addAll(mediaNode, title, meta);
+        return card;
+    }
+
+    private Node createNewsMediaNode(String imageUrl) {
+        if (!isBlank(imageUrl)) {
+            try {
+                Image image = new Image(imageUrl, false);
+                if (!image.isError()) {
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(236);
+                    imageView.setFitHeight(82);
+                    imageView.setPreserveRatio(false);
+                    imageView.getStyleClass().add("news-image");
+                    return imageView;
+                }
+            } catch (IllegalArgumentException ignored) {
+                // fallback placeholder below
+            }
+        }
+
+        Label placeholder = new Label("📰 ACTU");
+        placeholder.getStyleClass().add("news-image-placeholder");
+        placeholder.setMinSize(236, 82);
+        placeholder.setPrefSize(236, 82);
+        placeholder.setMaxSize(236, 82);
+        return placeholder;
     }
 
     private void setupListeners() {
