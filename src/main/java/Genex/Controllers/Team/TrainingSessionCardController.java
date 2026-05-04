@@ -134,12 +134,16 @@ public class TrainingSessionCardController {
 
         if (session == null) return;
 
-        // Check if we have the required references for overlay modal
-        if (rootStackPane != null && contentArea != null) {
-            openEditModalAsOverlay();
+        // Call the inline form in TeamDetailController (like Sponsors)
+        if (teamDetailController != null) {
+            teamDetailController.openEditSessionForm(session);
         } else {
-            // Fallback to old window approach
-            openEditModalAsWindow();
+            // Fallback to old modal approach if controller not set
+            if (rootStackPane != null && contentArea != null) {
+                openEditModalAsOverlay();
+            } else {
+                openEditModalAsWindow();
+            }
         }
     }
 
@@ -274,5 +278,11 @@ public class TrainingSessionCardController {
 
     public void setOnUpdateCallback(Runnable callback) {
         this.onUpdateCallback = callback;
+    }
+
+    private TeamDetailController teamDetailController;
+
+    public void setTeamDetailController(TeamDetailController controller) {
+        this.teamDetailController = controller;
     }
 }

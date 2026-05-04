@@ -1,238 +1,265 @@
 package Genex.Controllers.Team;
 
+import Genex.entities.Game;
 import Genex.entities.Team;
+import Genex.services.CrudGame;
 import Genex.services.CrudTeam;
+import Genex.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 public class TeamHubController {
 
-    @FXML
-    private StackPane rootStackPane;
+    // ── Left panel ──────────────────────────────────────────────────
+    @FXML private StackPane rootStackPane;
+    @FXML private VBox contentArea;
+    @FXML private TextField searchField;
+    @FXML private Button btnAddTeam;
+    @FXML private FlowPane teamCardsContainer;
 
-    @FXML
-    private VBox contentArea;
+    // ── Right form panel ────────────────────────────────────────────
+    @FXML private VBox formPanel;
+    @FXML private Label formPanelTitle;
+    @FXML private TextField txtName;
+    @FXML private ChoiceBox<Game> choiceGame;
+    @FXML private TextField txtContact;
+    @FXML private TextField txtLogoFileName;
+    @FXML private ChoiceBox<Team.Status> choiceStatus;
+    @FXML private Button btnSave;
+    @FXML private Label errorName;
+    @FXML private Label errorGameId;
+    @FXML private Label errorContact;
 
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private Button btnAddTeam;
-
-    @FXML
-    private FlowPane teamCardsContainer;
-
+    // ── State ───────────────────────────────────────────────────────
     private CrudTeam crudTeam;
     private List<Team> allTeams;
-    private javafx.scene.layout.Pane mainContentContainer; // Reference to main content area
+    private Team teamToEdit;
+    private String logoImagePath;
+    private javafx.scene.layout.Pane mainContentContainer;
 
     @FXML
     public void initialize() {
-        System.out.println("TeamHubController initialized");
-
-        // Initialize CRUD service
         crudTeam = new CrudTeam();
-
-        // Setup search listener
         setupSearchListener();
-
-        // Load teams from database
+        loadGames();
+        setupStatusChoiceBox();
         loadTeamsFromDatabase();
     }
 
-    /**
-     * Set the main content container from Dashboard
-     */
+    // ── Content container (set by MainController / Dashboard) ───────
     public void setContentContainer(javafx.scene.layout.Pane contentContainer) {
         this.mainContentContainer = contentContainer;
-        System.out.println("Content container set in TeamHubController");
-
-        // Reload teams to pass the container to cards
-        if (allTeams != null && !allTeams.isEmpty()) {
-            displayTeams(allTeams);
-        }
+        if (allTeams != null && !allTeams.isEmpty()) displayTeams(allTeams);
     }
 
-    private void findMainContentContainer() {
-        // This method is no longer needed but kept for backward compatibility
-        if (mainContentContainer != null) {
-            return; // Already set by MainController
-        }
-
-        try {
-            // Navigate up the scene graph to find the main content container
-            javafx.scene.Node node = teamCardsContainer;
-            while (node != null) {
-                if (node instanceof StackPane && node.getId() != null && node.getId().equals("contentContainer")) {
-                    mainContentContainer = (StackPane) node;
-                    System.out.println("Found main content container!");
-                    break;
-                }
-                node = node.getParent();
-            }
-            if (mainContentContainer == null) {
-                System.out.println("Main content container not found - will use fallback navigation");
-            }
-        } catch (Exception e) {
-            System.err.println("Error finding main content container: " + e.getMessage());
-        }
-    }
-
-    private void setupSearchListener() {
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filterTeams(newValue);
-        });
-    }
-
-    private void filterTeams(String searchText) {
-        teamCardsContainer.getChildren().clear();
-
-        if (searchText == null || searchText.trim().isEmpty()) {
-            // Show all teams
-            displayTeams(allTeams);
-        } else {
-            // Filter teams by name or contact
-            String search = searchText.toLowerCase();
-            List<Team> filtered = allTeams.stream()
-                    .filter(t -> t.getName().toLowerCase().contains(search) ||
-                            (t.getContact() != null && t.getContact().toLowerCase().contains(search)))
-                    .toList();
-            displayTeams(filtered);
-        }
-    }
-
-    private void updateEmptyState() {
-        // Empty state handling removed to match Player interface
-        // Teams will always show in the grid, even if empty
+    // ── Form panel toggle ────────────────────────────────────────────
+    @FXML
+    private void toggleFormPanel() {
+        boolean nowVisible = !formPanel.isVisible();
+        formPanel.setVisible(nowVisible);
+        formPanel.setManaged(nowVisible);
+        if (!nowVisible) clearForm();
     }
 
     @FXML
-    private void openAddTeamModal() {
-        System.out.println("Opening Add Team Modal...");
+    private void cancelForm() {
+        formPanel.setVisible(false);
+        formPanel.setManaged(false);
+        clearForm();
+    }
 
+    private void clearForm() {
+        teamToEdit = null;
+        logoImagePath = null;
+        if (txtName != null) txtName.clear();
+        if (txtContact != null) txtContact.clear();
+        if (txtLogoFileName != null) txtLogoFileName.clear();
+        if (choiceStatus != null && !choiceStatus.getItems().isEmpty())
+            choiceStatus.setValue(Team.Status.ACTIVE);
+        if (choiceGame != null && !choiceGame.getItems().isEmpty())
+            choiceGame.setValue(choiceGame.getItems().get(0));
+        hideError(errorName);
+        hideError(errorGameId);
+        hideError(errorContact);
+        if (formPanelTitle != null) formPanelTitle.setText("Nouvelle équipe");
+        if (btnSave != null) btnSave.setText("ENREGISTRER");
+    }
+
+    // ── Called by TeamCardController to open edit mode ───────────────
+    public void openEditForm(Team team) {
+        teamToEdit = team;
+        formPanelTitle.setText("Modifier l'équipe");
+        btnSave.setText("ENREGISTRER");
+
+        txtName.setText(team.getName());
+        txtContact.setText(team.getContact() != null ? team.getContact() : "");
+
+        if (team.getGameId() != null) {
+            for (Game g : choiceGame.getItems()) {
+                if (g.getId().equals(team.getGameId())) { choiceGame.setValue(g); break; }
+            }
+        }
+        if (team.getStatus() != null) choiceStatus.setValue(team.getStatus());
+        if (team.getLogoImage() != null && !team.getLogoImage().isEmpty()) {
+            logoImagePath = team.getLogoImage();
+            txtLogoFileName.setText(Paths.get(team.getLogoImage()).getFileName().toString());
+        }
+
+        formPanel.setVisible(true);
+        formPanel.setManaged(true);
+    }
+
+    // ── Logo picker ──────────────────────────────────────────────────
+    @FXML
+    private void handleUploadLogo() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Choisir un logo");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+        Stage stage = (Stage) btnAddTeam.getScene().getWindow();
+        File file = fc.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                Path dir = Paths.get("uploads", "team-logos");
+                Files.createDirectories(dir);
+                String fileName = System.currentTimeMillis() + "_" + file.getName();
+                Files.copy(file.toPath(), dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+                logoImagePath = "uploads/team-logos/" + fileName;
+                txtLogoFileName.setText(file.getName());
+            } catch (IOException e) {
+                txtLogoFileName.setText("Erreur upload");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // ── Save ─────────────────────────────────────────────────────────
+    @FXML
+    private void saveTeam() {
+        if (!validateForm()) return;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTeamModal.fxml"));
-            Parent addTeamForm = loader.load();
+            Team team = teamToEdit != null ? teamToEdit : new Team();
+            team.setName(txtName.getText().trim());
+            Game selectedGame = choiceGame.getValue();
+            if (selectedGame != null) team.setGameId(selectedGame.getId());
+            team.setContact(txtContact.getText().trim());
+            team.setLogoImage(logoImagePath);
+            team.setStatus(choiceStatus.getValue());
 
-            // 1. Apply Blur effect to the background
-            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
-            contentArea.setEffect(blur);
-            contentArea.setDisable(true); // Prevent clicking background items
+            if (teamToEdit == null) {
+                String userId = SessionManager.getInstance().getCurrentUserId();
+                team.setCreatedBy(userId);
+                crudTeam.addEntity(team);
+            } else {
+                crudTeam.updateEntity(team, teamToEdit.getId());
+            }
 
-            // 2. Wrap the form in a darkening overlay (dimmer)
-            VBox overlay = new VBox(addTeamForm);
-            overlay.setAlignment(javafx.geometry.Pos.CENTER);
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);"); // Dim background
-
-            // 3. Add to the stack
-            rootStackPane.getChildren().add(overlay);
-
-            // 4. Pass a "Close" callback to the AddTeamModalController
-            AddTeamModalController controller = loader.getController();
-            controller.setOnSaveCallback(newTeam -> {
-                System.out.println("Saving new team: " + newTeam.getName());
-
-                // Save to database
-                crudTeam.addEntity(newTeam);
-
-                // Reload teams
-                loadTeamsFromDatabase();
-            });
-
-            controller.setOnCloseCallback(() -> {
-                rootStackPane.getChildren().remove(overlay); // Remove form
-                contentArea.setEffect(null);                // Remove blur
-                contentArea.setDisable(false);              // Re-enable content
-            });
-
+            cancelForm();
+            loadTeamsFromDatabase();
         } catch (Exception e) {
-            System.err.println("Error opening add team modal");
             e.printStackTrace();
         }
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+        if (txtName.getText().trim().isEmpty()) { showError(errorName, "Le nom est requis"); valid = false; }
+        if (choiceGame.getValue() == null) { showError(errorGameId, "Le jeu est requis"); valid = false; }
+        if (txtContact.getText().trim().isEmpty()) { showError(errorContact, "Le contact est requis"); valid = false; }
+        return valid;
+    }
+
+    // ── Search ───────────────────────────────────────────────────────
+    private void setupSearchListener() {
+        searchField.textProperty().addListener((obs, old, val) -> filterTeams(val));
+    }
+
+    private void filterTeams(String text) {
+        teamCardsContainer.getChildren().clear();
+        if (text == null || text.trim().isEmpty()) {
+            displayTeams(allTeams);
+        } else {
+            String s = text.toLowerCase();
+            displayTeams(allTeams.stream()
+                    .filter(t -> t.getName().toLowerCase().contains(s) ||
+                            (t.getContact() != null && t.getContact().toLowerCase().contains(s)))
+                    .toList());
+        }
+    }
+
+    // ── Data ─────────────────────────────────────────────────────────
+    private void loadGames() {
+        if (choiceGame == null) return;
+        try {
+            List<Game> games = new CrudGame().getgames();
+            choiceGame.getItems().addAll(games);
+            choiceGame.setConverter(new StringConverter<>() {
+                @Override public String toString(Game g) { return g != null ? g.getNom() : ""; }
+                @Override public Game fromString(String s) { return null; }
+            });
+            if (!games.isEmpty()) choiceGame.setValue(games.get(0));
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void setupStatusChoiceBox() {
+        if (choiceStatus == null) return;
+        choiceStatus.getItems().addAll(Team.Status.values());
+        choiceStatus.setValue(Team.Status.ACTIVE);
     }
 
     private void loadTeamsFromDatabase() {
         try {
-            System.out.println("Loading teams from database...");
-
-            // Get all teams from database
             allTeams = crudTeam.getAll();
-
-            System.out.println("Loaded " + allTeams.size() + " teams");
-
-            // Display teams
             displayTeams(allTeams);
-
-        } catch (Exception e) {
-            System.err.println("Error loading teams from database");
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     private void displayTeams(List<Team> teams) {
         teamCardsContainer.getChildren().clear();
-
-        System.out.println("=== Displaying " + teams.size() + " teams ===");
-        System.out.println("Main content container: " + (mainContentContainer != null ? "AVAILABLE" : "NULL"));
-
         for (Team team : teams) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamCard.fxml"));
                 Parent card = loader.load();
-
-                TeamCardController cardController = loader.getController();
-                cardController.setTeam(team);
-
-                // Pass the main content container reference
-                if (mainContentContainer != null) {
-                    cardController.setContentContainer(mainContentContainer);
-                    System.out.println("✓ Passed content container to card: " + team.getName());
-                } else {
-                    System.out.println("✗ No content container to pass to card: " + team.getName());
-                }
-
-                // Pass rootStackPane and contentArea for overlay modals
-                if (rootStackPane != null) {
-                    cardController.setRootStackPane(rootStackPane);
-                }
-                if (contentArea != null) {
-                    cardController.setContentArea(contentArea);
-                }
-
-                // Set callback to reload teams when card is updated/deleted
-                cardController.setOnUpdateCallback(this::loadTeamsFromDatabase);
-
+                TeamCardController cc = loader.getController();
+                cc.setTeam(team);
+                if (mainContentContainer != null) cc.setContentContainer(mainContentContainer);
+                if (rootStackPane != null) cc.setRootStackPane(rootStackPane);
+                if (contentArea != null) cc.setContentArea(contentArea);
+                cc.setOnUpdateCallback(this::loadTeamsFromDatabase);
+                // Pass hub reference so card can open edit form inline
+                cc.setTeamHubController(this);
                 teamCardsContainer.getChildren().add(card);
-
-            } catch (Exception e) {
-                System.err.println("Error creating team card for: " + team.getName());
-                e.printStackTrace();
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
-
-        updateEmptyState();
-        System.out.println("=== Teams displayed ===");
     }
 
-    public void addTeamCard(Parent card) {
-        teamCardsContainer.getChildren().add(card);
-        updateEmptyState();
+    // ── Helpers ──────────────────────────────────────────────────────
+    private void showError(Label lbl, String msg) {
+        if (lbl != null) { lbl.setText(msg); lbl.setVisible(true); lbl.setManaged(true); }
     }
 
-    public void clearTeams() {
-        teamCardsContainer.getChildren().clear();
-        updateEmptyState();
+    private void hideError(Label lbl) {
+        if (lbl != null) { lbl.setVisible(false); lbl.setManaged(false); }
     }
+
+    public void addTeamCard(Parent card) { teamCardsContainer.getChildren().add(card); }
+    public void clearTeams() { teamCardsContainer.getChildren().clear(); }
 }

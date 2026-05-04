@@ -215,12 +215,16 @@ public class TeamCardController {
 
         if (team == null) return;
 
-        // Check if we have the required references for overlay modal
-        if (rootStackPane != null && contentArea != null) {
-            openEditModalAsOverlay();
+        // Call the inline form in TeamHubController (like Sponsors)
+        if (teamHubController != null) {
+            teamHubController.openEditForm(team);
         } else {
-            // Fallback to old window approach
-            openEditModalAsWindow();
+            // Fallback to old modal approach if controller not set
+            if (rootStackPane != null && contentArea != null) {
+                openEditModalAsOverlay();
+            } else {
+                openEditModalAsWindow();
+            }
         }
     }
 
@@ -355,5 +359,11 @@ public class TeamCardController {
 
     public void setOnUpdateCallback(Runnable callback) {
         this.onUpdateCallback = callback;
+    }
+
+    private TeamHubController teamHubController;
+
+    public void setTeamHubController(TeamHubController controller) {
+        this.teamHubController = controller;
     }
 }

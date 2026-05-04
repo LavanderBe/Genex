@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════
    Team Hub Stylesheet — Nexus Esports Hub
-   Primary: #1F1E4E | Secondary: #8B0D0D
+   Sponsors Design Language — Purple/Violet Theme
    ═══════════════════════════════════════════════════ */
 
 /* Main Container */
@@ -13,37 +13,41 @@
     -fx-text-fill: white;
     -fx-font-size: 28;
     -fx-font-weight: 800;
-    -fx-effect: dropshadow(gaussian, rgba(31, 30, 78, 0.5), 10, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.4), 10, 0, 0, 0);
 }
 
 /* ──────────────── Search Bar ──────────────── */
 .search-field {
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 12;
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
     -fx-border-width: 1;
     -fx-text-fill: white;
-    -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
-    -fx-padding: 8 15;
-    -fx-font-size: 13;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 13px;
+    -fx-padding: 9 14;
 }
 
 .search-field:focused {
-    -fx-border-color: rgba(139, 13, 13, 0.7);
-    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-border-color: rgba(124, 111, 255, 0.5);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.15), 8, 0, 0, 0);
 }
 
 .icon-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-background-radius: 10;
+    -fx-background-color: rgba(124, 111, 255, 0.18);
     -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 32 0 L 38 6 L 38 32 L 6 32 L 0 26 Z";
     -fx-cursor: hand;
     -fx-padding: 8 12;
 }
 
 .icon-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-color: rgba(124, 111, 255, 0.35);
+    -fx-translate-y: -1;
 }
 
 /* ──────────────── Team Cards ──────────────── */
@@ -61,40 +65,182 @@
     -fx-background-color: transparent;
 }
 
-.scroll-pane .thumb {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 5;
+.scroll-pane:vertical .thumb,
+.scroll-pane:horizontal .thumb {
+    -fx-background-color: rgba(124, 111, 255, 0.35);
+    -fx-background-radius: 4;
 }
 
 .scroll-pane .track {
     -fx-background-color: transparent;
 }
 
-/* PRIMARY BLUE BUTTON - CYBER LOOK */
+/* ──────────────── Add Button — Polygon ──────────────── */
 .action-blue-button {
-    -fx-background-color: #5c7cfa;
+    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
     -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
     -fx-font-family: "Arial Black";
-    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z"; /* Cuts the corners off */
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-padding: 10 24;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.5), 14, 0, 0, 4);
 }
 
 .action-blue-button:hover {
-    -fx-background-color: #7d97ff;
+    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.8), 18, 0, 0, 6);
     -fx-translate-y: -2;
 }
 
-/* CANCEL RED BUTTON - EDGY */
+.action-blue-button:pressed {
+    -fx-translate-y: 1;
+    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+}
+
+/* ──────────────── Delete/Cancel Button — Polygon ──────────────── */
 .action-red-button {
     -fx-background-color: #ff5252;
     -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
     -fx-font-family: "Arial Black";
-    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z"; /* Opposite cut */
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
+    -fx-padding: 10 24;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.5), 14, 0, 0, 4);
 }
 
 .action-red-button:hover {
-    -fx-background-color: #f54c4c;
+    -fx-background-color: #ff6b6b;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.8), 18, 0, 0, 6);
     -fx-translate-y: -2;
+}
+
+.action-red-button:pressed {
+    -fx-translate-y: 1;
+}
+
+/* ══ Finance-style inline form card ══════════════════════════════ */
+.form-card {
+    -fx-background-color: rgba(20, 20, 40, 0.95);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 0 0 0 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 30, 0.2, -4, 0);
+}
+
+.form-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.field-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+}
+
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
+    -fx-font-size: 13px;
+    -fx-padding: 10 12;
+}
+
+.input-field:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.18), 8, 0, 0, 0);
+}
+
+.err-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 2 0 0 4;
+}
+
+.drawer-sep {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-close {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-font-size: 13px;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.2);
+    -fx-text-fill: #ff6b6b;
+}
+
+.btn-pick {
+    -fx-background-color: rgba(124, 111, 255, 0.15);
+    -fx-text-fill: #a89fff;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.btn-pick:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.3);
+    -fx-text-fill: white;
+}
+
+/* Primary save button — polygon */
+.primary-btn {
+    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-padding: 11 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.5), 14, 0, 0, 4);
+}
+
+.primary-btn:hover {
+    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.8), 18, 0, 0, 6);
+    -fx-translate-y: -2;
+}
+
+.primary-btn:pressed {
+    -fx-translate-y: 1;
+    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+}
+
+/* Secondary cancel button — polygon */
+.secondary-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: rgba(255, 255, 255, 0.75);
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
+    -fx-padding: 11 24;
+    -fx-cursor: hand;
+}
+
+.secondary-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
+}
+
+.secondary-btn:pressed {
+    -fx-translate-y: 1;
 }
