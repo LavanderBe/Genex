@@ -10,7 +10,7 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // UPDATED: Load dashboard.fxml directly (lowercase as you requested)
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("GENEX");
         primaryStage.setScene(scene);
