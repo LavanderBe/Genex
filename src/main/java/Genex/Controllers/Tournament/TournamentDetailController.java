@@ -96,6 +96,17 @@ public class TournamentDetailController {
     @FXML
     private VBox emptyMatches;
 
+    // Player status section
+    @FXML private VBox playerStatusSection;
+    @FXML private HBox statusCard;
+    @FXML private Text txtStatusIcon;
+    @FXML private Text txtPlayerStatus;
+    @FXML private Text txtStatusDetail;
+
+    // Rankings section
+    @FXML private VBox rankingsSection;
+    @FXML private VBox rankingsList;
+
     private Tounament tournament;
     private User currentUser;
     private boolean isPlayerJoined = false;
@@ -244,7 +255,6 @@ public class TournamentDetailController {
         String role = currentUser.getRole();
 
         if ("player".equalsIgnoreCase(role)) {
-            // Player view: Show join/leave button, hide participants section and sync button
             btnJoinLeave.setVisible(true);
             btnJoinLeave.setManaged(true);
             participantsSection.setVisible(false);
@@ -253,15 +263,34 @@ public class TournamentDetailController {
             btnSync.setManaged(false);
             btnStart.setVisible(false);
             btnStart.setManaged(false);
+            btnReset.setVisible(false);
+            btnReset.setManaged(false);
 
-            // Check if player is already joined
             checkPlayerJoinStatus();
-            
-            // Show bracket if synced
+
             if (tournament.isSynced()) {
                 showBracket();
             } else {
                 hideBracket();
+            }
+
+            // Show player status if tournament started
+            String playerId = getPlayerIdFromUserId(currentUser.getId());
+            if (playerId != null) {
+                if (tournament.isStarted()) {
+                    loadPlayerStatus(playerId);
+                } else {
+                    playerStatusSection.setVisible(false);
+                    playerStatusSection.setManaged(false);
+                }
+            }
+
+            // Show rankings if tournament completed
+            if (Tounament.TournamentState.COMPLETED.name().equals(tournament.getState())) {
+                loadRankings();
+            } else {
+                rankingsSection.setVisible(false);
+                rankingsSection.setManaged(false);
             }
 
         } else {
@@ -304,6 +333,14 @@ public class TournamentDetailController {
                 showMatches();
             }
 
+            // Show rankings if completed
+            if (Tounament.TournamentState.COMPLETED.name().equals(tournament.getState())) {
+                loadRankings();
+            } else {
+                rankingsSection.setVisible(false);
+                rankingsSection.setManaged(false);
+            }
+
             // Load participants
             loadParticipants();
         }
@@ -320,7 +357,6 @@ public class TournamentDetailController {
 
     private void checkPlayerJoinStatus() {
         try {
-            // Get the player ID from the players table using the user ID
             String playerId = getPlayerIdFromUserId(currentUser.getId());
             
             if (playerId == null) {
@@ -330,10 +366,15 @@ public class TournamentDetailController {
                 return;
             }
 
-            isPlayerJoined = crudParticipant.isPlayerParticipating(
-                    tournament.getTournamentId(), 
-                    playerId
-            );
+            // Check participation record - must be ACTIVE to count as joined
+            TournamentParticipants participation = crudParticipant.getPlayerParticipation(
+                    tournament.getTournamentId(), playerId);
+
+            if (participation != null && participation.isActive()) {
+                isPlayerJoined = true;
+            } else {
+                isPlayerJoined = false;
+            }
 
             updateJoinButton();
         } catch (Exception e) {
@@ -343,16 +384,54 @@ public class TournamentDetailController {
     }
 
     private void updateJoinButton() {
-        if (isPlayerJoined) {
-            btnJoinLeave.setText("QUITTER");
-            // Keep btn-join class for polygon shape, add joined for red color
+        if (currentUser == null || tournament == null) return;
+        String playerId = getPlayerIdFromUserId(currentUser.getId());
+        if (playerId == null) return;
+
+        TournamentParticipants participation = crudParticipant.getPlayerParticipation(
+                tournament.getTournamentId(), playerId);
+
+        if (participation == null) {
+            // Never joined - only allow joining if registration is open
+            if (Tounament.TournamentState.REGISTRATION_OPEN.name().equals(tournament.getState())) {
+                btnJoinLeave.setText("REJOINDRE");
+                btnJoinLeave.setDisable(false);
+                btnJoinLeave.getStyleClass().removeAll("joined", "eliminated");
+            } else {
+                btnJoinLeave.setText("INSCRIPTIONS FERMÉES");
+                btnJoinLeave.setDisable(true);
+                btnJoinLeave.getStyleClass().removeAll("joined");
+                if (!btnJoinLeave.getStyleClass().contains("eliminated")) {
+                    btnJoinLeave.getStyleClass().add("eliminated");
+                }
+            }
+            return;
+        }
+
+        if (participation.isEliminated()) {
+            // Withdrew or lost - show disabled button
+            if (participation.withdrewFromTournament()) {
+                btnJoinLeave.setText("RETIRÉ");
+            } else {
+                btnJoinLeave.setText("ÉLIMINÉ");
+            }
+            btnJoinLeave.setDisable(true);
+            btnJoinLeave.getStyleClass().removeAll("joined");
+            if (!btnJoinLeave.getStyleClass().contains("eliminated")) {
+                btnJoinLeave.getStyleClass().add("eliminated");
+            }
+        } else if (participation.isWinner()) {
+            btnJoinLeave.setText("🏆 VAINQUEUR");
+            btnJoinLeave.setDisable(true);
+            btnJoinLeave.getStyleClass().removeAll("joined", "eliminated");
+        } else {
+            // ACTIVE - still competing
+            btnJoinLeave.setText(tournament.isStarted() ? "SE RETIRER" : "QUITTER");
+            btnJoinLeave.setDisable(false);
+            btnJoinLeave.getStyleClass().removeAll("eliminated");
             if (!btnJoinLeave.getStyleClass().contains("joined")) {
                 btnJoinLeave.getStyleClass().add("joined");
             }
-        } else {
-            btnJoinLeave.setText("REJOINDRE");
-            // Remove joined class to show green color
-            btnJoinLeave.getStyleClass().remove("joined");
         }
     }
 
@@ -361,44 +440,164 @@ public class TournamentDetailController {
         if (currentUser == null || tournament == null) return;
 
         try {
-            // Get the player ID from the players table using the user ID
             String playerId = getPlayerIdFromUserId(currentUser.getId());
-            
             if (playerId == null) {
                 showAlert("Erreur", "Profil joueur introuvable.", Alert.AlertType.ERROR);
                 return;
             }
 
             if (isPlayerJoined) {
-                // Leave tournament
-                crudParticipant.removePlayerFromTournament(
-                        tournament.getTournamentId(), 
-                        playerId
-                );
-                isPlayerJoined = false;
-                showAlert("Succès", "Vous avez quitté le tournoi.", Alert.AlertType.INFORMATION);
+                // Check if tournament has started
+                if (tournament.isStarted()) {
+                    // Tournament in progress → WITHDRAW flow
+                    handleWithdraw(playerId);
+                } else {
+                    // Tournament not started → normal leave
+                    crudParticipant.removePlayerFromTournament(tournament.getTournamentId(), playerId);
+                    isPlayerJoined = false;
+                    // Auto-reopen registration if space available
+                    checkAndUpdateTournamentState();
+                    showAlert("Succès", "Vous avez quitté le tournoi.", Alert.AlertType.INFORMATION);
+                    updateJoinButton();
+                }
             } else {
+                // Check if player was previously eliminated or withdrew
+                TournamentParticipants existing = crudParticipant.getPlayerParticipation(
+                        tournament.getTournamentId(), playerId);
+                // Only block if they have an ELIMINATED record (withdrew or lost)
+                // If no record exists (deleted manually or never joined), allow joining
+                if (existing != null && existing.isEliminated()) {
+                    showAlert("Impossible", "Vous ne pouvez pas rejoindre ce tournoi car vous avez été éliminé ou retiré.", Alert.AlertType.WARNING);
+                    return;
+                }
+
                 // Join tournament
                 int currentCount = crudParticipant.getParticipantCount(tournament.getTournamentId());
-                
                 TournamentParticipants participant = TournamentParticipants.solo(
-                        tournament.getTournamentId(),
-                        playerId,
-                        currentCount + 1  // seed based on join order
-                );
-                
+                        tournament.getTournamentId(), playerId, currentCount + 1);
                 crudParticipant.addEntity(participant);
                 isPlayerJoined = true;
+                // Auto-close if now full
+                checkAndUpdateTournamentState();
                 showAlert("Succès", "Vous avez rejoint le tournoi!", Alert.AlertType.INFORMATION);
+                updateJoinButton();
             }
-
-            updateJoinButton();
 
         } catch (Exception e) {
             System.err.println("Error joining/leaving tournament: " + e.getMessage());
             e.printStackTrace();
             showAlert("Erreur", "Une erreur est survenue.", Alert.AlertType.ERROR);
         }
+    }
+
+    private void handleWithdraw(String playerId) {
+        javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmer le retrait");
+        confirm.setHeaderText("Quitter le tournoi en cours");
+        confirm.setContentText(
+                "⚠️ Le tournoi est en cours!\n\n" +
+                "Si vous quittez maintenant:\n" +
+                "• Vous serez marqué comme RETIRÉ\n" +
+                "• Votre adversaire actuel gagne par forfait (3-0)\n" +
+                "• Vous ne pourrez pas rejoindre ce tournoi\n\n" +
+                "Voulez-vous vraiment vous retirer?");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                try {
+                    // Get the player's Challonge participant ID
+                    TournamentParticipants participation = crudParticipant.getPlayerParticipation(
+                            tournament.getTournamentId(), playerId);
+                    String challongePlayerId = participation != null 
+                            ? participation.getChallongeParticipantId() : null;
+
+                    System.out.println("Withdrawing player: " + playerId + " (Challonge ID: " + challongePlayerId + ")");
+
+                    // Find ALL pending matches involving this player
+                    List<TournamentMatch> allMatches = crudMatch.getAllByTournament(tournament.getTournamentId());
+                    int withdrawRound = 0;
+                    int forfeitsReported = 0;
+
+                    for (TournamentMatch match : allMatches) {
+                        if (match.getStatus() != TournamentMatch.MatchStatus.PENDING) continue;
+
+                        // Check by local player ID
+                        boolean isPlayer1 = playerId.equals(match.getPlayer1Id());
+                        boolean isPlayer2 = playerId.equals(match.getPlayer2Id());
+
+                        // Also check by Challonge participant ID (for TBD matches)
+                        if (!isPlayer1 && !isPlayer2 && challongePlayerId != null) {
+                            isPlayer1 = challongePlayerId.equals(match.getChallongePlayer1Id());
+                            isPlayer2 = challongePlayerId.equals(match.getChallongePlayer2Id());
+                        }
+
+                        if (!isPlayer1 && !isPlayer2) continue;
+
+                        System.out.println("Found pending match for withdrawn player: Round " + match.getRound() + " Match " + match.getMatchNumber());
+
+                        // Determine opponent IDs
+                        String opponentLocalId = isPlayer1 ? match.getPlayer2Id() : match.getPlayer1Id();
+                        String challongeWinnerId = isPlayer1
+                                ? match.getChallongePlayer2Id()
+                                : match.getChallongePlayer1Id();
+
+                        // Forfeit scores: withdrawn player gets 0, opponent gets 3
+                        int p1Score = isPlayer1 ? 0 : 3;
+                        int p2Score = isPlayer1 ? 3 : 0;
+
+                        // Update local DB - mark as COMPLETED with forfeit score
+                        crudMatch.updateMatchResult(match.getId(), p1Score, p2Score, opponentLocalId);
+                        System.out.println("  Forfeit set: " + p1Score + "-" + p2Score + ", winner: " + opponentLocalId);
+
+                        // Update Challonge
+                        if (tournament.getChallongeUrlSlug() != null
+                                && match.getChallongeMatchId() != null
+                                && challongeWinnerId != null) {
+                            try {
+                                challongeService.updateMatchResult(
+                                        tournament.getChallongeUrlSlug(),
+                                        match.getChallongeMatchId(),
+                                        p1Score, p2Score,
+                                        challongeWinnerId);
+                                System.out.println("  Challonge updated for match " + match.getChallongeMatchId());
+                            } catch (Exception e) {
+                                System.err.println("  Warning: Challonge forfeit failed: " + e.getMessage());
+                            }
+                        }
+
+                        if (withdrawRound == 0) withdrawRound = match.getRound();
+                        forfeitsReported++;
+                    }
+
+                    System.out.println("Total forfeits reported: " + forfeitsReported);
+
+                    // Mark player as WITHDREW in participants table
+                    crudParticipant.withdrawPlayer(tournament.getTournamentId(), playerId, withdrawRound);
+
+                    isPlayerJoined = false;
+
+                    // Refresh matches from Challonge to get updated next rounds
+                    refreshMatchesFromChallonge();
+
+                    // Update UI
+                    updateJoinButton();
+                    loadPlayerStatus(playerId);
+                    loadMatches();
+                    showBracket();
+
+                    showAlert("Retrait confirmé",
+                            "Vous avez été retiré du tournoi.\n" +
+                            forfeitsReported + " match(s) résolu(s) par forfait (3-0).",
+                            Alert.AlertType.INFORMATION);
+
+                } catch (Exception e) {
+                    System.err.println("Error withdrawing: " + e.getMessage());
+                    e.printStackTrace();
+                    showAlert("Erreur", "Échec du retrait: " + e.getMessage(), Alert.AlertType.ERROR);
+                }
+            }
+        });
     }
 
     private String getPlayerIdFromUserId(String userId) {
@@ -663,35 +862,44 @@ public class TournamentDetailController {
         confirmAlert.showAndWait().ifPresent(response -> {
             if (response == javafx.scene.control.ButtonType.OK) {
                 try {
-                    // Delete all matches for this tournament
+                    // Delete all matches
                     List<TournamentMatch> matches = crudMatch.getAllByTournament(tournament.getTournamentId());
                     for (TournamentMatch match : matches) {
                         crudMatch.deleteEntity(match);
                     }
-                    System.out.println("Deleted " + matches.size() + " matches from database");
-                    
+                    System.out.println("Deleted " + matches.size() + " matches");
+
+                    // Delete withdrawn/eliminated participants (reset their status)
+                    List<TournamentParticipants> participants = crudParticipant.getAll(tournament.getTournamentId());
+                    for (TournamentParticipants p : participants) {
+                        if (p.isEliminated()) {
+                            // Remove them completely so they can rejoin
+                            crudParticipant.deleteEntity(p);
+                            System.out.println("Removed withdrawn/eliminated participant: " + p.getParticipantId());
+                        } else if (p.isActive()) {
+                            // Reset active participants - clear challonge ID and placement
+                            p.setChallongeParticipantId(null);
+                            p.setFinalPlacement(null);
+                            p.setEliminatedAtRound(null);
+                            p.setEliminationReason(null);
+                            crudParticipant.updateEntity(p, p.getId());
+                        }
+                    }
+
                     // Reset tournament state completely
                     tournament.setStarted(false);
                     tournament.setSynced(false);
                     tournament.setChallongeId(null);
                     tournament.setChallongeUrl(null);
                     tournament.setChallongeUrlSlug(null);
-                    tournament.setState(Tounament.TournamentState.REGISTRATION_CLOSED.name());
-                    
-                    // Save to database
+                    tournament.setState(Tounament.TournamentState.REGISTRATION_OPEN.name());
+
                     crudTournament.updateEntity(tournament, tournament.getTournamentId());
-                    
-                    // Update UI
                     updateStateBadge();
                     setupRoleBasedUI();
-                    
-                    showAlert("Succès", 
-                            "Tournoi réinitialisé!\n\n" +
-                            "Vous pouvez maintenant:\n" +
-                            "1. Cliquer 'SYNCHRONISER AVEC CHALLONGE' pour créer un nouveau bracket\n" +
-                            "2. Ou aller sur challonge.com pour supprimer l'ancien bracket d'abord", 
-                            Alert.AlertType.INFORMATION);
-                    
+
+                    showAlert("Succès", "Tournoi réinitialisé! Les joueurs retirés peuvent rejoindre à nouveau.", Alert.AlertType.INFORMATION);
+
                 } catch (Exception e) {
                     System.err.println("Error resetting tournament: " + e.getMessage());
                     e.printStackTrace();
@@ -750,62 +958,191 @@ public class TournamentDetailController {
     
     @FXML
     private void handleRefreshMatches() {
-        // Sync matches from Challonge
-        syncMatchesFromChallonge();
-        // Then load them
+        // Pull latest match data from Challonge and update local DB
+        refreshMatchesFromChallonge();
+        // Reload UI
         loadMatches();
-        showAlert("Succès", "Matches actualisés!", Alert.AlertType.INFORMATION);
     }
     
     private void loadMatches() {
         if (tournament == null) return;
-        
+
         try {
-            // Get all matches for this tournament
             List<TournamentMatch> matches = crudMatch.getAllByTournament(tournament.getTournamentId());
-            
-            // Clear matches list
             matchesList.getChildren().clear();
-            
+
             if (matches.isEmpty()) {
                 emptyMatches.setVisible(true);
                 emptyMatches.setManaged(true);
                 return;
             }
-            
+
             emptyMatches.setVisible(false);
             emptyMatches.setManaged(false);
-            
-            // Group matches by round
-            Map<Integer, List<TournamentMatch>> matchesByRound = new HashMap<>();
+
+            // Group by absolute round number
+            // Winners: round 1,2,3... Losers: round -1,-2,-3...
+            // We group them as: Round 1 (winners R1 + losers R1), Round 2 (winners R2 + losers R2)...
+            Map<Integer, List<TournamentMatch>> winnersByRound = new HashMap<>();
+            Map<Integer, List<TournamentMatch>> losersByRound = new HashMap<>();
+
             for (TournamentMatch match : matches) {
-                matchesByRound.computeIfAbsent(match.getRound(), k -> new java.util.ArrayList<>()).add(match);
+                if (match.getRound() > 0) {
+                    winnersByRound.computeIfAbsent(match.getRound(), k -> new java.util.ArrayList<>()).add(match);
+                } else {
+                    // Store losers by absolute round number
+                    int absRound = Math.abs(match.getRound());
+                    losersByRound.computeIfAbsent(absRound, k -> new java.util.ArrayList<>()).add(match);
+                }
             }
-            
-            // Create UI for each round
-            List<Integer> rounds = new java.util.ArrayList<>(matchesByRound.keySet());
-            java.util.Collections.sort(rounds);
-            
-            for (Integer round : rounds) {
-                VBox roundSection = createRoundSection(round, matchesByRound.get(round));
+
+            // Get all unique round numbers (union of winners and losers rounds)
+            java.util.Set<Integer> allRoundNumbers = new java.util.TreeSet<>();
+            allRoundNumbers.addAll(winnersByRound.keySet());
+            allRoundNumbers.addAll(losersByRound.keySet());
+
+            for (Integer roundNum : allRoundNumbers) {
+                List<TournamentMatch> wMatches = winnersByRound.getOrDefault(roundNum, new java.util.ArrayList<>());
+                List<TournamentMatch> lMatches = losersByRound.getOrDefault(roundNum, new java.util.ArrayList<>());
+
+                // Combine all matches for this round number
+                List<TournamentMatch> allRoundMatches = new java.util.ArrayList<>();
+                allRoundMatches.addAll(wMatches);
+                allRoundMatches.addAll(lMatches);
+
+                // Determine if this is the current active round
+                boolean isCurrentRound = allRoundMatches.stream()
+                        .anyMatch(m -> m.getStatus() == TournamentMatch.MatchStatus.PENDING)
+                        && isPreviousRoundDone(roundNum, winnersByRound, losersByRound);
+
+                // Create round section
+                VBox roundSection = new VBox();
+                roundSection.setSpacing(12);
+                roundSection.getStyleClass().add("round-section");
+                if (isCurrentRound) roundSection.getStyleClass().add("round-section-active");
+
+                // Round header
+                HBox header = new HBox();
+                header.setSpacing(12);
+                header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+                Text roundTitle = new Text("Round " + roundNum);
+                roundTitle.getStyleClass().add("round-title");
+                header.getChildren().add(roundTitle);
+
+                if (isCurrentRound) {
+                    StackPane activeBadge = new StackPane();
+                    activeBadge.getStyleClass().add("active-round-badge");
+                    Text activeText = new Text("● ROUND ACTUEL");
+                    activeText.getStyleClass().add("active-round-text");
+                    activeBadge.getChildren().add(activeText);
+                    header.getChildren().add(activeBadge);
+                } else if (allRoundMatches.stream().allMatch(m -> m.getStatus() == TournamentMatch.MatchStatus.COMPLETED)) {
+                    StackPane doneBadge = new StackPane();
+                    doneBadge.getStyleClass().add("done-round-badge");
+                    Text doneText = new Text("✓ TERMINÉ");
+                    doneText.getStyleClass().add("done-round-text");
+                    doneBadge.getChildren().add(doneText);
+                    header.getChildren().add(doneBadge);
+                }
+
+                roundSection.getChildren().add(header);
+
+                // Winners matches first
+                if (!wMatches.isEmpty()) {
+                    if (!lMatches.isEmpty()) {
+                        // Only show label if there are both brackets
+                        Text wLabel = new Text("▲ Winners");
+                        wLabel.getStyleClass().add("sub-bracket-label");
+                        roundSection.getChildren().add(wLabel);
+                    }
+                    for (TournamentMatch m : wMatches) {
+                        roundSection.getChildren().add(createMatchCard(m));
+                    }
+                }
+
+                // Losers matches after
+                if (!lMatches.isEmpty()) {
+                    if (!wMatches.isEmpty()) {
+                        Text lLabel = new Text("▼ Losers");
+                        lLabel.getStyleClass().add("sub-bracket-label-losers");
+                        roundSection.getChildren().add(lLabel);
+                    }
+                    for (TournamentMatch m : lMatches) {
+                        roundSection.getChildren().add(createMatchCard(m));
+                    }
+                }
+
                 matchesList.getChildren().add(roundSection);
             }
-            
+
         } catch (Exception e) {
             System.err.println("Error loading matches: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    private boolean isPreviousRoundDone(int roundNum,
+                                         Map<Integer, List<TournamentMatch>> winnersByRound,
+                                         Map<Integer, List<TournamentMatch>> losersByRound) {
+        if (roundNum == 1) return true; // First round is always available
+        int prevRound = roundNum - 1;
+
+        List<TournamentMatch> prevWinners = winnersByRound.getOrDefault(prevRound, new java.util.ArrayList<>());
+        List<TournamentMatch> prevLosers = losersByRound.getOrDefault(prevRound, new java.util.ArrayList<>());
+
+        List<TournamentMatch> prevAll = new java.util.ArrayList<>();
+        prevAll.addAll(prevWinners);
+        prevAll.addAll(prevLosers);
+
+        if (prevAll.isEmpty()) return true;
+        return prevAll.stream().allMatch(m -> m.getStatus() == TournamentMatch.MatchStatus.COMPLETED);
+    }
     
-    private VBox createRoundSection(int round, List<TournamentMatch> matches) {
+    private VBox createRoundSection(int round, List<TournamentMatch> matches, boolean isCurrentRound) {
         VBox roundSection = new VBox();
         roundSection.setSpacing(12);
         roundSection.getStyleClass().add("round-section");
+        if (isCurrentRound) roundSection.getStyleClass().add("round-section-active");
         
         // Round header
-        Text roundTitle = new Text("Round " + round);
+        HBox header = new HBox();
+        header.setSpacing(12);
+        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        
+        String roundLabel;
+        if (round > 0) {
+            roundLabel = "Round " + round;
+        } else {
+            roundLabel = "Losers Round " + Math.abs(round);
+        }
+        
+        Text roundTitle = new Text(roundLabel);
         roundTitle.getStyleClass().add("round-title");
-        roundSection.getChildren().add(roundTitle);
+        header.getChildren().add(roundTitle);
+        
+        // "ROUND ACTUEL" badge
+        if (isCurrentRound) {
+            StackPane activeBadge = new StackPane();
+            activeBadge.getStyleClass().add("active-round-badge");
+            Text activeText = new Text("● ROUND ACTUEL");
+            activeText.getStyleClass().add("active-round-text");
+            activeBadge.getChildren().add(activeText);
+            header.getChildren().add(activeBadge);
+        }
+        
+        // Check if all matches in this round are done
+        boolean allDone = matches.stream().allMatch(m -> m.getStatus() == TournamentMatch.MatchStatus.COMPLETED);
+        if (allDone && !isCurrentRound) {
+            StackPane doneBadge = new StackPane();
+            doneBadge.getStyleClass().add("done-round-badge");
+            Text doneText = new Text("✓ TERMINÉ");
+            doneText.getStyleClass().add("done-round-text");
+            doneBadge.getChildren().add(doneText);
+            header.getChildren().add(doneBadge);
+        }
+        
+        roundSection.getChildren().add(header);
         
         // Match cards
         for (TournamentMatch match : matches) {
@@ -951,6 +1288,9 @@ public class TournamentDetailController {
         }
     }
     
+    /**
+     * Called on first start - inserts all matches from Challonge into local DB
+     */
     private void syncMatchesFromChallonge() {
         if (tournament == null || tournament.getChallongeUrlSlug() == null) {
             System.err.println("Cannot sync matches: tournament or URL slug is null");
@@ -959,42 +1299,29 @@ public class TournamentDetailController {
         
         try {
             System.out.println("Fetching matches from Challonge for: " + tournament.getChallongeUrlSlug());
-            
-            // Fetch matches from Challonge
             List<ChallongeService.ChallongeMatch> challongeMatches = 
                     challongeService.fetchMatches(tournament.getChallongeUrlSlug());
-            
             System.out.println("Fetched " + challongeMatches.size() + " matches from Challonge");
             
-            // Create a map of participant IDs: Challonge ID → Local Player ID
             Map<String, String> participantMap = createParticipantMap();
             
-            // Save matches to local database
             int matchNumber = 1;
             for (ChallongeService.ChallongeMatch cMatch : challongeMatches) {
-                System.out.println("Processing match: Round " + cMatch.getRound() + 
-                                 ", Player1: " + cMatch.getPlayer1Id() + 
-                                 ", Player2: " + cMatch.getPlayer2Id());
-                
                 TournamentMatch localMatch = new TournamentMatch();
                 localMatch.setTournamentId(tournament.getTournamentId());
                 localMatch.setChallongeMatchId(cMatch.getId());
                 localMatch.setRound(cMatch.getRound());
                 localMatch.setMatchNumber(matchNumber++);
                 
-                // Map Challonge participant IDs to local player IDs
                 if (cMatch.getPlayer1Id() != null) {
-                    String localId = participantMap.get(cMatch.getPlayer1Id());
-                    localMatch.setPlayer1Id(localId);
-                    System.out.println("  Player1 mapped: " + cMatch.getPlayer1Id() + " -> " + localId);
+                    localMatch.setPlayer1Id(participantMap.get(cMatch.getPlayer1Id()));
+                    localMatch.setChallongePlayer1Id(cMatch.getPlayer1Id());
                 }
                 if (cMatch.getPlayer2Id() != null) {
-                    String localId = participantMap.get(cMatch.getPlayer2Id());
-                    localMatch.setPlayer2Id(localId);
-                    System.out.println("  Player2 mapped: " + cMatch.getPlayer2Id() + " -> " + localId);
+                    localMatch.setPlayer2Id(participantMap.get(cMatch.getPlayer2Id()));
+                    localMatch.setChallongePlayer2Id(cMatch.getPlayer2Id());
                 }
                 
-                // Set scores and winner if match is completed
                 if (cMatch.isCompleted()) {
                     localMatch.setPlayer1Score(cMatch.getPlayer1Score());
                     localMatch.setPlayer2Score(cMatch.getPlayer2Score());
@@ -1007,43 +1334,102 @@ public class TournamentDetailController {
                     localMatch.setStatus(TournamentMatch.MatchStatus.PENDING);
                 }
                 
-                // Save to database
                 try {
                     crudMatch.addEntity(localMatch);
-                    System.out.println("  Match saved to database with ID: " + localMatch.getId());
                 } catch (Exception e) {
-                    System.err.println("  Error saving match: " + e.getMessage());
-                    e.printStackTrace();
+                    System.err.println("Error saving match: " + e.getMessage());
+                }
+            }
+            System.out.println("Successfully synced " + challongeMatches.size() + " matches");
+            
+        } catch (Exception e) {
+            System.err.println("Error syncing matches: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Avertissement", "Les matches n'ont pas pu être synchronisés.", Alert.AlertType.WARNING);
+        }
+    }
+    
+    /**
+     * Called on refresh - updates existing matches from Challonge (players advancing, scores)
+     */
+    private void refreshMatchesFromChallonge() {
+        if (tournament == null || tournament.getChallongeUrlSlug() == null) return;
+        
+        try {
+            List<ChallongeService.ChallongeMatch> challongeMatches = 
+                    challongeService.fetchMatches(tournament.getChallongeUrlSlug());
+            
+            Map<String, String> participantMap = createParticipantMap();
+            
+            // Get existing local matches indexed by challonge_match_id
+            List<TournamentMatch> localMatches = crudMatch.getAllByTournament(tournament.getTournamentId());
+            Map<String, TournamentMatch> localByChallongeId = new HashMap<>();
+            for (TournamentMatch lm : localMatches) {
+                if (lm.getChallongeMatchId() != null) {
+                    localByChallongeId.put(lm.getChallongeMatchId(), lm);
                 }
             }
             
-            System.out.println("Successfully synced " + challongeMatches.size() + " matches from Challonge");
+            for (ChallongeService.ChallongeMatch cMatch : challongeMatches) {
+                TournamentMatch localMatch = localByChallongeId.get(cMatch.getId());
+                if (localMatch == null) continue; // shouldn't happen
+                
+                boolean changed = false;
+                
+                // Update player1 if it was TBD and now has a value
+                if (cMatch.getPlayer1Id() != null && localMatch.getPlayer1Id() == null) {
+                    localMatch.setPlayer1Id(participantMap.get(cMatch.getPlayer1Id()));
+                    localMatch.setChallongePlayer1Id(cMatch.getPlayer1Id());
+                    changed = true;
+                }
+                // Update player2 if it was TBD and now has a value
+                if (cMatch.getPlayer2Id() != null && localMatch.getPlayer2Id() == null) {
+                    localMatch.setPlayer2Id(participantMap.get(cMatch.getPlayer2Id()));
+                    localMatch.setChallongePlayer2Id(cMatch.getPlayer2Id());
+                    changed = true;
+                }
+                
+                // Update scores and winner if completed
+                if (cMatch.isCompleted() && localMatch.getStatus() != TournamentMatch.MatchStatus.COMPLETED) {
+                    localMatch.setPlayer1Score(cMatch.getPlayer1Score());
+                    localMatch.setPlayer2Score(cMatch.getPlayer2Score());
+                    if (cMatch.getWinnerId() != null) {
+                        localMatch.setWinnerId(participantMap.get(cMatch.getWinnerId()));
+                    }
+                    localMatch.setStatus(TournamentMatch.MatchStatus.COMPLETED);
+                    localMatch.setCompletedTime(java.time.LocalDateTime.now());
+                    changed = true;
+                }
+                
+                if (changed) {
+                    crudMatch.updateEntity(localMatch, localMatch.getId());
+                    System.out.println("Updated match: Round " + localMatch.getRound() + " Match " + localMatch.getMatchNumber());
+                }
+            }
+            
+            System.out.println("Matches refreshed from Challonge");
             
         } catch (Exception e) {
-            System.err.println("Error syncing matches from Challonge: " + e.getMessage());
+            System.err.println("Error refreshing matches: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Avertissement", "Les matches n'ont pas pu être synchronisés automatiquement. Vous pouvez les actualiser manuellement.", Alert.AlertType.WARNING);
         }
     }
     
     private Map<String, String> createParticipantMap() {
-        // Create a mapping between Challonge participant IDs and local player IDs
-        // We need to fetch participants from Challonge and match them with local participants
+        // Map: Challonge participant ID → Local player ID
         Map<String, String> map = new HashMap<>();
         
         try {
-            // Get local participants
             List<TournamentParticipants> localParticipants = crudParticipant.getAll(tournament.getTournamentId());
             
-            // For now, we'll use a simple approach:
-            // The order of participants in Challonge should match the order they were added locally
-            // This is a temporary solution until we implement proper Challonge participant ID storage
+            for (TournamentParticipants p : localParticipants) {
+                if (p.getChallongeParticipantId() != null && !p.getChallongeParticipantId().isEmpty()) {
+                    map.put(p.getChallongeParticipantId(), p.getParticipantId());
+                    System.out.println("Mapped Challonge ID " + p.getChallongeParticipantId() + " → Player " + p.getParticipantId());
+                }
+            }
             
-            // TODO: Store Challonge participant IDs when creating participants
-            // For now, matches will be created but player IDs might be null
-            // The matches will still work, just player names might show as "TBD"
-            
-            System.out.println("Participant mapping: " + localParticipants.size() + " local participants found");
+            System.out.println("Participant map created with " + map.size() + " entries");
             
         } catch (Exception e) {
             System.err.println("Error creating participant map: " + e.getMessage());
@@ -1051,6 +1437,168 @@ public class TournamentDetailController {
         }
         
         return map;
+    }
+
+    private void loadPlayerStatus(String playerId) {
+        try {
+            TournamentParticipants participation = crudParticipant.getPlayerParticipation(
+                    tournament.getTournamentId(), playerId);
+
+            playerStatusSection.setVisible(true);
+            playerStatusSection.setManaged(true);
+            statusCard.getStyleClass().removeAll("status-active", "status-eliminated", "status-withdrew", "status-winner");
+
+            if (participation == null) {
+                txtStatusIcon.setText("⏳");
+                txtPlayerStatus.setText("NON INSCRIT");
+                txtStatusDetail.setText("");
+                statusCard.getStyleClass().add("status-eliminated");
+                return;
+            }
+
+            switch (participation.getStatus()) {
+                case ACTIVE:
+                    txtStatusIcon.setText("🟢");
+                    txtPlayerStatus.setText("EN COMPÉTITION");
+                    txtStatusDetail.setText("Vous êtes toujours en lice!");
+                    statusCard.getStyleClass().add("status-active");
+                    break;
+                case WINNER:
+                    txtStatusIcon.setText("🏆");
+                    txtPlayerStatus.setText("VAINQUEUR!");
+                    txtStatusDetail.setText("Félicitations! Vous avez remporté le tournoi!");
+                    statusCard.getStyleClass().add("status-winner");
+                    break;
+                case ELIMINATED:
+                    if (participation.withdrewFromTournament()) {
+                        txtStatusIcon.setText("⚪");
+                        txtPlayerStatus.setText("RETIRÉ");
+                        String round = participation.getEliminatedAtRound() != null
+                                ? " au Round " + participation.getEliminatedAtRound() : "";
+                        txtStatusDetail.setText("Vous vous êtes retiré" + round);
+                        statusCard.getStyleClass().add("status-withdrew");
+                    } else {
+                        txtStatusIcon.setText("🔴");
+                        txtPlayerStatus.setText("ÉLIMINÉ");
+                        String round = participation.getEliminatedAtRound() != null
+                                ? " au Round " + participation.getEliminatedAtRound() : "";
+                        txtStatusDetail.setText("Vous avez été éliminé" + round);
+                        statusCard.getStyleClass().add("status-eliminated");
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading player status: " + e.getMessage());
+        }
+    }
+
+    private void loadRankings() {
+        try {
+            rankingsSection.setVisible(true);
+            rankingsSection.setManaged(true);
+            rankingsList.getChildren().clear();
+
+            List<TournamentParticipants> participants = crudParticipant.getAll(tournament.getTournamentId());
+
+            // Sort: winners first, then by final_placement, then by wins
+            participants.sort((a, b) -> {
+                if (a.getFinalPlacement() != null && b.getFinalPlacement() != null)
+                    return a.getFinalPlacement() - b.getFinalPlacement();
+                if (a.getFinalPlacement() != null) return -1;
+                if (b.getFinalPlacement() != null) return 1;
+                int winsA = crudMatch.getWinsInTournament(tournament.getTournamentId(), a.getParticipantId());
+                int winsB = crudMatch.getWinsInTournament(tournament.getTournamentId(), b.getParticipantId());
+                return winsB - winsA;
+            });
+
+            int placement = 1;
+            for (TournamentParticipants p : participants) {
+                HBox row = createRankingRow(placement, p);
+                rankingsList.getChildren().add(row);
+                placement++;
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading rankings: " + e.getMessage());
+        }
+    }
+
+    private HBox createRankingRow(int placement, TournamentParticipants p) {
+        HBox row = new HBox();
+        row.setSpacing(15);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        row.getStyleClass().add("ranking-row");
+        if (placement <= 3) row.getStyleClass().add("ranking-top-" + placement);
+
+        // Placement medal
+        String medal = placement == 1 ? "🥇" : placement == 2 ? "🥈" : placement == 3 ? "🥉" : placement + ".";
+        Text placementText = new Text(medal);
+        placementText.getStyleClass().add("ranking-placement");
+
+        // Player name
+        String playerName = getPlayerName(p.getParticipantId());
+        Text nameText = new Text(playerName);
+        nameText.getStyleClass().add("ranking-name");
+
+        // Wins / Losses
+        int wins = crudMatch.getWinsInTournament(tournament.getTournamentId(), p.getParticipantId());
+        int losses = crudMatch.getLossesInTournament(tournament.getTournamentId(), p.getParticipantId());
+        Text wlText = new Text(wins + "W - " + losses + "L");
+        wlText.getStyleClass().add("ranking-wl");
+
+        // Spacer
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        // Status badge
+        StackPane badge = new StackPane();
+        badge.getStyleClass().add("ranking-badge");
+        String badgeText;
+        if (p.isWinner()) {
+            badgeText = "VAINQUEUR";
+            badge.getStyleClass().add("badge-winner");
+        } else if (p.withdrewFromTournament()) {
+            badgeText = "RETIRÉ";
+            badge.getStyleClass().add("badge-withdrew");
+        } else {
+            badgeText = "ÉLIMINÉ";
+            badge.getStyleClass().add("badge-eliminated");
+        }
+        Text badgeLabel = new Text(badgeText);
+        badgeLabel.getStyleClass().add("ranking-badge-text");
+        badge.getChildren().add(badgeLabel);
+
+        row.getChildren().addAll(placementText, nameText, spacer, wlText, badge);
+        return row;
+    }
+
+    private void checkAndUpdateTournamentState() {
+        try {
+            // Only auto-update registration states, not IN_PROGRESS/COMPLETED/CANCELLED
+            String state = tournament.getState();
+            boolean isRegistrationState =
+                Tounament.TournamentState.REGISTRATION_OPEN.name().equals(state) ||
+                Tounament.TournamentState.REGISTRATION_CLOSED.name().equals(state);
+
+            if (!isRegistrationState) return;
+
+            int count = crudParticipant.getParticipantCount(tournament.getTournamentId());
+            int max = tournament.getMaxPlayers();
+
+            if (count >= max && Tounament.TournamentState.REGISTRATION_OPEN.name().equals(state)) {
+                tournament.setState(Tounament.TournamentState.REGISTRATION_CLOSED.name());
+                crudTournament.updateEntity(tournament, tournament.getTournamentId());
+                updateStateBadge();
+                updateJoinButton();
+            } else if (count < max && Tounament.TournamentState.REGISTRATION_CLOSED.name().equals(state)) {
+                tournament.setState(Tounament.TournamentState.REGISTRATION_OPEN.name());
+                crudTournament.updateEntity(tournament, tournament.getTournamentId());
+                updateStateBadge();
+                updateJoinButton();
+                System.out.println("Registration reopened - space available");
+            }
+        } catch (Exception e) {
+            System.err.println("Error checking tournament state: " + e.getMessage());
+        }
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

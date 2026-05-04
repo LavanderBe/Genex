@@ -348,6 +348,7 @@ public class ChallongeService {
 
     private void addParticipantsToChallonge(String challongeId, List<TournamentParticipants> participants) throws Exception {
         CrudPlayer crudPlayer = new CrudPlayer();
+        CrudTournamentParticipant crudParticipant = new CrudTournamentParticipant();
         
         for (TournamentParticipants participant : participants) {
             // Get player name
@@ -359,12 +360,18 @@ public class ChallongeService {
                             : p.getUsername())
                     .orElse("Player " + participant.getSeed());
 
-            // Add participant to Challonge (without seed - Challonge will auto-assign)
-            addParticipantToChallonge(challongeId, playerName);
+            // Add participant to Challonge and get their Challonge ID
+            String challongeParticipantId = addParticipantToChallonge(challongeId, playerName);
+            
+            // Save Challonge participant ID back to local database
+            if (challongeParticipantId != null) {
+                participant.setChallongeParticipantId(challongeParticipantId);
+                crudParticipant.updateChallongeParticipantId(participant.getId(), challongeParticipantId);
+            }
         }
     }
 
-    private void addParticipantToChallonge(String challongeId, String participantName) throws Exception {
+    private String addParticipantToChallonge(String challongeId, String participantName) throws Exception {
         URL url = new URL(baseUrl + "/tournaments/" + challongeId + "/participants.json");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -391,7 +398,14 @@ public class ChallongeService {
             throw new RuntimeException("Failed to add participant: " + participantName + ". Response: " + error);
         }
 
-        System.out.println("Added participant to Challonge: " + participantName);
+        // Parse response to get Challonge participant ID
+        String response = readResponse(conn);
+        JSONObject jsonResponse = new JSONObject(response);
+        Object idObj = jsonResponse.getJSONObject("participant").get("id");
+        String challongeParticipantId = idObj.toString();
+        
+        System.out.println("Added participant to Challonge: " + participantName + " (ID: " + challongeParticipantId + ")");
+        return challongeParticipantId;
     }
 
     private String mapTournamentType(String internalType) {

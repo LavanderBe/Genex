@@ -32,9 +32,53 @@
 
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" styleClass="scroll-pane" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
             <content>
-                <VBox fx:id="tournamentCardsContainer" spacing="20" styleClass="tournaments-container">
-                    <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
-                        <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun tournoi trouvé" />
+                <VBox spacing="20">
+                    <!-- Player Record Section (shown for players only) -->
+                    <VBox fx:id="playerRecordSection" styleClass="hub-record-section" spacing="15" visible="false" managed="false">
+                       <children>
+                          <javafx.scene.text.Text styleClass="hub-record-title" text="VOTRE RECORD" />
+                          <HBox spacing="15" styleClass="hub-record-grid">
+                             <children>
+                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtTournamentsPlayed" styleClass="hub-record-value" text="0" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="TOURNOIS" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtTotalWins" styleClass="hub-record-value hub-wins" text="0" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="VICTOIRES" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtTotalLosses" styleClass="hub-record-value hub-losses" text="0" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="DÉFAITES" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtWinRatio" styleClass="hub-record-value hub-ratio" text="0%" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="RATIO W/L" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtBestPlacement" styleClass="hub-record-value hub-best" text="-" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="MEILLEUR" />
+                                   </children>
+                                </VBox>
+                             </children>
+                          </HBox>
+                       </children>
+                    </VBox>
+
+                    <!-- Tournament Cards -->
+                    <VBox fx:id="tournamentCardsContainer" spacing="20" styleClass="tournaments-container">
+                        <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
+                            <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun tournoi trouvé" />
+                        </VBox>
                     </VBox>
                 </VBox>
             </content>

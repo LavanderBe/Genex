@@ -190,17 +190,31 @@ public class TournamentCardController {
             int participantCount = crudParticipant.getParticipantCount(tournament.getTournamentId());
             int maxPlayers = tournament.getMaxPlayers();
 
-            // ONLY auto-update state from REGISTRATION_OPEN to REGISTRATION_CLOSED when max players reached
-            // Other states (EN COURS, TERMINÉ, ANNULÉ) are manually set by admin
-            if (participantCount >= maxPlayers && 
-                Tounament.TournamentState.REGISTRATION_OPEN.name().equals(tournament.getState())) {
-                
-                // Update state to REGISTRATION_CLOSED
-                tournament.setState(Tounament.TournamentState.REGISTRATION_CLOSED.name());
+            // Auto-update state based on participant count
+            // Only applies to REGISTRATION_OPEN and REGISTRATION_CLOSED states
+            // Other states (IN_PROGRESS, COMPLETED, CANCELLED) are manually set by admin
+            String currentState = tournament.getState();
+            boolean isRegistrationState = 
+                Tounament.TournamentState.REGISTRATION_OPEN.name().equals(currentState) ||
+                Tounament.TournamentState.REGISTRATION_CLOSED.name().equals(currentState);
+
+            if (isRegistrationState) {
                 CrudTournament crudTournament = new CrudTournament();
-                crudTournament.updateEntity(tournament, tournament.getTournamentId());
                 
-                System.out.println("Tournament " + tournament.getTournamentName() + " registration auto-closed (max players reached)");
+                if (participantCount >= maxPlayers && 
+                    Tounament.TournamentState.REGISTRATION_OPEN.name().equals(currentState)) {
+                    // Full → auto-close
+                    tournament.setState(Tounament.TournamentState.REGISTRATION_CLOSED.name());
+                    crudTournament.updateEntity(tournament, tournament.getTournamentId());
+                    System.out.println("Tournament auto-closed (max players reached)");
+                    
+                } else if (participantCount < maxPlayers && 
+                    Tounament.TournamentState.REGISTRATION_CLOSED.name().equals(currentState)) {
+                    // Space available → auto-reopen
+                    tournament.setState(Tounament.TournamentState.REGISTRATION_OPEN.name());
+                    crudTournament.updateEntity(tournament, tournament.getTournamentId());
+                    System.out.println("Tournament auto-reopened (space available)");
+                }
             }
 
             Tounament.TournamentState state = Tounament.TournamentState.valueOf(tournament.getState());

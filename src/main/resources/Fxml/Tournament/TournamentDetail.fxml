@@ -155,6 +155,39 @@
                      </StackPane>
                   </children>
                </VBox>
+               
+               <!-- Player Status Card (Player view only) -->
+               <VBox fx:id="playerStatusSection" styleClass="player-status-section" spacing="15" visible="false" managed="false">
+                  <children>
+                     <Text styleClass="section-title" text="VOTRE STATUT" />
+                     <HBox fx:id="statusCard" styleClass="status-card" spacing="15" alignment="CENTER_LEFT">
+                        <padding><Insets top="20" right="25" bottom="20" left="25" /></padding>
+                        <children>
+                           <Text fx:id="txtStatusIcon" styleClass="status-icon-large" text="🟢" />
+                           <VBox spacing="5">
+                              <children>
+                                 <Text fx:id="txtPlayerStatus" styleClass="status-title-text" text="EN COMPÉTITION" />
+                                 <Text fx:id="txtStatusDetail" styleClass="status-detail-text" text="" />
+                              </children>
+                           </VBox>
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+               
+               <!-- Final Rankings Section (shown when tournament COMPLETED) -->
+               <VBox fx:id="rankingsSection" styleClass="rankings-section" spacing="15" visible="false" managed="false">
+                  <children>
+                     <HBox alignment="CENTER_LEFT" spacing="15">
+                        <children>
+                           <Text styleClass="section-title" text="🏆 CLASSEMENT FINAL" />
+                        </children>
+                     </HBox>
+                     <VBox fx:id="rankingsList" styleClass="rankings-list" spacing="10">
+                        <!-- Rankings will be added dynamically -->
+                     </VBox>
+                  </children>
+               </VBox>
 
                <!-- Participants Section (Admin only) -->
                <VBox fx:id="participantsSection" styleClass="participants-section" spacing="20" visible="false" managed="false">

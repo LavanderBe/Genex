@@ -70,7 +70,10 @@ public class MatchReportModalController {
         this.challongeUrlSlug = challongeUrlSlug;
 
         // Update UI
-        txtMatchInfo.setText("Round " + match.getRound() + " - Match " + match.getMatchNumber());
+        String roundLabel = match.getRound() > 0 
+                ? "Winners - Round " + match.getRound() 
+                : "Losers - Round " + Math.abs(match.getRound());
+        txtMatchInfo.setText(roundLabel + " - Match " + match.getMatchNumber());
         txtPlayer1Name.setText(player1Name);
         txtPlayer2Name.setText(player2Name);
         radioPlayer1.setText(player1Name);
@@ -112,27 +115,23 @@ public class MatchReportModalController {
         int player1Score = cmbPlayer1Score.getValue();
         int player2Score = cmbPlayer2Score.getValue();
 
-        // Determine winner
-        String winnerId;
-        if (radioPlayer1.isSelected()) {
-            winnerId = match.getPlayer1Id();
-        } else {
-            winnerId = match.getPlayer2Id();
-        }
+        // Determine winner (local player ID)
+        String winnerId = radioPlayer1.isSelected() ? match.getPlayer1Id() : match.getPlayer2Id();
+        
+        // Determine Challonge winner ID (Challonge participant ID)
+        String challongeWinnerId = radioPlayer1.isSelected() 
+                ? match.getChallongePlayer1Id() 
+                : match.getChallongePlayer2Id();
 
         try {
             // Update local database
             crudMatch.updateMatchResult(match.getId(), player1Score, player2Score, winnerId);
 
-            // Update Challonge if tournament is synced
-            if (challongeUrlSlug != null && !challongeUrlSlug.isEmpty() && match.getChallongeMatchId() != null) {
+            // Update Challonge if we have the match ID and winner's Challonge ID
+            if (challongeUrlSlug != null && !challongeUrlSlug.isEmpty() 
+                    && match.getChallongeMatchId() != null 
+                    && challongeWinnerId != null) {
                 try {
-                    // Get Challonge participant ID for winner
-                    // For now, we'll use the match's challonge IDs
-                    String challongeWinnerId = radioPlayer1.isSelected() 
-                            ? getChallongeParticipantId(match.getPlayer1Id())
-                            : getChallongeParticipantId(match.getPlayer2Id());
-                    
                     challongeService.updateMatchResult(
                             challongeUrlSlug,
                             match.getChallongeMatchId(),
@@ -142,31 +141,19 @@ public class MatchReportModalController {
                     );
                 } catch (Exception e) {
                     System.err.println("Warning: Failed to update Challonge: " + e.getMessage());
-                    // Continue anyway - local update succeeded
                 }
             }
 
             showAlert("Succès", "Résultat enregistré avec succès!", Alert.AlertType.INFORMATION);
 
-            // Call success callback
-            if (onSuccess != null) {
-                onSuccess.run();
-            }
-
-            // Close modal
+            if (onSuccess != null) onSuccess.run();
             closeModal();
 
         } catch (Exception e) {
             System.err.println("Error submitting match result: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Erreur", "Échec de l'enregistrement du résultat: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erreur", "Échec de l'enregistrement: " + e.getMessage(), Alert.AlertType.ERROR);
         }
-    }
-
-    private String getChallongeParticipantId(String playerId) {
-        // TODO: Implement proper mapping between local player IDs and Challonge participant IDs
-        // For now, return the player ID as-is
-        return playerId;
     }
 
     @FXML

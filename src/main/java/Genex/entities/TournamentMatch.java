@@ -12,6 +12,8 @@ public class TournamentMatch {
     private String player1Id;
     private String player2Id;
     private String winnerId;
+    private String challongePlayer1Id;  // Challonge participant ID for player 1
+    private String challongePlayer2Id;  // Challonge participant ID for player 2
     private int player1Score;
     private int player2Score;
     private MatchStatus status;
@@ -128,6 +130,12 @@ public class TournamentMatch {
     public void setWinnerId(String winnerId) {
         this.winnerId = winnerId;
     }
+
+    public String getChallongePlayer1Id() { return challongePlayer1Id; }
+    public void setChallongePlayer1Id(String challongePlayer1Id) { this.challongePlayer1Id = challongePlayer1Id; }
+
+    public String getChallongePlayer2Id() { return challongePlayer2Id; }
+    public void setChallongePlayer2Id(String challongePlayer2Id) { this.challongePlayer2Id = challongePlayer2Id; }
 
     public int getPlayer1Score() {
         return player1Score;

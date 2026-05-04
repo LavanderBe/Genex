@@ -4,6 +4,7 @@ import Genex.entities.Game;
 import Genex.entities.Tounament;
 import Genex.services.CrudGame;
 import Genex.services.CrudTournament;
+import Genex.services.CrudTournamentMatch;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
 import java.util.List;
@@ -40,8 +42,17 @@ public class TournamentHubController {
     @FXML
     private VBox emptyState;
 
+    // Player record section
+    @FXML private VBox playerRecordSection;
+    @FXML private Text txtTournamentsPlayed;
+    @FXML private Text txtTotalWins;
+    @FXML private Text txtTotalLosses;
+    @FXML private Text txtWinRatio;
+    @FXML private Text txtBestPlacement;
+
     private CrudTournament crudTournament;
     private CrudGame crudGame;
+    private CrudTournamentMatch crudMatch = new CrudTournamentMatch();
     private List<Tounament> allTournaments;
     private boolean showOnlyMyTournaments = false;
 
@@ -70,17 +81,53 @@ public class TournamentHubController {
     }
 
     private void setupRoleBasedUI() {
-        // Get current user from session
         Genex.entities.User currentUser = Genex.utils.SessionManager.getInstance().getCurrentUser();
         
         if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
-            // Player: Change button to "Mes Tournois"
             btnAddTournament.setText("Mes Tournois");
             btnAddTournament.setOnAction(event -> toggleMyTournaments());
+            // Show player record
+            loadPlayerRecord(currentUser.getId());
         } else {
-            // Admin: Keep "Nouveau Tournoi" button
             btnAddTournament.setText("+ Nouveau Tournoi");
             btnAddTournament.setOnAction(event -> openAddTournamentModal());
+            // Hide record for admin
+            if (playerRecordSection != null) {
+                playerRecordSection.setVisible(false);
+                playerRecordSection.setManaged(false);
+            }
+        }
+    }
+
+    private void loadPlayerRecord(String playerId) {
+        try {
+            playerRecordSection.setVisible(true);
+            playerRecordSection.setManaged(true);
+
+            int tournamentsPlayed = crudMatch.getTotalTournamentsPlayed(playerId);
+            int totalWins = crudMatch.getTotalWins(playerId);
+            int totalLosses = crudMatch.getTotalLosses(playerId);
+            Integer bestPlacement = crudMatch.getBestPlacement(playerId);
+
+            int total = totalWins + totalLosses;
+            int ratio = total > 0 ? (int) ((totalWins * 100.0) / total) : 0;
+
+            txtTournamentsPlayed.setText(String.valueOf(tournamentsPlayed));
+            txtTotalWins.setText(String.valueOf(totalWins));
+            txtTotalLosses.setText(String.valueOf(totalLosses));
+            txtWinRatio.setText(ratio + "%");
+
+            if (bestPlacement != null) {
+                String medal = bestPlacement == 1 ? "🥇 1er" :
+                               bestPlacement == 2 ? "🥈 2ème" :
+                               bestPlacement == 3 ? "🥉 3ème" :
+                               bestPlacement + "ème";
+                txtBestPlacement.setText(medal);
+            } else {
+                txtBestPlacement.setText("-");
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading player record: " + e.getMessage());
         }
     }
 
