@@ -5,7 +5,8 @@ import com.sendgrid.helpers.mail.objects.*;
 import java.io.IOException;
 
 public class EmailSystem {
-    private static final String API_KEY = System.getenv("SENDGRID_API_KEY");
+    private static final String API_KEY = "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";
+    ///private static final String API_KEY = System.getenv("SENDGRID_API_KEY");
     private static String TEMPLATE_ID = "d-dce24ed71c034fe2972457aaaf380772"; // Paste your Template ID here
     private static final String FROM_EMAIL = "genexesportstn@gmail.com"; // Your verified sender
 
