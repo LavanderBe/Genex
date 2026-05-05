@@ -26,7 +26,7 @@ public class MainController {
     private TextField searchField;
 
     @FXML
-    private Button btnTournaments;
+    private Button btnTeams;
 
     @FXML
     private Button btnFinances;
@@ -36,9 +36,6 @@ public class MainController {
 
     @FXML
     private Button btnTutorials;
-
-    @FXML
-    private Button btnCenters;
 
     @FXML
     private Button btnNotification;
@@ -99,12 +96,12 @@ public class MainController {
     }
 
     @FXML
-    private void loadTournaments() {
-        System.out.println("Loading Tournaments...");
-        animateButtonClick(btnTournaments);
-        setActiveButton(btnTournaments);
-        // Load the Tournament Hub page
-        loadPage("/Fxml/Tournament/TournamentHub.fxml");
+    private void loadTeams() {
+        System.out.println("Loading Teams...");
+        animateButtonClick(btnTeams);
+        setActiveButton(btnTeams);
+        // Load the Team Hub page
+        loadPage("/Fxml/Team/TeamHub.fxml");
     }
 
     @FXML
@@ -132,15 +129,6 @@ public class MainController {
         setActiveButton(btnTutorials);
         // Don't load any page - just activate the button
         System.out.println("Tutorials section - No page loaded yet");
-    }
-
-    @FXML
-    private void loadCenters() {
-        System.out.println("Loading Centers...");
-        animateButtonClick(btnCenters);
-        setActiveButton(btnCenters);
-        // Load the Center Hub page
-        loadPage("/Fxml/Center/CenterHub.fxml");
     }
 
     @FXML
@@ -271,6 +259,13 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent page = loader.load();
 
+            // Pass the content container to the controller if it's TeamHubController
+            Object controller = loader.getController();
+            if (controller instanceof Genex.Controllers.Team.TeamHubController) {
+                ((Genex.Controllers.Team.TeamHubController) controller).setContentContainer(contentContainer);
+                System.out.println("Passed contentContainer to TeamHubController");
+            }
+
             contentContainer.getChildren().clear();
             contentContainer.getChildren().add(page);
             System.out.println("Successfully loaded: " + fxmlPath);
@@ -281,11 +276,10 @@ public class MainController {
     }
 
     private void setActiveButton(Button activeButton) {
-        btnTournaments.getStyleClass().remove("sidebar-button-active");
+        btnTeams.getStyleClass().remove("sidebar-button-active");
         btnFinances.getStyleClass().remove("sidebar-button-active");
         btnCommunity.getStyleClass().remove("sidebar-button-active");
         btnTutorials.getStyleClass().remove("sidebar-button-active");
-        btnCenters.getStyleClass().remove("sidebar-button-active");
 
         if (!activeButton.getStyleClass().contains("sidebar-button-active")) {
             activeButton.getStyleClass().add("sidebar-button-active");
@@ -295,22 +289,19 @@ public class MainController {
     }
 
     private void updateIconStyles() {
-        resetIconStyle(btnTournaments);
+        resetIconStyle(btnTeams);
         resetIconStyle(btnFinances);
         resetIconStyle(btnCommunity);
         resetIconStyle(btnTutorials);
-        resetIconStyle(btnCenters);
 
-        if (btnTournaments.getStyleClass().contains("sidebar-button-active")) {
-            setActiveIconStyle(btnTournaments);
+        if (btnTeams.getStyleClass().contains("sidebar-button-active")) {
+            setActiveIconStyle(btnTeams);
         } else if (btnFinances.getStyleClass().contains("sidebar-button-active")) {
             setActiveIconStyle(btnFinances);
         } else if (btnCommunity.getStyleClass().contains("sidebar-button-active")) {
             setActiveIconStyle(btnCommunity);
         } else if (btnTutorials.getStyleClass().contains("sidebar-button-active")) {
             setActiveIconStyle(btnTutorials);
-        } else if (btnCenters.getStyleClass().contains("sidebar-button-active")) {
-            setActiveIconStyle(btnCenters);
         }
     }
 

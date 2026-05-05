@@ -1,5 +1,7 @@
 package Genex.Controllers.Dashboard;
 
+import Genex.Controllers.Team.TeamHubController;
+import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -172,9 +174,44 @@ public class Dashboard {
         clickedButton.getStyleClass().add("nav-button-active");
     }
 
+
+    @FXML
+    void navTeamBtn(ActionEvent event) {
+        try {
+            setActiveButton((Button) event.getSource());
+
+            // Load the Team Hub FXML with loader to get controller
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamHub.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and pass the contentArea as container
+            TeamHubController teamHubController = loader.getController();
+            teamHubController.setContentContainer(contentArea);
+
+            // Clear the existing content
+            contentArea.getChildren().clear();
+
+            // Add the new content
+            contentArea.getChildren().add(root);
+
+            // Ensure the new content scales to fit the AnchorPane
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error loading Team Hub FXML: " + ex.getMessage());
+        }
+    }
+
+
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
+            SessionManager.getInstance().logout();
+            System.out.println("User logged out");
             Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
