@@ -5,6 +5,7 @@ import Genex.entities.User;
 import Genex.services.CrudPlayer;
 import Genex.services.CrudUser;
 import Genex.services.UserControl;
+import Genex.utils.EmailSystem;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,6 +47,7 @@ public class Inscription {
     @FXML private PasswordField passwordField, confirmPasswordField;
     @FXML private ProgressBar strengthBar;
     @FXML private Label strengthLabel;
+    private final EmailSystem emailsys=new EmailSystem();
 
     // Stage 2 Fields
     @FXML private TextField otpField;
@@ -74,13 +76,9 @@ public class Inscription {
             return null;
         }));
         try {
-            // 1. Try to get the resource
             var resource = getClass().getResource("/Videos/Login.mp4");
-
             if (resource == null) {
-                // This is what is happening now.
                 System.err.println("CRITICAL: Video file not found at /Genex/Videos/background.mp4");
-                // Optionally set a static background color so the app still runs
                 rootPane.setStyle("-fx-background-color: #050508;");
                 return;
             }
@@ -150,9 +148,9 @@ public class Inscription {
         generatedCode = String.valueOf((int)(Math.random() * 900000) + 100000);
         System.out.println(generatedCode);
 
-        /*new Thread(() -> {
-            emailService.sendVerificationCode(email, generatedCode);
-        }).start();*/
+        Thread.ofVirtual().start(() -> {
+            emailsys.sendVerificationEmail(email,username,generatedCode);
+        });
         goToStep(step1Box, step2Box);
     }
 
@@ -166,7 +164,6 @@ public class Inscription {
         }
     }
 
-    // --- STAGE 3: FINAL REGISTRATION ---
     @FXML
     private void handleFinalRegistration(ActionEvent event) {
         String nom = nomField.getText();

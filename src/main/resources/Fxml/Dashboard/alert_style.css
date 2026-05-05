@@ -1,0 +1,52 @@
+/* THE MAIN BOX */
+.cyber-alert {
+    -fx-background-color: #050508;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.4), 15, 0, 0, 0);
+}
+
+/* THE HEADER SECTION */
+.cyber-alert .header-panel {
+    -fx-background-color: #1F1E4E; /* Your Blue */
+    -fx-padding: 10;
+}
+
+.cyber-alert .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 18px;
+}
+
+/* THE CONTENT (TEXT) SECTION */
+.cyber-alert .content {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+.cyber-alert .content.label {
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+}
+
+/* THE BUTTON BAR AT THE BOTTOM */
+.cyber-alert .button-bar {
+    -fx-background-color: #050508;
+    -fx-padding: 10;
+}
+
+/* STYLING THE OK/CANCEL BUTTONS */
+.cyber-alert .button {
+    -fx-background-color: #1F1E4E;
+    -fx-text-fill: white;
+    -fx-background-radius: 0;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+}
+
+.cyber-alert .button:hover {
+    -fx-background-color: #8B0D0D; /* Turns Red on Hover */
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 10, 0, 0, 0);
+}

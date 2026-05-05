@@ -14,6 +14,15 @@ public class Myconnection {
 
     private  Connection cnx;
     public Connection getCnx() {
+        // Reconnect automatically if connection dropped
+        try {
+            if (cnx == null || cnx.isClosed()) {
+                cnx = DriverManager.getConnection(url, login, pwd);
+                System.out.println("Connection rétablie !");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return cnx;
     }
 
@@ -26,7 +35,17 @@ public class Myconnection {
         }
 
     }
-
+    public static void closeConnection() {
+        try {
+            if (Instance != null && Instance.cnx != null && !Instance.cnx.isClosed()) {
+                Instance.cnx.close();
+                Instance = null; // reset singleton
+                System.out.println("Connection fermée !");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public static Myconnection getInstance (){
         if (Instance==null)
         {

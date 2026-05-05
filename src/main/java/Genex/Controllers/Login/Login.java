@@ -76,6 +76,16 @@ public class Login {
             mediaView.fitWidthProperty().bind(rootPane.widthProperty());
             mediaView.fitHeightProperty().bind(rootPane.heightProperty());
 
+            mediaView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.windowProperty().addListener((obs2, oldWindow, newWindow) -> {
+                        if (newWindow != null) {
+                            newWindow.setOnCloseRequest(e -> cleanup());
+                        }
+                    });
+                }
+            });
+
         } catch (Exception e) {
             System.err.println("Error initializing media: " + e.getMessage());
         }
@@ -135,6 +145,7 @@ public class Login {
                     stage.setScene(scene);
                     stage.setMaximized(true);
                     stage.show();
+                    cleanup();
                 }
                 else{
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
@@ -152,14 +163,17 @@ public class Login {
                     stage.setScene(scene);
                     stage.setMaximized(true);
                     stage.show();
+                    cleanup();
                 }
             }
             else {
                 showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
+                shakeNode(rootPane.lookup("#loginCard"));
             }
         }
         else {
             showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
+            shakeNode(rootPane.lookup("#loginCard"));
         }
         pause.setOnFinished(e -> {
             loginBtn.setText("Se connecter");
@@ -201,16 +215,22 @@ public class Login {
             node.setRotate(0);});
         tt.play();
     }
-    @FXML
-    private void handleGoogleLogin(ActionEvent event) {
+
+    @FXML private void handleGoogleLogin(ActionEvent event) {
         System.out.println("Initiating Google OAuth...");
-        // Logic:
-        // 1. Open Browser: Desktop.getDesktop().browse(new URI("google_auth_url"));
-        // 2. Start a temporary local server to catch the callback token
     }
 
-    @FXML
-    private void handleDiscordLogin(ActionEvent event) {
+    @FXML private void handleDiscordLogin(ActionEvent event) {
         System.out.println("Initiating Discord OAuth...");
+    }
+
+    public void cleanup() {
+        MediaPlayer player = mediaView.getMediaPlayer();
+        if (player != null) {
+            player.stop();
+            player.dispose();
+            mediaView.setMediaPlayer(null);
+            System.out.println("[Cleanup Mediaview] Mediaview stopped.");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package Genex.services;
 
+import Genex.Controllers.Games.Games;
 import Genex.entities.Game;
 import Genex.utils.Myconnection;
 
@@ -99,6 +100,32 @@ public class CrudGame {
                 games.add(g);
             }
             return games;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Game getGameByName(String name){
+        String requete="SELECT name " +
+                "FROM games " +
+                "where name=?";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,name);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                Game g=new Game(
+                        rs.getString("name"),
+                        rs.getString("genre"),
+                        rs.getString("platform"),
+                        rs.getString("team_mode"),
+                        rs.getInt("max_players_per_match"),
+                        rs.getString("icon_url")
+                );
+                return g;
+            }
+            else return null;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

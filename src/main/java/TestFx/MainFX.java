@@ -1,9 +1,11 @@
 package TestFx;
 
+import Genex.utils.Myconnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class MainFX extends Application {
@@ -14,8 +16,14 @@ public class MainFX extends Application {
         primaryStage.setTitle("GENEX");
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
+        primaryStage.getIcons().add(new Image("Images/logo.png"));
         primaryStage.show();
     }
-    /*hazebaheba*/
+    @Override
+    public void stop() throws Exception{
+        Myconnection.closeConnection();
+        super.stop();
+        System.exit(0);
+    }
     public static void main(String[] args) { launch(args); }
 }
