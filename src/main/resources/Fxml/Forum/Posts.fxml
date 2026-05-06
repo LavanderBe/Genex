@@ -29,7 +29,7 @@
             </HBox>
         </HBox>
 
-        <VBox spacing="32.0" VBox.vgrow="ALWAYS">
+        <VBox spacing="20.0" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="40" right="60" bottom="40" left="60"/>
             </padding>
@@ -69,24 +69,24 @@
                 <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="160" promptText="Modération"/>
             </HBox>
 
-            <VBox spacing="10">
-                <Label text="📰 FEED NEWS GAMING" styleClass="field-label"/>
-                <ScrollPane fitToHeight="false" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
-                            minHeight="190.0" prefHeight="190.0" maxHeight="190.0"
-                            styleClass="custom-scroll, news-feed-scroll">
-                    <HBox fx:id="newsFeedContainer" spacing="14" styleClass="news-feed-row">
-                        <padding>
-                            <Insets top="6" right="6" bottom="6" left="6"/>
-                        </padding>
-                    </HBox>
-                </ScrollPane>
-            </VBox>
-
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
-                <VBox spacing="24" styleClass="cards-container">
+                <VBox spacing="20" styleClass="cards-container">
                     <padding>
-                        <Insets top="8" right="8" bottom="8" left="8"/>
+                        <Insets top="4" right="8" bottom="8" left="8"/>
                     </padding>
+
+                    <VBox spacing="10">
+                        <Label text="📰 FEED NEWS GAMING" styleClass="field-label"/>
+                        <ScrollPane fitToHeight="false" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                    minHeight="190.0" prefHeight="190.0" maxHeight="190.0"
+                                    styleClass="custom-scroll, news-feed-scroll">
+                            <HBox fx:id="newsFeedContainer" spacing="14" styleClass="news-feed-row">
+                                <padding>
+                                    <Insets top="6" right="6" bottom="6" left="6"/>
+                                </padding>
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
 
                     <!-- Post Management Card -->
                     <VBox spacing="18" styleClass="modal-container">
@@ -170,9 +170,9 @@
                     </VBox>
 
                     <!-- Posts List -->
-                    <VBox spacing="16" prefWidth="1000">
+                    <VBox spacing="16" prefWidth="1320">
                         <Label text="📝 TOUS LES POSTS" styleClass="field-label"/>
-                        <FlowPane fx:id="postCardsContainer" prefWrapLength="980" hgap="16" vgap="16" styleClass="cards-flow"/>
+                        <FlowPane fx:id="postCardsContainer" prefWrapLength="1280" hgap="18" vgap="18" styleClass="cards-flow"/>
                     </VBox>
                 </VBox>
             </ScrollPane>

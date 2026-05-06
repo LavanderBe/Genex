@@ -440,7 +440,17 @@
 }
 
 .cards-flow {
-    -fx-padding: 4;
+    -fx-padding: 6;
+}
+
+.post-actions-row {
+    -fx-alignment: center-left;
+    -fx-pref-wrap-length: 390;
+}
+
+.post-actions-row .action-button {
+    -fx-font-size: 13;
+    -fx-padding: 10 14;
 }
 
 .cards-container {

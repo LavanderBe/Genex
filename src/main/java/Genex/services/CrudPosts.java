@@ -14,7 +14,7 @@ public class CrudPosts implements ICrud<Posts> {
     public void addEntity(Posts post) {
         String requete = "INSERT INTO posts (forum_id, author_id, title, body, created_at, updated_at) VALUES (?,?,?,?,?,?)";
         try {
-            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, post.getForumId());
             pst.setString(2, post.getAuthorId());
             pst.setString(3, post.getTitle());
@@ -22,6 +22,10 @@ public class CrudPosts implements ICrud<Posts> {
             pst.setString(5, post.getCreatedAt().toString());
             pst.setString(6, post.getUpdatedAt().toString());
             pst.executeUpdate();
+            ResultSet generatedKeys = pst.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                post.setId(generatedKeys.getString(1));
+            }
             System.out.println("Post ajouté avec succès");
         } catch (SQLException e) {
             throw new RuntimeException(e);
