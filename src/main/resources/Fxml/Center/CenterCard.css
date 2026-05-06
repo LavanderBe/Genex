@@ -76,6 +76,7 @@
 
 .detail-label {
     -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
     -fx-font-size: 9;
     -fx-font-weight: 700;
     -fx-letter-spacing: 0.5;
@@ -83,6 +84,7 @@
 
 .detail-value {
     -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-fill: rgba(255, 255, 255, 0.95);
     -fx-font-size: 13;
     -fx-font-weight: 600;
 }

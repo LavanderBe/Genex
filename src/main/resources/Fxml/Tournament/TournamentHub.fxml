@@ -41,31 +41,31 @@
                              <children>
                                 <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtTournamentsPlayed" styleClass="hub-record-value" text="0" />
+                                      <javafx.scene.text.Text fx:id="txtTournamentsPlayed" styleClass="hub-record-value" style="-fx-fill: white;" text="0" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="TOURNOIS" />
                                    </children>
                                 </VBox>
-                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="hub-record-card hub-record-card-wins" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtTotalWins" styleClass="hub-record-value hub-wins" text="0" />
+                                      <javafx.scene.text.Text fx:id="txtTotalWins" styleClass="hub-record-value" style="-fx-fill: #34d399;" text="0" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="VICTOIRES" />
                                    </children>
                                 </VBox>
-                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="hub-record-card hub-record-card-losses" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtTotalLosses" styleClass="hub-record-value hub-losses" text="0" />
+                                      <javafx.scene.text.Text fx:id="txtTotalLosses" styleClass="hub-record-value" style="-fx-fill: #f87171;" text="0" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="DÉFAITES" />
                                    </children>
                                 </VBox>
-                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="hub-record-card hub-record-card-ratio" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtWinRatio" styleClass="hub-record-value hub-ratio" text="0%" />
+                                      <javafx.scene.text.Text fx:id="txtWinRatio" styleClass="hub-record-value" style="-fx-fill: #a78bfa;" text="0%" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="RATIO W/L" />
                                    </children>
                                 </VBox>
-                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="hub-record-card hub-record-card-best" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtBestPlacement" styleClass="hub-record-value hub-best" text="-" />
+                                      <javafx.scene.text.Text fx:id="txtBestPlacement" styleClass="hub-record-value" style="-fx-fill: #fcd34d;" text="-" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="MEILLEUR" />
                                    </children>
                                 </VBox>

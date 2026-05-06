@@ -49,12 +49,14 @@
 
 .tournament-name {
     -fx-fill: white;
+    -fx-text-fill: white;
     -fx-font-size: 20;
     -fx-font-weight: 700;
 }
 
 .game-name {
     -fx-fill: rgba(139, 13, 13, 0.9);
+    -fx-text-fill: rgba(139, 13, 13, 0.9);
     -fx-font-size: 13;
     -fx-font-weight: 600;
     -fx-font-style: italic;
@@ -157,6 +159,7 @@
 
 .detail-label {
     -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
     -fx-font-size: 9;
     -fx-font-weight: 700;
     -fx-letter-spacing: 0.5;
@@ -164,6 +167,7 @@
 
 .detail-value {
     -fx-fill: rgba(255, 255, 255, 0.95);
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
     -fx-font-size: 13;
     -fx-font-weight: 600;
 }
@@ -236,5 +240,5 @@
 }
 
 .tournament-card:hover .tournament-name {
-    -fx-fill: #8B0D0D;
+    -fx-fill: #ff6b6b;
 }

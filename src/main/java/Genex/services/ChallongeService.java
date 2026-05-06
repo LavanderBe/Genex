@@ -307,6 +307,10 @@ public class ChallongeService {
         tournament.put("open_signup", false);  // Closed registration, we add participants manually
         tournament.put("show_rounds", true);
         tournament.put("private", false);  // Public bracket
+        // Skip the grand finals reset match (match 15) in double elimination
+        if ("double elimination".equals(challongeType)) {
+            tournament.put("grand_finals_modifier", "single match");
+        }
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("tournament", tournament);

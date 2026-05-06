@@ -960,8 +960,11 @@ public class TournamentDetailController {
     private void handleRefreshMatches() {
         // Pull latest match data from Challonge and update local DB
         refreshMatchesFromChallonge();
+        // Check if tournament is now complete
+        checkAndCompleteTournament(null);
         // Reload UI
         loadMatches();
+        updateStateBadge();
     }
     
     private void loadMatches() {
@@ -1076,6 +1079,15 @@ public class TournamentDetailController {
                 matchesList.getChildren().add(roundSection);
             }
 
+            // Auto-detect tournament completion when all matches are done
+            if (!Tounament.TournamentState.COMPLETED.name().equals(tournament.getState())) {
+                boolean allDone = matches.stream()
+                        .allMatch(m -> m.getStatus() == TournamentMatch.MatchStatus.COMPLETED);
+                if (allDone && !matches.isEmpty()) {
+                    checkAndCompleteTournament(null);
+                }
+            }
+
         } catch (Exception e) {
             System.err.println("Error loading matches: " + e.getMessage());
             e.printStackTrace();
@@ -1158,73 +1170,224 @@ public class TournamentDetailController {
         card.setSpacing(15);
         card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         card.getStyleClass().add("match-card");
-        
+
         // Match number
         VBox matchInfo = new VBox();
         matchInfo.setSpacing(5);
         Text matchLabel = new Text("Match " + match.getMatchNumber());
         matchLabel.getStyleClass().add("match-label");
         matchInfo.getChildren().add(matchLabel);
-        
-        // Players section
-        HBox playersBox = new HBox();
-        playersBox.setSpacing(20);
-        playersBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        
-        // Player 1
-        VBox player1Box = new VBox();
-        player1Box.setSpacing(5);
-        player1Box.setAlignment(javafx.geometry.Pos.CENTER);
-        Text player1Icon = new Text("👤");
-        player1Icon.getStyleClass().add("player-icon");
+
+        // Player names
         String player1Name = getPlayerName(match.getPlayer1Id());
-        Text player1Text = new Text(player1Name);
-        player1Text.getStyleClass().add("player-name");
-        Text player1Score = new Text("[" + match.getPlayer1Score() + "]");
-        player1Score.getStyleClass().add("player-score");
-        player1Box.getChildren().addAll(player1Icon, player1Text, player1Score);
-        
-        // VS
-        Text vsText = new Text("VS");
-        vsText.getStyleClass().add("vs-text");
-        
-        // Player 2
-        VBox player2Box = new VBox();
-        player2Box.setSpacing(5);
-        player2Box.setAlignment(javafx.geometry.Pos.CENTER);
-        Text player2Icon = new Text("👤");
-        player2Icon.getStyleClass().add("player-icon");
         String player2Name = getPlayerName(match.getPlayer2Id());
-        Text player2Text = new Text(player2Name);
-        player2Text.getStyleClass().add("player-name");
-        Text player2Score = new Text("[" + match.getPlayer2Score() + "]");
-        player2Score.getStyleClass().add("player-score");
-        player2Box.getChildren().addAll(player2Icon, player2Text, player2Score);
-        
-        playersBox.getChildren().addAll(player1Box, vsText, player2Box);
-        
-        // Spacer
-        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
-        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
-        
-        // Status badge
-        StackPane statusBadge = new StackPane();
-        statusBadge.getStyleClass().add("match-status-badge");
-        statusBadge.getStyleClass().add("status-" + match.getStatus().name().toLowerCase());
-        Text statusText = new Text(match.getStatus().getDisplayName());
-        statusText.getStyleClass().add("match-status-text");
-        statusBadge.getChildren().add(statusText);
-        
-        // Report button (only for pending matches)
-        Button btnReport = new Button("REPORTER RÉSULTAT");
-        btnReport.getStyleClass().add("btn-report");
-        btnReport.setOnAction(e -> handleReportResult(match));
-        btnReport.setVisible(match.getStatus() == TournamentMatch.MatchStatus.PENDING);
-        btnReport.setManaged(match.getStatus() == TournamentMatch.MatchStatus.PENDING);
-        
-        card.getChildren().addAll(matchInfo, playersBox, spacer, statusBadge, btnReport);
-        
+
+        boolean isPending = match.getStatus() == TournamentMatch.MatchStatus.PENDING;
+
+        if (isPending) {
+            // ── Inline score entry layout ──────────────────────────────
+            // [P1 name]  [score spinner]  VS  [score spinner]  [P2 name]  [CONFIRMER]
+
+            // Player 1 name
+            Text p1Text = new Text(player1Name);
+            p1Text.getStyleClass().add("player-name");
+
+            // Score spinner for player 1
+            javafx.scene.control.Spinner<Integer> sp1 = new javafx.scene.control.Spinner<>(0, 99, match.getPlayer1Score());
+            sp1.setEditable(true);
+            sp1.setPrefWidth(70);
+            sp1.getStyleClass().add("score-spinner");
+
+            Text vsText = new Text("VS");
+            vsText.getStyleClass().add("vs-text");
+
+            // Score spinner for player 2
+            javafx.scene.control.Spinner<Integer> sp2 = new javafx.scene.control.Spinner<>(0, 99, match.getPlayer2Score());
+            sp2.setEditable(true);
+            sp2.setPrefWidth(70);
+            sp2.getStyleClass().add("score-spinner");
+
+            // Player 2 name
+            Text p2Text = new Text(player2Name);
+            p2Text.getStyleClass().add("player-name");
+
+            // Spacer
+            javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+            // Confirm button
+            Button btnConfirm = new Button("✔ CONFIRMER");
+            btnConfirm.getStyleClass().add("btn-confirm-inline");
+            btnConfirm.setOnAction(e -> {
+                int s1 = sp1.getValue();
+                int s2 = sp2.getValue();
+                if (s1 == s2) {
+                    showAlert("Erreur", "Les scores ne peuvent pas être égaux.", Alert.AlertType.ERROR);
+                    return;
+                }
+                String winnerId = s1 > s2 ? match.getPlayer1Id() : match.getPlayer2Id();
+                String challongeWinnerId = s1 > s2 ? match.getChallongePlayer1Id() : match.getChallongePlayer2Id();
+                submitMatchResult(match, s1, s2, winnerId, challongeWinnerId);
+            });
+
+            card.getChildren().addAll(matchInfo, p1Text, sp1, vsText, sp2, p2Text, spacer, btnConfirm);
+
+        } else {
+            // ── Completed match: show names + scores + status badge ────
+            HBox playersBox = new HBox();
+            playersBox.setSpacing(20);
+            playersBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+            VBox player1Box = new VBox();
+            player1Box.setSpacing(5);
+            player1Box.setAlignment(javafx.geometry.Pos.CENTER);
+            Text player1Icon = new Text("👤");
+            player1Icon.getStyleClass().add("player-icon");
+            Text player1Text = new Text(player1Name);
+            player1Text.getStyleClass().add("player-name");
+            Text player1Score = new Text("[" + match.getPlayer1Score() + "]");
+            player1Score.getStyleClass().add("player-score");
+            player1Box.getChildren().addAll(player1Icon, player1Text, player1Score);
+
+            Text vsText = new Text("VS");
+            vsText.getStyleClass().add("vs-text");
+
+            VBox player2Box = new VBox();
+            player2Box.setSpacing(5);
+            player2Box.setAlignment(javafx.geometry.Pos.CENTER);
+            Text player2Icon = new Text("👤");
+            player2Icon.getStyleClass().add("player-icon");
+            Text player2Text = new Text(player2Name);
+            player2Text.getStyleClass().add("player-name");
+            Text player2Score = new Text("[" + match.getPlayer2Score() + "]");
+            player2Score.getStyleClass().add("player-score");
+            player2Box.getChildren().addAll(player2Icon, player2Text, player2Score);
+
+            playersBox.getChildren().addAll(player1Box, vsText, player2Box);
+
+            javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+            StackPane statusBadge = new StackPane();
+            statusBadge.getStyleClass().add("match-status-badge");
+            statusBadge.getStyleClass().add("status-" + match.getStatus().name().toLowerCase());
+            Text statusText = new Text(match.getStatus().getDisplayName());
+            statusText.getStyleClass().add("match-status-text");
+            statusBadge.getChildren().add(statusText);
+
+            card.getChildren().addAll(matchInfo, playersBox, spacer, statusBadge);
+        }
+
         return card;
+    }
+
+    private void submitMatchResult(TournamentMatch match, int p1Score, int p2Score,
+                                   String winnerId, String challongeWinnerId) {
+        try {
+            // Save to local DB
+            crudMatch.updateMatchResult(match.getId(), p1Score, p2Score, winnerId);
+
+            // Push to Challonge
+            if (tournament.getChallongeUrlSlug() != null
+                    && match.getChallongeMatchId() != null
+                    && challongeWinnerId != null) {
+                try {
+                    challongeService.updateMatchResult(
+                            tournament.getChallongeUrlSlug(),
+                            match.getChallongeMatchId(),
+                            p1Score, p2Score,
+                            challongeWinnerId);
+                } catch (Exception e) {
+                    System.err.println("Warning: Challonge update failed: " + e.getMessage());
+                }
+            }
+
+            // Eliminate loser if appropriate
+            String loserId = winnerId.equals(match.getPlayer1Id()) ? match.getPlayer2Id() : match.getPlayer1Id();
+            if (loserId != null) {
+                boolean isDoubleElim = tournament.getFormat() != null
+                        && tournament.getFormat().toUpperCase().contains("DOUBLE");
+                boolean isLosersMatch = match.getRound() < 0;
+                if (!isDoubleElim || isLosersMatch) {
+                    try {
+                        crudParticipant.eliminatePlayer(tournament.getTournamentId(), loserId, Math.abs(match.getRound()));
+                    } catch (Exception e) {
+                        System.err.println("Warning: eliminatePlayer failed: " + e.getMessage());
+                    }
+                }
+            }
+
+            // Refresh UI
+            refreshMatchesFromChallonge();
+            checkAndCompleteTournament(winnerId);
+            loadMatches();
+            showBracket();
+            updateStateBadge();
+
+            if ("player".equalsIgnoreCase(currentUser.getRole())) {
+                String playerId = getPlayerIdFromUserId(currentUser.getId());
+                if (playerId != null) {
+                    loadPlayerStatus(playerId);
+                    updateJoinButton();
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error submitting match result: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Erreur", "Échec de l'enregistrement: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Checks if all matches are done and, if so, marks the tournament COMPLETED,
+     * sets the winner's status to WINNER, and hides the matches section controls.
+     */
+    private void checkAndCompleteTournament(String lastWinnerId) {
+        try {
+            List<TournamentMatch> allMatches = crudMatch.getAllByTournament(tournament.getTournamentId());
+            if (allMatches.isEmpty()) return;
+
+            boolean allDone = allMatches.stream()
+                    .allMatch(m -> m.getStatus() == TournamentMatch.MatchStatus.COMPLETED);
+
+            if (!allDone) return;
+
+            // All matches completed — find the overall winner:
+            // the player who won the last match (highest match number)
+            TournamentMatch finalMatch = allMatches.stream()
+                    .max(java.util.Comparator.comparingInt(TournamentMatch::getMatchNumber))
+                    .orElse(null);
+
+            String overallWinnerId = (finalMatch != null && finalMatch.getWinnerId() != null)
+                    ? finalMatch.getWinnerId()
+                    : lastWinnerId;
+
+            // Mark winner in participants table
+            if (overallWinnerId != null) {
+                String query = "UPDATE tournament_participants SET status='WINNER', final_placement=1 " +
+                        "WHERE tournament_id=? AND participant_id=?";
+                java.sql.PreparedStatement pst = Genex.utils.Myconnection.getInstance().getCnx()
+                        .prepareStatement(query);
+                pst.setString(1, tournament.getTournamentId());
+                pst.setString(2, overallWinnerId);
+                pst.executeUpdate();
+                System.out.println("Tournament winner set: " + overallWinnerId);
+            }
+
+            // Mark tournament as COMPLETED
+            tournament.setState(Tounament.TournamentState.COMPLETED.name());
+            crudTournament.updateEntity(tournament, tournament.getTournamentId());
+            System.out.println("Tournament marked as COMPLETED");
+
+            // Refresh UI
+            updateStateBadge();
+            setupRoleBasedUI();
+
+        } catch (Exception e) {
+            System.err.println("Error completing tournament: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private String getPlayerName(String playerId) {
@@ -1249,43 +1412,6 @@ public class TournamentDetailController {
         }
         
         return "Joueur inconnu";
-    }
-    
-    private void handleReportResult(TournamentMatch match) {
-        try {
-            // Load modal
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/MatchReportModal.fxml"));
-            Parent modalRoot = loader.load();
-            
-            // Get controller and set data
-            MatchReportModalController modalController = loader.getController();
-            modalController.setMatch(
-                    match,
-                    getPlayerName(match.getPlayer1Id()),
-                    getPlayerName(match.getPlayer2Id()),
-                    tournament.getChallongeUrlSlug()
-            );
-            
-            // Set callback to refresh matches after submission
-            modalController.setOnSuccess(() -> {
-                loadMatches();
-                showBracket(); // Refresh bracket
-            });
-            
-            // Create and show modal stage
-            javafx.stage.Stage modalStage = new javafx.stage.Stage();
-            modalStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            modalStage.initOwner(txtTournamentName.getScene().getWindow());
-            modalStage.setTitle("Reporter le résultat");
-            modalStage.setScene(new javafx.scene.Scene(modalRoot));
-            modalStage.setResizable(false);
-            modalStage.showAndWait();
-            
-        } catch (Exception e) {
-            System.err.println("Error opening match report modal: " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible d'ouvrir le formulaire de rapport.", Alert.AlertType.ERROR);
-        }
     }
     
     /**
@@ -1393,12 +1519,34 @@ public class TournamentDetailController {
                 if (cMatch.isCompleted() && localMatch.getStatus() != TournamentMatch.MatchStatus.COMPLETED) {
                     localMatch.setPlayer1Score(cMatch.getPlayer1Score());
                     localMatch.setPlayer2Score(cMatch.getPlayer2Score());
+                    String localWinnerId = null;
                     if (cMatch.getWinnerId() != null) {
-                        localMatch.setWinnerId(participantMap.get(cMatch.getWinnerId()));
+                        localWinnerId = participantMap.get(cMatch.getWinnerId());
+                        localMatch.setWinnerId(localWinnerId);
                     }
                     localMatch.setStatus(TournamentMatch.MatchStatus.COMPLETED);
                     localMatch.setCompletedTime(java.time.LocalDateTime.now());
                     changed = true;
+
+                    // Also eliminate the loser in tournament_participants
+                    if (localWinnerId != null) {
+                        String loserId = localWinnerId.equals(localMatch.getPlayer1Id())
+                                ? localMatch.getPlayer2Id() : localMatch.getPlayer1Id();
+                        if (loserId != null) {
+                            boolean isDoubleElim = tournament.getFormat() != null
+                                    && tournament.getFormat().toUpperCase().contains("DOUBLE");
+                            boolean isLosersMatch = localMatch.getRound() < 0;
+                            if (!isDoubleElim || isLosersMatch) {
+                                try {
+                                    crudParticipant.eliminatePlayer(
+                                            tournament.getTournamentId(), loserId,
+                                            Math.abs(localMatch.getRound()));
+                                } catch (Exception ex) {
+                                    System.err.println("Warning: eliminatePlayer in refresh failed: " + ex.getMessage());
+                                }
+                            }
+                        }
+                    }
                 }
                 
                 if (changed) {
@@ -1458,10 +1606,24 @@ public class TournamentDetailController {
 
             switch (participation.getStatus()) {
                 case ACTIVE:
-                    txtStatusIcon.setText("🟢");
-                    txtPlayerStatus.setText("EN COMPÉTITION");
-                    txtStatusDetail.setText("Vous êtes toujours en lice!");
-                    statusCard.getStyleClass().add("status-active");
+                    // Cross-check match results — the DB status may be stale
+                    // if the admin reported a result but eliminatePlayer wasn't called
+                    if (isActuallyEliminated(playerId)) {
+                        // Fix the DB silently and fall through to ELIMINATED display
+                        int lastLossRound = getLastLossRound(playerId);
+                        crudParticipant.eliminatePlayer(
+                                tournament.getTournamentId(), playerId, lastLossRound);
+                        txtStatusIcon.setText("🔴");
+                        txtPlayerStatus.setText("ÉLIMINÉ");
+                        String round = lastLossRound > 0 ? " au Round " + lastLossRound : "";
+                        txtStatusDetail.setText("Vous avez été éliminé" + round);
+                        statusCard.getStyleClass().add("status-eliminated");
+                    } else {
+                        txtStatusIcon.setText("🟢");
+                        txtPlayerStatus.setText("EN COMPÉTITION");
+                        txtStatusDetail.setText("Vous êtes toujours en lice!");
+                        statusCard.getStyleClass().add("status-active");
+                    }
                     break;
                 case WINNER:
                     txtStatusIcon.setText("🏆");
@@ -1490,6 +1652,59 @@ public class TournamentDetailController {
         } catch (Exception e) {
             System.err.println("Error loading player status: " + e.getMessage());
         }
+    }
+
+    /**
+     * Returns true if the player has been eliminated based on match results,
+     * regardless of what the tournament_participants.status column says.
+     * - Single elim: 1 loss = eliminated
+     * - Double elim: 2 losses = eliminated, OR 1 loss with no pending matches left
+     */
+    private boolean isActuallyEliminated(String playerId) {
+        try {
+            int losses = crudMatch.getLossesInTournament(tournament.getTournamentId(), playerId);
+            boolean isDoubleElim = tournament.getFormat() != null
+                    && tournament.getFormat().toUpperCase().contains("DOUBLE");
+
+            if (!isDoubleElim) {
+                // Single elim: any loss = out
+                return losses >= 1;
+            } else {
+                // Double elim: 2 losses = out
+                if (losses >= 2) return true;
+                // 1 loss but no pending match remaining = also out
+                if (losses == 1) {
+                    TournamentMatch pending = crudMatch.getActiveMatchForPlayer(
+                            tournament.getTournamentId(), playerId);
+                    return pending == null;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error checking elimination: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Returns the round number of the player's most recent loss.
+     */
+    private int getLastLossRound(String playerId) {
+        try {
+            List<TournamentMatch> matches = crudMatch.getAllByTournament(tournament.getTournamentId());
+            int lastRound = 0;
+            for (TournamentMatch m : matches) {
+                if (m.getStatus() != TournamentMatch.MatchStatus.COMPLETED) continue;
+                boolean isLoser = (playerId.equals(m.getPlayer1Id()) || playerId.equals(m.getPlayer2Id()))
+                        && !playerId.equals(m.getWinnerId());
+                if (isLoser) {
+                    lastRound = Math.max(lastRound, Math.abs(m.getRound()));
+                }
+            }
+            return lastRound;
+        } catch (Exception e) {
+            System.err.println("Error getting last loss round: " + e.getMessage());
+        }
+        return 0;
     }
 
     private void loadRankings() {
@@ -1529,21 +1744,33 @@ public class TournamentDetailController {
         row.getStyleClass().add("ranking-row");
         if (placement <= 3) row.getStyleClass().add("ranking-top-" + placement);
 
-        // Placement medal
-        String medal = placement == 1 ? "🥇" : placement == 2 ? "🥈" : placement == 3 ? "🥉" : placement + ".";
-        Text placementText = new Text(medal);
+        // Placement — emoji for top 3, styled number for the rest
+        Text placementText;
+        if (placement == 1) {
+            placementText = new Text("🥇");
+        } else if (placement == 2) {
+            placementText = new Text("🥈");
+        } else if (placement == 3) {
+            placementText = new Text("🥉");
+        } else {
+            placementText = new Text(placement + ".");
+            // Explicit white fill so it doesn't go black on dark background
+            placementText.setStyle("-fx-fill: rgba(255,255,255,0.7);");
+        }
         placementText.getStyleClass().add("ranking-placement");
 
-        // Player name
+        // Player name — explicit white
         String playerName = getPlayerName(p.getParticipantId());
         Text nameText = new Text(playerName);
         nameText.getStyleClass().add("ranking-name");
+        nameText.setStyle("-fx-fill: white;");
 
-        // Wins / Losses
+        // Wins / Losses — explicit light color
         int wins = crudMatch.getWinsInTournament(tournament.getTournamentId(), p.getParticipantId());
         int losses = crudMatch.getLossesInTournament(tournament.getTournamentId(), p.getParticipantId());
         Text wlText = new Text(wins + "W - " + losses + "L");
         wlText.getStyleClass().add("ranking-wl");
+        wlText.setStyle("-fx-fill: rgba(255,255,255,0.75);");
 
         // Spacer
         javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
@@ -1554,7 +1781,7 @@ public class TournamentDetailController {
         badge.getStyleClass().add("ranking-badge");
         String badgeText;
         if (p.isWinner()) {
-            badgeText = "VAINQUEUR";
+            badgeText = "🏆 VAINQUEUR";
             badge.getStyleClass().add("badge-winner");
         } else if (p.withdrewFromTournament()) {
             badgeText = "RETIRÉ";
@@ -1565,6 +1792,7 @@ public class TournamentDetailController {
         }
         Text badgeLabel = new Text(badgeText);
         badgeLabel.getStyleClass().add("ranking-badge-text");
+        badgeLabel.setStyle("-fx-fill: white;");
         badge.getChildren().add(badgeLabel);
 
         row.getChildren().addAll(placementText, nameText, spacer, wlText, badge);

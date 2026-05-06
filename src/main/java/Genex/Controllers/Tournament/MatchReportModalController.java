@@ -3,6 +3,7 @@ package Genex.Controllers.Tournament;
 import Genex.entities.TournamentMatch;
 import Genex.services.ChallongeService;
 import Genex.services.CrudTournamentMatch;
+import Genex.services.CrudTournamentParticipant;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -41,9 +42,12 @@ public class MatchReportModalController {
     private String player1Name;
     private String player2Name;
     private String challongeUrlSlug;
+    private String tournamentFormat; // e.g. "DOUBLE_ELIM" or "SINGLE_ELIM"
+    private String tournamentId;
     private Runnable onSuccess;
 
     private CrudTournamentMatch crudMatch = new CrudTournamentMatch();
+    private CrudTournamentParticipant crudParticipant = new CrudTournamentParticipant();
     private ChallongeService challongeService = new ChallongeService();
 
     @FXML
@@ -68,6 +72,8 @@ public class MatchReportModalController {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
         this.challongeUrlSlug = challongeUrlSlug;
+        this.tournamentFormat = null;
+        this.tournamentId = match.getTournamentId();
 
         // Update UI
         String roundLabel = match.getRound() > 0 
@@ -86,6 +92,10 @@ public class MatchReportModalController {
 
     public void setOnSuccess(Runnable onSuccess) {
         this.onSuccess = onSuccess;
+    }
+
+    public void setTournamentFormat(String format) {
+        this.tournamentFormat = format;
     }
 
     private void autoSelectWinner() {
@@ -141,6 +151,25 @@ public class MatchReportModalController {
                     );
                 } catch (Exception e) {
                     System.err.println("Warning: Failed to update Challonge: " + e.getMessage());
+                }
+            }
+
+            // Mark the loser as ELIMINATED if this match definitively eliminates them:
+            // - Always in single elimination (every loss = out)
+            // - In double elimination: only losers bracket matches (negative round) eliminate
+            String loserId = radioPlayer1.isSelected() ? match.getPlayer2Id() : match.getPlayer1Id();
+            if (loserId != null) {
+                boolean isDoubleElim = tournamentFormat != null &&
+                        (tournamentFormat.toUpperCase().contains("DOUBLE"));
+                boolean isLosersMatch = match.getRound() < 0;
+
+                if (!isDoubleElim || isLosersMatch) {
+                    try {
+                        crudParticipant.eliminatePlayer(tournamentId, loserId, Math.abs(match.getRound()));
+                        System.out.println("Player " + loserId + " eliminated at round " + match.getRound());
+                    } catch (Exception e) {
+                        System.err.println("Warning: Failed to mark player as eliminated: " + e.getMessage());
+                    }
                 }
             }
 

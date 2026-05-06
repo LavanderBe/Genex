@@ -240,6 +240,7 @@
 
 .info-label {
     -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
     -fx-font-size: 11;
     -fx-font-weight: 600;
     -fx-letter-spacing: 1;
@@ -247,6 +248,7 @@
 
 .info-value {
     -fx-fill: white;
+    -fx-text-fill: white;
     -fx-font-size: 18;
     -fx-font-weight: 600;
 }
@@ -259,6 +261,7 @@
 
 .section-title {
     -fx-fill: white;
+    -fx-text-fill: white;
     -fx-font-size: 24;
     -fx-font-weight: 700;
     -fx-letter-spacing: 0.5;
@@ -308,12 +311,14 @@
 
 .participant-name {
     -fx-fill: white;
+    -fx-text-fill: white;
     -fx-font-size: 16;
     -fx-font-weight: 600;
 }
 
 .participant-seed {
     -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
     -fx-font-size: 13;
     -fx-font-weight: 500;
 }
@@ -408,6 +413,7 @@
 
 .round-title {
     -fx-fill: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
     -fx-font-size: 18;
     -fx-font-weight: 700;
     -fx-letter-spacing: 0.5;
@@ -433,6 +439,7 @@
 
 .match-label {
     -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
     -fx-font-size: 12;
     -fx-font-weight: 600;
     -fx-letter-spacing: 0.5;
@@ -444,18 +451,21 @@
 
 .player-name {
     -fx-fill: white;
+    -fx-text-fill: white;
     -fx-font-size: 14;
     -fx-font-weight: 600;
 }
 
 .player-score {
     -fx-fill: #7c6fff;
+    -fx-text-fill: #7c6fff;
     -fx-font-size: 16;
     -fx-font-weight: 700;
 }
 
 .vs-text {
     -fx-fill: rgba(255, 255, 255, 0.4);
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
     -fx-font-size: 12;
     -fx-font-weight: 700;
 }
@@ -617,42 +627,51 @@
 .rankings-list { -fx-padding: 0; }
 
 .ranking-row {
-    -fx-background-color: rgba(255,255,255,0.04);
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(255,255,255,0.08);
-    -fx-border-radius: 10;
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 12;
     -fx-border-width: 1;
-    -fx-padding: 16 20;
+    -fx-padding: 18 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 2);
+}
+
+.ranking-row:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-translate-y: -1;
 }
 
 .ranking-row.ranking-top-1 {
-    -fx-background-color: rgba(255, 215, 0, 0.1);
-    -fx-border-color: rgba(255, 215, 0, 0.4);
+    -fx-background-color: rgba(255, 215, 0, 0.15);
+    -fx-border-color: rgba(255, 215, 0, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.25), 16, 0, 0, 4);
 }
 
 .ranking-row.ranking-top-2 {
-    -fx-background-color: rgba(192, 192, 192, 0.1);
-    -fx-border-color: rgba(192, 192, 192, 0.4);
+    -fx-background-color: rgba(192, 192, 192, 0.12);
+    -fx-border-color: rgba(192, 192, 192, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(192, 192, 192, 0.2), 12, 0, 0, 3);
 }
 
 .ranking-row.ranking-top-3 {
-    -fx-background-color: rgba(205, 127, 50, 0.1);
-    -fx-border-color: rgba(205, 127, 50, 0.4);
+    -fx-background-color: rgba(205, 127, 50, 0.12);
+    -fx-border-color: rgba(205, 127, 50, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(205, 127, 50, 0.2), 12, 0, 0, 3);
 }
 
 .ranking-placement {
-    -fx-font-size: 22;
-    -fx-min-width: 40;
+    -fx-font-size: 28;
+    -fx-min-width: 48;
 }
 
 .ranking-name {
     -fx-fill: white;
-    -fx-font-size: 16;
-    -fx-font-weight: 600;
+    -fx-font-size: 17;
+    -fx-font-weight: 700;
 }
 
 .ranking-wl {
-    -fx-fill: rgba(255,255,255,0.6);
+    -fx-fill: rgba(255, 255, 255, 0.75);
     -fx-font-size: 14;
     -fx-font-weight: 600;
 }
@@ -660,27 +679,28 @@
 .ranking-badge {
     -fx-background-radius: 6;
     -fx-border-radius: 6;
-    -fx-border-width: 1;
-    -fx-padding: 5 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 6 16;
 }
 
 .ranking-badge.badge-winner {
-    -fx-background-color: rgba(255,215,0,0.2);
-    -fx-border-color: rgba(255,215,0,0.5);
+    -fx-background-color: rgba(255, 215, 0, 0.35);
+    -fx-border-color: #ffd700;
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.4), 10, 0, 0, 2);
 }
 
 .ranking-badge.badge-eliminated {
-    -fx-background-color: rgba(239,68,68,0.2);
-    -fx-border-color: rgba(239,68,68,0.4);
+    -fx-background-color: rgba(239, 68, 68, 0.3);
+    -fx-border-color: #ef4444;
 }
 
 .ranking-badge.badge-withdrew {
-    -fx-background-color: rgba(156,163,175,0.2);
-    -fx-border-color: rgba(156,163,175,0.4);
+    -fx-background-color: rgba(156, 163, 175, 0.25);
+    -fx-border-color: rgba(156, 163, 175, 0.6);
 }
 
 .ranking-badge-text {
-    -fx-font-size: 11;
+    -fx-font-size: 12;
     -fx-font-weight: 700;
     -fx-fill: white;
 }
@@ -760,4 +780,54 @@
     -fx-font-size: 12;
     -fx-font-weight: 700;
     -fx-padding: 8 0 2 0;
+}
+
+/* ─── Inline Score Entry ─────────────────────────────────────────────── */
+
+.score-spinner {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.score-spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7c6fff;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+    -fx-alignment: CENTER;
+}
+
+.score-spinner .increment-arrow-button,
+.score-spinner .decrement-arrow-button {
+    -fx-background-color: rgba(124, 111, 255, 0.2);
+    -fx-border-color: transparent;
+}
+
+.score-spinner .increment-arrow-button:hover,
+.score-spinner .decrement-arrow-button:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.4);
+}
+
+.score-spinner .increment-arrow,
+.score-spinner .decrement-arrow {
+    -fx-background-color: white;
+}
+
+.btn-confirm-inline {
+    -fx-background-color: linear-gradient(to right, #10b981, #059669);
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+    -fx-padding: 8 18;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.35), 8, 0, 0, 2);
+}
+
+.btn-confirm-inline:hover {
+    -fx-background-color: linear-gradient(to right, #34d399, #10b981);
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.55), 12, 0, 0, 4);
 }
