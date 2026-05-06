@@ -111,6 +111,12 @@ public class PostsController {
     private Button selectVideoButton;
     @FXML
     private Button clearVideoButton;
+    @FXML
+    private TextField imagePathField;
+    @FXML
+    private Button selectImageButton;
+    @FXML
+    private Button clearImageButton;
 
     private final CrudPosts crudPosts = new CrudPosts();
     private final CrudForum crudForum = new CrudForum();
@@ -133,7 +139,11 @@ public class PostsController {
         "free", "giveaway", "urgent", "winner", "bitcoin", "promo", "click", "offer"
     );
     private static final Set<String> FILTERED_SPEECH_KEYWORDS = Set.of(
-        "idiot", "imbecile", "stupid", "hate", "racist", "violent", "con", "merde"
+        "idiot", "imbecile", "stupid", "hate", "racist", "violent", "con", "merde",
+        "putain", "connard", "salaud", "débile", "nul", "pourri", "minables",
+        "fuck", "shit", "damn", "asshole", "bastard", "bitch", "crap", "dickhead",
+        "fucker", "motherfucker", "whore", "slut", "faggot", "retard", "ugly",
+        "pédé", "pute", "saloperie", "ordure", "enculé", "ducon", "biatch"
     );
     private boolean adminMode;
     private String currentUserId;
@@ -224,6 +234,25 @@ public class PostsController {
     }
 
     @FXML
+    private void handleSelectImage(ActionEvent event) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Sélectionner une image");
+        chooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp"),
+            new FileChooser.ExtensionFilter("Tous les fichiers", "*.*")
+        );
+        File selected = chooser.showOpenDialog(rootPane.getScene().getWindow());
+        if (selected != null) {
+            imagePathField.setText(selected.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    private void handleClearImage(ActionEvent event) {
+        imagePathField.clear();
+    }
+
+    @FXML
     private void handleClearForm(ActionEvent event) {
         clearFormFields();
     }
@@ -256,6 +285,8 @@ public class PostsController {
             String rawTitle = titleField.getText().trim();
             String rawBody = bodyArea.getText() == null ? "" : bodyArea.getText().trim();
             boolean hadFilteredSpeech = containsFilteredSpeech(rawTitle) || containsFilteredSpeech(rawBody);
+            int badwordCount = countBadwords(rawTitle) + countBadwords(rawBody);
+            
             String cleanTitle = sanitizeSpeech(rawTitle);
             String cleanBody = sanitizeSpeech(rawBody);
             boolean isSpam = isSpamContent(cleanTitle, cleanBody);
@@ -264,8 +295,14 @@ public class PostsController {
                 resolveForumIdForCreate(),
                 authorId,
                 cleanTitle,
-                cleanBody
+                cleanBody,
+                imagePathField.getText().isEmpty() ? null : imagePathField.getText(),
+                "image"
             );
+            post.setTag(tagField.getText().isEmpty() ? null : tagField.getText());
+            post.setPostType(postTypeField.getValue() != null ? postTypeField.getValue() : "text");
+            post.setPostStatus(postStatusField.getValue() != null ? postStatusField.getValue() : "published");
+            post.setModerationStatus(isSpam || hadFilteredSpeech ? "flagged" : "visible");
             post.setCreatedAt(LocalDateTime.now());
             post.setUpdatedAt(LocalDateTime.now());
             crudPosts.addEntity(post);
@@ -282,7 +319,7 @@ public class PostsController {
                 message.append(" Le post est marqué SPAM.");
             }
             if (hadFilteredSpeech) {
-                message.append(" Le contenu sensible a été filtré.");
+                message.append(" " + badwordCount + " gros mot(s) détecté(s) et filtré(s).");
             }
             showAlert(Alert.AlertType.INFORMATION, "Succès", message.toString());
             clearFormFields();
@@ -308,6 +345,7 @@ public class PostsController {
             String rawTitle = titleField.getText().trim();
             String rawBody = bodyArea.getText() == null ? "" : bodyArea.getText().trim();
             boolean hadFilteredSpeech = containsFilteredSpeech(rawTitle) || containsFilteredSpeech(rawBody);
+            int badwordCount = countBadwords(rawTitle) + countBadwords(rawBody);
             String cleanTitle = sanitizeSpeech(rawTitle);
             String cleanBody = sanitizeSpeech(rawBody);
             boolean isSpam = isSpamContent(cleanTitle, cleanBody);
@@ -315,6 +353,12 @@ public class PostsController {
             Posts post = new Posts();
             post.setTitle(cleanTitle);
             post.setBody(cleanBody);
+            post.setMediaUrl(imagePathField.getText().isEmpty() ? null : imagePathField.getText());
+            post.setMediaType(imagePathField.getText().isEmpty() ? null : "image");
+            post.setTag(tagField.getText().isEmpty() ? null : tagField.getText());
+            post.setPostType(postTypeField.getValue() != null ? postTypeField.getValue() : "text");
+            post.setPostStatus(postStatusField.getValue() != null ? postStatusField.getValue() : "published");
+            post.setModerationStatus(isSpam || hadFilteredSpeech ? "flagged" : "visible");
             post.setUpdatedAt(LocalDateTime.now());
             crudPosts.updateEntity(post, selectedPostId);
 
@@ -326,7 +370,7 @@ public class PostsController {
                 message.append(" Le post est marqué SPAM.");
             }
             if (hadFilteredSpeech) {
-                message.append(" Le contenu sensible a été filtré.");
+                message.append(" " + badwordCount + " gros mot(s) détecté(s) et filtré(s).");
             }
             showAlert(Alert.AlertType.INFORMATION, "Succès", message.toString());
             clearFormFields();
@@ -588,6 +632,20 @@ public class PostsController {
         title.getStyleClass().add("forum-card-title");
         title.setWrapText(true);
 
+        // Afficher l'image si elle existe
+        if (post.getMediaUrl() != null && !post.getMediaUrl().isBlank() && "image".equals(post.getMediaType())) {
+            try {
+                ImageView imageView = new ImageView();
+                imageView.setImage(new Image("file:" + post.getMediaUrl()));
+                imageView.setPreserveRatio(true);
+                imageView.setFitWidth(380);
+                imageView.setFitHeight(220);
+                card.getChildren().add(imageView);
+            } catch (Exception e) {
+                System.out.println("Erreur chargement image: " + e.getMessage());
+            }
+        }
+
         Label body = new Label(post.getBody() == null || post.getBody().isBlank() ? "Aucun contenu." : post.getBody());
         body.getStyleClass().add("forum-card-desc");
         body.setWrapText(true);
@@ -652,6 +710,14 @@ public class PostsController {
         authorNameField.setValue(authorNameForId(post.getAuthorId()));
         titleField.setText(safe(post.getTitle()));
         bodyArea.setText(safe(post.getBody()));
+        tagField.setText(safe(post.getTag()));
+        postTypeField.setValue(safe(post.getPostType()));
+        postStatusField.setValue(safe(post.getPostStatus()));
+        if (post.getMediaUrl() != null && !post.getMediaUrl().isBlank()) {
+            imagePathField.setText(post.getMediaUrl());
+        } else {
+            imagePathField.clear();
+        }
     }
 
     private void updateFeatured(List<Posts> filtered) {
@@ -795,13 +861,24 @@ public class PostsController {
     }
 
     private boolean containsFilteredSpeech(String value) {
-        String normalized = normalize(value);
+        String normalized = normalize(value).toLowerCase();
         for (String keyword : FILTERED_SPEECH_KEYWORDS) {
-            if (normalized.contains(keyword)) {
+            if (normalized.contains(keyword.toLowerCase())) {
                 return true;
             }
         }
         return false;
+    }
+
+    private int countBadwords(String value) {
+        String normalized = normalize(value).toLowerCase();
+        int count = 0;
+        for (String keyword : FILTERED_SPEECH_KEYWORDS) {
+            String pattern = "(?i)\\b" + Pattern.quote(keyword) + "\\b";
+            int matches = (int) Pattern.compile(pattern).matcher(normalized).results().count();
+            count += matches;
+        }
+        return count;
     }
 
     private String sanitizeSpeech(String value) {
@@ -857,6 +934,7 @@ public class PostsController {
         bodyArea.clear();
         tagField.clear();
         videoPathField.clear();
+        imagePathField.clear();
         postTypeField.setValue("DISCUSSION");
         postStatusField.setValue("ACTIF");
     }

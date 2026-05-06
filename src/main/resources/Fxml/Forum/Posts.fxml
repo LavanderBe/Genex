@@ -133,6 +133,15 @@
                             </HBox>
                         </VBox>
 
+                        <VBox spacing="10">
+                            <Label text="IMAGE (OPTIONNELLE)" styleClass="field-label"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <TextField fx:id="imagePathField" promptText="Aucune image sélectionnée" editable="false" HBox.hgrow="ALWAYS" styleClass="modal-input"/>
+                                <Button fx:id="selectImageButton" text="🖼 IMPORTER" onAction="#handleSelectImage" styleClass="action-button, secondary-button"/>
+                                <Button fx:id="clearImageButton" text="✕ EFFACER" onAction="#handleClearImage" styleClass="action-button, neutral-button"/>
+                            </HBox>
+                        </VBox>
+
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Button fx:id="addPostButton" text="✓ CRÉER" onAction="#handleAddPost" styleClass="submit-button"/>
                             <Button fx:id="updatePostButton" text="↻ METTRE À JOUR" onAction="#handleUpdatePost" styleClass="action-button, secondary-button"/>
