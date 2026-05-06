@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@TeamDetailDashboard.css"
+           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="Genex.Controllers.Team.TeamDetailDashboardController">
+    
+    <!-- Wrap entire content in ScrollPane like TeamHub -->
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS"
+                style="-fx-background-color: transparent;" styleClass="scroll-pane">
+        <VBox fx:id="contentArea" spacing="20">
+            <padding>
+                <Insets bottom="25" left="25" right="25" top="25"/>
+            </padding>
+            
+            <!-- Top Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button fx:id="btnBack" text="← Back" onAction="#handleBack" styleClass="back-button"/>
+                
+                <Label fx:id="teamNameTitle" text="TEAM NAME" styleClass="page-title">
+                    <HBox.margin>
+                        <Insets left="10"/>
+                    </HBox.margin>
+                </Label>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Button fx:id="btnEditTeam" text="Edit Team" onAction="#handleEditTeam" styleClass="action-blue-button"/>
+            </HBox>
+            
+            <Separator styleClass="separator"/>
+            
+            <!-- Main Content: Top Row (60% / 40%) -->
+            <HBox spacing="20">
+                
+                <!-- LEFT: Team Members (60% width) -->
+                <VBox spacing="15" styleClass="panel-left" HBox.hgrow="ALWAYS" prefHeight="200">
+                    
+                    <Label text="TEAM MEMBERS" styleClass="section-title"/>
+                    
+                    <Label fx:id="lblMemberCount" text="Members: 0/5" styleClass="member-count"/>
+                    
+                    <Separator styleClass="separator-light"/>
+                    
+                    <!-- Members Container (Horizontal FlowPane) - Fixed height for 5 members -->
+                    <FlowPane fx:id="teamMembersContainer" hgap="15" vgap="15" prefWrapLength="800" prefHeight="120"/>
+                </VBox>
+                
+                <!-- RIGHT: Team Info (40% width) -->
+                <VBox spacing="15" styleClass="panel-right" prefWidth="350" HBox.hgrow="NEVER" prefHeight="200">
+                    
+                    <!-- Team Logo (Smaller) -->
+                    <VBox alignment="CENTER" styleClass="logo-container">
+                        <ImageView fx:id="teamLogoImage" fitWidth="100" fitHeight="100" preserveRatio="true">
+                            <VBox.margin>
+                                <Insets bottom="5"/>
+                            </VBox.margin>
+                        </ImageView>
+                        <Label text="TEAM LOGO" styleClass="logo-label"/>
+                    </VBox>
+                    
+                    <!-- Team Info (Compact) -->
+                    <VBox spacing="8" styleClass="info-container">
+                        <Label fx:id="lblGameName" text="Game: N/A" styleClass="info-label"/>
+                        <Label fx:id="lblStatus" text="Status: N/A" styleClass="info-label"/>
+                        <Label fx:id="lblContact" text="Contact: N/A" styleClass="info-label"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+            
+            <Separator styleClass="separator"/>
+            
+            <!-- Bottom Row: Calendar (60%) + Sessions List (40%) -->
+            <HBox spacing="20" VBox.vgrow="ALWAYS">
+                
+                <!-- LEFT: Calendar (60% width) -->
+                <VBox spacing="15" styleClass="panel-calendar" HBox.hgrow="ALWAYS">
+                    
+                    <HBox alignment="CENTER" spacing="20">
+                        <Button fx:id="btnPrevMonth" text="◀ Previous" onAction="#handlePrevMonth" styleClass="nav-button"/>
+                        
+                        <Label fx:id="lblCurrentMonth" text="MONTH YEAR" styleClass="month-title"/>
+                        
+                        <Button fx:id="btnNextMonth" text="Next ▶" onAction="#handleNextMonth" styleClass="nav-button"/>
+                    </HBox>
+                    
+                    <!-- Calendar Legend -->
+                    <HBox spacing="20" alignment="CENTER" styleClass="legend-container">
+                        <Label text="■ SCRIM" styleClass="legend-item legend-scrim"/>
+                        <Label text="■ AIM_TRAINING" styleClass="legend-item legend-aim"/>
+                        <Label text="■ STRATEGY" styleClass="legend-item legend-strategy"/>
+                        <Label text="■ TEAM_PRACTICE" styleClass="legend-item legend-practice"/>
+                        <Label text="■ OTHER" styleClass="legend-item legend-other"/>
+                    </HBox>
+                    
+                    <!-- Calendar WebView -->
+                    <WebView fx:id="calendarWebView" prefHeight="500" styleClass="calendar-view" VBox.vgrow="ALWAYS"/>
+                </VBox>
+                
+                <!-- RIGHT: Sessions List (40% width) -->
+                <VBox spacing="15" styleClass="panel-sessions" prefWidth="350" HBox.hgrow="NEVER">
+                    
+                    <!-- Header with Add Button -->
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="TRAINING SESSIONS" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnAddSessionQuick" text="＋ Add" onAction="#handleAddSessionQuick" 
+                                styleClass="add-session-button" visible="false"/>
+                    </HBox>
+                    
+                    <!-- Selected Date Display -->
+                    <Label fx:id="lblSelectedDate" text="Select a day" styleClass="selected-date-label"/>
+                    
+                    <Separator styleClass="separator-light"/>
+                    
+                    <!-- Sessions List (Scrollable) -->
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" 
+                                styleClass="sessions-scroll" VBox.vgrow="ALWAYS">
+                        <VBox fx:id="sessionsListContainer" spacing="10" styleClass="sessions-list"/>
+                    </ScrollPane>
+                </VBox>
+            </HBox>
+            
+        </VBox>
+    </ScrollPane>
+    
+</StackPane>

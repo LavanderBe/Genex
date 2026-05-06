@@ -116,6 +116,10 @@ public class Login {
         if (cu.check_email(email)){
             User u=cu.getUser_withmail(email);
             if (u.verifyPassword(password)){
+                // ✅ SET USER IN SESSION MANAGER
+                Genex.utils.SessionManager.getInstance().setCurrentUser(u);
+                System.out.println("✓ User logged in: " + u.getUsername() + " (Role: " + u.getRole() + ")");
+                
                 if (u.getRole().equals("admin"))
                 {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));

@@ -107,6 +107,12 @@ public class AddTrainingSessionModalController {
         this.teamId = teamId;
     }
 
+    public void setPrefilledDate(java.time.LocalDate date) {
+        if (dateSession != null) {
+            dateSession.setValue(date);
+        }
+    }
+
     public void setSession(TrainingSession session) {
         this.sessionToEdit = session;
         this.teamId = session.getTeamId();

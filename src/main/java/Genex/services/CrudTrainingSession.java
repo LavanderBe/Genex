@@ -10,7 +10,16 @@ import java.util.List;
 
 public class CrudTrainingSession {
 
-    public CrudTrainingSession() {}
+    private GoogleCalendarService calendarService;
+
+    public CrudTrainingSession() {
+        try {
+            this.calendarService = new GoogleCalendarService();
+        } catch (Exception e) {
+            System.err.println("Warning: Google Calendar Service not available: " + e.getMessage());
+            this.calendarService = null;
+        }
+    }
 
     public List<TrainingSession> getAllSessions() {
         List<TrainingSession> sessions = new ArrayList<>();
@@ -57,8 +66,14 @@ public class CrudTrainingSession {
 
     public void addSession(TrainingSession session) {
         String query = "INSERT INTO training_sessions (team_id, title, type, " +
-                "session_datetime, start_time, end_time, location, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "session_datetime, start_time, end_time, location, notes, status, calendar_event_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
+            // Create Google Calendar event first
+            if (calendarService != null) {
+                String eventId = calendarService.createEvent(session);
+                session.setCalendarEventId(eventId);
+            }
+
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
             pst.setString(1, session.getTeamId());
             pst.setString(2, session.getTitle());
@@ -69,6 +84,7 @@ public class CrudTrainingSession {
             pst.setString(7, session.getLocation());
             pst.setString(8, session.getNotes());
             pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
+            pst.setString(10, session.getCalendarEventId());
 
             int rowsAffected = pst.executeUpdate();
             System.out.println("Training session added successfully. Rows affected: " + rowsAffected);
@@ -81,8 +97,13 @@ public class CrudTrainingSession {
 
     public void updateSession(TrainingSession session) {
         String query = "UPDATE training_sessions SET team_id=?, title=?, type=?, " +
-                "session_datetime=?, start_time=?, end_time=?, location=?, notes=?, status=? WHERE id=?";
+                "session_datetime=?, start_time=?, end_time=?, location=?, notes=?, status=?, calendar_event_id=? WHERE id=?";
         try {
+            // Update Google Calendar event
+            if (calendarService != null && session.getCalendarEventId() != null) {
+                calendarService.updateEvent(session.getCalendarEventId(), session);
+            }
+
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
             pst.setString(1, session.getTeamId());
             pst.setString(2, session.getTitle());
@@ -93,7 +114,8 @@ public class CrudTrainingSession {
             pst.setString(7, session.getLocation());
             pst.setString(8, session.getNotes());
             pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(10, session.getId());
+            pst.setString(10, session.getCalendarEventId());
+            pst.setString(11, session.getId());
             pst.executeUpdate();
             System.out.println("Training session updated successfully");
         } catch (SQLException e) {
@@ -103,11 +125,28 @@ public class CrudTrainingSession {
     }
 
     public void deleteSession(String id) {
-        String query = "DELETE FROM training_sessions WHERE id=?";
+        String query = "SELECT calendar_event_id FROM training_sessions WHERE id=?";
+        String deleteQuery = "DELETE FROM training_sessions WHERE id=?";
         try {
+            // Get calendar event ID first
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
             pst.setString(1, id);
-            pst.executeUpdate();
+            ResultSet rs = pst.executeQuery();
+            
+            String calendarEventId = null;
+            if (rs.next()) {
+                calendarEventId = rs.getString("calendar_event_id");
+            }
+
+            // Delete from Google Calendar
+            if (calendarService != null && calendarEventId != null) {
+                calendarService.deleteEvent(calendarEventId);
+            }
+
+            // Delete from database
+            PreparedStatement deletePst = Myconnection.getInstance().getCnx().prepareStatement(deleteQuery);
+            deletePst.setString(1, id);
+            deletePst.executeUpdate();
             System.out.println("Training session deleted successfully");
         } catch (SQLException e) {
             System.err.println("Error deleting session: " + e.getMessage());
@@ -213,6 +252,7 @@ public class CrudTrainingSession {
         session.setId(rs.getString("id"));
         session.setTeamId(rs.getString("team_id"));
         session.setTitle(rs.getString("title"));
+        session.setCalendarEventId(rs.getString("calendar_event_id"));
 
         String typeStr = rs.getString("type");
         if (typeStr != null) {

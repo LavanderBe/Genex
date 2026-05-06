@@ -171,11 +171,11 @@ public class TeamCardController {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamDetail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamDetailDashboard.fxml"));
             Parent detailRoot = loader.load();
 
             // Get controller and set team
-            TeamDetailController controller = loader.getController();
+            TeamDetailDashboardController controller = loader.getController();
             controller.setTeam(team);
 
             // If we have a content container reference, load in same window

@@ -32,6 +32,14 @@ public class SessionManager {
         return currentUser != null ? currentUser.getId() : null;
     }
 
+    public String getCurrentUserName() {
+        return currentUser != null ? currentUser.getUsername() : "Unknown";
+    }
+
+    public boolean isAdmin() {
+        return currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
+    }
+
     public boolean isLoggedIn() {
         return currentUser != null;
     }

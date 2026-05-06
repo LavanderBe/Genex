@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Google Calendar API Credentials ###
+credentials.json
+tokens/
+StoredCredential
