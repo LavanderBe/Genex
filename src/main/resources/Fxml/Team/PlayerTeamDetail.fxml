@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+            style="-fx-background-color: #0d0d1a; -fx-background: #0d0d1a;"
+            stylesheets="@PlayerTeams.css"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Genex.Controllers.Team.PlayerTeamDetailController">
+
+    <content>
+        <VBox fx:id="rootVBox" spacing="0"
+              style="-fx-background-color: #0d0d1a;">
+
+            <!-- ── Nav Bar ───────────────────────────────────────── -->
+            <HBox fx:id="navBar" alignment="CENTER_LEFT" spacing="12"
+                  style="-fx-background-color: #12122a; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 0 0 1 0; -fx-padding: 12 20 12 20;">
+                <Label fx:id="teamNameLabel"
+                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"
+                       text="Team Name" />
+                <Region HBox.hgrow="ALWAYS" />
+                <HBox spacing="8" alignment="CENTER">
+                    <Button fx:id="btnMonEquipe" text="Mon Équipe"
+                            styleClass="player-tab-btn-active"
+                            onAction="#handleMonEquipe" />
+                    <Button fx:id="btnAutresEquipes" text="Autres Équipes"
+                            styleClass="player-tab-btn"
+                            onAction="#handleAutresEquipes" />
+                </HBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnQuitTeam" text="Quitter l'équipe"
+                        styleClass="player-quit-btn"
+                        onAction="#handleQuitTeam"
+                        visible="false" managed="false" />
+                <Button fx:id="btnDeleteTeam" text="🗑  Supprimer l'équipe"
+                        styleClass="player-quit-btn"
+                        onAction="#handleDeleteTeam"
+                        visible="false" managed="false" />
+            </HBox>
+
+            <!-- ── Swappable area ────────────────────────────────── -->
+            <StackPane fx:id="swapPane">
+
+                <!-- MON ÉQUIPE content -->
+                <VBox fx:id="mainContent" spacing="16">
+                    <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
+
+                    <!-- 50/50 Split -->
+                    <HBox fx:id="splitPanel" spacing="16">
+
+                        <!-- LEFT: Members -->
+                        <VBox fx:id="leftPanel" spacing="12" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
+
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px; -fx-font-weight: bold;"
+                                       text="MEMBRES" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="memberCountLabel" styleClass="player-member-count"
+                                       text="0 / 5 membres" />
+                            </HBox>
+
+                            <VBox fx:id="membersContainer" spacing="8" />
+                        </VBox>
+
+                        <!-- RIGHT: Logo + Info -->
+                        <VBox fx:id="rightPanel" spacing="14" HBox.hgrow="ALWAYS"
+                              alignment="TOP_CENTER"
+                              style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
+
+                            <!-- Logo -->
+                            <StackPane alignment="CENTER" maxHeight="100" minHeight="100">
+                                <Circle fx:id="logoCircle" radius="44"
+                                        style="-fx-fill: #0d0d1a; -fx-stroke: #8B0D0D; -fx-stroke-width: 2;" />
+                                <ImageView fx:id="teamLogo" fitWidth="76" fitHeight="76"
+                                           preserveRatio="true">
+                                    <clip>
+                                        <Circle radius="38" centerX="38" centerY="38" />
+                                    </clip>
+                                </ImageView>
+                                <Text fx:id="teamIconFallback"
+                                      style="-fx-fill: #8B0D0D; -fx-font-size: 28px;"
+                                      text="▶" visible="false" />
+                            </StackPane>
+
+                            <!-- Info rows -->
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="JEU" />
+                                <Label fx:id="infoGame" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="CONTACT" />
+                                <Label fx:id="infoContact" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="STATUT" />
+                                <Label fx:id="infoStatus" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="FONDÉE LE" />
+                                <Label fx:id="infoDate" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Training Sessions -->
+                    <VBox fx:id="sessionsSection" spacing="12" visible="false" managed="false"
+                          style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"
+                                   text="📅 Séances d'Entraînement" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="btnAddSession" text="＋  Ajouter"
+                                    styleClass="player-add-session-btn"
+                                    onAction="#openAddSessionModal"
+                                    visible="false" managed="false" />
+                        </HBox>
+
+                        <VBox fx:id="sessionsContainer" spacing="12" />
+                    </VBox>
+
+                </VBox>
+
+                <!-- AUTRES ÉQUIPES overlay — initially hidden -->
+                <StackPane fx:id="innerContainer" visible="false" managed="false"
+                           style="-fx-background-color: #0d0d1a;" />
+
+            </StackPane>
+
+        </VBox>
+    </content>
+</ScrollPane>

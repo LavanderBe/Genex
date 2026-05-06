@@ -1,0 +1,297 @@
+/* ═══════════════════════════════════════════════════════════
+   PlayerTeams.css — Player-facing team views
+   Dark/gaming aesthetic — polygon buttons matching app style
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Root background ──────────────────────────────────────── */
+.player-main-content {
+    -fx-background-color: #0d0d1a;
+}
+
+/* ── Team card (list view) ────────────────────────────────── */
+.player-team-card {
+    -fx-background-color: rgba(20, 20, 40, 0.85);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 18px;
+    -fx-background-radius: 18px;
+    -fx-padding: 18px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.player-team-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.5), 14, 0, 0, 0);
+    -fx-translate-y: -2px;
+}
+
+.player-card-team-name {
+    -fx-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.player-card-info-label {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 11px;
+}
+
+.player-card-info-value {
+    -fx-fill: white;
+    -fx-font-size: 12px;
+}
+
+.player-card-logo-circle {
+    -fx-fill: #1a1a2e;
+    -fx-stroke: #8B0D0D;
+    -fx-stroke-width: 2px;
+}
+
+.player-card-logo-fallback {
+    -fx-fill: #8B0D0D;
+    -fx-font-size: 22px;
+}
+
+/* ── POLYGON BUTTON BASE ──────────────────────────────────── */
+/* All buttons use the same parallelogram shape as the modals  */
+
+/* "Voir" button — transparent with white border */
+.player-view-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-width: 1;
+}
+
+.player-view-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+/* "Rejoindre" button — red polygon */
+.player-join-btn {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 8, 0, 0, 3);
+}
+
+.player-join-btn:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 12, 0, 0, 4);
+}
+
+.player-join-btn:disabled {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+/* ── Tab buttons ──────────────────────────────────────────── */
+.player-tab-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1;
+}
+
+.player-tab-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+.player-tab-btn-active {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 8, 0, 0, 3);
+}
+
+.player-tab-btn-active:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -1;
+}
+
+/* ── Quit team button ─────────────────────────────────────── */
+.player-quit-btn {
+    -fx-background-color: rgba(220, 50, 50, 0.12);
+    -fx-text-fill: rgba(220, 50, 50, 0.9);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-border-color: rgba(220, 50, 50, 0.4);
+    -fx-border-width: 1;
+}
+
+.player-quit-btn:hover {
+    -fx-background-color: rgba(220, 50, 50, 0.25);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+/* ── Add session button ───────────────────────────────────── */
+.player-add-session-btn {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 8, 0, 0, 3);
+}
+
+.player-add-session-btn:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 12, 0, 0, 4);
+}
+
+/* ── Nav bar ──────────────────────────────────────────────── */
+.player-nav-bar {
+    -fx-background-color: rgba(20, 20, 40, 0.9);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 12px 20px;
+}
+
+.player-nav-team-name {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* ── Split panel ──────────────────────────────────────────── */
+.player-info-panel {
+    -fx-background-color: rgba(20, 20, 40, 0.7);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-spacing: 12px;
+}
+
+.player-info-label {
+    -fx-fill: rgba(255, 255, 255, 0.45);
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.player-info-value {
+    -fx-fill: white;
+    -fx-font-size: 13px;
+}
+
+.player-panel-title {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ── Member roster ────────────────────────────────────────── */
+.player-member-count {
+    -fx-text-fill: #ff4444;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* For Text nodes */
+Text.player-member-count {
+    -fx-fill: #ff4444;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.player-member-row {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 12px;
+    -fx-spacing: 10px;
+}
+
+.player-member-nickname {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.player-member-fullname {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 11px;
+}
+
+/* ── Section titles ───────────────────────────────────────── */
+.player-section-title {
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+.player-empty-state {
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* ── Scroll pane ──────────────────────────────────────────── */
+.player-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.player-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.player-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-pref-width: 6px;
+}
+
+.player-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(139, 13, 13, 0.6);
+    -fx-background-radius: 3px;
+}
+
+/* ── Logo area ────────────────────────────────────────────── */
+.player-logo-circle {
+    -fx-fill: #1a1a2e;
+    -fx-stroke: #8B0D0D;
+    -fx-stroke-width: 2px;
+}
+
+.player-logo-fallback {
+    -fx-fill: #8B0D0D;
+    -fx-font-size: 28px;
+}

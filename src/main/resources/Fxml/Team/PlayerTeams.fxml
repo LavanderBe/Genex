@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane fx:id="rootStackPane"
+           styleClass="player-main-content"
+           stylesheets="@PlayerTeams.css"
+           xmlns="http://javafx.com/javafx/26"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Team.PlayerTeamBrowserController">
+
+    <!-- Inner container: swapped between team list and team detail -->
+    <StackPane fx:id="innerContainer" />
+
+</StackPane>

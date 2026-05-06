@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Team.PlayerTeamCardController"
+      styleClass="player-team-card"
+      stylesheets="@PlayerTeams.css"
+      spacing="12"
+      prefWidth="260">
+
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16" />
+    </padding>
+
+    <!-- Logo area -->
+    <StackPane alignment="CENTER">
+        <Circle radius="36" styleClass="player-card-logo-circle" />
+        <ImageView fx:id="teamLogo" fitWidth="64" fitHeight="64" preserveRatio="true">
+            <clip>
+                <Circle radius="32" centerX="32" centerY="32" />
+            </clip>
+        </ImageView>
+        <Text fx:id="teamIconFallback" styleClass="player-card-logo-fallback" text="▶" visible="false" />
+    </StackPane>
+
+    <!-- Team name -->
+    <Text fx:id="teamName" styleClass="player-card-team-name" text="Team Name"
+          wrappingWidth="220" textAlignment="CENTER" />
+
+    <!-- Game row -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+        <Text styleClass="player-card-info-label" text="Jeu:" />
+        <Text fx:id="teamGame" styleClass="player-card-info-value" text="—" />
+    </HBox>
+
+    <!-- Contact row -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+        <Text styleClass="player-card-info-label" text="Contact:" />
+        <Text fx:id="teamContact" styleClass="player-card-info-value" text="—" />
+    </HBox>
+
+    <!-- Member count row -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+        <Text styleClass="player-card-info-label" text="Membres:" />
+        <Text fx:id="memberCount" styleClass="player-member-count" text="0 / 5" />
+    </HBox>
+
+    <!-- Action buttons -->
+    <HBox spacing="8" alignment="CENTER">
+        <Button fx:id="btnView" text="Voir" styleClass="player-view-btn"
+                onAction="#handleView" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+        <Button fx:id="btnJoin" text="Rejoindre" styleClass="player-join-btn"
+                onAction="#handleJoin" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+    </HBox>
+
+</VBox>

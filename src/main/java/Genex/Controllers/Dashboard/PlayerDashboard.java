@@ -71,7 +71,7 @@ public class PlayerDashboard {
     }
 
     @FXML private void showMain() { loadModule("PlayerMain.fxml"); }
-    @FXML private void showTeams() { loadModule("PlayerTeams.fxml"); }
+    @FXML private void showTeams() { loadModuleAbsolute("/Fxml/Team/PlayerTeams.fxml"); }
     @FXML private void showTournaments() { loadModule("PlayerTournaments.fxml"); }
     @FXML private void showTutorials() { loadModule("PlayerTutorials.fxml"); }
     @FXML private void showForums() { loadModule("PlayerForums.fxml"); }
@@ -84,6 +84,21 @@ public class PlayerDashboard {
             contentArea.getChildren().setAll(module);
         } catch (IOException e) {
             System.err.println("Module not found: " + fxmlName);
+        }
+    }
+
+    private void loadModuleAbsolute(String absolutePath) {
+        try {
+            Parent module = FXMLLoader.load(getClass().getResource(absolutePath));
+            contentArea.getChildren().setAll(module);
+            // Anchor to fill the content area
+            javafx.scene.layout.AnchorPane.setTopAnchor(module, 0.0);
+            javafx.scene.layout.AnchorPane.setBottomAnchor(module, 0.0);
+            javafx.scene.layout.AnchorPane.setLeftAnchor(module, 0.0);
+            javafx.scene.layout.AnchorPane.setRightAnchor(module, 0.0);
+        } catch (IOException e) {
+            System.err.println("Module not found: " + absolutePath);
+            e.printStackTrace();
         }
     }
 
