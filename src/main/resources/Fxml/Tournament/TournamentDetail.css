@@ -599,7 +599,6 @@
     -fx-border-width: 1;
     -fx-padding: 20 25;
     -fx-min-width: 100;
-    HBox.hgrow: ALWAYS;
 }
 
 .record-value {
