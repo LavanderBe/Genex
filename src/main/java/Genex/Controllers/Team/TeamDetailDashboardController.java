@@ -56,7 +56,6 @@ public class TeamDetailDashboardController {
     private Team team;
     private CrudTrainingSession crudTrainingSession;
     private CrudTeamMember crudTeamMember;
-    private GoogleCalendarService googleCalendarService;
     private YearMonth currentMonth;
     private String currentUserId;
     private boolean isAdmin;
@@ -69,12 +68,6 @@ public class TeamDetailDashboardController {
         System.out.println("TeamDetailDashboardController initialized");
         crudTrainingSession = new CrudTrainingSession();
         crudTeamMember = new CrudTeamMember();
-        
-        try {
-            googleCalendarService = new GoogleCalendarService();
-        } catch (Exception e) {
-            System.err.println("Google Calendar Service not available: " + e.getMessage());
-        }
         
         currentMonth = YearMonth.now();
         currentUserId = SessionManager.getInstance().getCurrentUserId();
