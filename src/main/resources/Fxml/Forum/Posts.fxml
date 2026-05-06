@@ -46,15 +46,7 @@
                         <Label text="Créez et gérez les publications du forum avec le même workflow et le même style visuel."
                                styleClass="header-desc"/>
                     </VBox>
-                    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="weather-widget">
-                        <padding>
-                            <Insets top="6" right="10" bottom="6" left="10"/>
-                        </padding>
-                        <ImageView fx:id="weatherIconView" fitHeight="22" fitWidth="22" preserveRatio="true"/>
-                        <Label fx:id="weatherLabel" text="🌡 Chargement météo..." styleClass="featured-meta, weather-text" maxWidth="220" textOverrun="ELLIPSIS"/>
-                        <Button text="↻" onAction="#handleRefreshHeaderData" styleClass="action-button, weather-refresh-button"/>
-                    </HBox>
-                    <Button text="+ NOUVEAU POST" styleClass="primary-button" onAction="#handleClearForm"/>
+                    <Button fx:id="newPostButton" text="+ NOUVEAU POST" styleClass="primary-button" onAction="#handleClearForm"/>
                 </HBox>
             </VBox>
 
@@ -97,12 +89,12 @@
 
                         <HBox spacing="20">
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="ID FORUM" styleClass="field-label"/>
-                                <TextField fx:id="forumIdField" promptText="ID du forum" styleClass="modal-input"/>
+                                <Label text="NOM DU FORUM" styleClass="field-label"/>
+                                <ComboBox fx:id="forumNameField" promptText="Sélectionner un forum" styleClass="modal-combo"/>
                             </VBox>
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="ID AUTEUR" styleClass="field-label"/>
-                                <TextField fx:id="authorIdField" promptText="ID de l'auteur" styleClass="modal-input"/>
+                                <Label text="NOM AUTEUR" styleClass="field-label"/>
+                                <ComboBox fx:id="authorNameField" promptText="Sélectionner un auteur" styleClass="modal-combo"/>
                             </VBox>
                         </HBox>
 
@@ -136,18 +128,18 @@
                             <Label text="VIDÉO (OPTIONNELLE)" styleClass="field-label"/>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <TextField fx:id="videoPathField" promptText="Aucune vidéo sélectionnée" editable="false" HBox.hgrow="ALWAYS" styleClass="modal-input"/>
-                                <Button text="📁 IMPORTER" onAction="#handleSelectVideo" styleClass="action-button, secondary-button"/>
-                                <Button text="✕ EFFACER" onAction="#handleClearVideo" styleClass="action-button, neutral-button"/>
+                                <Button fx:id="selectVideoButton" text="📁 IMPORTER" onAction="#handleSelectVideo" styleClass="action-button, secondary-button"/>
+                                <Button fx:id="clearVideoButton" text="✕ EFFACER" onAction="#handleClearVideo" styleClass="action-button, neutral-button"/>
                             </HBox>
                         </VBox>
 
                         <HBox spacing="10" alignment="CENTER_LEFT">
-                            <Button text="✓ CRÉER" onAction="#handleAddPost" styleClass="submit-button"/>
-                            <Button text="↻ METTRE À JOUR" onAction="#handleUpdatePost" styleClass="action-button, secondary-button"/>
-                            <Button text="✕ SUPPRIMER" onAction="#handleDeletePost" styleClass="action-button, danger-button"/>
-                            <Button text="⚠ SIGNALER" onAction="#handleReportPost" styleClass="action-button, warning-button"/>
-                            <Button text="👁 MASQUER" onAction="#handleHidePost" styleClass="action-button, warning-button"/>
-                            <Button text="↺ RESTAURER" onAction="#handleRestorePost" styleClass="action-button, secondary-button"/>
+                            <Button fx:id="addPostButton" text="✓ CRÉER" onAction="#handleAddPost" styleClass="submit-button"/>
+                            <Button fx:id="updatePostButton" text="↻ METTRE À JOUR" onAction="#handleUpdatePost" styleClass="action-button, secondary-button"/>
+                            <Button fx:id="deletePostButton" text="✕ SUPPRIMER" onAction="#handleDeletePost" styleClass="action-button, danger-button"/>
+                            <Button fx:id="reportPostButton" text="⚠ SIGNALER" onAction="#handleReportPost" styleClass="action-button, warning-button"/>
+                            <Button fx:id="hidePostButton" text="👁 MASQUER" onAction="#handleHidePost" styleClass="action-button, warning-button"/>
+                            <Button fx:id="restorePostButton" text="↺ RESTAURER" onAction="#handleRestorePost" styleClass="action-button, secondary-button"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button text="✖ EFFACER" onAction="#handleClearForm" styleClass="action-button, neutral-button"/>
                         </HBox>

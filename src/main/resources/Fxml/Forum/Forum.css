@@ -453,6 +453,80 @@
     -fx-padding: 10 14;
 }
 
+.reaction-emoji-button {
+    -fx-font-size: 18;
+    -fx-font-weight: 800;
+    -fx-padding: 9 13;
+    -fx-min-width: 60;
+    -fx-min-height: 44;
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255, 255, 255, 0.22);
+    -fx-border-width: 1;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(3, 8, 26, 0.48), 14, 0.14, 0, 3);
+}
+
+.reaction-emoji-button:hover {
+    -fx-opacity: 0.98;
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(163, 190, 255, 0.42), 18, 0.16, 0, 4);
+}
+
+.reaction-like {
+    -fx-background-color: linear-gradient(to bottom, #5ca4ff, #2a6de6);
+    -fx-border-color: rgba(199, 224, 255, 0.62);
+}
+
+.reaction-heart {
+    -fx-background-color: linear-gradient(to bottom, #ff86a7, #db3362);
+    -fx-border-color: rgba(255, 211, 224, 0.62);
+}
+
+.reaction-laugh {
+    -fx-background-color: linear-gradient(to bottom, #ffe78a, #f1bc35);
+    -fx-border-color: rgba(255, 236, 177, 0.65);
+}
+
+.social-logo-button {
+    -fx-font-size: 16;
+    -fx-font-weight: 800;
+    -fx-text-fill: white;
+    -fx-padding: 9 0;
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+    -fx-min-height: 40;
+    -fx-max-height: 40;
+    -fx-alignment: center;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(8, 14, 35, 0.46), 12, 0.12, 0, 2);
+}
+
+.social-logo-button:hover {
+    -fx-opacity: 0.95;
+    -fx-translate-y: -1;
+}
+
+.social-actions-row {
+    -fx-hgap: 14;
+    -fx-vgap: 10;
+}
+
+.social-x {
+    -fx-background-color: #0f1115;
+}
+
+.social-facebook {
+    -fx-background-color: #1877f2;
+}
+
+.social-linkedin {
+    -fx-background-color: #0a66c2;
+}
+
 .cards-container {
     -fx-padding: 0;
 }

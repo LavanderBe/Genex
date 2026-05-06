@@ -3,6 +3,7 @@ package Genex.Controllers.Login;
 import Genex.entities.User;
 import Genex.services.CrudUser;
 import Genex.services.UserControl;
+import Genex.utils.SessionManager;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
@@ -116,7 +117,8 @@ public class Login {
         if (cu.check_email(email)){
             User u=cu.getUser_withmail(email);
             if (u.verifyPassword(password)){
-                if (u.getRole().equals("admin"))
+                SessionManager.getInstance().setCurrentUser(u);
+                if ("ADMIN".equalsIgnoreCase(u.getRole()))
                 {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
                     Parent root = null;

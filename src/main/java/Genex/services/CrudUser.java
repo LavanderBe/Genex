@@ -6,6 +6,8 @@ import Genex.utils.Myconnection;
 
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrudUser implements ICrud<User> {
     public CrudUser() {
@@ -101,6 +103,7 @@ public class CrudUser implements ICrud<User> {
                         rs.getString("email"),
                         rs.getString("password_hash"),
                         rs.getString("role"));
+                u.setId(rs.getString("id"));
                 return u;
             }
 
@@ -178,12 +181,37 @@ public class CrudUser implements ICrud<User> {
                         rs.getString("salt"),
                         rs.getString("password_hash"),
                         rs.getString("role"));
+                u.setId(rs.getString("id"));
                 return u;
             }
             else return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String requete = "SELECT id, username, email, role, created_at FROM users";
+        try {
+            Statement st = Myconnection.getInstance().getCnx().createStatement();
+            ResultSet rs = st.executeQuery(requete);
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getString("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                if (createdAt != null) {
+                    user.setCreated_at(createdAt.toLocalDateTime());
+                }
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
     }
 
 }

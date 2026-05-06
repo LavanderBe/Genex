@@ -1,9 +1,13 @@
 package Genex.Controllers.Forum;
 
+import Genex.entities.Forum;
 import Genex.entities.Posts;
+import Genex.entities.User;
+import Genex.services.CrudForum;
 import Genex.services.CrudPosts;
+import Genex.services.CrudUser;
 import Genex.services.NewsService;
-import Genex.services.TemperatureService;
+import Genex.utils.SessionManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +43,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -59,9 +64,9 @@ public class PostsController {
     @FXML
     private ComboBox<String> moderationFilterField;
     @FXML
-    private TextField forumIdField;
+    private ComboBox<String> forumNameField;
     @FXML
-    private TextField authorIdField;
+    private ComboBox<String> authorNameField;
     @FXML
     private TextField titleField;
     @FXML
@@ -85,26 +90,54 @@ public class PostsController {
     @FXML
     private Label featuredDescLabel;
     @FXML
-    private Label weatherLabel;
-    @FXML
-    private ImageView weatherIconView;
-    @FXML
     private HBox newsFeedContainer;
     @FXML
     private FlowPane postCardsContainer;
+    @FXML
+    private Button newPostButton;
+    @FXML
+    private Button addPostButton;
+    @FXML
+    private Button updatePostButton;
+    @FXML
+    private Button deletePostButton;
+    @FXML
+    private Button reportPostButton;
+    @FXML
+    private Button hidePostButton;
+    @FXML
+    private Button restorePostButton;
+    @FXML
+    private Button selectVideoButton;
+    @FXML
+    private Button clearVideoButton;
 
     private final CrudPosts crudPosts = new CrudPosts();
-    private final TemperatureService temperatureService = new TemperatureService();
+    private final CrudForum crudForum = new CrudForum();
+    private final CrudUser crudUser = new CrudUser();
     private final NewsService newsService = new NewsService();
     private final List<Posts> posts = new ArrayList<>();
+    private final List<Forum> forums = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
     private final Map<String, ModerationState> moderationByPostId = new HashMap<>();
     private final Map<String, ReactionCounter> reactionsByPostId = new HashMap<>();
+    private final Map<String, String> forumNameById = new HashMap<>();
+    private final Map<String, String> forumIdByName = new LinkedHashMap<>();
+    private final Map<String, String> authorNameById = new HashMap<>();
+    private final Map<String, String> authorIdByName = new LinkedHashMap<>();
+    private final Map<String, Long> userPostTimestamps = new HashMap<>();
+    private final Map<String, Long> userBanUntil = new HashMap<>();
+    private static final int CONSECUTIVE_POSTS_LIMIT = 3;
+    private static final long BAN_DURATION_MINUTES = 30;
     private static final Set<String> SPAM_KEYWORDS = Set.of(
         "free", "giveaway", "urgent", "winner", "bitcoin", "promo", "click", "offer"
     );
     private static final Set<String> FILTERED_SPEECH_KEYWORDS = Set.of(
         "idiot", "imbecile", "stupid", "hate", "racist", "violent", "con", "merde"
     );
+    private boolean adminMode;
+    private String currentUserId;
+    private String currentUserName;
     private String selectedPostId;
 
     private enum ModerationState {
@@ -127,27 +160,24 @@ public class PostsController {
     private enum ReactionType {
         LIKE,
         HEART,
-        LAUGH,
-        CLAP
+        LAUGH
     }
 
     private static final class ReactionCounter {
         private int likes;
         private int hearts;
         private int laughs;
-        private int claps;
 
         private void increment(ReactionType type) {
             switch (type) {
                 case LIKE -> likes++;
                 case HEART -> hearts++;
                 case LAUGH -> laughs++;
-                case CLAP -> claps++;
             }
         }
 
         private String summary() {
-            return "Like " + likes + " • Love " + hearts + " • Haha " + laughs + " • Clap " + claps;
+            return "👍 " + likes + " • ❤️ " + hearts + " • 😂 " + laughs;
         }
     }
 
@@ -163,10 +193,14 @@ public class PostsController {
 
     @FXML
     public void initialize() {
+        resolveCurrentRole();
         setupCombos();
+        loadForumCatalog();
+        loadAuthorCatalog();
         setupListeners();
         loadPosts();
         clearFormFields();
+        applyRolePermissions();
         loadHeaderInfo();
     }
 
@@ -196,7 +230,7 @@ public class PostsController {
 
     @FXML
     private void handleRefreshHeaderData(ActionEvent event) {
-        loadHeaderInfo();
+        loadNews();
     }
 
     @FXML
@@ -204,6 +238,20 @@ public class PostsController {
         if (!validatePostForm()) {
             return;
         }
+
+        String authorId = resolveAuthorForCreate();
+        if (isUserBanned(authorId)) {
+            showAlert(Alert.AlertType.WARNING, "Accès refusé", "Cet auteur est banni temporairement pour spam (30 min).");
+            return;
+        }
+
+        int consecutiveCount = countConsecutivePostsByAuthor(authorId);
+        if (consecutiveCount >= CONSECUTIVE_POSTS_LIMIT) {
+            banUserTemporarily(authorId);
+            showAlert(Alert.AlertType.WARNING, "SPAM DÉTECTÉ", "Auteur banni pour 30 minutes : 3 posts consécutifs détectés.");
+            return;
+        }
+
         try {
             String rawTitle = titleField.getText().trim();
             String rawBody = bodyArea.getText() == null ? "" : bodyArea.getText().trim();
@@ -213,14 +261,16 @@ public class PostsController {
             boolean isSpam = isSpamContent(cleanTitle, cleanBody);
 
             Posts post = new Posts(
-                forumIdField.getText().trim(),
-                authorIdField.getText().trim(),
+                resolveForumIdForCreate(),
+                authorId,
                 cleanTitle,
                 cleanBody
             );
             post.setCreatedAt(LocalDateTime.now());
             post.setUpdatedAt(LocalDateTime.now());
             crudPosts.addEntity(post);
+
+            recordUserPostTimestamp(authorId);
 
             if (!isBlank(post.getId())) {
                 moderationByPostId.put(post.getId(), isSpam ? ModerationState.SPAM : ModerationState.VISIBLE);
@@ -244,6 +294,9 @@ public class PostsController {
 
     @FXML
     private void handleUpdatePost(ActionEvent event) {
+        if (!canManageSelectedPost("modifier ce post")) {
+            return;
+        }
         if (selectedPostId == null || selectedPostId.isBlank()) {
             showAlert(Alert.AlertType.WARNING, "Sélection requise", "Sélectionne un post à modifier.");
             return;
@@ -285,6 +338,9 @@ public class PostsController {
 
     @FXML
     private void handleDeletePost(ActionEvent event) {
+        if (!canManageSelectedPost("supprimer ce post")) {
+            return;
+        }
         if (selectedPostId == null || selectedPostId.isBlank()) {
             showAlert(Alert.AlertType.WARNING, "Sélection requise", "Sélectionne un post à supprimer.");
             return;
@@ -316,6 +372,9 @@ public class PostsController {
 
     @FXML
     private void handleHidePost(ActionEvent event) {
+        if (!requireAdminAction("masquer un post")) {
+            return;
+        }
         if (isBlank(selectedPostId)) {
             showAlert(Alert.AlertType.WARNING, "Sélection requise", "Sélectionne un post à masquer.");
             return;
@@ -327,6 +386,9 @@ public class PostsController {
 
     @FXML
     private void handleRestorePost(ActionEvent event) {
+        if (!requireAdminAction("restaurer un post")) {
+            return;
+        }
         if (isBlank(selectedPostId)) {
             showAlert(Alert.AlertType.WARNING, "Sélection requise", "Sélectionne un post à restaurer.");
             return;
@@ -348,38 +410,12 @@ public class PostsController {
         typeFilterField.setValue("TOUS");
         statusFilterField.setValue("TOUS");
         moderationFilterField.setValue("TOUS");
+
+        authorNameField.setEditable(true);
     }
 
     private void loadHeaderInfo() {
-        loadTemperature();
         loadNews();
-    }
-
-    private void loadTemperature() {
-        weatherLabel.setText("🌡 Chargement météo...");
-        weatherIconView.setImage(null);
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                TemperatureService.TemperatureSnapshot snapshot = temperatureService.getCurrentForTunis();
-                Image weatherImage = new Image(temperatureService.iconUrlForCode(snapshot.weatherCode()), true);
-                Platform.runLater(() -> {
-                    weatherLabel.setText(temperatureService.formatForUi(snapshot));
-                    weatherIconView.setImage(weatherImage);
-                });
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                Platform.runLater(() -> {
-                    weatherLabel.setText("🌡 Météo indisponible");
-                    weatherIconView.setImage(null);
-                });
-            } catch (IOException | IllegalStateException e) {
-                Platform.runLater(() -> {
-                    weatherLabel.setText("🌡 Météo indisponible");
-                    weatherIconView.setImage(null);
-                });
-            }
-        });
     }
 
     private void loadNews() {
@@ -522,7 +558,7 @@ public class PostsController {
     private boolean matchesFilters(Posts post) {
         String search = normalize(searchField.getText());
         if (!search.isBlank()) {
-            String haystack = normalize(post.getTitle()) + " " + normalize(post.getBody()) + " " + normalize(post.getAuthorId()) + " " + normalize(post.getForumId());
+            String haystack = normalize(post.getTitle()) + " " + normalize(post.getBody()) + " " + normalize(authorDisplayName(post)) + " " + normalize(forumDisplayName(post));
             if (!haystack.contains(search)) {
                 return false;
             }
@@ -557,13 +593,13 @@ public class PostsController {
         body.setWrapText(true);
         body.setMaxWidth(390);
 
-        Label meta = new Label("Forum " + safe(post.getForumId()) + " • Auteur " + safe(post.getAuthorId()) + " • ID " + safe(post.getId()));
+        Label meta = new Label("Forum " + forumDisplayName(post) + " • Auteur " + authorDisplayName(post) + " • ID " + safe(post.getId()));
         meta.getStyleClass().add("forum-card-meta");
 
         Label moderation = new Label("Modération: " + moderationLabel(post));
         moderation.getStyleClass().add("forum-card-meta");
 
-        Label reactions = new Label("Réactions: " + reactionSummary(post));
+        Label reactions = new Label(reactionSummary(post));
         reactions.getStyleClass().add("forum-card-meta");
 
         Button editBtn = new Button("Modifier");
@@ -581,24 +617,30 @@ public class PostsController {
             handleDeletePost(new ActionEvent());
         });
 
-        Button likeBtn = createReactionButton("Like", post, ReactionType.LIKE);
-        Button heartBtn = createReactionButton("Love", post, ReactionType.HEART);
-        Button laughBtn = createReactionButton("Haha", post, ReactionType.LAUGH);
-        Button clapBtn = createReactionButton("Clap", post, ReactionType.CLAP);
+        Button likeBtn = createReactionButton("👍", post, ReactionType.LIKE, "reaction-like");
+        Button heartBtn = createReactionButton("❤️", post, ReactionType.HEART, "reaction-heart");
+        Button laughBtn = createReactionButton("😂", post, ReactionType.LAUGH, "reaction-laugh");
 
-        Button repostXBtn = createRepostButton("X", post, "X");
-        Button repostFacebookBtn = createRepostButton("Facebook", post, "FACEBOOK");
-        Button repostLinkedInBtn = createRepostButton("LinkedIn", post, "LINKEDIN");
+        Button repostXBtn = createRepostButton("𝕏", post, "X", "social-x");
+        Button repostFacebookBtn = createRepostButton("f", post, "FACEBOOK", "social-facebook");
+        Button repostLinkedInBtn = createRepostButton("in", post, "LINKEDIN", "social-linkedin");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox actions = new HBox(8, editBtn, spacer, deleteBtn);
+        HBox actions = new HBox(8);
+        if (canManagePost(post)) {
+            actions.getChildren().addAll(editBtn, spacer, deleteBtn);
+        } else {
+            Label readOnlyBadge = new Label("Lecture seule");
+            readOnlyBadge.getStyleClass().add("forum-card-meta");
+            actions.getChildren().add(readOnlyBadge);
+        }
         actions.setAlignment(Pos.CENTER_LEFT);
-        FlowPane reactionActions = new FlowPane(8, 8, likeBtn, heartBtn, laughBtn, clapBtn);
+        FlowPane reactionActions = new FlowPane(8, 8, likeBtn, heartBtn, laughBtn);
         reactionActions.getStyleClass().add("post-actions-row");
-        FlowPane repostActions = new FlowPane(8, 8, repostXBtn, repostFacebookBtn, repostLinkedInBtn);
-        repostActions.getStyleClass().add("post-actions-row");
+        FlowPane repostActions = new FlowPane(14, 10, repostXBtn, repostFacebookBtn, repostLinkedInBtn);
+        repostActions.getStyleClass().addAll("post-actions-row", "social-actions-row");
 
         card.getChildren().addAll(title, body, meta, moderation, reactions, reactionActions, repostActions, actions);
         return card;
@@ -606,8 +648,8 @@ public class PostsController {
 
     private void selectPost(Posts post) {
         selectedPostId = post.getId();
-        forumIdField.setText(safe(post.getForumId()));
-        authorIdField.setText(safe(post.getAuthorId()));
+        forumNameField.setValue(forumNameForId(post.getForumId()));
+        authorNameField.setValue(authorNameForId(post.getAuthorId()));
         titleField.setText(safe(post.getTitle()));
         bodyArea.setText(safe(post.getBody()));
     }
@@ -625,7 +667,7 @@ public class PostsController {
         featuredTitleLabel.setText(safe(featured.getTitle()));
         featuredMoodLabel.setText("🔥 ACTIF");
         featuredTrendLabel.setText("TENDANCE " + filtered.size());
-        featuredMetaLabel.setText("Forum " + safe(featured.getForumId()) + " • Par " + safe(featured.getAuthorId()));
+        featuredMetaLabel.setText("Forum " + forumDisplayName(featured) + " • Par " + authorDisplayName(featured));
         featuredDescLabel.setText(safe(featured.getBody()).isBlank() ? "Aucun contenu." : safe(featured.getBody()));
     }
 
@@ -648,7 +690,7 @@ public class PostsController {
 
     private String reactionSummary(Posts post) {
         if (isBlank(post.getId())) {
-            return "Like 0 • Love 0 • Haha 0 • Clap 0";
+            return "👍 0 • ❤️ 0 • 😂 0";
         }
         return reactionsByPostId.computeIfAbsent(post.getId(), key -> new ReactionCounter()).summary();
     }
@@ -660,10 +702,10 @@ public class PostsController {
         return moderationByPostId.computeIfAbsent(post.getId(), key -> ModerationState.VISIBLE).label();
     }
 
-    private Button createReactionButton(String text, Posts post, ReactionType reactionType) {
+    private Button createReactionButton(String text, Posts post, ReactionType reactionType, String variantClass) {
         Button button = new Button(text);
-        button.getStyleClass().addAll("action-button", "neutral-button");
-        button.setMinWidth(92);
+        button.getStyleClass().addAll("action-button", "reaction-emoji-button", variantClass);
+        button.setMinWidth(52);
         button.setOnAction(e -> {
             e.consume();
             if (isBlank(post.getId())) {
@@ -675,10 +717,10 @@ public class PostsController {
         return button;
     }
 
-    private Button createRepostButton(String text, Posts post, String network) {
+    private Button createRepostButton(String text, Posts post, String network, String logoClass) {
         Button button = new Button(text);
-        button.getStyleClass().addAll("action-button", "secondary-button");
-        button.setMinWidth(120);
+        button.getStyleClass().addAll("action-button", "social-logo-button", logoClass);
+        button.setMinWidth(44);
         button.setOnAction(e -> {
             e.consume();
             repostToSocial(post, network);
@@ -772,12 +814,20 @@ public class PostsController {
     }
 
     private boolean validatePostForm() {
-        if (isBlank(forumIdField.getText())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID forum est obligatoire.");
+        if (isBlank(forumNameField.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le nom du forum est obligatoire.");
             return false;
         }
-        if (isBlank(authorIdField.getText())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID auteur est obligatoire.");
+        if (isBlank(resolveForumIdForCreate())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le forum sélectionné est introuvable.");
+            return false;
+        }
+        if (isBlank(authorNameField.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le nom auteur est obligatoire.");
+            return false;
+        }
+        if (isBlank(resolveAuthorForCreate())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "L'auteur sélectionné est introuvable.");
             return false;
         }
         if (isBlank(titleField.getText())) {
@@ -789,8 +839,20 @@ public class PostsController {
 
     private void clearFormFields() {
         selectedPostId = null;
-        forumIdField.clear();
-        authorIdField.clear();
+        if (!forumNameField.getItems().isEmpty()) {
+            forumNameField.setValue(forumNameField.getItems().get(0));
+        } else {
+            forumNameField.setValue(null);
+        }
+        if (adminMode) {
+            if (!authorNameField.getItems().isEmpty()) {
+                authorNameField.setValue(authorNameField.getItems().get(0));
+            } else {
+                authorNameField.setValue(null);
+            }
+        } else {
+            authorNameField.setValue(resolveAuthorNameForCurrentUser());
+        }
         titleField.clear();
         bodyArea.clear();
         tagField.clear();
@@ -823,6 +885,189 @@ public class PostsController {
         return value == null ? "" : value;
     }
 
+    private void resolveCurrentRole() {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        adminMode = currentUser != null && "ADMIN".equalsIgnoreCase(currentUser.getRole());
+        currentUserId = currentUser != null ? currentUser.getId() : null;
+        currentUserName = currentUser != null ? currentUser.getUsername() : null;
+    }
+
+    private void applyRolePermissions() {
+        if (adminMode) {
+            return;
+        }
+        hideNode(hidePostButton);
+        hideNode(restorePostButton);
+        forumNameField.setDisable(false);
+        authorNameField.setDisable(true);
+        authorNameField.setValue(resolveAuthorNameForCurrentUser());
+    }
+
+    private boolean requireAdminAction(String actionLabel) {
+        if (adminMode) {
+            return true;
+        }
+        showAlert(Alert.AlertType.WARNING, "Permission refusée", "Action réservée à l'administrateur: " + actionLabel + ".");
+        return false;
+    }
+
+    private boolean canManageSelectedPost(String actionLabel) {
+        if (isBlank(selectedPostId)) {
+            return true;
+        }
+        Posts selectedPost = findPostById(selectedPostId);
+        if (selectedPost == null) {
+            return true;
+        }
+        if (canManagePost(selectedPost)) {
+            return true;
+        }
+        showAlert(Alert.AlertType.WARNING, "Permission refusée", "Vous n'avez pas la permission de " + actionLabel + ".");
+        return false;
+    }
+
+    private Posts findPostById(String postId) {
+        for (Posts post : posts) {
+            if (postId.equals(post.getId())) {
+                return post;
+            }
+        }
+        return null;
+    }
+
+    private boolean canManagePost(Posts post) {
+        if (adminMode) {
+            return true;
+        }
+        return currentUserId != null && currentUserId.equals(post.getAuthorId());
+    }
+
+    private String resolveAuthorForCreate() {
+        String selectedAuthorName = authorNameField.getValue();
+        if (isBlank(selectedAuthorName)) {
+            return "";
+        }
+
+        if (adminMode) {
+            String authorId = authorIdByName.get(selectedAuthorName);
+            if (!isBlank(authorId)) {
+                return authorId;
+            }
+            if (selectedAuthorName.length() > 2) {
+                return selectedAuthorName;
+            }
+            return "";
+        }
+
+        if (!isBlank(currentUserId)) {
+            return currentUserId;
+        }
+        if (!isBlank(currentUserName)) {
+            return safe(authorIdByName.get(currentUserName));
+        }
+        return "";
+    }
+
+    private void loadForumCatalog() {
+        forums.clear();
+        forumNameById.clear();
+        forumIdByName.clear();
+
+        forums.addAll(crudForum.getAllForums());
+        for (Forum forum : forums) {
+            if (isBlank(forum.getId()) || isBlank(forum.getTitle())) {
+                continue;
+            }
+            forumNameById.put(forum.getId(), forum.getTitle());
+            forumIdByName.putIfAbsent(forum.getTitle(), forum.getId());
+        }
+
+        forumNameField.getItems().setAll(forumIdByName.keySet());
+    }
+
+    private void loadAuthorCatalog() {
+        users.clear();
+        authorNameById.clear();
+        authorIdByName.clear();
+
+        users.addAll(crudUser.getAllUsers());
+        for (User user : users) {
+            if (isBlank(user.getId()) || isBlank(user.getUsername())) {
+                continue;
+            }
+            authorNameById.put(user.getId(), user.getUsername());
+            authorIdByName.putIfAbsent(user.getUsername(), user.getId());
+        }
+        authorNameField.getItems().setAll(authorIdByName.keySet());
+    }
+
+    private String resolveForumIdForCreate() {
+        String selectedForumName = forumNameField.getValue();
+        if (isBlank(selectedForumName)) {
+            return "";
+        }
+        return safe(forumIdByName.get(selectedForumName));
+    }
+
+    private String forumDisplayName(Posts post) {
+        String name = forumNameForId(post.getForumId());
+        if (!isBlank(name)) {
+            return name;
+        }
+        return "Forum inconnu";
+    }
+
+    private String authorDisplayName(Posts post) {
+        String name = authorNameForId(post.getAuthorId());
+        if (!isBlank(name)) {
+            return name;
+        }
+        return "Auteur inconnu";
+    }
+
+    private String forumNameForId(String forumId) {
+        if (isBlank(forumId)) {
+            return "";
+        }
+        String name = forumNameById.get(forumId);
+        if (!isBlank(name)) {
+            return name;
+        }
+        return "";
+    }
+
+    private String authorNameForId(String authorId) {
+        if (isBlank(authorId)) {
+            return "";
+        }
+        String name = authorNameById.get(authorId);
+        if (!isBlank(name)) {
+            return name;
+        }
+        if (authorIdByName.containsKey(authorId)) {
+            return authorId;
+        }
+        return "";
+    }
+
+    private String resolveAuthorNameForCurrentUser() {
+        if (!isBlank(currentUserName)) {
+            return currentUserName;
+        }
+        if (!isBlank(currentUserId)) {
+            return authorNameForId(currentUserId);
+        }
+        return null;
+    }
+
+    private void hideNode(Node node) {
+        if (node == null) {
+            return;
+        }
+        node.setVisible(false);
+        node.setManaged(false);
+    }
+
     private void switchView(String fxmlPath) {
         try {
             Parent view = FXMLLoader.load(getClass().getResource(fxmlPath));
@@ -833,6 +1078,52 @@ public class PostsController {
             AnchorPane.setLeftAnchor(view, 0.0);
         } catch (IOException e) {
             throw new RuntimeException("Unable to load view: " + fxmlPath, e);
+        }
+    }
+
+    private boolean isUserBanned(String authorId) {
+        if (isBlank(authorId)) {
+            return false;
+        }
+        Long banUntil = userBanUntil.get(authorId);
+        if (banUntil == null) {
+            return false;
+        }
+        long now = System.currentTimeMillis();
+        if (now > banUntil) {
+            userBanUntil.remove(authorId);
+            return false;
+        }
+        return true;
+    }
+
+    private void banUserTemporarily(String authorId) {
+        if (isBlank(authorId)) {
+            return;
+        }
+        long banUntil = System.currentTimeMillis() + (BAN_DURATION_MINUTES * 60 * 1000);
+        userBanUntil.put(authorId, banUntil);
+    }
+
+    private int countConsecutivePostsByAuthor(String authorId) {
+        if (isBlank(authorId)) {
+            return 0;
+        }
+        int count = 0;
+        for (int i = posts.size() - 1; i >= 0 && count < CONSECUTIVE_POSTS_LIMIT; i--) {
+            Posts post = posts.get(i);
+            if (authorId.equals(post.getAuthorId())) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+
+    private void recordUserPostTimestamp(String authorId) {
+        if (!isBlank(authorId)) {
+            userPostTimestamps.put(authorId, System.currentTimeMillis());
         }
     }
 }

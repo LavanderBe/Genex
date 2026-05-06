@@ -1,5 +1,6 @@
 package Genex.Controllers.Dashboard;
 
+import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -175,6 +176,7 @@ public class Dashboard {
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
+            SessionManager.getInstance().logout();
             Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

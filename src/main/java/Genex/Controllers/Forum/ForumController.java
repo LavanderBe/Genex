@@ -1,9 +1,12 @@
 package Genex.Controllers.Forum;
 
 import Genex.entities.Forum;
+import Genex.entities.User;
 import Genex.services.CrudForum;
+import Genex.services.GroqService;
 import Genex.services.NewsService;
 import Genex.services.TemperatureService;
+import Genex.utils.SessionManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -77,19 +80,45 @@ public class ForumController {
     private HBox newsFeedContainer;
     @FXML
     private FlowPane forumCardsContainer;
+    @FXML
+    private Button newForumButton;
+    @FXML
+    private Button addForumButton;
+    @FXML
+    private Button updateForumButton;
+    @FXML
+    private Button deleteForumButton;
+    @FXML
+    private Button pinForumButton;
+    @FXML
+    private Button resolveForumButton;
+    @FXML
+    private Button reportForumButton;
+    @FXML
+    private Button hideForumButton;
+    @FXML
+    private Button restoreForumButton;
+    @FXML
+    private Button generateDescButton;
+    @FXML
+    private VBox forumManagementCard;
 
     private final CrudForum crudForum = new CrudForum();
     private final TemperatureService temperatureService = new TemperatureService();
     private final NewsService newsService = new NewsService();
+    private final GroqService groqService = new GroqService();
     private final List<Forum> forums = new ArrayList<>();
+    private boolean adminMode;
     private String selectedForumId;
 
     @FXML
     public void initialize() {
+        resolveCurrentRole();
         setupCombos();
         setupListeners();
         loadForums();
         clearFormFields();
+        applyRolePermissions();
         loadHeaderInfo();
     }
 
@@ -115,14 +144,17 @@ public class ForumController {
 
     @FXML
     private void handleAddForum(ActionEvent event) {
+        if (!requireAdminAction("créer un forum")) {
+            return;
+        }
         if (!validateForumForm()) {
             return;
         }
         try {
             Forum forum = new Forum(
-                titleField.getText().trim(),
-                descriptionArea.getText() == null ? "" : descriptionArea.getText().trim(),
-                createdByField.getText().trim()
+                    titleField.getText().trim(),
+                    descriptionArea.getText() == null ? "" : descriptionArea.getText().trim(),
+                    createdByField.getText().trim()
             );
             forum.setCreatedAt(LocalDateTime.now());
             crudForum.addEntity(forum);
@@ -135,7 +167,46 @@ public class ForumController {
     }
 
     @FXML
+    private void handleGenerateDescription(ActionEvent event) {
+        if (titleField.getText() == null || titleField.getText().isBlank()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le titre du forum est requis pour générer une description.");
+            return;
+        }
+        
+        String title = titleField.getText().trim();
+        generateDescButton.setDisable(true);
+        generateDescButton.setText("⏳ EN COURS...");
+        
+        CompletableFuture.supplyAsync(() -> {
+            System.out.println("[GROQ] Demande de génération pour: " + title);
+            return groqService.generateForumDescription(title);
+        })
+        .thenAccept(generatedDesc -> {
+            Platform.runLater(() -> {
+                System.out.println("[GROQ] Réponse reçue: " + generatedDesc);
+                descriptionArea.setText(generatedDesc);
+                generateDescButton.setDisable(false);
+                generateDescButton.setText("✨ GÉNÉRER");
+                showAlert(Alert.AlertType.INFORMATION, "Succès ✓", "Description générée par IA Groq !");
+            });
+        })
+        .exceptionally(e -> {
+            Platform.runLater(() -> {
+                System.err.println("[GROQ] Erreur: " + e.getMessage());
+                e.printStackTrace();
+                generateDescButton.setDisable(false);
+                generateDescButton.setText("✨ GÉNÉRER");
+                showAlert(Alert.AlertType.ERROR, "Erreur Groq", "Erreur: " + e.getMessage());
+            });
+            return null;
+        });
+    }
+
+    @FXML
     private void handleUpdateForum(ActionEvent event) {
+        if (!requireAdminAction("modifier un forum")) {
+            return;
+        }
         if (selectedForumId == null || selectedForumId.isBlank()) {
             showAlert(Alert.AlertType.WARNING, "Sélection requise", "Sélectionne un forum à modifier.");
             return;
@@ -159,6 +230,9 @@ public class ForumController {
 
     @FXML
     private void handleDeleteForum(ActionEvent event) {
+        if (!requireAdminAction("supprimer un forum")) {
+            return;
+        }
         if (selectedForumId == null || selectedForumId.isBlank()) {
             showAlert(Alert.AlertType.WARNING, "Sélection requise", "Sélectionne un forum à supprimer.");
             return;
@@ -177,11 +251,17 @@ public class ForumController {
 
     @FXML
     private void handleTogglePin(ActionEvent event) {
+        if (!requireAdminAction("épingler un forum")) {
+            return;
+        }
         showAlert(Alert.AlertType.INFORMATION, "Info", "Le statut Pin est visuel pour le moment.");
     }
 
     @FXML
     private void handleMarkResolved(ActionEvent event) {
+        if (!requireAdminAction("marquer un forum résolu")) {
+            return;
+        }
         topicStatusField.setValue("RÉSOLU");
         showAlert(Alert.AlertType.INFORMATION, "Info", "Statut local réglé sur RÉSOLU.");
     }
@@ -194,12 +274,18 @@ public class ForumController {
 
     @FXML
     private void handleHideForum(ActionEvent event) {
+        if (!requireAdminAction("masquer un forum")) {
+            return;
+        }
         moderationFilterField.setValue("MASQUÉ");
         showAlert(Alert.AlertType.INFORMATION, "Info", "Masquage local appliqué.");
     }
 
     @FXML
     private void handleRestoreForum(ActionEvent event) {
+        if (!requireAdminAction("restaurer un forum")) {
+            return;
+        }
         moderationFilterField.setValue("TOUS");
         showAlert(Alert.AlertType.INFORMATION, "Info", "Restauration locale appliquée.");
     }
@@ -442,7 +528,14 @@ public class ForumController {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox actions = new HBox(8, editBtn, spacer, deleteBtn);
+        HBox actions = new HBox(8);
+        if (adminMode) {
+            actions.getChildren().addAll(editBtn, spacer, deleteBtn);
+        } else {
+            Label readOnlyBadge = new Label("Lecture seule");
+            readOnlyBadge.getStyleClass().add("forum-card-meta");
+            actions.getChildren().add(readOnlyBadge);
+        }
         actions.setAlignment(Pos.CENTER_LEFT);
 
         card.getChildren().addAll(title, desc, meta, actions);
@@ -517,6 +610,49 @@ public class ForumController {
 
     private String safe(String value) {
         return value == null ? "" : value;
+    }
+
+    private void resolveCurrentRole() {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        adminMode = currentUser != null && "ADMIN".equalsIgnoreCase(currentUser.getRole());
+    }
+
+    private void applyRolePermissions() {
+        if (adminMode) {
+            return;
+        }
+        hideNode(addForumButton);
+        hideNode(updateForumButton);
+        hideNode(deleteForumButton);
+        hideNode(newForumButton);
+        hideNode(forumManagementCard);
+        hideNode(pinForumButton);
+        hideNode(resolveForumButton);
+        hideNode(reportForumButton);
+        hideNode(hideForumButton);
+        hideNode(restoreForumButton);
+        titleField.setEditable(false);
+        createdByField.setEditable(false);
+        descriptionArea.setEditable(false);
+        categoryField.setDisable(true);
+        topicStatusField.setDisable(true);
+        pinnedField.setDisable(true);
+    }
+
+    private boolean requireAdminAction(String actionLabel) {
+        if (adminMode) {
+            return true;
+        }
+        showAlert(Alert.AlertType.WARNING, "Permission refusée", "Action réservée à l'administrateur: " + actionLabel + ".");
+        return false;
+    }
+
+    private void hideNode(Node node) {
+        if (node == null) {
+            return;
+        }
+        node.setVisible(false);
+        node.setManaged(false);
     }
 
     private void switchView(String fxmlPath) {

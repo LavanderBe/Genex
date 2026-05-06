@@ -1,15 +1,16 @@
 package Genex.Controllers.Dashboard;
 
-//import Genex.services.UserSession;
+import Genex.entities.User;
+import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -31,7 +32,10 @@ public class PlayerDashboard {
 
     @FXML
     public void initialize() {
-        //gotta make a usersessionclass and replace the profile topleft thing with the current user
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        if (currentUser != null && sessionUser != null) {
+            sessionUser.setText(currentUser.getUsername());
+        }
         startPingAnimation();
     }
 
@@ -67,31 +71,64 @@ public class PlayerDashboard {
     @FXML
     private void handleProfileClick() {
         System.out.println("Switching to Profile Module...");
-        showProfile();
+        loadModule("PlayerProfile.fxml");
     }
 
-    @FXML private void showMain() { loadModule("PlayerMain.fxml"); }
-    @FXML private void showTeams() { loadModule("PlayerTeams.fxml"); }
-    @FXML private void showTournaments() { loadModule("PlayerTournaments.fxml"); }
-    @FXML private void showTutorials() { loadModule("PlayerTutorials.fxml"); }
-    @FXML private void showForums() { loadModule("PlayerForums.fxml"); }
-    @FXML private void showProfile() { loadModule("PlayerProfile.fxml"); }
-    @FXML private void showBoutique() {loadModule("Boutique.fxml");}
+    @FXML private void showMain(ActionEvent event) { activateSidebarButton(event); loadModule("PlayerMain.fxml"); }
+    @FXML private void showTeams(ActionEvent event) { activateSidebarButton(event); loadModule("PlayerTeams.fxml"); }
+    @FXML private void showTournaments(ActionEvent event) { activateSidebarButton(event); loadModule("PlayerTournaments.fxml"); }
+    @FXML private void showTutorials(ActionEvent event) { activateSidebarButton(event); loadModule("PlayerTutorials.fxml"); }
+    @FXML private void showForums(ActionEvent event) { activateSidebarButton(event); loadAbsoluteModule("/Fxml/Forum/Forum.fxml"); }
+    @FXML private void showProfile(ActionEvent event) { activateSidebarButton(event); loadModule("PlayerProfile.fxml"); }
+    @FXML private void showBoutique(ActionEvent event) { activateSidebarButton(event); loadModule("Boutique.fxml"); }
 
     private void loadModule(String fxmlName) {
         try {
             Parent module = FXMLLoader.load(getClass().getResource(fxmlName));
             contentArea.getChildren().setAll(module);
+            AnchorPane.setTopAnchor(module, 0.0);
+            AnchorPane.setBottomAnchor(module, 0.0);
+            AnchorPane.setLeftAnchor(module, 0.0);
+            AnchorPane.setRightAnchor(module, 0.0);
         } catch (IOException e) {
             System.err.println("Module not found: " + fxmlName);
         }
     }
 
+    private void activateSidebarButton(ActionEvent event) {
+        if (event.getSource() instanceof Button clickedButton) {
+            for (Node node : sidebarContainer.lookupAll(".nav-button, .nav-button-active")) {
+                if (node instanceof Button btn) {
+                    btn.getStyleClass().remove("nav-button-active");
+                    if (!btn.getStyleClass().contains("nav-button")) {
+                        btn.getStyleClass().add("nav-button");
+                    }
+                }
+            }
+            clickedButton.getStyleClass().remove("nav-button");
+            if (!clickedButton.getStyleClass().contains("nav-button-active")) {
+                clickedButton.getStyleClass().add("nav-button-active");
+            }
+        }
+    }
+
+    private void loadAbsoluteModule(String fxmlPath) {
+        try {
+            Parent module = FXMLLoader.load(getClass().getResource(fxmlPath));
+            contentArea.getChildren().setAll(module);
+            AnchorPane.setTopAnchor(module, 0.0);
+            AnchorPane.setBottomAnchor(module, 0.0);
+            AnchorPane.setLeftAnchor(module, 0.0);
+            AnchorPane.setRightAnchor(module, 0.0);
+        } catch (IOException e) {
+            System.err.println("Module not found: " + fxmlPath);
+        }
+    }
+
     @FXML
     private void handleLogout(ActionEvent event) {
-        //gotta make a user session class for better security will work on that later on
-       // UserSession.getInstance().cleanUserSession();
         try {
+            SessionManager.getInstance().logout();
             Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Login/Login.fxml"));
             Stage stage = (Stage) mainPane.getScene().getWindow();
             stage.setScene(new Scene(root));
