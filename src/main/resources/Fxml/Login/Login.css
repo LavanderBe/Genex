@@ -24,8 +24,10 @@
 }
 
 .edgy-button:hover {
-    -fx-background-color: #7d97ff;
     -fx-effect: dropshadow(three-pass-box, rgb(125 186 255 / 0.8), 15, 0.5, 0, 0);
+    -fx-background-color: #7dbaff;
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
 }
 
 .edgy-link {
@@ -67,4 +69,28 @@
     -fx-border-color: #7289da; /* Discord Blurple */
     -fx-background-color: rgba(114, 137, 218, 0.1);
     -fx-effect: dropshadow(three-pass-box, rgba(114, 137, 218, 0.4), 10, 0, 0, 0);
+}
+
+.neon-text-red {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 15, 0.6, 0, 0);
+}
+
+.title-glitch {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 0, 0,-8, 3);
+    -fx-letter-spacing: 5px;
+}
+
+.title-neon-blue {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 3px;
+    /* We use a higher radius for blue to make it feel "cooler" and softer */
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 20, 0.5, 0, 0);
+}
+#captchaWebView {
+    -fx-background-color: transparent;
 }

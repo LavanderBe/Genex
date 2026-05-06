@@ -34,14 +34,15 @@ public class CrudUser implements ICrud<User> {
     @Override
     public void updateEntity(User user,String id) {
         String requete="UPDATE users " +
-                "SET username=?,email=?,password_hash=? " +
+                "SET username=?,email=?,password_hash=?,salt=? " +
                 "WHERE id=? ";
         try {
             PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1,user.getUsername());
             pst.setString(2,user.getEmail());
             pst.setString(3,user.getPassword_hash());
-            pst.setString(4,id);
+            pst.setString(4,user.getSalt());
+            pst.setString(5,id);
             pst.executeUpdate();
             System.out.println("User added successfully");
         } catch (SQLException e) {
@@ -178,6 +179,7 @@ public class CrudUser implements ICrud<User> {
                         rs.getString("salt"),
                         rs.getString("password_hash"),
                         rs.getString("role"));
+                u.setId(rs.getString("id"));
                 return u;
             }
             else return null;

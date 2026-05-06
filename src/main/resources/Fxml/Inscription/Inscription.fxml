@@ -30,13 +30,37 @@
                 <!-- Geometric Card Background -->
                 <SVGPath content="M 0 50 L 50 0 L 400 0 L 450 50 L 450 600 L 400 650 L 50 650 L 0 600 Z" strokeWidth="0.0">
                     <fill>
-                        <LinearGradient endX="0.5" endY="1.0" startX="0.5" startY="0.0">
+                        <LinearGradient endX="0.5592417061611374" endY="0.7819905213270142" startX="0.13744075829383887" startY="0.26066350710900477">
                             <stops>
-                                <Stop><color><Color red="0.12" green="0.11" blue="0.30" opacity="0.9" /></color></Stop>
-                                <Stop offset="1.0"><color><Color red="0.01" green="0.01" blue="0.04" opacity="0.98" /></color></Stop>
+                                <Stop>
+                                    <color>
+                                        <Color red="0.12156862765550613" green="0.11764705926179886" blue="0.30588236451148987" opacity="0.75" />
+                                    </color>
+                                </Stop>
+                                <Stop offset="1.0">
+                                    <color>
+                                        <Color red="0.009502924047410488" green="0.012500000186264515" blue="0.03947368264198303" opacity="0.8600000143051147" />
+                                    </color>
+                                </Stop>
                             </stops>
                         </LinearGradient>
                     </fill>
+                    <stroke>
+                        <LinearGradient endX="1.0" endY="1.0">
+                            <stops>
+                                <Stop>
+                                    <color>
+                                        <Color red="0.23879142105579376" green="0.17836257815361023" blue="0.6315789222717285" opacity="0.75" />
+                                    </color>
+                                </Stop>
+                                <Stop offset="1.0">
+                                    <color>
+                                        <Color red="0.12156862765550613" green="0.11764705926179886" blue="0.30588236451148987" opacity="0.8500000238418579" />
+                                    </color>
+                                </Stop>
+                            </stops>
+                        </LinearGradient>
+                    </stroke>
                 </SVGPath>
 
                 <SVGPath content="M 150 0 L 300 0 L 280 20 L 170 20 Z">
@@ -54,10 +78,10 @@
                     <children>
                         <VBox alignment="CENTER" spacing="5.0">
                             <children>
-                                <Label style="-fx-letter-spacing: 5px;" text="Genex" textFill="WHITE">
+                                <Label style="-fx-font-size: 45;" styleClass="title-glitch" text="GENEX" textFill="WHITE">
                                     <font><Font name="System Bold" size="28.0" /></font>
                                 </Label>
-                                <Label style="-fx-font-size: 10px;" text="GÉNÉRATION D'IDENTITÉ" textFill="RED" />
+                                <Label style="-fx-font-size: 13;" styleClass="neon-text-red" text="GÉNÉRATION D'IDENTITÉ" textFill="RED" />
                             </children>
                         </VBox>
 

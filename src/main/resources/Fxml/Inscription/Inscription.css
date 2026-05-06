@@ -112,3 +112,16 @@
 .card{
     -fx-background-color:transparent;
 }
+
+.neon-text-red {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 15, 0.6, 0, 0);
+}
+
+.title-glitch {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 0, 0,-8, 3);
+    -fx-letter-spacing: 5px;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <style>
+        .h-captcha {
+            transform-origin: top left;
+        }
+    </style>
+    <style>body { background: black; margin: 0; display: flex; justify-content: center; }</style>
+</head>
+<body>
+<div class="h-captcha"
+     data-sitekey="d338495c-944e-4390-9d56-bbf24abc3cfc"
+     data-theme="dark"
+     id="hcaptcha-widget">
+</div>
+
+<script>
+    let widgetId = null;
+    window.onload = function() {
+        // Optional: You can call this from Java if needed
+        window.getCaptchaToken = function() {
+            return document.querySelector('[name="h-captcha-response"]')?.value || "";
+        };
+
+        window.resetCaptcha = function() {
+            if (typeof hcaptcha !== "undefined") {
+                hcaptcha.reset(widgetId);
+            }
+        };
+    };
+</script>
+</body>
+</html>

@@ -76,9 +76,9 @@ public class Inscription {
             return null;
         }));
         try {
-            var resource = getClass().getResource("/Videos/Login.mp4");
+            var resource = getClass().getResource("/Videos/test.mp4");
             if (resource == null) {
-                System.err.println("CRITICAL: Video file not found at /Genex/Videos/background.mp4");
+                System.err.println("CRITICAL: Video file not found at /Genex/Videos/test.mp4");
                 rootPane.setStyle("-fx-background-color: #050508;");
                 return;
             }

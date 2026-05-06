@@ -1,5 +1,6 @@
 package TestFx;
 
+import Genex.Server.LocalHttpServer;
 import Genex.utils.Myconnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ public class MainFX extends Application {
     @Override
     public void stop() throws Exception{
         Myconnection.closeConnection();
+        LocalHttpServer.stop();
         super.stop();
         System.exit(0);
     }

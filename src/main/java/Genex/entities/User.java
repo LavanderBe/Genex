@@ -37,6 +37,10 @@ public class User {
 
     }
 
+    public void updatepassword(String password){
+        this.salt=generateSalt();
+        this.password_hash =hashPassword(password,this.salt);
+    }
 
     private String generateSalt() {
         SecureRandom random = new SecureRandom();
