@@ -50,12 +50,12 @@ public class PlayerTutorialController {
             }
             allTutorials = tutorialService.getAllTutorials();
             if (allTutorials.isEmpty()) {
-                setStatus("NO TRAINING MODULES AVAILABLE YET.");
+                setStatus("AUCUN MODULE D'ENTRAÎNEMENT DISPONIBLE POUR LE MOMENT.");
                 return;
             }
             displayTutorials(allTutorials);
         } catch (IllegalStateException e) {
-            setStatus("FAILED TO LOAD TRAINING MODULES.");
+            setStatus("ÉCHEC DU CHARGEMENT DES MODULES D'ENTRAÎNEMENT.");
             showLoadError(e);
         }
     }
@@ -89,7 +89,7 @@ public class PlayerTutorialController {
             imagePane.getChildren().add(header);
         }
 
-        Label categoryBadge = new Label(tutorial.getCategory() != null ? tutorial.getCategory().toUpperCase() : "GENERAL");
+        Label categoryBadge = new Label(localizeCategory(tutorial.getCategory()));
         categoryBadge.getStyleClass().add("category-badge");
 
         imagePane.getChildren().add(categoryBadge);
@@ -102,7 +102,7 @@ public class PlayerTutorialController {
 
         String title = tutorial.getTitle() != null && !tutorial.getTitle().isBlank()
                 ? tutorial.getTitle().toUpperCase()
-                : "UNTITLED MODULE";
+                : "MODULE SANS TITRE";
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setWrapText(true);
@@ -120,7 +120,7 @@ public class PlayerTutorialController {
         playTriangle.getStyleClass().add("launch-triangle");
         launchIcon.getChildren().addAll(launchBox, playTriangle);
 
-        Label launchLabel = new Label("LAUNCH PROTOCOL");
+        Label launchLabel = new Label("LANCER LE PROTOCOLE");
         launchLabel.getStyleClass().add("launch-text");
 
         HBox launchRow = new HBox(8, launchIcon, launchLabel);
@@ -135,7 +135,7 @@ public class PlayerTutorialController {
         dateLabel.getStyleClass().add("card-date");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        Label diffLabel = new Label(tutorial.getDifficulty() != null ? tutorial.getDifficulty().toUpperCase() : "UNDEFINED");
+        Label diffLabel = new Label(localizeDifficulty(tutorial.getDifficulty()));
         String diff = tutorial.getDifficulty() != null ? tutorial.getDifficulty().toLowerCase() : "";
         if (diff.contains("expert") || diff.contains("hard")) {
             diffLabel.getStyleClass().add("diff-expert");
@@ -147,7 +147,7 @@ public class PlayerTutorialController {
         footer.getChildren().addAll(dateLabel, spacer, diffLabel);
 
         double progress = computeProgress(tutorial);
-        Label progressLabel = new Label("PROGRESS: " + (int) (progress * 100) + "%");
+        Label progressLabel = new Label("PROGRESSION : " + (int) (progress * 100) + "%");
         progressLabel.getStyleClass().add("progress-text");
         ProgressBar progressBar = new ProgressBar(progress);
         progressBar.getStyleClass().add("module-progress");
@@ -171,8 +171,8 @@ public class PlayerTutorialController {
 
     private void showLoadError(IllegalStateException e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("LOAD FAILURE");
-        alert.setHeaderText("Could not fetch tutorials");
+        alert.setTitle("ÉCHEC DU CHARGEMENT");
+        alert.setHeaderText("Impossible de récupérer les tutoriels");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
@@ -205,7 +205,7 @@ public class PlayerTutorialController {
             }
         }
         displayTutorials(filtered);
-        setStatus(filtered.isEmpty() ? "NO MODULE MATCHES YOUR FILTER." : null);
+        setStatus(filtered.isEmpty() ? "AUCUN MODULE NE CORRESPOND À VOTRE FILTRE." : null);
     }
 
     private double computeProgress(Tutorial tutorial) {
@@ -229,18 +229,47 @@ public class PlayerTutorialController {
             VideoPlayerController controller = loader.getController();
 
             Stage videoStage = new Stage();
-            videoStage.setTitle(tutorial.getTitle() != null ? tutorial.getTitle() : "Video Player");
+            videoStage.setTitle(tutorial.getTitle() != null ? tutorial.getTitle() : "Lecteur vidéo");
             videoStage.setScene(new Scene(root, 1280, 720));
             videoStage.setResizable(true);
             videoStage.setOnShown(event -> controller.setTutorial(tutorial, videoStage));
             videoStage.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("VIDEO PLAYER ERROR");
-            alert.setHeaderText("Could not open video player");
-            alert.setContentText("Error: " + e.getMessage());
+            alert.setTitle("ERREUR DU LECTEUR VIDÉO");
+            alert.setHeaderText("Impossible d'ouvrir le lecteur vidéo");
+            alert.setContentText("Erreur : " + e.getMessage());
             alert.showAndWait();
             e.printStackTrace();
         }
+    }
+
+    private String localizeCategory(String category) {
+        if (category == null || category.isBlank()) {
+            return "GÉNÉRAL";
+        }
+
+        return switch (category.trim().toUpperCase()) {
+            case "MACRO" -> "MACRO";
+            case "OBJECTIVE" -> "OBJECTIF";
+            case "MECHANICS" -> "MÉCANIQUE";
+            case "STRATEGY" -> "STRATÉGIE";
+            case "TEAMPLAY" -> "JEU D'ÉQUIPE";
+            case "VISION" -> "VISION";
+            default -> category.toUpperCase();
+        };
+    }
+
+    private String localizeDifficulty(String difficulty) {
+        if (difficulty == null || difficulty.isBlank()) {
+            return "INDÉFINI";
+        }
+
+        return switch (difficulty.trim().toUpperCase()) {
+            case "BEGINNER" -> "DÉBUTANT";
+            case "INTERMEDIATE" -> "INTERMÉDIAIRE";
+            case "EXPERT", "HARD" -> "EXPERT";
+            default -> difficulty.toUpperCase();
+        };
     }
 }

@@ -8,11 +8,11 @@
             <children>
                 <VBox spacing="4.0">
                     <children>
-                        <Label styleClass="section-title" text="EVALUATING CENTER" />
-                        <Label styleClass="module-subtitle" text="QUIZ MODULE" />
+                        <Label styleClass="section-title" text="CENTRE D'ÉVALUATION" />
+                        <Label styleClass="module-subtitle" text="MODULE DE QUIZ" />
                     </children>
                 </VBox>
-                <TextField fx:id="scanField" styleClass="scan-search-field" text="SCAN EVALUATIONS..." />
+                <TextField fx:id="scanField" styleClass="scan-search-field" text="ANALYSER LES ÉVALUATIONS..." />
                 <ScrollPane fitToWidth="true" styleClass="transparent-scroll" VBox.vgrow="ALWAYS">
                     <content>
                         <VBox fx:id="quizContainer" spacing="16.0" />

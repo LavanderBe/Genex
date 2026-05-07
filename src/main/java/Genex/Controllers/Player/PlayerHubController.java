@@ -52,10 +52,10 @@ public class PlayerHubController {
         }
 
         if (userId == null || userId.isBlank()) {
-            operatorIdLabel.setText("UNKNOWN // OFFLINE");
+            operatorIdLabel.setText("INCONNU // HORS LIGNE");
             xpLabel.setText("0");
             accuracyLabel.setText("0.0%");
-            rankLabel.setText("#N/A");
+            rankLabel.setText("#N/D");
             return;
         }
 
@@ -70,7 +70,7 @@ public class PlayerHubController {
             displayName = currentUser.getUsername();
         }
 
-        operatorIdLabel.setText("OPERATOR // TACTICAL DATA");
+        operatorIdLabel.setText("OPÉRATEUR // DONNÉES TACTIQUES");
 
         int xp = 0;
         int totalAttempts = 0;
@@ -95,7 +95,7 @@ public class PlayerHubController {
                 rank = quizService.getGlobalRankByXp(userId);
             } catch (IllegalStateException ignored) {}
         }
-        rankLabel.setText(rank > 0 ? "#" + rank : "#N/A");
+        rankLabel.setText(rank > 0 ? "#" + rank : "#N/D");
     }
 
     @FXML
@@ -112,7 +112,7 @@ public class PlayerHubController {
         try {
             URL resource = getClass().getResource(fxmlPath);
             if (resource == null) {
-                showNavigationError("FXML not found: " + fxmlPath);
+                showNavigationError("FXML introuvable : " + fxmlPath);
                 return;
             }
 
@@ -131,7 +131,7 @@ public class PlayerHubController {
 
             Stage stage = resolveCurrentStage(event);
             if (stage == null) {
-                showNavigationError("Could not resolve the current window.");
+                showNavigationError("Impossible de déterminer la fenêtre actuelle.");
                 return;
             }
 
@@ -142,7 +142,7 @@ public class PlayerHubController {
                 stage.show();
             }
         } catch (Exception e) {
-            showNavigationError("Could not open screen: " + fxmlPath + "\n" + e.getMessage());
+            showNavigationError("Impossible d'ouvrir l'écran : " + fxmlPath + "\n" + e.getMessage());
         }
     }
 
@@ -181,8 +181,8 @@ public class PlayerHubController {
 
     private void showNavigationError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("NAVIGATION ERROR");
-        alert.setHeaderText("Screen could not be loaded");
+        alert.setTitle("ERREUR DE NAVIGATION");
+        alert.setHeaderText("Impossible de charger l'écran");
         alert.setContentText(message);
         alert.showAndWait();
     }

@@ -9,15 +9,15 @@
             <children>
                 <HBox spacing="10.0" styleClass="video-header" VBox.vgrow="NEVER">
                     <children>
-                        <Label fx:id="videoTitleLabel" styleClass="video-title" text="LOADING..." />
+                        <Label fx:id="videoTitleLabel" styleClass="video-title" text="CHARGEMENT..." />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button fx:id="closeButton" onAction="#handleClose" styleClass="close-button" text="CLOSE" />
+                        <Button fx:id="closeButton" onAction="#handleClose" styleClass="close-button" text="FERMER" />
                     </children>
                 </HBox>
                 <StackPane fx:id="videoPlayerPane" styleClass="video-player-pane" VBox.vgrow="ALWAYS">
                     <children>
                         <WebView fx:id="webView" />
-                        <Label fx:id="loadingLabel" styleClass="loading-message" text="LOADING VIDEO..." />
+                        <Label fx:id="loadingLabel" styleClass="loading-message" text="CHARGEMENT DE LA VIDÉO..." />
                         <Label fx:id="errorLabel" styleClass="error-message" text="" visible="false" />
                     </children>
                 </StackPane>

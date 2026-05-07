@@ -13,7 +13,7 @@
     <!-- Dialog Header -->
     <HBox styleClass="dialog-header" alignment="CENTER_LEFT" spacing="10">
         <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
-        <Label fx:id="dialogTitle" text="NEW DRILL ASSIGNMENT" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="dialogTitle" text="NOUVEAU MODULE D'ENTRAÎNEMENT" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
         <Button text="✕" styleClass="close-btn" onAction="#handleAbort"/>
     </HBox>
 
@@ -22,32 +22,32 @@
 
         <!-- Tactical Title -->
         <VBox spacing="6">
-            <Label text="TACTICAL TITLE" styleClass="field-label"/>
-            <TextField fx:id="titleField" promptText="ENTER DESIGNATION..." styleClass="dialog-field"/>
+            <Label text="TITRE TACTIQUE" styleClass="field-label"/>
+            <TextField fx:id="titleField" promptText="SAISIR LA DÉSIGNATION..." styleClass="dialog-field"/>
         </VBox>
 
         <!-- Briefing Data -->
         <VBox spacing="6">
-            <Label text="BRIEFING DATA" styleClass="field-label"/>
-            <TextArea fx:id="descriptionField" promptText="ENTER SUMMARY..." styleClass="dialog-textarea"
+            <Label text="DONNÉES DE BRIEFING" styleClass="field-label"/>
+            <TextArea fx:id="descriptionField" promptText="SAISIR LE RÉSUMÉ..." styleClass="dialog-textarea"
                       prefHeight="100" wrapText="true"/>
         </VBox>
 
         <!-- Sector + Intensity row -->
         <HBox spacing="16">
             <VBox spacing="6" HBox.hgrow="ALWAYS">
-                <Label text="SECTOR" styleClass="field-label"/>
+                <Label text="SECTEUR" styleClass="field-label"/>
                 <ComboBox fx:id="categoryCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
             </VBox>
             <VBox spacing="6" HBox.hgrow="ALWAYS">
-                <Label text="INTENSITY" styleClass="field-label"/>
+                <Label text="INTENSITÉ" styleClass="field-label"/>
                 <ComboBox fx:id="difficultyCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
             </VBox>
         </HBox>
 
         <!-- Intel Source URL -->
         <VBox spacing="6">
-            <Label text="INTEL SOURCE (URL)" styleClass="field-label"/>
+            <Label text="SOURCE DES RENSEIGNEMENTS (URL)" styleClass="field-label"/>
             <TextField fx:id="videoUrlField" promptText="HTTPS://YOUTUBE.COM/..." styleClass="dialog-field"/>
         </VBox>
     </VBox>
@@ -55,7 +55,7 @@
     <!-- Action Buttons -->
     <HBox spacing="12" styleClass="dialog-footer" alignment="CENTER_LEFT">
         <padding><Insets top="16" right="28" bottom="24" left="28"/></padding>
-        <Button text="DEPLOY DRILL" styleClass="save-btn" onAction="#handleSave" prefWidth="200"/>
-        <Button text="ABORT" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
+        <Button text="DÉPLOYER LE MODULE" styleClass="save-btn" onAction="#handleSave" prefWidth="200"/>
+        <Button text="ANNULER" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
     </HBox>
 </VBox>

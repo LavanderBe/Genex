@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class PlayerQuizController {
 
-    private static final String SEARCH_HINT = "SCAN EVALUATIONS...";
+    private static final String SEARCH_HINT = "ANALYSER LES ÉVALUATIONS...";
 
     @FXML private VBox quizContainer;
     @FXML private TextField scanField;
@@ -41,7 +41,7 @@ public class PlayerQuizController {
                 quizService = new QuizService();
             } catch (IllegalStateException e) {
                 quizContainer.getChildren().clear();
-                Label errorLabel = new Label("FAILED TO LOAD QUIZZES.");
+                Label errorLabel = new Label("ÉCHEC DU CHARGEMENT DES QUIZ.");
                 errorLabel.getStyleClass().add("result-wrong");
                 quizContainer.getChildren().add(errorLabel);
                 return;
@@ -62,7 +62,7 @@ public class PlayerQuizController {
         quizContainer.getChildren().clear();
 
         if (quizzes.isEmpty()) {
-            Label emptyLabel = new Label("NO QUIZ EVALUATIONS AVAILABLE.");
+            Label emptyLabel = new Label("AUCUNE ÉVALUATION DE QUIZ DISPONIBLE.");
             emptyLabel.getStyleClass().add("module-subtitle");
             quizContainer.getChildren().add(emptyLabel);
             return;
@@ -72,8 +72,8 @@ public class PlayerQuizController {
             VBox quizBox = new VBox(12);
             quizBox.getStyleClass().add("quiz-card");
 
-            Label linkedLabel = new Label("MODULE: " + (quiz.getTutorialTitle() != null
-                    ? quiz.getTutorialTitle().toUpperCase() : "GENERAL PROTOCOL"));
+            Label linkedLabel = new Label("MODULE : " + (quiz.getTutorialTitle() != null
+                    ? quiz.getTutorialTitle().toUpperCase() : "PROTOCOLE GÉNÉRAL"));
             linkedLabel.getStyleClass().add("quiz-linked-label");
 
             HBox topBar = new HBox(8);
@@ -94,7 +94,7 @@ public class PlayerQuizController {
             questionLabel.getStyleClass().add("quiz-title");
             questionLabel.setWrapText(true);
 
-            Button authenticateButton = new Button("AUTHENTICATE RESPONSE");
+            Button authenticateButton = new Button("VALIDER LA RÉPONSE");
             authenticateButton.getStyleClass().add("auth-button");
             authenticateButton.setDisable(true);
 
@@ -138,8 +138,8 @@ public class PlayerQuizController {
                 resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
                 resultLabel.getStyleClass().add(previousAttempt.isCorrect() ? "result-correct" : "result-wrong");
                 resultLabel.setText(previousAttempt.isCorrect()
-                        ? "ALREADY SOLVED: CORRECT ANSWER SAVED"
-                        : "ALREADY SUBMITTED: RED = YOUR CHOICE, GREEN = CORRECT");
+                        ? "DÉJÀ RÉSOLU : LA BONNE RÉPONSE EST ENREGISTRÉE"
+                        : "DÉJÀ SOUMIS : ROUGE = VOTRE CHOIX, VERT = CORRECT");
             }
 
             quizBox.getChildren().addAll(linkedLabel, topBar, questionLabel, optionsBox, footer);
@@ -172,8 +172,8 @@ public class PlayerQuizController {
                 resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
                 resultLabel.getStyleClass().add(existing.isCorrect() ? "result-correct" : "result-wrong");
                 resultLabel.setText(existing.isCorrect()
-                        ? "ALREADY SOLVED: CORRECT ANSWER SAVED"
-                        : "ALREADY SUBMITTED: RED = YOUR CHOICE, GREEN = CORRECT");
+                        ? "DÉJÀ RÉSOLU : LA BONNE RÉPONSE EST ENREGISTRÉE"
+                        : "DÉJÀ SOUMIS : ROUGE = VOTRE CHOIX, VERT = CORRECT");
                 return;
             }
         }
@@ -181,7 +181,7 @@ public class PlayerQuizController {
         if (status == QuizService.QuizSubmissionStatus.SESSION_MISSING) {
             resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
             resultLabel.getStyleClass().add("result-wrong");
-            resultLabel.setText("SESSION MISSING: PLEASE RECONNECT");
+            resultLabel.setText("SESSION MANQUANTE : VEUILLEZ VOUS RECONNECTER");
             return;
         }
 
@@ -191,7 +191,7 @@ public class PlayerQuizController {
         setAuthenticateResultState(authenticateButton, isCorrect);
         resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
         resultLabel.getStyleClass().add(isCorrect ? "result-correct" : "result-wrong");
-        resultLabel.setText(isCorrect ? "CORRECT: YOUR CHOICE IS VALIDATED" : "WRONG: RED = YOUR CHOICE, GREEN = CORRECT");
+        resultLabel.setText(isCorrect ? "CORRECT : VOTRE CHOIX EST VALIDÉ" : "FAUX : ROUGE = VOTRE CHOIX, VERT = CORRECT");
     }
 
     private void styleSelectedOption(VBox optionsBox, char selectedAnswer) {

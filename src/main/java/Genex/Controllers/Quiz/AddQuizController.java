@@ -70,7 +70,7 @@ public class AddQuizController implements Initializable {
         this.isEditMode = editMode;
         this.currentQuiz = quiz;
         if (editMode && quiz != null) {
-            dialogTitle.setText("EDIT PROTOCOL ENTRY");
+            dialogTitle.setText("MODIFIER L'ENTRÉE DE PROTOCOLE");
             questionField.setText(quiz.getQuestion());
             optionAField.setText(quiz.getOptionA());
             optionBField.setText(quiz.getOptionB());
@@ -90,7 +90,7 @@ public class AddQuizController implements Initializable {
             else if (ca == 'C') answerC.setSelected(true);
             else if (ca == 'D') answerD.setSelected(true);
         } else {
-            dialogTitle.setText("NEW PROTOCOL ENTRY");
+            dialogTitle.setText("NOUVELLE ENTRÉE DE PROTOCOLE");
         }
     }
 
@@ -118,15 +118,15 @@ public class AddQuizController implements Initializable {
         char correct = getSelectedAnswer();
 
         if (selectedTutorial == null) {
-            showAlert("VALIDATION ERROR", "Please select a linked strategy module.");
+            showAlert("ERREUR DE VALIDATION", "Veuillez sélectionner un module stratégique lié.");
             return;
         }
         if (question.isEmpty()) {
-            showAlert("VALIDATION ERROR", "Tactical query is required.");
+            showAlert("ERREUR DE VALIDATION", "La question tactique est requise.");
             return;
         }
         if (optA.isEmpty() || optB.isEmpty() || optC.isEmpty() || optD.isEmpty()) {
-            showAlert("VALIDATION ERROR", "All response options (A-D) are required.");
+            showAlert("ERREUR DE VALIDATION", "Toutes les réponses (A à D) sont requises.");
             return;
         }
 

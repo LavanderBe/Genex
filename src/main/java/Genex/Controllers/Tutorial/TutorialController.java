@@ -110,7 +110,7 @@ public class TutorialController implements Initializable {
         } catch (Exception ignored) {}
 
         // Category badge
-        Label categoryBadge = new Label(tutorial.getCategory() != null ? tutorial.getCategory().toUpperCase() : "GENERAL");
+        Label categoryBadge = new Label(localizeCategory(tutorial.getCategory()));
         categoryBadge.getStyleClass().add("category-badge");
 
         imagePane.getChildren().addAll(imgView, categoryBadge);
@@ -142,7 +142,7 @@ public class TutorialController implements Initializable {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Difficulty color
-        Label diffLabel = new Label(tutorial.getDifficulty() != null ? tutorial.getDifficulty().toUpperCase() : "");
+        Label diffLabel = new Label(localizeDifficulty(tutorial.getDifficulty()));
         String diff = tutorial.getDifficulty() != null ? tutorial.getDifficulty().toLowerCase() : "";
         if (diff.contains("expert") || diff.contains("hard")) {
             diffLabel.getStyleClass().add("diff-expert");
@@ -160,16 +160,16 @@ public class TutorialController implements Initializable {
         actions.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
         actions.setPadding(new Insets(0, 14, 10, 14));
 
-        Button editBtn = new Button("EDIT");
+        Button editBtn = new Button("MODIFIER");
         editBtn.getStyleClass().add("card-edit-btn");
         editBtn.setOnAction(e -> openEditTutorial(tutorial));
 
-        Button deleteBtn = new Button("DELETE");
+        Button deleteBtn = new Button("SUPPRIMER");
         deleteBtn.getStyleClass().add("card-delete-btn");
         deleteBtn.setOnAction(e -> deleteTutorial(tutorial));
 
         // ADDED: Tooltip for info
-        Tooltip tooltip = new Tooltip("Double click to view full details");
+        Tooltip tooltip = new Tooltip("Double-cliquez pour afficher tous les détails");
         Tooltip.install(card, tooltip);
 
         actions.getChildren().addAll(editBtn, deleteBtn);
@@ -205,7 +205,7 @@ public class TutorialController implements Initializable {
         card.getStyleClass().add("quiz-card");
 
         // Linked tutorial
-        Label linkedLabel = new Label("MODULE: " + (quiz.getTutorialTitle() != null ? quiz.getTutorialTitle().toUpperCase() : "UNKNOWN"));
+        Label linkedLabel = new Label("MODULE : " + (quiz.getTutorialTitle() != null ? quiz.getTutorialTitle().toUpperCase() : "INCONNU"));
         linkedLabel.getStyleClass().add("quiz-linked-label");
 
         Label questionLabel = new Label(quiz.getQuestion());
@@ -233,11 +233,11 @@ public class TutorialController implements Initializable {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button editBtn = new Button("EDIT");
+        Button editBtn = new Button("MODIFIER");
         editBtn.getStyleClass().add("card-edit-btn");
         editBtn.setOnAction(e -> openEditQuiz(quiz));
 
-        Button deleteBtn = new Button("DELETE");
+        Button deleteBtn = new Button("SUPPRIMER");
         deleteBtn.getStyleClass().add("card-delete-btn");
         deleteBtn.setOnAction(e -> deleteQuiz(quiz));
 
@@ -272,7 +272,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.setTitle("NEW DRILL ASSIGNMENT");
+            stage.setTitle("NOUVEAU MODULE D'ENTRAÎNEMENT");
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -290,7 +290,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.setTitle("EDIT DRILL ASSIGNMENT");
+            stage.setTitle("MODIFIER LE MODULE D'ENTRAÎNEMENT");
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -299,9 +299,9 @@ public class TutorialController implements Initializable {
 
     private void deleteTutorial(Tutorial tutorial) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("TERMINATE MODULE");
-        alert.setHeaderText("Confirm deletion of: " + tutorial.getTitle());
-        alert.setContentText("This will also delete all linked quiz questions.");
+        alert.setTitle("SUPPRIMER LE MODULE");
+        alert.setHeaderText("Confirmer la suppression de : " + tutorial.getTitle());
+        alert.setContentText("Cela supprimera également toutes les questions de quiz liées.");
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 tutorialService.deleteEntity(tutorial);
@@ -324,7 +324,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.setTitle("NEW PROTOCOL ENTRY");
+            stage.setTitle("NOUVELLE ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -342,7 +342,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.setTitle("EDIT PROTOCOL ENTRY");
+            stage.setTitle("MODIFIER L'ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -351,8 +351,8 @@ public class TutorialController implements Initializable {
 
     private void deleteQuiz(Quiz quiz) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("TERMINATE PROTOCOL");
-        alert.setHeaderText("Delete this question?");
+        alert.setTitle("SUPPRIMER LE PROTOCOLE");
+        alert.setHeaderText("Supprimer cette question ?");
         alert.setContentText(quiz.getQuestion());
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
@@ -360,5 +360,34 @@ public class TutorialController implements Initializable {
                 loadQuizCards(null);
             }
         });
+    }
+
+    private String localizeCategory(String category) {
+        if (category == null || category.isBlank()) {
+            return "GÉNÉRAL";
+        }
+
+        return switch (category.trim().toUpperCase()) {
+            case "MACRO" -> "MACRO";
+            case "OBJECTIVE" -> "OBJECTIF";
+            case "MECHANICS" -> "MÉCANIQUE";
+            case "STRATEGY" -> "STRATÉGIE";
+            case "TEAMPLAY" -> "JEU D'ÉQUIPE";
+            case "VISION" -> "VISION";
+            default -> category.toUpperCase();
+        };
+    }
+
+    private String localizeDifficulty(String difficulty) {
+        if (difficulty == null || difficulty.isBlank()) {
+            return "";
+        }
+
+        return switch (difficulty.trim().toUpperCase()) {
+            case "BEGINNER" -> "DÉBUTANT";
+            case "INTERMEDIATE" -> "INTERMÉDIAIRE";
+            case "EXPERT", "HARD" -> "EXPERT";
+            default -> difficulty.toUpperCase();
+        };
     }
 }

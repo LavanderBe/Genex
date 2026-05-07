@@ -120,20 +120,20 @@ public class PlayerDashboard {
         try {
             URL resource = getClass().getResource(fxmlPath);
             if (resource == null) {
-                showModuleError("Module not found: " + fxmlPath);
+                showModuleError("Module introuvable : " + fxmlPath);
                 return;
             }
             Parent module = FXMLLoader.load(resource);
             contentArea.getChildren().setAll(module);
         } catch (Exception e) {
-            showModuleError("Failed to load module: " + fxmlPath + "\n" + e.getMessage());
+            showModuleError("Impossible de charger le module : " + fxmlPath + "\n" + e.getMessage());
         }
     }
 
     private void showModuleError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("MODULE LOAD ERROR");
-        alert.setHeaderText("Could not open selected module");
+        alert.setTitle("ERREUR DE CHARGEMENT DU MODULE");
+        alert.setHeaderText("Impossible d'ouvrir le module sélectionné");
         alert.setContentText(message);
         alert.showAndWait();
     }

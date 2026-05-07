@@ -8,11 +8,11 @@
             <children>
                 <VBox spacing="4.0">
                     <children>
-                        <Label styleClass="section-title" text="TRAINING INVENTORY" />
-                        <Label styleClass="subtitle" text="DATA STREAM ACTIVE" />
+                        <Label styleClass="section-title" text="INVENTAIRE D'ENTRAÎNEMENT" />
+                        <Label styleClass="subtitle" text="FLUX DE DONNÉES ACTIF" />
                     </children>
                 </VBox>
-                <TextField fx:id="searchField" promptText="FILTER MODULES..." styleClass="search-field" />
+                <TextField fx:id="searchField" promptText="FILTRER LES MODULES..." styleClass="search-field" />
                 <Label fx:id="statusLabel" managed="false" styleClass="status-text" text="" visible="false" />
                 <ScrollPane fitToWidth="true" styleClass="transparent-scroll" VBox.vgrow="ALWAYS">
                     <content>

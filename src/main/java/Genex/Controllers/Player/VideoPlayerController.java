@@ -46,27 +46,27 @@ public class VideoPlayerController {
      */
     private void loadVideo() {
         if (currentTutorial == null) {
-            showError("No tutorial data provided.");
+            showError("Aucune donnée de tutoriel fournie.");
             return;
         }
 
         // Update labels with tutorial info
-        videoTitleLabel.setText(currentTutorial.getTitle() != null ? currentTutorial.getTitle().toUpperCase() : "UNTITLED");
+        videoTitleLabel.setText(currentTutorial.getTitle() != null ? currentTutorial.getTitle().toUpperCase() : "SANS TITRE");
         videoDescriptionLabel.setText(currentTutorial.getDescription() != null ? currentTutorial.getDescription() : "");
-        videoCategoryLabel.setText("CATEGORY: " + (currentTutorial.getCategory() != null ? currentTutorial.getCategory() : "N/A"));
-        videoDifficultyLabel.setText("DIFFICULTY: " + (currentTutorial.getDifficulty() != null ? currentTutorial.getDifficulty() : "N/A"));
-        videoDateLabel.setText("PUBLISHED: " + (currentTutorial.getCreatedAt() != null ? currentTutorial.getCreatedAt() : "N/A"));
+        videoCategoryLabel.setText("CATÉGORIE : " + (currentTutorial.getCategory() != null ? currentTutorial.getCategory() : "N/D"));
+        videoDifficultyLabel.setText("DIFFICULTÉ : " + (currentTutorial.getDifficulty() != null ? currentTutorial.getDifficulty() : "N/D"));
+        videoDateLabel.setText("PUBLIÉ LE : " + (currentTutorial.getCreatedAt() != null ? currentTutorial.getCreatedAt() : "N/D"));
 
         String videoUrl = currentTutorial.getVideoUrl();
         if (videoUrl == null || videoUrl.isBlank()) {
-            showError("No video URL found for this tutorial.");
+            showError("Aucune URL de vidéo trouvée pour ce tutoriel.");
             return;
         }
 
         // Extract video ID and validate
         String videoId = videoService.extractVideoId(videoUrl);
         if (videoId == null || videoId.isBlank()) {
-            showError("Invalid video URL format.");
+            showError("Format d'URL vidéo invalide.");
             return;
         }
 
@@ -79,7 +79,7 @@ public class VideoPlayerController {
             loadingLabel.setVisible(false);
             webView.getEngine().loadContent(html);
         } catch (Exception e) {
-            showError("Error loading video: " + e.getMessage());
+            showError("Erreur lors du chargement de la vidéo : " + e.getMessage());
         }
     }
 

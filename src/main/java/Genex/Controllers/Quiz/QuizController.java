@@ -62,8 +62,8 @@ public class QuizController implements Initializable {
         card.setPadding(new Insets(16));
         card.getStyleClass().add("quiz-card");
 
-        Label linkedLabel = new Label("MODULE: " + (quiz.getTutorialTitle() != null
-                ? quiz.getTutorialTitle().toUpperCase() : "UNKNOWN"));
+        Label linkedLabel = new Label("MODULE : " + (quiz.getTutorialTitle() != null
+                ? quiz.getTutorialTitle().toUpperCase() : "INCONNU"));
         linkedLabel.getStyleClass().add("quiz-linked-label");
 
         Label questionLabel = new Label(quiz.getQuestion());
@@ -89,11 +89,11 @@ public class QuizController implements Initializable {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button editBtn = new Button("EDIT");
+        Button editBtn = new Button("MODIFIER");
         editBtn.getStyleClass().add("card-edit-btn");
         editBtn.setOnAction(e -> openEditQuiz(quiz));
 
-        Button deleteBtn = new Button("DELETE");
+        Button deleteBtn = new Button("SUPPRIMER");
         deleteBtn.getStyleClass().add("card-delete-btn");
         deleteBtn.setOnAction(e -> deleteQuiz(quiz));
 
@@ -160,7 +160,7 @@ public class QuizController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.setTitle("NEW PROTOCOL ENTRY");
+            stage.setTitle("NOUVELLE ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
             loadQuizCards(null); // Refresh after close
         } catch (IOException e) {
@@ -182,7 +182,7 @@ public class QuizController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.setTitle("EDIT PROTOCOL ENTRY");
+            stage.setTitle("MODIFIER L'ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
             loadQuizCards(null); // Refresh after close
         } catch (IOException e) {
@@ -193,8 +193,8 @@ public class QuizController implements Initializable {
 
     private void deleteQuiz(Quiz quiz) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("TERMINATE PROTOCOL");
-        alert.setHeaderText("Delete this question?");
+        alert.setTitle("SUPPRIMER LE PROTOCOLE");
+        alert.setHeaderText("Supprimer cette question ?");
         alert.setContentText(quiz.getQuestion());
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
