@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -18,6 +20,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
+import java.net.URL;
 
 public class PlayerDashboard {
 
@@ -26,6 +29,13 @@ public class PlayerDashboard {
     @FXML private AnchorPane contentArea;
     @FXML private Label sessionUser;
     @FXML private Circle pingDot;
+    @FXML private Button navMainButton;
+    @FXML private Button navTeamsButton;
+    @FXML private Button navTournamentsButton;
+    @FXML private Button navTutorialsButton;
+    @FXML private Button navForumsButton;
+    @FXML private Button navBoutiqueButton;
+    @FXML private Button navProfileButton;
 
     private boolean isSidebarVisible = true;
 
@@ -33,6 +43,7 @@ public class PlayerDashboard {
     public void initialize() {
         //gotta make a usersessionclass and replace the profile topleft thing with the current user
         startPingAnimation();
+        showMain();
     }
 
     @FXML
@@ -70,20 +81,74 @@ public class PlayerDashboard {
         showProfile();
     }
 
-    @FXML private void showMain() { loadModule("PlayerMain.fxml"); }
-    @FXML private void showTeams() { loadModule("PlayerTeams.fxml"); }
-    @FXML private void showTournaments() { loadModule("PlayerTournaments.fxml"); }
-    @FXML private void showTutorials() { loadModule("PlayerTutorials.fxml"); }
-    @FXML private void showForums() { loadModule("PlayerForums.fxml"); }
-    @FXML private void showProfile() { loadModule("PlayerProfile.fxml"); }
-    @FXML private void showBoutique() {loadModule("Boutique.fxml");}
+    @FXML private void showMain() {
+        setActiveNav(navMainButton);
+        contentArea.getChildren().clear();
+    }
 
-    private void loadModule(String fxmlName) {
+    @FXML private void showTeams() {
+        setActiveNav(navTeamsButton);
+        loadModule("PlayerTeams.fxml");
+    }
+
+    @FXML private void showTournaments() {
+        setActiveNav(navTournamentsButton);
+        loadModule("PlayerTournaments.fxml");
+    }
+
+    @FXML private void showTutorials() {
+        setActiveNav(navTutorialsButton);
+        loadModule("/Fxml/Player/PlayerHub.fxml");
+    }
+
+    @FXML private void showForums() {
+        setActiveNav(navForumsButton);
+        loadModule("PlayerForums.fxml");
+    }
+
+    @FXML private void showProfile() {
+        setActiveNav(navProfileButton);
+        loadModule("PlayerProfile.fxml");
+    }
+
+    @FXML private void showBoutique() {
+        setActiveNav(navBoutiqueButton);
+        loadModule("Boutique.fxml");
+    }
+
+    private void loadModule(String fxmlPath) {
         try {
-            Parent module = FXMLLoader.load(getClass().getResource(fxmlName));
+            URL resource = getClass().getResource(fxmlPath);
+            if (resource == null) {
+                showModuleError("Module not found: " + fxmlPath);
+                return;
+            }
+            Parent module = FXMLLoader.load(resource);
             contentArea.getChildren().setAll(module);
-        } catch (IOException e) {
-            System.err.println("Module not found: " + fxmlName);
+        } catch (Exception e) {
+            showModuleError("Failed to load module: " + fxmlPath + "\n" + e.getMessage());
+        }
+    }
+
+    private void showModuleError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("MODULE LOAD ERROR");
+        alert.setHeaderText("Could not open selected module");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void setActiveNav(Button activeButton) {
+        Button[] buttons = {
+                navMainButton, navTeamsButton, navTournamentsButton,
+                navTutorialsButton, navForumsButton, navBoutiqueButton, navProfileButton
+        };
+        for (Button button : buttons) {
+            if (button == null) {
+                continue;
+            }
+            button.getStyleClass().removeAll("nav-button", "nav-button-active");
+            button.getStyleClass().add(button == activeButton ? "nav-button-active" : "nav-button");
         }
     }
 

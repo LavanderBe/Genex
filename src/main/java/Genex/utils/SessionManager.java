@@ -1,6 +1,7 @@
 package Genex.utils;
 
 import Genex.entities.User;
+import Genex.entities.Player;
 
 /**
  * Singleton class to manage the current logged-in user session
@@ -21,11 +22,17 @@ public class SessionManager {
 
     public void setCurrentUser(User user) {
         this.currentUser = user;
-        System.out.println("Session started for user: " + (user != null ? user.getUsername() : "null"));
     }
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    public Player getCurrentPlayer() {
+        if (currentUser instanceof Player) {
+            return (Player) currentUser;
+        }
+        return null;
     }
 
     public String getCurrentUserId() {
@@ -37,7 +44,6 @@ public class SessionManager {
     }
 
     public void logout() {
-        System.out.println("Session ended for user: " + (currentUser != null ? currentUser.getUsername() : "null"));
         this.currentUser = null;
     }
 }

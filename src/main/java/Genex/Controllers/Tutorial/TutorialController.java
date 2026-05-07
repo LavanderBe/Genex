@@ -168,6 +168,10 @@ public class TutorialController implements Initializable {
         deleteBtn.getStyleClass().add("card-delete-btn");
         deleteBtn.setOnAction(e -> deleteTutorial(tutorial));
 
+        // ADDED: Tooltip for info
+        Tooltip tooltip = new Tooltip("Double click to view full details");
+        Tooltip.install(card, tooltip);
+
         actions.getChildren().addAll(editBtn, deleteBtn);
 
         card.getChildren().addAll(imagePane, infoBox, actions);

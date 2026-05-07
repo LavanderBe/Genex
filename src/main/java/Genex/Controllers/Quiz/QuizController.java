@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -79,12 +80,12 @@ public class QuizController implements Initializable {
         for (int i = 0; i < 4; i++) {
             Label optLabel = new Label(labels[i] + ". " + (opts[i] != null ? opts[i] : ""));
             optLabel.getStyleClass().add(labels[i] == quiz.getCorrectAnswer() ? "option-correct" : "option-label");
-            optLabel.setMaxWidth(200);
+            optLabel.setMinWidth(200);
             optGrid.add(optLabel, i % 2, i / 2);
         }
 
         HBox footer = new HBox(8);
-        footer.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        footer.setAlignment(Pos.CENTER_RIGHT);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -150,17 +151,21 @@ public class QuizController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Quiz/AddQuiz.fxml"));
             Parent root = loader.load();
-            AddQuizController controller = loader.getController();
-            controller.setMode(false, null);
-            controller.setOnSaveCallback(() -> loadQuizCards(null));
+
+            // Assuming there's an AddQuizController
+            // AddQuizController controller = loader.getController();
+            // controller.setMode(false, null);
+            // controller.setOnSaveCallback(() -> loadQuizCards(null));
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
             stage.setTitle("NEW PROTOCOL ENTRY");
             stage.showAndWait();
+            loadQuizCards(null); // Refresh after close
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Could not open Add Quiz dialog: " + e.getMessage());
         }
     }
 
@@ -168,17 +173,21 @@ public class QuizController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Quiz/AddQuiz.fxml"));
             Parent root = loader.load();
-            AddQuizController controller = loader.getController();
-            controller.setMode(true, quiz);
-            controller.setOnSaveCallback(() -> loadQuizCards(null));
+
+            // Assuming there's an AddQuizController
+            // AddQuizController controller = loader.getController();
+            // controller.setMode(true, quiz);
+            // controller.setOnSaveCallback(() -> loadQuizCards(null));
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
             stage.setTitle("EDIT PROTOCOL ENTRY");
             stage.showAndWait();
+            loadQuizCards(null); // Refresh after close
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Could not open Edit Quiz dialog: " + e.getMessage());
         }
     }
 

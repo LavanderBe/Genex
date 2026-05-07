@@ -178,6 +178,7 @@ public class CrudUser implements ICrud<User> {
                         rs.getString("salt"),
                         rs.getString("password_hash"),
                         rs.getString("role"));
+                u.setId(rs.getString("id"));
                 return u;
             }
             else return null;
