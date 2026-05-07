@@ -74,12 +74,15 @@ public class CrudPlayer {
 
     public List<Player> getEntities() {
         List<Player> players = new ArrayList<>();
-        String requete = "SELECT * FROM players";
+        String requete = "SELECT p.*, u.id as user_id, u.username FROM players p " +
+                        "LEFT JOIN users u ON p.user_id = u.id";
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 Player p = new Player(rs.getDate("date_of_birth").toLocalDate(),rs.getString("first_name"),rs.getString("last_name"),rs.getString("nickname"), rs.getString("cin"),rs.getString("nationality"),rs.getString("city"));
+                p.setId(rs.getString("user_id"));
+                p.setUsername(rs.getString("username"));
                 players.add(p);
             }
         } catch (SQLException e) {

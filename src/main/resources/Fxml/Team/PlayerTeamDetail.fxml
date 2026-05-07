@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -26,37 +27,37 @@
             <!-- ── Nav Bar ───────────────────────────────────────── -->
             <HBox fx:id="navBar" alignment="CENTER_LEFT" spacing="12"
                   style="-fx-background-color: #12122a; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 0 0 1 0; -fx-padding: 12 20 12 20;">
-                <Label fx:id="teamNameLabel"
-                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"
-                       text="Team Name" />
-                <Region HBox.hgrow="ALWAYS" />
-                <HBox spacing="8" alignment="CENTER">
-                    <Button fx:id="btnMonEquipe" text="Mon Équipe"
-                            styleClass="player-tab-btn-active"
-                            onAction="#handleMonEquipe" />
-                    <Button fx:id="btnAutresEquipes" text="Autres Équipes"
-                            styleClass="player-tab-btn"
-                            onAction="#handleAutresEquipes" />
+                    <Label fx:id="teamNameLabel"
+                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"
+                           text="Team Name" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox spacing="8" alignment="CENTER">
+                        <Button fx:id="btnMonEquipe" text="Mon Équipe"
+                                styleClass="player-tab-btn-active"
+                                onAction="#handleMonEquipe" />
+                        <Button fx:id="btnAutresEquipes" text="Autres Équipes"
+                                styleClass="player-tab-btn"
+                                onAction="#handleAutresEquipes" />
+                    </HBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button fx:id="btnQuitTeam" text="Quitter l'équipe"
+                            styleClass="player-quit-btn"
+                            onAction="#handleQuitTeam"
+                            visible="false" managed="false" />
+                    <Button fx:id="btnDeleteTeam" text="🗑  Supprimer l'équipe"
+                            styleClass="player-quit-btn"
+                            onAction="#handleDeleteTeam"
+                            visible="false" managed="false" />
                 </HBox>
-                <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="btnQuitTeam" text="Quitter l'équipe"
-                        styleClass="player-quit-btn"
-                        onAction="#handleQuitTeam"
-                        visible="false" managed="false" />
-                <Button fx:id="btnDeleteTeam" text="🗑  Supprimer l'équipe"
-                        styleClass="player-quit-btn"
-                        onAction="#handleDeleteTeam"
-                        visible="false" managed="false" />
-            </HBox>
 
-            <!-- ── Swappable area ────────────────────────────────── -->
-            <StackPane fx:id="swapPane">
+                <!-- ── Swappable area ────────────────────────────────── -->
+                <StackPane fx:id="swapPane">
 
                 <!-- MON ÉQUIPE content -->
                 <VBox fx:id="mainContent" spacing="16">
                     <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
 
-                    <!-- 50/50 Split -->
+                    <!-- 2-Column Split: Members | Info -->
                     <HBox fx:id="splitPanel" spacing="16">
 
                         <!-- LEFT: Members -->
@@ -112,6 +113,7 @@
                                 <Label fx:id="infoDate" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
                             </VBox>
                         </VBox>
+
                     </HBox>
 
                     <!-- Training Sessions -->

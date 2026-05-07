@@ -4,63 +4,120 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@TeamDetail.css"
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@PlayerTeams.css"
            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="Genex.Controllers.Team.TeamDetailController">
 
-    <VBox fx:id="contentArea" spacing="20">
-        <padding>
-            <Insets bottom="25" left="25" right="25" top="25" />
-        </padding>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                style="-fx-background-color: #0d0d1a; -fx-background: #0d0d1a;">
+        <content>
+            <VBox fx:id="contentArea" spacing="0"
+                  style="-fx-background-color: #0d0d1a;">
 
-        <!-- Header: back + team name -->
-        <HBox alignment="CENTER_LEFT" spacing="15">
-            <Button fx:id="btnBack" onAction="#handleBack" styleClass="back-btn" text="← Retour" />
-            <Label fx:id="teamNameTitle" styleClass="page-title" text="Team Name" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Text fx:id="teamTag" styleClass="team-tag-large" text="[TAG]" />
-        </HBox>
+                <!-- ── Nav Bar ───────────────────────────────────────── -->
+                <HBox alignment="CENTER_LEFT" spacing="12"
+                      style="-fx-background-color: #12122a; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 0 0 1 0; -fx-padding: 12 20 12 20;">
+                    <Button fx:id="btnBack" onAction="#handleBack" 
+                            style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.15); -fx-border-width: 1; -fx-border-radius: 6;"
+                            text="← Retour" />
+                    <Label fx:id="teamNameTitle"
+                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"
+                           text="Team Name" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Text fx:id="teamTag"
+                          style="-fx-fill: rgba(255,255,255,0.5); -fx-font-size: 14px;"
+                          text="[ACTIVE]" />
+                </HBox>
 
-        <!-- Team info cards -->
-        <HBox spacing="20">
-            <VBox spacing="8" styleClass="info-card">
-                <Text styleClass="info-label" text="Jeu" />
-                <Text fx:id="teamGame" styleClass="info-value" text="Game Name" />
+                <!-- ── Main Content ────────────────────────────────── -->
+                <VBox spacing="16">
+                    <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
+
+                    <!-- 50/50 Split -->
+                    <HBox spacing="16">
+
+                        <!-- LEFT: Members -->
+                        <VBox spacing="12" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
+
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px; -fx-font-weight: bold;"
+                                       text="MEMBRES" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="memberCountLabel" styleClass="player-member-count"
+                                       text="0 / 5 membres" />
+                            </HBox>
+
+                            <VBox fx:id="membersContainer" spacing="8" />
+                        </VBox>
+
+                        <!-- RIGHT: Logo + Info -->
+                        <VBox spacing="14" HBox.hgrow="ALWAYS"
+                              alignment="TOP_CENTER"
+                              style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
+
+                            <!-- Logo -->
+                            <StackPane alignment="CENTER" maxHeight="100" minHeight="100">
+                                <Circle radius="44"
+                                        style="-fx-fill: #0d0d1a; -fx-stroke: #8B0D0D; -fx-stroke-width: 2;" />
+                                <ImageView fitWidth="76" fitHeight="76"
+                                           preserveRatio="true">
+                                    <clip>
+                                        <Circle radius="38" centerX="38" centerY="38" />
+                                    </clip>
+                                </ImageView>
+                                <Text style="-fx-fill: #8B0D0D; -fx-font-size: 28px;"
+                                      text="▶" />
+                            </StackPane>
+
+                            <!-- Info rows -->
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="JEU" />
+                                <Label fx:id="teamGame" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="CONTACT" />
+                                <Label fx:id="teamType" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="STATUT" />
+                                <Text fx:id="teamStatus" style="-fx-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="FONDÉE LE" />
+                                <Text fx:id="teamFounded" style="-fx-fill: white; -fx-font-size: 13px;" text="—" />
+                            </VBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Training Sessions -->
+                    <VBox spacing="12"
+                          style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"
+                                   text="📅 Séances d'Entraînement" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="btnAddSession" text="＋  Ajouter"
+                                    styleClass="player-add-session-btn"
+                                    onAction="#openAddSessionModal" />
+                        </HBox>
+
+                        <VBox fx:id="sessionsContainer" spacing="12" />
+                    </VBox>
+
+                </VBox>
+
             </VBox>
-            <VBox spacing="8" styleClass="info-card">
-                <Text styleClass="info-label" text="Contact" />
-                <Text fx:id="teamType" styleClass="info-value" text="Type" />
-            </VBox>
-            <VBox spacing="8" styleClass="info-card">
-                <Text styleClass="info-label" text="Fondée le" />
-                <Text fx:id="teamFounded" styleClass="info-value" text="Date" />
-            </VBox>
-        </HBox>
-
-        <!-- Sessions header -->
-        <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label styleClass="section-title" text="📅 Séances d'Entraînement" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnAddSession" onAction="#openAddSessionModal"
-                    styleClass="action-blue-button" text="＋  AJOUTER" />
-        </HBox>
-
-        <!-- Sessions list -->
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-                    style="-fx-background-color: transparent;"
-                    styleClass="scroll-pane" vbarPolicy="ALWAYS"
-                    VBox.vgrow="ALWAYS">
-            <content>
-                <VBox fx:id="sessionsContainer" spacing="15" styleClass="sessions-container" />
-            </content>
-        </ScrollPane>
-    </VBox>
+        </content>
+    </ScrollPane>
 
 </StackPane>

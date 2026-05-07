@@ -28,6 +28,7 @@ public class AddTeamModalController {
     @FXML private TextField txtContact;
     @FXML private TextField txtLogoFileName;
     @FXML private ChoiceBox<Team.Status> choiceStatus;
+    @FXML private javafx.scene.control.Button btnCloseModal;
 
     // Error labels
     @FXML private Label errorName;
@@ -48,6 +49,11 @@ public class AddTeamModalController {
         // Set default title
         if (modalTitle != null) {
             modalTitle.setText("NOUVELLE ÉQUIPE");
+        }
+
+        // Setup close button
+        if (btnCloseModal != null) {
+            btnCloseModal.setOnAction(e -> closeModal());
         }
 
         // Load games

@@ -25,9 +25,10 @@
         </padding>
 
         <!-- Header -->
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="CENTER_LEFT" spacing="12">
             <Label fx:id="modalTitle" text="Nouvelle session" styleClass="drawer-title" />
             <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnCloseModal" text="✕" styleClass="btn-close-polygon" />
         </HBox>
 
         <Separator styleClass="drawer-sep">

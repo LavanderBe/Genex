@@ -5,6 +5,7 @@ import Genex.entities.Player;
 import Genex.entities.Team;
 import Genex.entities.TrainingSession;
 import Genex.services.CrudGame;
+import Genex.services.CrudPlayer;
 import Genex.services.CrudTeam;
 import Genex.services.CrudTeamMember;
 import Genex.services.CrudTrainingSession;
@@ -23,6 +24,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerTeamDetailController {
@@ -59,6 +61,7 @@ public class PlayerTeamDetailController {
     private CrudTeamMember crudTeamMember;
     private CrudTrainingSession crudTrainingSession;
     private PlayerTeamBrowserController browserController;
+    private TeamChatPanelController chatController;
 
     @FXML
     public void initialize() {
@@ -78,6 +81,11 @@ public class PlayerTeamDetailController {
 
     public void setBrowserController(PlayerTeamBrowserController controller) {
         this.browserController = controller;
+    }
+
+    private void loadChatPanel() {
+        // Chat is now opened via modal from browser controller
+        // This method is kept for compatibility but does nothing
     }
 
     public void openEditSessionModal(TrainingSession session) {
@@ -125,6 +133,7 @@ public class PlayerTeamDetailController {
         innerContainer.setVisible(true);
         innerContainer.setManaged(true);
         setActiveTab(btnAutresEquipes, btnMonEquipe);
+        teamNameLabel.setText("Autres équipes");
         loadOtherTeams();
     }
 
@@ -235,7 +244,12 @@ public class PlayerTeamDetailController {
                 btnAddSession.setManaged(isCreator);
                 loadSessions();
             }
-            setActiveTab(btnMonEquipe, btnAutresEquipes);
+            // Set active tab based on whether this is the user's team or another team
+            if (isMember || isCreator) {
+                setActiveTab(btnMonEquipe, btnAutresEquipes);
+            } else {
+                setActiveTab(btnAutresEquipes, btnMonEquipe);
+            }
             boolean showQuit = isMember && !isCreator;
             btnQuitTeam.setVisible(showQuit);
             btnQuitTeam.setManaged(showQuit);
@@ -313,30 +327,255 @@ public class PlayerTeamDetailController {
         List<Player> members = crudTeamMember.getMembersByTeam(team.getId());
         memberCountLabel.setText(members.size() + " / " + CrudTeamMember.MAX_MEMBERS + " membres");
 
-        if (members.isEmpty()) {
-            Label empty = new Label("Aucun membre pour l'instant.");
-            empty.setStyle("-fx-text-fill: rgba(255,255,255,0.35); -fx-font-style: italic;");
-            membersContainer.getChildren().add(empty);
-            return;
+        // Always show 5 slots (MAX_MEMBERS)
+        for (int i = 0; i < CrudTeamMember.MAX_MEMBERS; i++) {
+            if (i < members.size()) {
+                // Existing member slot
+                Player p = members.get(i);
+                boolean isTeamCreator = team.getCreatedBy() != null && team.getCreatedBy().equals(p.getId());
+                
+                HBox row = new HBox(12);
+                row.setAlignment(Pos.CENTER_LEFT);
+                
+                // Different background color for creator
+                if (isTeamCreator) {
+                    row.setStyle("-fx-background-color: rgba(218,165,32,0.15); -fx-background-radius: 8; -fx-padding: 8 12 8 12; -fx-border-color: rgba(218,165,32,0.4); -fx-border-width: 1; -fx-border-radius: 8;");
+                } else {
+                    row.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 8; -fx-padding: 8 12 8 12;");
+                }
+
+                String nickname = p.getNickname() != null ? p.getNickname() : p.getUsername();
+                String fullName = ((p.getPrenom() != null ? p.getPrenom() : "") + " " +
+                                   (p.getNom() != null ? p.getNom() : "")).trim();
+
+                Label nickLabel = new Label(nickname);
+                if (isTeamCreator) {
+                    nickLabel.setStyle("-fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-font-size: 13px;");
+                } else {
+                    nickLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;");
+                }
+
+                Label nameLabel = new Label(fullName.isEmpty() ? "" : "— " + fullName);
+                if (isTeamCreator) {
+                    nameLabel.setStyle("-fx-text-fill: rgba(218,165,32,0.7); -fx-font-size: 11px;");
+                } else {
+                    nameLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 11px;");
+                }
+                
+                // Add crown icon for creator
+                if (isTeamCreator) {
+                    Label crownIcon = new Label("👑");
+                    crownIcon.setStyle("-fx-font-size: 14px;");
+                    row.getChildren().addAll(crownIcon, nickLabel, nameLabel);
+                } else {
+                    row.getChildren().addAll(nickLabel, nameLabel);
+                    
+                    // Add spacer
+                    Region spacer = new Region();
+                    HBox.setHgrow(spacer, Priority.ALWAYS);
+                    row.getChildren().add(spacer);
+                    
+                    // Add kick button (only visible to creator)
+                    if (isCreator) {
+                        Button btnKick = new Button("Kick");
+                        btnKick.setStyle(
+                            "-fx-background-color: rgba(139,13,13,0.3);" +
+                            "-fx-text-fill: #ff6b6b;" +
+                            "-fx-font-size: 11px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-padding: 4 12;" +
+                            "-fx-background-radius: 6px;" +
+                            "-fx-border-radius: 6px;" +
+                            "-fx-cursor: hand;" +
+                            "-fx-border-color: rgba(255,107,107,0.3);" +
+                            "-fx-border-width: 1;"
+                        );
+                        btnKick.setOnMouseEntered(e -> 
+                            btnKick.setStyle(
+                                "-fx-background-color: #8B0D0D;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 11px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 4 12;" +
+                                "-fx-background-radius: 6px;" +
+                                "-fx-border-radius: 6px;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-border-color: rgba(255,255,255,0.5);" +
+                                "-fx-border-width: 1;"
+                            )
+                        );
+                        btnKick.setOnMouseExited(e -> 
+                            btnKick.setStyle(
+                                "-fx-background-color: rgba(139,13,13,0.3);" +
+                                "-fx-text-fill: #ff6b6b;" +
+                                "-fx-font-size: 11px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 4 12;" +
+                                "-fx-background-radius: 6px;" +
+                                "-fx-border-radius: 6px;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-border-color: rgba(255,107,107,0.3);" +
+                                "-fx-border-width: 1;"
+                            )
+                        );
+                        btnKick.setOnAction(e -> kickPlayer(p));
+                        row.getChildren().add(btnKick);
+                    }
+                }
+                
+                membersContainer.getChildren().add(row);
+            } else {
+                // Empty slot
+                HBox row = new HBox(12);
+                row.setAlignment(Pos.CENTER);
+                row.setStyle("-fx-background-color: rgba(255,255,255,0.02); -fx-background-radius: 8; -fx-padding: 8 12 8 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1; -fx-border-style: dashed; -fx-border-radius: 8;");
+
+                if (isCreator) {
+                    // Show circular "+" button for creator
+                    Button btnAddPlayer = new Button("+");
+                    btnAddPlayer.setStyle(
+                        "-fx-background-color: #8B0D0D;" +
+                        "-fx-text-fill: #FFFFFF;" +
+                        "-fx-font-size: 24px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-family: 'Arial';" +
+                        "-fx-min-width: 40px;" +
+                        "-fx-min-height: 40px;" +
+                        "-fx-max-width: 40px;" +
+                        "-fx-max-height: 40px;" +
+                        "-fx-pref-width: 40px;" +
+                        "-fx-pref-height: 40px;" +
+                        "-fx-background-radius: 20px;" +
+                        "-fx-border-radius: 20px;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-border-color: rgba(255,255,255,0.3);" +
+                        "-fx-border-width: 1.5;" +
+                        "-fx-padding: 0;" +
+                        "-fx-alignment: center;"
+                    );
+                    btnAddPlayer.setOnMouseEntered(e -> 
+                        btnAddPlayer.setStyle(
+                            "-fx-background-color: #A01010;" +
+                            "-fx-text-fill: #FFFFFF;" +
+                            "-fx-font-size: 24px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-family: 'Arial';" +
+                            "-fx-min-width: 40px;" +
+                            "-fx-min-height: 40px;" +
+                            "-fx-max-width: 40px;" +
+                            "-fx-max-height: 40px;" +
+                            "-fx-pref-width: 40px;" +
+                            "-fx-pref-height: 40px;" +
+                            "-fx-background-radius: 20px;" +
+                            "-fx-border-radius: 20px;" +
+                            "-fx-cursor: hand;" +
+                            "-fx-border-color: rgba(255,255,255,0.5);" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-padding: 0;" +
+                            "-fx-alignment: center;"
+                        )
+                    );
+                    btnAddPlayer.setOnMouseExited(e -> 
+                        btnAddPlayer.setStyle(
+                            "-fx-background-color: #8B0D0D;" +
+                            "-fx-text-fill: #FFFFFF;" +
+                            "-fx-font-size: 24px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-family: 'Arial';" +
+                            "-fx-min-width: 40px;" +
+                            "-fx-min-height: 40px;" +
+                            "-fx-max-width: 40px;" +
+                            "-fx-max-height: 40px;" +
+                            "-fx-pref-width: 40px;" +
+                            "-fx-pref-height: 40px;" +
+                            "-fx-background-radius: 20px;" +
+                            "-fx-border-radius: 20px;" +
+                            "-fx-cursor: hand;" +
+                            "-fx-border-color: rgba(255,255,255,0.3);" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-padding: 0;" +
+                            "-fx-alignment: center;"
+                        )
+                    );
+                    btnAddPlayer.setOnAction(e -> openAddPlayerModal());
+                    row.getChildren().add(btnAddPlayer);
+                } else {
+                    // Show empty slot text for non-creators
+                    Label emptyLabel = new Label("Emplacement libre");
+                    emptyLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.25); -fx-font-style: italic; -fx-font-size: 11px;");
+                    row.getChildren().add(emptyLabel);
+                }
+                
+                membersContainer.getChildren().add(row);
+            }
         }
+    }
 
-        for (Player p : members) {
-            HBox row = new HBox(12);
-            row.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 8; -fx-padding: 8 12 8 12;");
-
-            String nickname = p.getNickname() != null ? p.getNickname() : p.getUsername();
-            String fullName = ((p.getPrenom() != null ? p.getPrenom() : "") + " " +
-                               (p.getNom() != null ? p.getNom() : "")).trim();
-
-            Label nickLabel = new Label(nickname);
-            nickLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;");
-
-            Label nameLabel = new Label(fullName.isEmpty() ? "" : "— " + fullName);
-            nameLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 11px;");
-
-            row.getChildren().addAll(nickLabel, nameLabel);
-            membersContainer.getChildren().add(row);
+    private void openAddPlayerModal() {
+        if (team == null) return;
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Fxml/Team/AddPlayerToTeamModal.fxml"));
+            StackPane modalOverlay = loader.load();
+            swapPane.getChildren().add(modalOverlay);
+            
+            AddPlayerToTeamModalController controller = loader.getController();
+            controller.setTeam(team);
+            controller.setOnPlayerAddedCallback(player -> {
+                loadMembers(); // Refresh the members list
+            });
+            controller.setOnCloseCallback(() -> 
+                swapPane.getChildren().remove(modalOverlay));
+            
+        } catch (Exception e) {
+            System.err.println("Error opening add player modal: " + e.getMessage());
+            e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir le modal d'ajout de joueur.");
+            alert.showAndWait();
         }
+    }
+
+    private void kickPlayer(Player player) {
+        if (team == null || player == null) return;
+        
+        // Confirm kick action
+        javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Retirer le joueur");
+        confirm.setHeaderText("Retirer \"" + (player.getNickname() != null ? player.getNickname() : player.getUsername()) + "\" de l'équipe ?");
+        confirm.setContentText("Ce joueur sera retiré de l'équipe et pourra rejoindre une autre équipe.");
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                try {
+                    crudTeamMember.removeMember(team.getId(), player.getId());
+                    loadMembers(); // Refresh the members list
+                    
+                    // Show success message
+                    javafx.scene.control.Alert success = new javafx.scene.control.Alert(
+                            javafx.scene.control.Alert.AlertType.INFORMATION);
+                    success.setTitle("Succès");
+                    success.setHeaderText(null);
+                    success.setContentText("Le joueur a été retiré de l'équipe.");
+                    success.showAndWait();
+                    
+                } catch (Exception e) {
+                    System.err.println("Error kicking player: " + e.getMessage());
+                    e.printStackTrace();
+                    javafx.scene.control.Alert error = new javafx.scene.control.Alert(
+                            javafx.scene.control.Alert.AlertType.ERROR);
+                    error.setTitle("Erreur");
+                    error.setHeaderText(null);
+                    error.setContentText("Impossible de retirer le joueur de l'équipe.");
+                    error.showAndWait();
+                }
+            }
+        });
     }
 
     private void loadSessions() {
@@ -411,10 +650,15 @@ public class PlayerTeamDetailController {
 
             List<Team> allTeams = new CrudTeam().getAll();
             boolean hasOthers = false;
+            
+            // Get current user's team to exclude it
+            String currentUserId = SessionManager.getInstance().getCurrentUserId();
+            Team myTeam = crudTeamMember.getTeamByPlayer(currentUserId);
 
             for (Team t : allTeams) {
                 if (t.getStatus() != Team.Status.ACTIVE) continue;
-                if (t.getId().equals(team.getId())) continue;
+                // Exclude the user's own team from the list
+                if (myTeam != null && t.getId().equals(myTeam.getId())) continue;
                 hasOthers = true;
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/Fxml/Team/PlayerTeamCard.fxml"));

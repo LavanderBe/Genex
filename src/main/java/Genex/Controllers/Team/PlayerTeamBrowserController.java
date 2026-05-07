@@ -24,11 +24,17 @@ public class PlayerTeamBrowserController {
 
     private CrudTeamMember crudTeamMember;
     private String currentUserId;
+    private Button chatBubbleBtn;
+    private Team currentTeam;
+    private StackPane currentChatModal;
 
     @FXML
     public void initialize() {
         crudTeamMember = new CrudTeamMember();
         currentUserId = SessionManager.getInstance().getCurrentUserId();
+
+        // Create floating chat bubble button
+        createFloatingChatButton();
 
         if (currentUserId == null) {
             showError("Session expirée. Veuillez vous reconnecter.");
@@ -49,10 +55,109 @@ public class PlayerTeamBrowserController {
         }
     }
 
+    private void createFloatingChatButton() {
+        chatBubbleBtn = new Button("💬");
+        chatBubbleBtn.setStyle(
+            "-fx-background-color: #8B0D0D;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-size: 32px;" +
+            "-fx-min-width: 70px;" +
+            "-fx-min-height: 70px;" +
+            "-fx-max-width: 70px;" +
+            "-fx-max-height: 70px;" +
+            "-fx-background-radius: 35px;" +
+            "-fx-border-radius: 35px;" +
+            "-fx-border-color: rgba(255,255,255,0.3);" +
+            "-fx-border-width: 2;" +
+            "-fx-cursor: hand;" +
+            "-fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 15, 0, 0, 5);"
+        );
+        
+        chatBubbleBtn.setOnMouseEntered(e -> chatBubbleBtn.setStyle(
+            "-fx-background-color: #A01010;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-size: 32px;" +
+            "-fx-min-width: 70px;" +
+            "-fx-min-height: 70px;" +
+            "-fx-max-width: 70px;" +
+            "-fx-max-height: 70px;" +
+            "-fx-background-radius: 35px;" +
+            "-fx-border-radius: 35px;" +
+            "-fx-border-color: rgba(255,255,255,0.5);" +
+            "-fx-border-width: 2;" +
+            "-fx-cursor: hand;" +
+            "-fx-effect: dropshadow(gaussian, rgba(139,13,13,0.8), 20, 0, 0, 7);" +
+            "-fx-scale-x: 1.05;" +
+            "-fx-scale-y: 1.05;"
+        ));
+        
+        chatBubbleBtn.setOnMouseExited(e -> chatBubbleBtn.setStyle(
+            "-fx-background-color: #8B0D0D;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-size: 32px;" +
+            "-fx-min-width: 70px;" +
+            "-fx-min-height: 70px;" +
+            "-fx-max-width: 70px;" +
+            "-fx-max-height: 70px;" +
+            "-fx-background-radius: 35px;" +
+            "-fx-border-radius: 35px;" +
+            "-fx-border-color: rgba(255,255,255,0.3);" +
+            "-fx-border-width: 2;" +
+            "-fx-cursor: hand;" +
+            "-fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 15, 0, 0, 5);"
+        ));
+        
+        chatBubbleBtn.setOnAction(e -> openChatModal());
+        chatBubbleBtn.setVisible(false);
+        chatBubbleBtn.setManaged(false);
+        
+        StackPane.setAlignment(chatBubbleBtn, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(chatBubbleBtn, new Insets(0, 30, 30, 0));
+        
+        rootStackPane.getChildren().add(chatBubbleBtn);
+    }
+
+    private void openChatModal() {
+        // Prevent opening multiple modals
+        if (currentChatModal != null) {
+            return;
+        }
+        
+        if (currentTeam == null) {
+            return;
+        }
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Fxml/Team/TeamChatModal.fxml"));
+            currentChatModal = loader.load();
+            
+            TeamChatPanelController controller = loader.getController();
+            controller.setTeam(currentTeam.getId());
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(currentChatModal);
+                currentChatModal = null;
+                chatBubbleBtn.setVisible(true);
+            });
+            
+            // Hide bubble when modal opens
+            chatBubbleBtn.setVisible(false);
+            
+            rootStackPane.getChildren().add(currentChatModal);
+            
+        } catch (Exception e) {
+            System.err.println("Error loading chat modal: " + e.getMessage());
+            e.printStackTrace();
+            currentChatModal = null;
+            chatBubbleBtn.setVisible(true);
+        }
+    }
+
     // ── Public navigation API ────────────────────────────────────────
 
     public void showTeamDetail(Team team) {
         try {
+            currentTeam = team;
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/Fxml/Team/PlayerTeamDetail.fxml"));
             Parent detailRoot = loader.load();
@@ -60,6 +165,12 @@ public class PlayerTeamBrowserController {
             controller.setTeam(team);
             controller.setBrowserController(this);
             innerContainer.getChildren().setAll(detailRoot);
+            
+            // Show chat bubble for team members
+            boolean isMember = crudTeamMember.isMember(team.getId(), currentUserId);
+            boolean isCreator = team.getCreatedBy() != null && team.getCreatedBy().equals(currentUserId);
+            chatBubbleBtn.setVisible(isMember || isCreator);
+            chatBubbleBtn.setManaged(isMember || isCreator);
         } catch (Exception e) {
             System.err.println("Error loading team detail view");
             e.printStackTrace();
@@ -69,6 +180,7 @@ public class PlayerTeamBrowserController {
 
     public void showTeamDetailViewOnly(Team team) {
         try {
+            currentTeam = null;
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/Fxml/Team/PlayerTeamDetail.fxml"));
             Parent detailRoot = loader.load();
@@ -76,6 +188,10 @@ public class PlayerTeamBrowserController {
             controller.setTeamViewOnly(team);
             controller.setBrowserController(this);
             innerContainer.getChildren().setAll(detailRoot);
+            
+            // Hide chat bubble when viewing other teams
+            chatBubbleBtn.setVisible(false);
+            chatBubbleBtn.setManaged(false);
         } catch (Exception e) {
             System.err.println("Error loading team detail view (view-only)");
             e.printStackTrace();
@@ -85,6 +201,10 @@ public class PlayerTeamBrowserController {
 
     public void showTeamList() {
         try {
+            currentTeam = null;
+            // Hide chat bubble in team list
+            chatBubbleBtn.setVisible(false);
+            chatBubbleBtn.setManaged(false);
             List<Team> allTeams = new CrudTeam().getAll();
 
             // ── Outer wrapper ────────────────────────────────────────

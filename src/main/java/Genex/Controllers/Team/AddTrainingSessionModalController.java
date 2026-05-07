@@ -53,6 +53,9 @@ public class AddTrainingSessionModalController {
     @FXML
     private Button btnSave;
 
+    @FXML
+    private Button btnCloseModal;
+
     // Error labels
     @FXML
     private Label errorTitle;
@@ -90,6 +93,11 @@ public class AddTrainingSessionModalController {
         if (choiceStatus != null) {
             choiceStatus.getItems().addAll(TrainingSession.Status.values());
             choiceStatus.setValue(TrainingSession.Status.PLANNED);
+        }
+
+        // Setup close button
+        if (btnCloseModal != null) {
+            btnCloseModal.setOnAction(e -> closeModal());
         }
 
         // Setup validation listeners

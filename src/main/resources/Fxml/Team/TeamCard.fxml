@@ -1,71 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Team.TeamCardController"
-      styleClass="team-card"
-      stylesheets="@TeamCard.css"
-      spacing="16"
-      onMouseClicked="#handleCardClick">
+      styleClass="player-team-card"
+      stylesheets="@PlayerTeams.css"
+      spacing="12"
+      prefWidth="260">
 
-    <children>
-        <!-- Header -->
-        <VBox styleClass="team-card-header" spacing="8" alignment="CENTER">
-            <children>
-                <!-- Team Logo -->
-                <StackPane styleClass="team-logo-container">
-                    <children>
-                        <Circle radius="40" styleClass="team-logo-circle" />
-                        <ImageView fx:id="teamLogo" fitWidth="70" fitHeight="70" preserveRatio="true" styleClass="team-logo-image">
-                            <clip>
-                                <Circle radius="35" centerX="35" centerY="35" />
-                            </clip>
-                        </ImageView>
-                        <!-- Fallback icon if no logo -->
-                        <Text fx:id="teamIconFallback" styleClass="team-icon" text="▶" visible="false" />
-                    </children>
-                </StackPane>
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16" />
+    </padding>
 
-                <Text fx:id="teamName" styleClass="team-name" text="Team Name" />
-                <Text fx:id="teamTag" styleClass="team-tag" text="[TAG]" />
-            </children>
-        </VBox>
+    <!-- Logo area -->
+    <StackPane alignment="CENTER">
+        <Circle radius="36" styleClass="player-card-logo-circle" />
+        <ImageView fx:id="teamLogo" fitWidth="64" fitHeight="64" preserveRatio="true">
+            <clip>
+                <Circle radius="32" centerX="32" centerY="32" />
+            </clip>
+        </ImageView>
+        <Text fx:id="teamIconFallback" styleClass="player-card-logo-fallback" text="▶" visible="false" />
+    </StackPane>
 
-        <!-- Info -->
-        <VBox spacing="8">
-            <children>
-                <HBox styleClass="team-info-row" spacing="8">
-                    <children>
-                        <Text styleClass="team-info-label" text="Jeu:" />
-                        <Text fx:id="teamGame" styleClass="team-info-value" text="Game" />
-                    </children>
-                </HBox>
+    <!-- Team name -->
+    <Text fx:id="teamName" styleClass="player-card-team-name" text="Team Name"
+          wrappingWidth="220" textAlignment="CENTER" />
 
-                <HBox styleClass="team-info-row" spacing="8">
-                    <children>
-                        <Text styleClass="team-info-label" text="Contact:" />
-                        <Text fx:id="teamType" styleClass="team-info-value" text="Type" />
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
+    <!-- Status tag -->
+    <Text fx:id="teamTag" styleClass="player-card-status-tag" text="[ACTIVE]"
+          textAlignment="CENTER" />
 
-        <!-- Actions -->
-        <HBox spacing="8" alignment="CENTER">
-            <children>
-                <Button fx:id="btnView" onAction="#handleView" styleClass="card-action-btn" text="Voir" />
-                <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="card-action-btn-edit" text="Modifier" />
-                <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="card-action-btn-delete" text="×" />
-            </children>
-        </HBox>
-    </children>
+    <!-- Game row -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+        <Text styleClass="player-card-info-label" text="Jeu:" />
+        <Text fx:id="teamGame" styleClass="player-card-info-value" text="—" />
+    </HBox>
+
+    <!-- Contact row -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+        <Text styleClass="player-card-info-label" text="Contact:" />
+        <Text fx:id="teamType" styleClass="player-card-info-value" text="—" />
+    </HBox>
+
+    <!-- Action buttons -->
+    <HBox spacing="8" alignment="CENTER">
+        <Button fx:id="btnView" text="Voir" styleClass="player-view-btn"
+                onAction="#handleView" prefWidth="100" />
+        <Button fx:id="btnEdit" text="Modifier" styleClass="player-join-btn"
+                onAction="#handleEdit" prefWidth="100" />
+        <Button fx:id="btnDelete" text="Supprimer" styleClass="player-delete-btn"
+                onAction="#handleDelete" prefWidth="100" />
+    </HBox>
 
 </VBox>

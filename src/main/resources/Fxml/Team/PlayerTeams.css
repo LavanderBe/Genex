@@ -101,6 +101,33 @@
     -fx-effect: none;
 }
 
+/* "Supprimer" button — dark red polygon */
+.player-delete-btn {
+    -fx-background-color: rgba(220, 50, 50, 0.15);
+    -fx-text-fill: rgba(220, 50, 50, 0.95);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 140 0 L 152 10 L 152 36 L 12 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-padding: 9 0;
+    -fx-border-color: rgba(220, 50, 50, 0.4);
+    -fx-border-width: 1;
+}
+
+.player-delete-btn:hover {
+    -fx-background-color: rgba(220, 50, 50, 0.3);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+    -fx-border-color: rgba(220, 50, 50, 0.6);
+}
+
+/* ── Status tag ───────────────────────────────────────────── */
+.player-card-status-tag {
+    -fx-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
 /* ── Tab buttons ──────────────────────────────────────────── */
 .player-tab-btn {
     -fx-background-color: rgba(255, 255, 255, 0.06);
