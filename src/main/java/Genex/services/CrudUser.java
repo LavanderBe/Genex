@@ -6,6 +6,9 @@ import Genex.utils.Myconnection;
 
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrudUser implements ICrud<User> {
     public CrudUser() {
@@ -84,6 +87,23 @@ public class CrudUser implements ICrud<User> {
             System.out.println(u);
             }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<User> SelectEntities(){
+        String requete="SELECT * " +
+                "FROM users";
+        List<User> l=new ArrayList<>();
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            ResultSet rs=pst.executeQuery();
+            while (rs.next()){
+                User u=new User(rs.getString("username"), rs.getString("email"), rs.getString("role"), rs.getTimestamp("created_at").toLocalDateTime());
+                l.add(u);
+            }
+            return l;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

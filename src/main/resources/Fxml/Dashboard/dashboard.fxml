@@ -81,7 +81,7 @@
                         <Button contentDisplay="TOP" onAction="#navDashboardBtn" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button-active" text="DASHBOARD">
                             <graphic><SVGPath content="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="#8b0d0d" /></graphic>
                         </Button>
-                        <Button contentDisplay="TOP" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button" text="COMPTES">
+                        <Button contentDisplay="TOP" onAction="#navAccountBtn" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button" text="COMPTES">
                             <graphic><SVGPath content="M4,2 C5.65685425,2 7,3.34314575 7,5 C7,5.67575081 6.7765771,6.2993184 6.39957171,6.80086239 C7.37120562,7.52882672 8,8.69098363 8,10 L8,14 L2.93098879e-14,14 L2.93098879e-14,10 C2.93098879e-14,8.69098363 0.628794382,7.52882672 1.60081401,6.79909841 C1.2234229,6.2993184 1,5.67575081 1,5 C1,3.34314575 2.34314575,2 4,2 Z M4,8 C2.89543475,8 2,8.89543475 2,10 L2,12 L6,12 L6,10 C6,8.89543475 5.10456525,8 4,8 Z" fill="#8b0d0d" scaleX="1.5" scaleY="1.5" /></graphic>
                         </Button>
                         <Button contentDisplay="TOP" onAction="#navPlayerBtn" prefHeight="75.0" prefWidth="120.0" styleClass="nav-button" text="JOUEURS">

@@ -3,6 +3,7 @@ package Genex.Controllers.Login;
 import Genex.Server.LocalHttpServer;
 import Genex.entities.User;
 import Genex.services.CrudUser;
+import Genex.services.GoogleAuthService;
 import Genex.services.UserControl;
 import Genex.utils.HcaptchaVerifier;
 import Genex.utils.SessionManager;
@@ -261,7 +262,58 @@ public class Login {
     }
 
     @FXML private void handleGoogleLogin(ActionEvent event) {
-        System.out.println("Initiating Google OAuth...");
+        loginBtn.setDisable(true);
+        loginBtn.setText("BROWSER_UPLINK_OPEN...");
+
+        new Thread(() -> {
+            try {
+                GoogleAuthService service = new GoogleAuthService();
+                var googleUser = service.getUserInfo();
+
+                // Jump back to the UI thread once we have the data
+                javafx.application.Platform.runLater(() -> {
+                    syncWithDatabase(googleUser.getEmail(), googleUser.getGivenName());
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> loginBtn.setDisable(false));
+            }
+        }).start();
+    }
+
+    private void syncWithDatabase(String email, String name) {
+        System.out.println(email+" "+name);
+        CrudUser cu = new CrudUser();
+        User u;
+        // 1. Check if this Google user already exists in your WAMP DB
+        if (cu.check_email(email)) {
+            u=cu.getUser_withmail(email);
+        } else {
+            u = new User(name,email,"nothing","player");
+            u.setPassword_hash("OAUTH_USER_SECURE");
+            u.setSalt("NO_SALT_GOOGLE");
+            cu.addEntity(u);
+            u=cu.getUser_withmail(email);
+            //TODO :load first time login to finish player info
+        }
+        SessionManager.getInstance().setCurrentUser(u);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        double width = stage.getScene().getWidth();
+        double height = stage.getScene().getHeight();
+        Scene scene = new Scene(root, width, height);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
+        cleanup();
     }
 
     @FXML private void handleDiscordLogin(ActionEvent event) {

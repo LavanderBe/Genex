@@ -219,7 +219,7 @@ public class Games {
     private void handleTerminate(Game game, VBox cardNode) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("SYSTEM_WARNING");
-        alert.setHeaderText("PURGE ENTITY: " + game.getNom().toUpperCase());
+        alert.setHeaderText("Supprimer : " + game.getNom().toUpperCase());
         alert.setContentText("Link termination is irreversible. Proceed?");
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/Fxml/Dashboard/alert_style.css").toExternalForm());
