@@ -1,12 +1,10 @@
 package Genex.Controllers.Login;
 
-import Genex.Server.LocalHttpServer;
 import Genex.entities.User;
 import Genex.services.CrudUser;
-import Genex.services.GoogleAuthService;
 import Genex.services.UserControl;
-import Genex.utils.HcaptchaVerifier;
 import Genex.utils.SessionManager;
+import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -23,25 +21,18 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.io.File;
 import java.io.IOException;
-import javafx.scene.web.WebView;
-import netscape.javascript.JSObject;
 
 public class Login {
-
-    int nb_errors=3;
-
-
-    @FXML private WebView captchaWebView;
-    @FXML private Label Errorcaptcha;
 
     @FXML
     private TextField EmailField;
 
-    @FXML private PasswordField passwordField;
+    @FXML
+    private PasswordField passwordField;
 
     @FXML
     private Label Errormail;
@@ -61,13 +52,8 @@ public class Login {
     @FXML
     public void initialize() {
         try {
-            // Start local server
-            LocalHttpServer.start();
-            String captchaUrl = "http://localhost:7654/captcha.html";
-            captchaWebView.getEngine().load(captchaUrl);
-
             // 1. Try to get the resource
-            var resource = getClass().getResource("/Videos/test.mp4");
+            var resource = getClass().getResource("/Videos/Login.mp4");
 
             if (resource == null) {
                 // This is what is happening now.
@@ -90,143 +76,98 @@ public class Login {
             mediaView.fitWidthProperty().bind(rootPane.widthProperty());
             mediaView.fitHeightProperty().bind(rootPane.heightProperty());
 
-            mediaView.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    newScene.windowProperty().addListener((obs2, oldWindow, newWindow) -> {
-                        if (newWindow != null) {
-                            newWindow.setOnCloseRequest(e -> cleanup());
-                        }
-                    });
-                }
-            });
-
         } catch (Exception e) {
             System.err.println("Error initializing media: " + e.getMessage());
         }
     }
 
     @FXML private void handleSignIn(ActionEvent event) {
+
         boolean valid = true;
         showError(Errorpassword, "");
         showError(Errormail, "");
         String email = EmailField.getText().trim();
         String password = passwordField.getText();
-        String token = (String) captchaWebView.getEngine().executeScript("getCaptchaToken()");
 
-        if (token == null || token.isBlank()) {
-            Errorcaptcha.setText("Veuillez compléter la vérification captcha");
-            Errorcaptcha.setVisible(true);
+        if (email.isEmpty()) {
+            showError(Errormail, "L'email est requis");
+            valid = false;
+        } else if (!UserControl.isValidEmail(email)) {
+            showError(Errormail, "Format d'email invalide");
+            valid = false;
+        }
+
+        if (password.isEmpty()) {
+            showError(Errorpassword, "Le mot de passe est requis");
+            valid = false;
+        }
+
+        if (!valid) {
             shakeNode(rootPane.lookup("#loginCard"));
             return;
         }
 
-        boolean captchaValid = HcaptchaVerifier.verify(token, null);
-        Errorcaptcha.setVisible(false);
-        System.out.println("Captcha passed");
-        if (nb_errors>0) {
-            if (email.isEmpty()) {
-                showError(Errormail, "L'email est requis");
-                valid = false;
-            } else if (!UserControl.isValidEmail(email)) {
-                showError(Errormail, "Format d'email invalide");
-                valid = false;
-            }
+        System.out.println("Login attempt: " + email);
 
-            if (password.isEmpty()) {
-                showError(Errorpassword, "Le mot de passe est requis");
-                valid = false;
-            }
+        loginBtn.setText("Connexion...");
+        loginBtn.setDisable(true);
 
-            if (!valid) {
-                shakeNode(rootPane.lookup("#loginCard"));
-                nb_errors--;
-                return;
-            }
-            System.out.println("Login attempt: " + email);
-            loginBtn.setText("Connexion...");
-            loginBtn.setDisable(true);
-
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
-            CrudUser cu = new CrudUser();
-            if (cu.check_email(email)) {
-                User u = cu.getUser_withmail(email);
-                if (u.verifyPassword(password)) {
-                    SessionManager.getInstance().setCurrentUser(u);
-                    if (u.getRole().equals("admin")) {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
-                        Parent root = null;
-                        try {
-                            root = loader.load();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        Stage stage = (Stage) rootPane.getScene().getWindow();
-                        double width = stage.getScene().getWidth();
-                        double height = stage.getScene().getHeight();
-                        Scene scene = new Scene(root, width, height);
-                        scene.setFill(Color.TRANSPARENT);
-                        stage.setScene(scene);
-                        stage.setMaximized(true);
-                        stage.show();
-                        cleanup();
-                    } else {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
-                        Parent root = null;
-                        try {
-                            root = loader.load();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        Stage stage = (Stage) rootPane.getScene().getWindow();
-                        double width = stage.getScene().getWidth();
-                        double height = stage.getScene().getHeight();
-                        Scene scene = new Scene(root, width, height);
-                        scene.setFill(Color.TRANSPARENT);
-                        stage.setScene(scene);
-                        stage.setMaximized(true);
-                        stage.show();
-                        cleanup();
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        CrudUser cu=new CrudUser();
+        if (cu.check_email(email)){
+            User u=cu.getUser_withmail(email);
+            if (u.verifyPassword(password)){
+                SessionManager.getInstance().setCurrentUser(u);
+                if ("ADMIN".equalsIgnoreCase(u.getRole()))
+                {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
+                    Parent root = null;
+                    try {
+                        root = loader.load();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } else {
-                    showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
-                    shakeNode(rootPane.lookup("#loginCard"));
-                    nb_errors--;
+                    Stage stage = (Stage) rootPane.getScene().getWindow();
+                    double width = stage.getScene().getWidth();
+                    double height = stage.getScene().getHeight();
+                    Scene scene = new Scene(root, width, height);
+                    scene.setFill(Color.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.setMaximized(true);
+                    stage.show();
                 }
-            } else {
+                else{
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
+                    Parent root = null;
+                    try {
+                        root = loader.load();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Stage stage = (Stage) rootPane.getScene().getWindow();
+                    double width = stage.getScene().getWidth();
+                    double height = stage.getScene().getHeight();
+                    Scene scene = new Scene(root, width, height);
+                    scene.setFill(Color.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.setMaximized(true);
+                    stage.show();
+                }
+            }
+            else {
                 showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
-                shakeNode(rootPane.lookup("#loginCard"));
-                nb_errors--;
-            }
-            pause.setOnFinished(e -> {
-                loginBtn.setText("Se connecter");
-                loginBtn.setDisable(false);
-            });
-            pause.play();
-            if (nb_errors <= 0) {
-                loginBtn.setDisable(true);
             }
         }
-        if (nb_errors <= 0) {
-            loginBtn.setDisable(true);
-            loginBtn.setText("Session Bloquée");
+        else {
+            showError(Errorpassword, "L'e-mail ou le mot de passe fourni est incorrect");
         }
+        pause.setOnFinished(e -> {
+            loginBtn.setText("Se connecter");
+            loginBtn.setDisable(false);
+        });
+        pause.play();
     }
-
-    @FXML private void handleForgotPassword(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login/ForgotPassword.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    @FXML private void handleForgotPassword(ActionEvent event) {  }
     @FXML void handlesignup(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Inscription/Inscription.fxml"));
@@ -260,78 +201,16 @@ public class Login {
             node.setRotate(0);});
         tt.play();
     }
-
-    @FXML private void handleGoogleLogin(ActionEvent event) {
-        loginBtn.setDisable(true);
-        loginBtn.setText("BROWSER_UPLINK_OPEN...");
-
-        new Thread(() -> {
-            try {
-                GoogleAuthService service = new GoogleAuthService();
-                var googleUser = service.getUserInfo();
-
-                // Jump back to the UI thread once we have the data
-                javafx.application.Platform.runLater(() -> {
-                    syncWithDatabase(googleUser.getEmail(), googleUser.getGivenName());
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                javafx.application.Platform.runLater(() -> loginBtn.setDisable(false));
-            }
-        }).start();
+    @FXML
+    private void handleGoogleLogin(ActionEvent event) {
+        System.out.println("Initiating Google OAuth...");
+        // Logic:
+        // 1. Open Browser: Desktop.getDesktop().browse(new URI("google_auth_url"));
+        // 2. Start a temporary local server to catch the callback token
     }
 
-    private void syncWithDatabase(String email, String name) {
-        System.out.println(email+" "+name);
-        CrudUser cu = new CrudUser();
-        User u;
-        // 1. Check if this Google user already exists in your WAMP DB
-        if (cu.check_email(email)) {
-            u=cu.getUser_withmail(email);
-        } else {
-            u = new User(name,email,"nothing","player");
-            u.setPassword_hash("OAUTH_USER_SECURE");
-            u.setSalt("NO_SALT_GOOGLE");
-            cu.addEntity(u);
-            u=cu.getUser_withmail(email);
-            //TODO :load first time login to finish player info
-        }
-        SessionManager.getInstance().setCurrentUser(u);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Stage stage = (Stage) rootPane.getScene().getWindow();
-        double width = stage.getScene().getWidth();
-        double height = stage.getScene().getHeight();
-        Scene scene = new Scene(root, width, height);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
-        stage.setMaximized(true);
-        stage.show();
-        cleanup();
-    }
-
-    @FXML private void handleDiscordLogin(ActionEvent event) {
+    @FXML
+    private void handleDiscordLogin(ActionEvent event) {
         System.out.println("Initiating Discord OAuth...");
-    }
-
-    public void cleanup() {
-        MediaPlayer player = mediaView.getMediaPlayer();
-        if (player != null) {
-            player.stop();
-            player.dispose();
-            mediaView.setMediaPlayer(null);
-            System.out.println("[Cleanup Mediaview] Mediaview stopped.");
-        }
-        if (captchaWebView != null) {
-            captchaWebView.getEngine().load(null);
-            captchaWebView.getEngine().executeScript("if(window.hcaptcha) hcaptcha.reset();");
-            System.out.println("[Cleanup Webview] Mediaview stopped.");
-        }
     }
 }
