@@ -129,6 +129,72 @@
     -fx-font-size: 13;
 }
 
+/* ChoiceBox Dropdown Menu - CRITICAL FIX */
+.choice-box .context-menu {
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: rgba(139,13,13,0.4);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0, 0, 5);
+    -fx-padding: 4 0;
+}
+
+.choice-box .menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+    -fx-background-radius: 0;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: rgba(139,13,13,0.3);
+    -fx-text-fill: white;
+}
+
+.choice-box .menu-item:hover {
+    -fx-background-color: rgba(139,13,13,0.4);
+    -fx-text-fill: white;
+}
+
+.choice-box .menu-item .label {
+    -fx-text-fill: white;
+}
+
+/* ChoiceBox Arrow */
+.choice-box > .open-button > .arrow {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.choice-box:hover > .open-button > .arrow {
+    -fx-background-color: white;
+}
+
+/* Context Menu - Global fix for all dropdowns */
+.context-menu {
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: rgba(139,13,13,0.4);
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0, 0, 5);
+    -fx-padding: 4 0;
+}
+
+.context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: white !important;
+    -fx-padding: 8 12;
+}
+
+.context-menu .menu-item:focused,
+.context-menu .menu-item:hover {
+    -fx-background-color: rgba(139,13,13,0.4);
+    -fx-text-fill: white !important;
+}
+
+.context-menu .menu-item .label {
+    -fx-text-fill: white !important;
+}
+
 /* DatePicker - Comprehensive styling to prevent white background */
 .date-picker,
 .date-picker:focused,
@@ -450,4 +516,40 @@
 .date-picker-popup .day-cell.today {
     -fx-border-color: #8B0D0D !important;
     -fx-border-width: 2;
+}
+
+/* ═══════════════════════════════════════════════════
+   POPUP POSITIONING FIX
+   ═══════════════════════════════════════════════════ */
+
+/* Force popup menus to appear below their parent */
+.choice-box-popup-list {
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: rgba(139,13,13,0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0, 0, 5);
+}
+
+.choice-box-popup-list .list-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 4 0;
+}
+
+.choice-box-popup-list .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+}
+
+.choice-box-popup-list .list-view .list-cell:filled:hover,
+.choice-box-popup-list .list-view .list-cell:filled:selected {
+    -fx-background-color: rgba(139,13,13,0.4);
+    -fx-text-fill: white;
+}
+
+.choice-box-popup-list .list-view .list-cell:filled:selected:hover {
+    -fx-background-color: rgba(139,13,13,0.6);
 }

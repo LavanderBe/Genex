@@ -33,6 +33,23 @@ public class PlayerDashboard {
     public void initialize() {
         //gotta make a usersessionclass and replace the profile topleft thing with the current user
         startPingAnimation();
+        
+        // Check for training notifications
+        checkTrainingNotifications();
+    }
+    
+    private void checkTrainingNotifications() {
+        javafx.application.Platform.runLater(() -> {
+            try {
+                System.out.println("=== CHECKING FOR TRAINING NOTIFICATIONS (PLAYER) ===");
+                // Show Windows system notifications
+                Genex.utils.TrainingNotificationHelper.checkAndShowNotifications();
+                System.out.println("=== NOTIFICATION CHECK COMPLETE (PLAYER) ===");
+            } catch (Exception e) {
+                System.err.println("Error checking notifications in PlayerDashboard: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML

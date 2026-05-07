@@ -48,9 +48,7 @@ public class PlayerTeamDetailController {
     @FXML private Label infoDate;
     @FXML private Label memberCountLabel;
     @FXML private VBox membersContainer;
-    @FXML private VBox sessionsSection;
-    @FXML private Button btnAddSession;
-    @FXML private VBox sessionsContainer;
+    @FXML private StackPane calendarViewContainer;
     @FXML private StackPane innerContainer;
     @FXML private StackPane swapPane;
 
@@ -62,6 +60,7 @@ public class PlayerTeamDetailController {
     private CrudTrainingSession crudTrainingSession;
     private PlayerTeamBrowserController browserController;
     private TeamChatPanelController chatController;
+    private CalendarViewController calendarViewController;
 
     @FXML
     public void initialize() {
@@ -98,7 +97,9 @@ public class PlayerTeamDetailController {
             controller.setOnSaveCallback(updatedSession -> {
                 crudTrainingSession.updateSession(updatedSession);
                 swapPane.getChildren().remove(modalOverlay);
-                loadSessions();
+                if (calendarViewController != null) {
+                    calendarViewController.refresh();
+                }
             });
             controller.setOnCloseCallback(() -> swapPane.getChildren().remove(modalOverlay));
         } catch (Exception e) {
@@ -195,24 +196,8 @@ public class PlayerTeamDetailController {
 
     @FXML
     private void openAddSessionModal() {
-        if (team == null) return;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTrainingSessionModal.fxml"));
-            StackPane modalOverlay = loader.load();
-            swapPane.getChildren().add(modalOverlay);
-            AddTrainingSessionModalController controller = loader.getController();
-            controller.setTeamId(team.getId());
-            controller.setOnSaveCallback(session -> {
-                if (session.getId() == null) crudTrainingSession.addSession(session);
-                else crudTrainingSession.updateSession(session);
-                swapPane.getChildren().remove(modalOverlay);
-                loadSessions();
-            });
-            controller.setOnCloseCallback(() -> swapPane.getChildren().remove(modalOverlay));
-        } catch (Exception e) {
-            System.err.println("Error opening add session modal");
-            e.printStackTrace();
-        }
+        // This method is no longer used - sessions are added through the calendar view
+        // Kept for compatibility
     }
 
     // ── Private helpers ──────────────────────────────────────────────
@@ -230,19 +215,17 @@ public class PlayerTeamDetailController {
         if (viewOnly) {
             navBar.setVisible(false);
             navBar.setManaged(false);
-            sessionsSection.setVisible(false);
-            sessionsSection.setManaged(false);
+            calendarViewContainer.setVisible(false);
+            calendarViewContainer.setManaged(false);
             addBackButton();
         } else {
             navBar.setVisible(true);
             navBar.setManaged(true);
-            boolean showSessions = isMember || isCreator;
-            sessionsSection.setVisible(showSessions);
-            sessionsSection.setManaged(showSessions);
-            if (showSessions) {
-                btnAddSession.setVisible(isCreator);
-                btnAddSession.setManaged(isCreator);
-                loadSessions();
+            boolean showCalendar = isMember || isCreator;
+            calendarViewContainer.setVisible(showCalendar);
+            calendarViewContainer.setManaged(showCalendar);
+            if (showCalendar) {
+                loadCalendarView();
             }
             // Set active tab based on whether this is the user's team or another team
             if (isMember || isCreator) {
@@ -578,58 +561,25 @@ public class PlayerTeamDetailController {
         });
     }
 
-    private void loadSessions() {
-        sessionsContainer.getChildren().clear();
+    private void loadCalendarView() {
+        calendarViewContainer.getChildren().clear();
         if (team == null) return;
-        List<TrainingSession> sessions;
+        
         try {
-            sessions = crudTrainingSession.getSessionsByTeam(team.getId());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/CalendarView.fxml"));
+            VBox calendarView = loader.load();
+            
+            calendarViewController = loader.getController();
+            calendarViewController.setTeamId(team.getId());
+            calendarViewController.setRootStackPane(swapPane);
+            calendarViewController.setIsCreator(isCreator);
+            
+            calendarViewContainer.getChildren().add(calendarView);
+            
         } catch (Exception e) {
+            System.err.println("Error loading calendar view: " + e.getMessage());
             e.printStackTrace();
-            return;
         }
-        if (sessions.isEmpty()) {
-            Label empty = new Label("Aucune séance planifiée.");
-            empty.setStyle("-fx-text-fill: rgba(255,255,255,0.35); -fx-font-style: italic;");
-            sessionsContainer.getChildren().add(empty);
-            return;
-        }
-        for (TrainingSession session : sessions) {
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/Fxml/Team/TrainingSessionCard.fxml"));
-                Parent card = loader.load();
-                TrainingSessionCardController cc = loader.getController();
-                cc.setSession(session);
-                cc.setRootStackPane(swapPane);
-                cc.setOnUpdateCallback(this::loadSessions);
-                if (isCreator) {
-                    cc.setTeamDetailController(buildAdapterController());
-                } else {
-                    hideSessionCardButtons(card);
-                }
-                sessionsContainer.getChildren().add(card);
-            } catch (Exception e) {
-                System.err.println("Error loading session card");
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private TeamDetailController buildAdapterController() {
-        return new TeamDetailController() {
-            @Override
-            public void openEditSessionModal(TrainingSession session) {
-                PlayerTeamDetailController.this.openEditSessionModal(session);
-            }
-        };
-    }
-
-    private void hideSessionCardButtons(Parent card) {
-        javafx.scene.Node btnEdit = card.lookup("#btnEdit");
-        javafx.scene.Node btnDelete = card.lookup("#btnDelete");
-        if (btnEdit != null) { btnEdit.setVisible(false); btnEdit.setManaged(false); }
-        if (btnDelete != null) { btnDelete.setVisible(false); btnDelete.setManaged(false); }
     }
 
     private void loadOtherTeams() {

@@ -30,12 +30,12 @@ public class TeamDetailController {
     @FXML private Text teamFounded;
     @FXML private Label memberCountLabel;
     @FXML private VBox membersContainer;
-    @FXML private Button btnAddSession;
-    @FXML private VBox sessionsContainer;
+    @FXML private StackPane calendarViewContainer;
 
     private Team team;
     private CrudTrainingSession crudTrainingSession;
     private CrudTeamMember crudTeamMember;
+    private CalendarViewController calendarViewController;
 
     @FXML
     public void initialize() {
@@ -48,49 +48,14 @@ public class TeamDetailController {
         this.team = team;
         updateTeamInfo();
         loadMembers();
-        loadTrainingSessions();
+        loadCalendarView();
     }
 
     // ── Open Add Session Modal (Tournament pattern) ──────────────────
     @FXML
     private void openAddSessionModal() {
-        try {
-            System.out.println("Opening Add Training Session Modal...");
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/AddTrainingSessionModal.fxml"));
-            StackPane modalOverlay = loader.load();
-
-            // Add modal overlay to the stack
-            rootStackPane.getChildren().add(modalOverlay);
-
-            // Get controller and set callbacks
-            AddTrainingSessionModalController controller = loader.getController();
-            controller.setTeamId(team.getId());
-            
-            controller.setOnSaveCallback(session -> {
-                System.out.println("Saving session: " + session.getTitle());
-
-                // Save to database
-                if (session.getId() == null) {
-                    crudTrainingSession.addSession(session);
-                } else {
-                    crudTrainingSession.updateSession(session);
-                }
-
-                // Remove modal overlay and reload
-                rootStackPane.getChildren().remove(modalOverlay);
-                loadTrainingSessions();
-            });
-
-            // Handle close without saving
-            controller.setOnCloseCallback(() -> {
-                rootStackPane.getChildren().remove(modalOverlay);
-            });
-
-        } catch (Exception e) {
-            System.err.println("Error opening Add Training Session Modal");
-            e.printStackTrace();
-        }
+        // This method is no longer used - sessions are added through the calendar view
+        // Kept for compatibility
     }
 
     // ── Called by TrainingSessionCardController to open edit modal ────
@@ -116,7 +81,9 @@ public class TeamDetailController {
 
                 // Remove modal overlay and reload
                 rootStackPane.getChildren().remove(modalOverlay);
-                loadTrainingSessions();
+                if (calendarViewController != null) {
+                    calendarViewController.refresh();
+                }
             });
 
             controller.setOnCloseCallback(() -> {
@@ -154,27 +121,24 @@ public class TeamDetailController {
     }
 
     // ── Sessions display ─────────────────────────────────────────────
-    private void loadTrainingSessions() {
+    private void loadCalendarView() {
+        calendarViewContainer.getChildren().clear();
+        if (team == null) return;
+        
         try {
-            displaySessions(crudTrainingSession.getSessionsByTeam(team.getId()));
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void displaySessions(List<TrainingSession> sessions) {
-        sessionsContainer.getChildren().clear();
-        for (TrainingSession session : sessions) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TrainingSessionCard.fxml"));
-                Parent card = loader.load();
-                TrainingSessionCardController cc = loader.getController();
-                cc.setSession(session);
-                if (rootStackPane != null) cc.setRootStackPane(rootStackPane);
-                if (contentArea != null)   cc.setContentArea(contentArea);
-                cc.setOnUpdateCallback(this::loadTrainingSessions);
-                // Pass detail controller so card can open edit modal
-                cc.setTeamDetailController(this);
-                sessionsContainer.getChildren().add(card);
-            } catch (Exception e) { e.printStackTrace(); }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/CalendarView.fxml"));
+            VBox calendarView = loader.load();
+            
+            calendarViewController = loader.getController();
+            calendarViewController.setTeamId(team.getId());
+            calendarViewController.setRootStackPane(rootStackPane);
+            calendarViewController.setIsCreator(true); // Admin is always creator
+            
+            calendarViewContainer.getChildren().add(calendarView);
+            
+        } catch (Exception e) {
+            System.err.println("Error loading calendar view: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

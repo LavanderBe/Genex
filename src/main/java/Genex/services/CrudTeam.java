@@ -7,26 +7,32 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CrudTeam {
 
     public CrudTeam() {}
 
     public void addEntity(Team team) {
-        String query = "INSERT INTO teams (created_by, game_id, name, logo_image, contact, status, created_at) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO teams (id, created_by, game_id, name, logo_image, contact, status, created_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
+            // Generate UUID for the team
+            String teamId = UUID.randomUUID().toString();
+            team.setId(teamId);
+            
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
-            pst.setString(1, team.getCreatedBy());
-            pst.setString(2, team.getGameId());
-            pst.setString(3, team.getName());
-            pst.setString(4, team.getLogoImage());
-            pst.setString(5, team.getContact());
-            pst.setString(6, team.getStatus() != null ? team.getStatus().name() : null);
-            pst.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+            pst.setString(1, teamId);
+            pst.setString(2, team.getCreatedBy());
+            pst.setString(3, team.getGameId());
+            pst.setString(4, team.getName());
+            pst.setString(5, team.getLogoImage());
+            pst.setString(6, team.getContact());
+            pst.setString(7, team.getStatus() != null ? team.getStatus().name() : null);
+            pst.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
             pst.executeUpdate();
-            System.out.println("Team added successfully");
+            System.out.println("Team added successfully with ID: " + teamId);
         } catch (SQLException e) {
             System.err.println("Error adding team: " + e.getMessage());
             throw new RuntimeException(e);

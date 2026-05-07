@@ -98,21 +98,8 @@
                         </VBox>
                     </HBox>
 
-                    <!-- Training Sessions -->
-                    <VBox spacing="12"
-                          style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
-
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14px; -fx-font-weight: bold;"
-                                   text="📅 Séances d'Entraînement" />
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Button fx:id="btnAddSession" text="＋  Ajouter"
-                                    styleClass="player-add-session-btn"
-                                    onAction="#openAddSessionModal" />
-                        </HBox>
-
-                        <VBox fx:id="sessionsContainer" spacing="12" />
-                    </VBox>
+                    <!-- Calendar View for Training Sessions -->
+                    <StackPane fx:id="calendarViewContainer" />
 
                 </VBox>
 
