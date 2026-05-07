@@ -14,7 +14,11 @@ public class TutorialService implements ICrud<Tutorial> {
     private Connection cnx;
 
     public TutorialService() {
-        cnx = Myconnection.getInstance().getCnx();
+        try {
+            cnx = Myconnection.getInstance().getCnx();
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Database connection is unavailable.", e);
+        }
     }
 
     @Override
@@ -100,7 +104,7 @@ public class TutorialService implements ICrud<Tutorial> {
                 list.add(t);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to load tutorials from database.", e);
         }
         return list;
     }
@@ -124,6 +128,39 @@ public class TutorialService implements ICrud<Tutorial> {
                         rs.getString("difficulty"),
                         rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null
                 );
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Enhancement: Returns tutorials with calculated progression for a player.
+     * Requires a 'player_progress' table.
+     */
+    public List<Tutorial> getAllTutorialsWithProgression(String playerId) {
+        List<Tutorial> list = new ArrayList<>();
+        String query = "SELECT t.*, COALESCE(p.progress_percent, 0) as progress " +
+                "FROM tutorial t " +
+                "LEFT JOIN player_progress p ON t.id = p.tutorial_id AND p.player_id = ? " +
+                "ORDER BY t.created_at DESC";
+        try (PreparedStatement ps = cnx.prepareStatement(query)) {
+            ps.setString(1, playerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Tutorial t = new Tutorial(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getString("video_url"),
+                        rs.getString("category"),
+                        rs.getString("difficulty"),
+                        rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null
+                );
+                // Note: If you want to store progress in the Tutorial entity, add a progress field.
+                // For now, we return the base list. In a real app, you'd wrap this or add the field.
                 list.add(t);
             }
         } catch (SQLException e) {

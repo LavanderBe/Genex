@@ -13,7 +13,7 @@
     <!-- Header -->
     <HBox styleClass="dialog-header" alignment="CENTER_LEFT" spacing="10">
         <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
-        <Label fx:id="dialogTitle" text="NEW PROTOCOL ENTRY" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="dialogTitle" text="NOUVELLE ENTRÉE DE PROTOCOLE" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
         <Button text="✕" styleClass="close-btn" onAction="#handleAbort"/>
     </HBox>
 
@@ -22,33 +22,33 @@
 
         <!-- Linked Tutorial -->
         <VBox spacing="6">
-            <Label text="LINKED STRATEGY MODULE" styleClass="field-label"/>
+            <Label text="MODULE STRATÉGIQUE LIÉ" styleClass="field-label"/>
             <ComboBox fx:id="tutorialCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
         </VBox>
 
         <!-- Question -->
         <VBox spacing="6">
-            <Label text="TACTICAL QUERY" styleClass="field-label"/>
-            <TextArea fx:id="questionField" promptText="ENTER QUERY DATA..." styleClass="dialog-textarea"
+            <Label text="QUESTION TACTIQUE" styleClass="field-label"/>
+            <TextArea fx:id="questionField" promptText="SAISIR LES DONNÉES DE LA QUESTION..." styleClass="dialog-textarea"
                       prefHeight="90" wrapText="true"/>
         </VBox>
 
         <!-- Options 2x2 grid -->
         <GridPane hgap="16" vgap="12">
             <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="5">
-                <Label text="RESPONSE A" styleClass="field-label"/>
+                <Label text="RÉPONSE A" styleClass="field-label"/>
                 <TextField fx:id="optionAField" styleClass="dialog-field"/>
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="5">
-                <Label text="RESPONSE B" styleClass="field-label"/>
+                <Label text="RÉPONSE B" styleClass="field-label"/>
                 <TextField fx:id="optionBField" styleClass="dialog-field"/>
             </VBox>
             <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="5">
-                <Label text="RESPONSE C" styleClass="field-label"/>
+                <Label text="RÉPONSE C" styleClass="field-label"/>
                 <TextField fx:id="optionCField" styleClass="dialog-field"/>
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="5">
-                <Label text="RESPONSE D" styleClass="field-label"/>
+                <Label text="RÉPONSE D" styleClass="field-label"/>
                 <TextField fx:id="optionDField" styleClass="dialog-field"/>
             </VBox>
             <columnConstraints>
@@ -59,7 +59,7 @@
 
         <!-- Correct Answer Toggle -->
         <VBox spacing="8">
-            <Label text="VALIDATED OUTCOME" styleClass="field-label"/>
+            <Label text="RÉPONSE VALIDÉE" styleClass="field-label"/>
             <HBox spacing="10">
                 <ToggleButton fx:id="answerA" text="A" styleClass="answer-toggle" prefWidth="90" prefHeight="48"/>
                 <ToggleButton fx:id="answerB" text="B" styleClass="answer-toggle" prefWidth="90" prefHeight="48"/>
@@ -72,7 +72,7 @@
     <!-- Footer -->
     <HBox spacing="12" styleClass="dialog-footer" alignment="CENTER_LEFT">
         <padding><Insets top="16" right="28" bottom="24" left="28"/></padding>
-        <Button text="SAVE PROTOCOL" styleClass="save-btn" onAction="#handleSave" prefWidth="220"/>
-        <Button text="ABORT" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
+        <Button text="ENREGISTRER LE PROTOCOLE" styleClass="save-btn" onAction="#handleSave" prefWidth="220"/>
+        <Button text="ANNULER" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
     </HBox>
 </VBox>

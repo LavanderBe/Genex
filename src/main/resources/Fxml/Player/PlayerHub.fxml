@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="main-container" stylesheets="@PlayerHub.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Player.PlayerHubController">
+    <children>
+        <VBox spacing="40.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="80.0">
+            <children>
+                <VBox spacing="5.0">
+                    <Label styleClass="terminal-title" text="TERMINAL // PLAYER_HUB" />
+                    <Label fx:id="operatorIdLabel" styleClass="operator-id" text="IDENTIFICATION DE L'OPÉRATEUR : ADMIN_CHEN // NIVEAU 12" />
+                    <Rectangle height="4.0" styleClass="title-accent" width="100.0" />
+                </VBox>
+
+                <HBox spacing="30.0">
+                    <children>
+                        <!-- Global Rank -->
+                        <VBox styleClass="stat-card, border-yellow">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <SVGPath styleClass="stat-icon, icon-cup" content="M4 4 H20 V10 C20 13.3 17.3 16 14 16 H10 C6.7 16 4 13.3 4 10 Z M7 4 V10 C7 11.7 8.3 13 10 13 H14 C15.7 13 17 11.7 17 10 V4 Z M2 6 H4 V10 C4 12.8 6.2 15 9 15 H9 V18 H15 V15 H15 C17.8 15 20 12.8 20 10 V6 H22" />
+                                <Label styleClass="stat-label" text="CLASSEMENT GÉNÉRAL" />
+                            </HBox>
+                            <Label fx:id="rankLabel" styleClass="stat-value, text-yellow" text="#482" />
+                        </VBox>
+                        <!-- Tactical XP -->
+                        <VBox styleClass="stat-card, border-blue">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <SVGPath styleClass="stat-icon, icon-bolt" content="M12 2 L6 13 H11 L9 22 L18 10 H13 L15 2 Z" />
+                                <Label styleClass="stat-label" text="XP TACTIQUE" />
+                            </HBox>
+                            <Label fx:id="xpLabel" styleClass="stat-value, text-blue" text="12,450" />
+                        </VBox>
+                        <!-- Accuracy -->
+                        <VBox styleClass="stat-card, border-green">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <StackPane prefHeight="18" prefWidth="18">
+                                    <Circle radius="7" styleClass="stat-icon, icon-target-ring" />
+                                    <Circle radius="3" styleClass="stat-icon, icon-target-ring" />
+                                </StackPane>
+                                <Label styleClass="stat-label" text="PRÉCISION" />
+                            </HBox>
+                            <Label fx:id="accuracyLabel" styleClass="stat-value, text-green" text="88%" />
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox spacing="40.0">
+                    <children>
+                        <Button fx:id="tutorialsButton" onAction="#handleTutorialsClick" styleClass="hub-button, bg-blue" text="TUTORIELS">
+                            <graphic>
+                                <Label styleClass="button-subtext" text="MAÎTRISER LES PROTOCOLES TACTIQUES" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#handleQuizzesClick" styleClass="hub-button, bg-red" text="QUIZ">
+                            <graphic>
+                                <Label styleClass="button-subtext" text="ÉVALUER LA PROFONDEUR STRATÉGIQUE" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

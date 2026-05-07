@@ -3,6 +3,7 @@ package Genex.Controllers.Login;
 import Genex.entities.User;
 import Genex.services.CrudUser;
 import Genex.services.UserControl;
+import Genex.utils.SessionManager;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class Login {
 
@@ -47,37 +49,42 @@ public class Login {
 
     @FXML
     private StackPane rootPane;
+    private MediaPlayer mediaPlayer;
 
     @FXML
     public void initialize() {
         try {
-            // 1. Try to get the resource
-            var resource = getClass().getResource("/Videos/Login.mp4");
-
-            if (resource == null) {
-                // This is what is happening now.
-                System.err.println("CRITICAL: Video file not found at /Genex/Videos/background.mp4");
-                // Optionally set a static background color so the app still runs
+            String mediaPath = resolveLoginVideoPath();
+            if (mediaPath == null) {
+                System.err.println("CRITICAL: Video file not found at /Videos/Login.mp4");
                 rootPane.setStyle("-fx-background-color: #050508;");
                 return;
             }
-
-            String path = resource.toExternalForm();
-            Media media = new Media(path);
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-            mediaView.setMediaPlayer(mediaPlayer);
-            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
+            Media media = new Media(mediaPath);
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setAutoPlay(true);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             mediaPlayer.setMute(true);
-            mediaPlayer.play();
-
-            // Stretches video to fill screen
+            mediaView.setMediaPlayer(mediaPlayer);
             mediaView.fitWidthProperty().bind(rootPane.widthProperty());
             mediaView.fitHeightProperty().bind(rootPane.heightProperty());
-
         } catch (Exception e) {
             System.err.println("Error initializing media: " + e.getMessage());
         }
+    }
+
+    private String resolveLoginVideoPath() {
+        var resource = getClass().getResource("/Videos/Login.mp4");
+        if (resource != null) {
+            return resource.toExternalForm();
+        }
+
+        Path localPath = Path.of(System.getProperty("user.dir"), "src", "main", "resources", "Videos", "Login.mp4");
+        File localFile = localPath.toFile();
+        if (localFile.exists()) {
+            return localFile.toURI().toString();
+        }
+        return null;
     }
 
     @FXML private void handleSignIn(ActionEvent event) {
@@ -116,6 +123,7 @@ public class Login {
         if (cu.check_email(email)){
             User u=cu.getUser_withmail(email);
             if (u.verifyPassword(password)){
+                SessionManager.getInstance().setCurrentUser(u);
                 if (u.getRole().equals("admin"))
                 {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));

@@ -1,0 +1,185 @@
+.main-container { -fx-background-color: #05070a; }
+.section-title { -fx-font-size: 32px; -fx-font-weight: 900; -fx-text-fill: white; }
+.subtitle { -fx-text-fill: #ff0000; -fx-font-size: 10px; -fx-font-weight: 900; -fx-letter-spacing: 0.2em; }
+.search-field {
+    -fx-background-color: linear-gradient(to bottom, #0f141d, #0b1018);
+    -fx-border-color: #273244;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #cbd5e1;
+    -fx-font-weight: bold;
+    -fx-pref-width: 320;
+    -fx-max-width: 320;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+.search-field:focused {
+    -fx-border-color: #60a5fa;
+    -fx-text-fill: white;
+}
+.status-text { -fx-text-fill: #9ca3af; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 2 0 8 0; }
+.transparent-scroll { -fx-background-color: transparent; -fx-background: transparent; }
+.transparent-scroll > .viewport { -fx-background-color: transparent; }
+.transparent-scroll .scroll-bar:vertical .thumb { -fx-background-color: transparent; -fx-opacity: 0.0; }
+.transparent-scroll .scroll-bar:vertical:hover .thumb { -fx-background-color: #1f2937; -fx-opacity: 0.55; }
+.transparent-scroll .scroll-bar:vertical .thumb:pressed { -fx-background-color: #374151; -fx-opacity: 0.8; }
+.transparent-scroll .scroll-bar:vertical .track { -fx-background-color: transparent; }
+.transparent-scroll .scroll-bar:vertical .track-background { -fx-background-color: transparent; }
+.transparent-scroll .scroll-bar:vertical { -fx-background-color: transparent; -fx-padding: 0; }
+.transparent-scroll .scroll-bar:vertical .increment-button,
+.transparent-scroll .scroll-bar:vertical .decrement-button,
+.transparent-scroll .scroll-bar:vertical .increment-arrow,
+.transparent-scroll .scroll-bar:vertical .decrement-arrow { -fx-background-color: transparent; -fx-opacity: 0; }
+.transparent-scroll .corner { -fx-background-color: transparent; }
+.transparent-scroll .scroll-bar:horizontal { -fx-background-color: transparent; -fx-padding: 0; }
+.transparent-scroll .scroll-bar:horizontal .thumb { -fx-background-color: transparent; -fx-opacity: 0.0; }
+.transparent-scroll .scroll-bar:horizontal:hover .thumb { -fx-background-color: #1f2937; -fx-opacity: 0.55; }
+.transparent-scroll .scroll-bar:horizontal .thumb:pressed { -fx-background-color: #374151; -fx-opacity: 0.8; }
+.transparent-scroll .scroll-bar:horizontal .track,
+.transparent-scroll .scroll-bar:horizontal .track-background { -fx-background-color: transparent; }
+.transparent-scroll .scroll-bar:horizontal .increment-button,
+.transparent-scroll .scroll-bar:horizontal .decrement-button,
+.transparent-scroll .scroll-bar:horizontal .increment-arrow,
+.transparent-scroll .scroll-bar:horizontal .decrement-arrow { -fx-background-color: transparent; -fx-opacity: 0; }
+
+.tutorial-card {
+    -fx-background-color: #0b0f14;
+    -fx-border-color: #1f2937;
+    -fx-border-width: 1;
+}
+
+.tutorial-card:hover {
+    -fx-border-color: #334155;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.card-image-pane {
+    -fx-background-color: #0b0f14;
+}
+
+.category-badge {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-family: "Courier New";
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-padding: 3 8 3 8;
+}
+
+.exp-badge {
+    -fx-background-color: rgba(250, 204, 21, 0.18);
+    -fx-border-color: #facc15;
+    -fx-border-width: 1;
+    -fx-padding: 3 8 3 8;
+}
+
+.exp-bolt {
+    -fx-fill: #facc15;
+}
+
+.exp-text {
+    -fx-text-fill: #facc15;
+    -fx-font-size: 10px;
+    -fx-font-weight: 900;
+}
+
+.card-info-box {
+    -fx-background-color: #111111;
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-family: "System";
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-font-style: italic;
+}
+
+.card-desc {
+    -fx-text-fill: #9aa3b2;
+    -fx-font-family: "System";
+    -fx-font-size: 11px;
+}
+
+.launch-protocol {
+    -fx-background-color: transparent;
+    -fx-border-color: #2b2f3a;
+    -fx-border-width: 1;
+    -fx-padding: 10 14 10 14;
+    -fx-alignment: center;
+    -fx-min-height: 36px;
+}
+
+.launch-text {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 0.1em;
+}
+
+.launch-icon {
+    -fx-fill: transparent;
+    -fx-stroke: #6b7280;
+    -fx-stroke-width: 1.6;
+}
+
+.launch-triangle {
+    -fx-fill: #6b7280;
+}
+
+.launch-protocol:hover {
+    -fx-background-color: #007bff;
+    -fx-border-color: #007bff;
+}
+
+.launch-protocol:hover .launch-text {
+    -fx-text-fill: #ffffff;
+}
+
+.launch-protocol:hover .launch-icon {
+    -fx-stroke: #ffffff;
+}
+
+.launch-protocol:hover .launch-triangle {
+    -fx-fill: #ffffff;
+}
+
+.card-date {
+    -fx-text-fill: #64748b;
+    -fx-font-family: "System";
+    -fx-font-size: 10px;
+    -fx-font-weight: 600;
+}
+
+.diff-expert {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-family: "Courier New";
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+.diff-intermediate {
+    -fx-text-fill: #f5a623;
+    -fx-font-family: "System";
+    -fx-font-weight: 800;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.08em;
+}
+.diff-beginner {
+    -fx-text-fill: #22c55e;
+    -fx-font-family: "Courier New";
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+
+.progress-text {
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.module-progress {
+    -fx-accent: #60a5fa;
+    -fx-pref-height: 6px;
+}
