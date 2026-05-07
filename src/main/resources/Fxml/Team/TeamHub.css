@@ -1,0 +1,206 @@
+/* ══════════════════════════════════════════════════════════════
+   Team Hub — Dark Esports Theme (matching Sponsors exactly)
+   ══════════════════════════════════════════════════════════════ */
+
+/* Main Container */
+.main-content {
+    -fx-background-color: #0d0d1a;
+}
+
+/* Page Title */
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+}
+
+/* ──────────────── Search Bar ──────────────── */
+.search-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 13px;
+    -fx-padding: 9 14;
+}
+
+.search-field:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.5);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.15), 8, 0, 0, 0);
+}
+
+/* ──────────────── Team Cards ──────────────── */
+.cards-container {
+    -fx-padding: 10 0;
+}
+
+/* ──────────────── ScrollPane Styling ──────────────── */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(124, 111, 255, 0.35);
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ──────────────── Add Button (matching Sponsors) ──────────────── */
+.action-blue-button {
+    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.4), 12, 0, 0, 4);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.6), 16, 0, 0, 6);
+}
+
+.action-blue-button:pressed {
+    -fx-translate-y: 1;
+    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+}
+
+/* ══ Finance-style inline form card (DARK) ══════════════════════ */
+.form-card {
+    -fx-background-color: #12122a;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-width: 0 0 0 1;
+}
+
+.form-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.field-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5;
+}
+
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
+    -fx-font-size: 13px;
+    -fx-padding: 10 12;
+}
+
+.input-field:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.18), 8, 0, 0, 0);
+}
+
+.err-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 2 0 0 4;
+}
+
+.drawer-sep {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-font-size: 16px;
+    -fx-border-width: 0;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.15);
+    -fx-text-fill: #ff6b6b;
+}
+
+.btn-pick {
+    -fx-background-color: rgba(124, 111, 255, 0.15);
+    -fx-text-fill: #a89fff;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-border-width: 0;
+}
+
+.btn-pick:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.3);
+    -fx-text-fill: white;
+}
+
+/* Primary save button (solid red like Sponsors "Enregistrar") */
+.primary-btn {
+    -fx-background-color: #d32f2f;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 11 0;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.primary-btn:hover {
+    -fx-background-color: #e53935;
+}
+
+.primary-btn:pressed {
+    -fx-translate-y: 1;
+    -fx-background-color: #c62828;
+}
+
+/* Secondary cancel button */
+.secondary-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 11 0;
+    -fx-cursor: hand;
+}
+
+.secondary-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+}

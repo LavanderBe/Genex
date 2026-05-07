@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Tutorial.AddTutorialController"
+      styleClass="dialog-root"
+      stylesheets="@Tutorial.css"
+      spacing="0"
+      prefWidth="500">
+
+    <!-- Dialog Header -->
+    <HBox styleClass="dialog-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+        <Label fx:id="dialogTitle" text="NEW DRILL ASSIGNMENT" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="close-btn" onAction="#handleAbort"/>
+    </HBox>
+
+    <VBox spacing="18" styleClass="dialog-body">
+        <padding><Insets top="24" right="28" bottom="10" left="28"/></padding>
+
+        <!-- Tactical Title -->
+        <VBox spacing="6">
+            <Label text="TACTICAL TITLE" styleClass="field-label"/>
+            <TextField fx:id="titleField" promptText="ENTER DESIGNATION..." styleClass="dialog-field"/>
+        </VBox>
+
+        <!-- Briefing Data -->
+        <VBox spacing="6">
+            <Label text="BRIEFING DATA" styleClass="field-label"/>
+            <TextArea fx:id="descriptionField" promptText="ENTER SUMMARY..." styleClass="dialog-textarea"
+                      prefHeight="100" wrapText="true"/>
+        </VBox>
+
+        <!-- Sector + Intensity row -->
+        <HBox spacing="16">
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="SECTOR" styleClass="field-label"/>
+                <ComboBox fx:id="categoryCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="INTENSITY" styleClass="field-label"/>
+                <ComboBox fx:id="difficultyCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+
+        <!-- Intel Source URL -->
+        <VBox spacing="6">
+            <Label text="INTEL SOURCE (URL)" styleClass="field-label"/>
+            <TextField fx:id="videoUrlField" promptText="HTTPS://YOUTUBE.COM/..." styleClass="dialog-field"/>
+        </VBox>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="12" styleClass="dialog-footer" alignment="CENTER_LEFT">
+        <padding><Insets top="16" right="28" bottom="24" left="28"/></padding>
+        <Button text="DEPLOY DRILL" styleClass="save-btn" onAction="#handleSave" prefWidth="200"/>
+        <Button text="ABORT" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
+    </HBox>
+</VBox>

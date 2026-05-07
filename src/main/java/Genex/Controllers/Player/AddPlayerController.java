@@ -84,7 +84,9 @@ public class AddPlayerController {
 
     @FXML
     void cancel(ActionEvent event) {
-
+        if (onCloseCallback != null) {
+            onCloseCallback.run();
+        }
     }
 
     @FXML
@@ -176,7 +178,12 @@ public class AddPlayerController {
             if (valid2){
                 Player p = new Player(username, email, password, role, prenom, nom, nickname, cin, birthday, nationalite, ville);
                 cp.addPlayer_admin(p);
-                System.out.println("KESAAA7");
+                System.out.println("Player added successfully");
+                
+                // Close modal after successful save
+                if (onCloseCallback != null) {
+                    onCloseCallback.run();
+                }
             }
 
 

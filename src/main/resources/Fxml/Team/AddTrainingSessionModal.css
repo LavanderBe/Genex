@@ -1,0 +1,309 @@
+/* ═══════════════════════════════════════════════════
+   Add Training Session Modal - Matches Tournament Design
+   ═══════════════════════════════════════════════════ */
+
+/* Overlay Background */
+.overlay-bg {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Drawer Container */
+.drawer {
+    -fx-background-color: #0d0d1a;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1 0 0 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 40, 0.3, -10, 0);
+}
+
+/* Drawer Title */
+.drawer-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+/* Close Button */
+.btn-close {
+    -fx-background-color: rgba(255, 80, 80, 0.15);
+    -fx-text-fill: #ff6b6b;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255, 80, 80, 0.3);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-font-size: 18;
+    -fx-padding: 4 10;
+    -fx-cursor: hand;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.3);
+}
+
+/* Separator */
+.drawer-sep {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Field Labels */
+.field-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 12;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5;
+}
+
+/* Input Fields */
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
+    -fx-font-size: 13;
+    -fx-padding: 10 12;
+}
+
+.input-field:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.18), 8, 0, 0, 0);
+}
+
+/* Override for DatePicker with input-field class */
+.date-picker.input-field,
+.date-picker.input-field:focused,
+.date-picker.input-field:showing {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+}
+
+.date-picker.input-field .text-field,
+.date-picker.input-field > .text-field {
+    -fx-background-color: transparent !important;
+}
+
+/* ChoiceBox */
+.choice-box {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.choice-box:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+}
+
+.choice-box .label {
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+}
+
+/* DatePicker - Comprehensive styling to prevent white background */
+.date-picker,
+.date-picker:focused,
+.date-picker:showing {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.date-picker:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* DatePicker arrow button */
+.date-picker > .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* DatePicker TextField - Force dark background with multiple selectors */
+.date-picker .text-field,
+.date-picker > .text-field,
+.date-picker .date-picker-display-node,
+.date-picker > .date-picker-display-node {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
+}
+
+/* Override any default white backgrounds */
+.date-picker .text-field .content,
+.date-picker > .text-field .content {
+    -fx-background-color: transparent !important;
+}
+
+/* DatePicker popup styling */
+.date-picker-popup {
+    -fx-background-color: #1a1a2e;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #0d0d1a;
+}
+
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.2);
+}
+
+.date-picker-popup .selected {
+    -fx-background-color: rgba(124, 111, 255, 0.5);
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .spinner .button {
+    -fx-background-color: rgba(124, 111, 255, 0.15);
+}
+
+.date-picker-popup .spinner .label {
+    -fx-text-fill: white;
+}
+
+/* TextArea */
+.text-area {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
+    -fx-font-size: 13;
+}
+
+.text-area:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+
+/* Error Labels */
+.err-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11;
+    -fx-font-weight: 500;
+    -fx-padding: 3 0 0 0;
+}
+
+/* Time Increment Buttons */
+.time-btn {
+    -fx-background-color: rgba(124, 111, 255, 0.15);
+    -fx-text-fill: #a89fff;
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-min-width: 28;
+    -fx-border-width: 0;
+}
+
+.time-btn:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.3);
+    -fx-text-fill: white;
+}
+
+/* Primary Button - Polygon */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.4), 12, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.6), 16, 0, 0, 6);
+}
+
+.btn-primary:pressed {
+    -fx-translate-y: 0;
+    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+}
+
+/* Secondary Button - Polygon */
+.btn-secondary {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
+}
+
+/* ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .thumb {
+    -fx-background-color: rgba(124, 111, 255, 0.35);
+    -fx-background-radius: 4;
+}
+
+.scroll-pane .track {
+    -fx-background-color: transparent;
+}
+
+/* Back Button - Polygon */
+.back-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 15 0 L 175 0 L 175 32 L 160 44 L 0 44 L 0 12 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
+}
+
+.back-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
+}

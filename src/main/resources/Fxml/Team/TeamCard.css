@@ -1,0 +1,144 @@
+/* ============================================
+   GENEX - Team Card Stylesheet
+   Sponsors Design Language — Purple/Violet Theme
+   ============================================ */
+
+.team-card {
+    -fx-background-color: rgba(20, 20, 40, 0.65);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 25, 0.15, 0, 4);
+    -fx-padding: 24;
+    -fx-cursor: hand;
+    -fx-pref-width: 340;
+    -fx-min-width: 340;
+    -fx-max-width: 340;
+    -fx-pref-height: 280;
+}
+
+.team-card:hover {
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-background-color: rgba(25, 25, 50, 0.75);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.3), 30, 0.3, 0, 6);
+    -fx-translate-y: -3;
+}
+
+.team-card-header {
+    -fx-spacing: 8;
+}
+
+.team-logo-container {
+    -fx-pref-width: 80;
+    -fx-pref-height: 80;
+    -fx-alignment: CENTER;
+}
+
+.team-logo-circle {
+    -fx-fill: linear-gradient(to bottom right, rgba(92, 79, 255, 0.2), rgba(124, 111, 255, 0.12));
+    -fx-stroke: rgba(124, 111, 255, 0.4);
+    -fx-stroke-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.3), 15, 0.3, 0, 3);
+}
+
+.team-logo-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.3, 0, 2);
+}
+
+.team-icon {
+    -fx-font-size: 48;
+}
+
+.team-name {
+    -fx-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+.team-tag {
+    -fx-fill: #a89fff;
+    -fx-font-size: 14;
+    -fx-font-weight: 500;
+}
+
+.team-info-row {
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.team-info-label {
+    -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 14;
+}
+
+.team-info-value {
+    -fx-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 600;
+}
+
+/* View / Edit buttons — Polygon */
+.card-action-btn {
+    -fx-background-color: rgba(92, 124, 250, 0.15);
+    -fx-text-fill: #748ffc;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 80 0 L 90 10 L 90 35 L 10 35 L 0 25 Z";
+    -fx-cursor: hand;
+    -fx-padding: 8 18;
+}
+
+.card-action-btn:hover {
+    -fx-background-color: rgba(92, 124, 250, 0.3);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+.card-action-btn:pressed {
+    -fx-translate-y: 1;
+}
+
+.card-action-btn-edit {
+    -fx-background-color: rgba(92, 124, 250, 0.15);
+    -fx-text-fill: #748ffc;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 80 0 L 90 10 L 90 35 L 10 35 L 0 25 Z";
+    -fx-cursor: hand;
+    -fx-padding: 8 18;
+}
+
+.card-action-btn-edit:hover {
+    -fx-background-color: rgba(92, 124, 250, 0.3);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+.card-action-btn-edit:pressed {
+    -fx-translate-y: 1;
+}
+
+/* Delete button — Polygon (opposite cut) */
+.card-action-btn-delete {
+    -fx-background-color: rgba(255, 80, 80, 0.12);
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 90 0 L 90 25 L 80 35 L 0 35 L 0 10 Z";
+    -fx-cursor: hand;
+    -fx-padding: 8 14;
+}
+
+.card-action-btn-delete:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.28);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+.card-action-btn-delete:pressed {
+    -fx-translate-y: 1;
+}
