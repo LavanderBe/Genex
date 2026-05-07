@@ -110,6 +110,11 @@ public class ForumController {
     private final List<Forum> forums = new ArrayList<>();
     private boolean adminMode;
     private String selectedForumId;
+    
+    // Limites de caractères
+    private static final int MAX_TITLE_LENGTH = 255;
+    private static final int MAX_DESCRIPTION_LENGTH = 10000;
+    private static final int MAX_CREATED_BY_LENGTH = 100;
 
     @FXML
     public void initialize() {
@@ -571,8 +576,20 @@ public class ForumController {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le titre est obligatoire.");
             return false;
         }
+        if (titleField.getText().length() > MAX_TITLE_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le titre ne doit pas dépasser " + MAX_TITLE_LENGTH + " caractères.");
+            return false;
+        }
         if (isBlank(createdByField.getText())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le champ « Créé par » est obligatoire.");
+            return false;
+        }
+        if (createdByField.getText().length() > MAX_CREATED_BY_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ « Créé par » ne doit pas dépasser " + MAX_CREATED_BY_LENGTH + " caractères.");
+            return false;
+        }
+        if (!isBlank(descriptionArea.getText()) && descriptionArea.getText().length() > MAX_DESCRIPTION_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "La description ne doit pas dépasser " + MAX_DESCRIPTION_LENGTH + " caractères.");
             return false;
         }
         return true;

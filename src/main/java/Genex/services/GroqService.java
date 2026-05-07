@@ -11,9 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class GroqService {
-    private static final String API_KEY = System.getenv("GROQ_API_KEY") != null 
-        ? System.getenv("GROQ_API_KEY") 
-        : "your-api-key-here";
+    private static final String API_KEY = "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";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
     private final HttpClient httpClient;
 

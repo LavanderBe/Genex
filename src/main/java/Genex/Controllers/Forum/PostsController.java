@@ -135,6 +135,9 @@ public class PostsController {
     private final Map<String, Long> userBanUntil = new HashMap<>();
     private static final int CONSECUTIVE_POSTS_LIMIT = 3;
     private static final long BAN_DURATION_MINUTES = 30;
+    private static final int MAX_TITLE_LENGTH = 255;
+    private static final int MAX_BODY_LENGTH = 10000;
+    private static final int MAX_TAG_LENGTH = 100;
     private static final Set<String> SPAM_KEYWORDS = Set.of(
         "free", "giveaway", "urgent", "winner", "bitcoin", "promo", "click", "offer"
     );
@@ -909,6 +912,18 @@ public class PostsController {
         }
         if (isBlank(titleField.getText())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le titre est obligatoire.");
+            return false;
+        }
+        if (titleField.getText().length() > MAX_TITLE_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le titre ne doit pas dépasser " + MAX_TITLE_LENGTH + " caractères.");
+            return false;
+        }
+        if (!isBlank(bodyArea.getText()) && bodyArea.getText().length() > MAX_BODY_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le corps du post ne doit pas dépasser " + MAX_BODY_LENGTH + " caractères.");
+            return false;
+        }
+        if (!isBlank(tagField.getText()) && tagField.getText().length() > MAX_TAG_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le tag ne doit pas dépasser " + MAX_TAG_LENGTH + " caractères.");
             return false;
         }
         return true;
