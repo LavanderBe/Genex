@@ -747,6 +747,16 @@ public class TournamentDetailController {
                 return;
             }
             
+            // CHECK: Participants must equal max_players to generate bracket
+            int maxPlayers = tournament.getMaxPlayers();
+            if (participants.size() != maxPlayers) {
+                showAlert("Erreur", 
+                    "Le tournoi doit avoir exactement " + maxPlayers + " participants pour générer le bracket.\n" +
+                    "Participants actuels: " + participants.size() + "/" + maxPlayers, 
+                    Alert.AlertType.ERROR);
+                return;
+            }
+            
             // Create tournament on Challonge
             ChallongeService.ChallongeResponse response = challongeService.createTournament(
                     tournament.getTournamentName(),
@@ -869,22 +879,13 @@ public class TournamentDetailController {
                     }
                     System.out.println("Deleted " + matches.size() + " matches");
 
-                    // Delete withdrawn/eliminated participants (reset their status)
+                    // DELETE ALL PARTICIPANTS (so they can rejoin)
                     List<TournamentParticipants> participants = crudParticipant.getAll(tournament.getTournamentId());
                     for (TournamentParticipants p : participants) {
-                        if (p.isEliminated()) {
-                            // Remove them completely so they can rejoin
-                            crudParticipant.deleteEntity(p);
-                            System.out.println("Removed withdrawn/eliminated participant: " + p.getParticipantId());
-                        } else if (p.isActive()) {
-                            // Reset active participants - clear challonge ID and placement
-                            p.setChallongeParticipantId(null);
-                            p.setFinalPlacement(null);
-                            p.setEliminatedAtRound(null);
-                            p.setEliminationReason(null);
-                            crudParticipant.updateEntity(p, p.getId());
-                        }
+                        crudParticipant.deleteEntity(p);
+                        System.out.println("Removed participant: " + p.getParticipantId());
                     }
+                    System.out.println("Removed all " + participants.size() + " participants");
 
                     // Reset tournament state completely
                     tournament.setStarted(false);
@@ -897,6 +898,17 @@ public class TournamentDetailController {
                     crudTournament.updateEntity(tournament, tournament.getTournamentId());
                     updateStateBadge();
                     setupRoleBasedUI();
+                    
+                    // Refresh participant list and player status
+                    loadParticipants();
+                    
+                    // Refresh player status card if player view
+                    if ("player".equalsIgnoreCase(currentUser.getRole())) {
+                        String playerId = getPlayerIdFromUserId(currentUser.getId());
+                        if (playerId != null) {
+                            loadPlayerStatus(playerId);
+                        }
+                    }
 
                     showAlert("Succès", "Tournoi réinitialisé! Les joueurs retirés peuvent rejoindre à nouveau.", Alert.AlertType.INFORMATION);
 
