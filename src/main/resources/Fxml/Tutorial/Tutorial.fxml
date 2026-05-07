@@ -13,17 +13,17 @@
     <!-- HEADER -->
     <VBox styleClass="tutorial-header" spacing="4">
         <padding><Insets top="30" right="40" bottom="20" left="40"/></padding>
-        <Label text="TERMINAL // TUTORIALS" styleClass="page-main-title"/>
-        <Label text="TACTICAL ANALYSIS &amp; TRAINING PROTOCOLS" styleClass="page-subtitle"/>
+        <Label text="TERMINAL // TUTORIELS" styleClass="page-main-title"/>
+        <Label text="ANALYSE TACTIQUE ET PROTOCOLES D'ENTRAÎNEMENT" styleClass="page-subtitle"/>
     </VBox>
 
     <!-- TAB SWITCHER -->
     <StackPane styleClass="tab-switcher-wrap">
         <padding><Insets top="10" right="40" bottom="10" left="40"/></padding>
         <HBox styleClass="tab-switcher" prefHeight="60" maxWidth="520" alignment="CENTER" spacing="10">
-            <Button fx:id="tabTutorial" text="TRAINING_MODULES" styleClass="tab-active"
+            <Button fx:id="tabTutorial" text="MODULES_DE_FORMATION" styleClass="tab-active"
                     onAction="#showTutorialTab" prefWidth="250" prefHeight="48"/>
-            <Button fx:id="tabQuiz" text="TACTICAL_QUIZZES" styleClass="tab-inactive"
+            <Button fx:id="tabQuiz" text="QUIZ_TACTIQUES" styleClass="tab-inactive"
                     onAction="#showQuizTab" prefWidth="250" prefHeight="48"/>
         </HBox>
     </StackPane>
@@ -43,8 +43,8 @@
                         <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
                             <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
                             <VBox spacing="2">
-                                <Label text="TRAINING MODULES" styleClass="section-title"/>
-                                <Label text="STRATEGIC DEPLOYMENT PHASE" styleClass="section-subtitle"/>
+                                <Label text="MODULES DE FORMATION" styleClass="section-title"/>
+                                <Label text="PHASE DE DÉPLOIEMENT STRATÉGIQUE" styleClass="section-subtitle"/>
                             </VBox>
                         </HBox>
 
@@ -54,13 +54,13 @@
                             <!-- Search -->
                             <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
                                 <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
-                                <TextField fx:id="searchTutorialField" promptText="SEARCH DATA..."
-                                           styleClass="search-field" onAction="#onSearchTutorial"
-                                           HBox.hgrow="ALWAYS"/>
+                                <TextField fx:id="searchTutorialField" promptText="RECHERCHER DES DONNÉES..."
+                                            styleClass="search-field" onAction="#onSearchTutorial"
+                                            HBox.hgrow="ALWAYS"/>
                             </HBox>
 
                             <!-- Add button -->
-                            <Button text="+ NEW MODULE" styleClass="add-btn-blue" onAction="#openAddTutorial"/>
+                            <Button text="+ NOUVEAU MODULE" styleClass="add-btn-blue" onAction="#openAddTutorial"/>
                         </HBox>
                     </HBox>
 
@@ -77,8 +77,8 @@
                         <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
                             <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
                             <VBox spacing="2">
-                                <Label text="QUIZ INVENTORY" styleClass="section-title"/>
-                                <Label text="TACTICAL EVALUATION PROTOCOL" styleClass="section-subtitle"/>
+                                <Label text="INVENTAIRE DES QUIZ" styleClass="section-title"/>
+                                <Label text="PROTOCOLE D'ÉVALUATION TACTIQUE" styleClass="section-subtitle"/>
                             </VBox>
                         </HBox>
 
@@ -87,12 +87,12 @@
                         <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="toolbar-actions">
                             <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
                                 <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
-                                <TextField fx:id="searchQuizField" promptText="SCAN QUESTIONS..."
-                                           styleClass="search-field" onAction="#onSearchQuiz"
-                                           HBox.hgrow="ALWAYS"/>
+                                <TextField fx:id="searchQuizField" promptText="ANALYSER LES QUESTIONS..."
+                                            styleClass="search-field" onAction="#onSearchQuiz"
+                                            HBox.hgrow="ALWAYS"/>
                             </HBox>
 
-                            <Button text="+ ADD QUESTION" styleClass="add-btn-blue" onAction="#openAddQuiz"/>
+                            <Button text="+ AJOUTER UNE QUESTION" styleClass="add-btn-blue" onAction="#openAddQuiz"/>
                         </HBox>
                     </HBox>
 
@@ -100,7 +100,7 @@
                     <VBox fx:id="emptyQuizLabel" alignment="CENTER" spacing="15" prefHeight="300"
                           styleClass="empty-state-box">
                         <Label text="?" styleClass="empty-icon"/>
-                        <Label text="NO PROTOCOLS DETECTED" styleClass="empty-text"/>
+                        <Label text="AUCUN PROTOCOLE DÉTECTÉ" styleClass="empty-text"/>
                     </VBox>
 
                     <!-- Quiz FlowPane -->

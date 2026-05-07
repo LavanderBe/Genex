@@ -38,14 +38,14 @@ public class AddTutorialController implements Initializable {
         this.isEditMode = editMode;
         this.currentTutorial = tutorial;
         if (editMode && tutorial != null) {
-            dialogTitle.setText("EDIT DRILL ASSIGNMENT");
+            dialogTitle.setText("MODIFIER LE MODULE D'ENTRAÎNEMENT");
             titleField.setText(tutorial.getTitle());
             descriptionField.setText(tutorial.getDescription());
             videoUrlField.setText(tutorial.getVideoUrl());
             categoryCombo.setValue(tutorial.getCategory() != null ? tutorial.getCategory() : "MACRO");
             difficultyCombo.setValue(tutorial.getDifficulty() != null ? tutorial.getDifficulty() : "INTERMEDIATE");
         } else {
-            dialogTitle.setText("NEW DRILL ASSIGNMENT");
+            dialogTitle.setText("NOUVEAU MODULE D'ENTRAÎNEMENT");
         }
     }
 
@@ -62,23 +62,23 @@ public class AddTutorialController implements Initializable {
         String difficulty = difficultyCombo.getValue();
 
         if (title.isEmpty()) {
-            showAlert("VALIDATION ERROR", "Tactical title is required.");
+            showAlert("ERREUR DE VALIDATION", "Le titre tactique est requis.");
             return;
         }
         if (description.isEmpty()) {
-            showAlert("VALIDATION ERROR", "Briefing data is required.");
+            showAlert("ERREUR DE VALIDATION", "Les données de briefing sont requises.");
             return;
         }
         if (category == null || category.isBlank()) {
-            showAlert("VALIDATION ERROR", "Please select a sector.");
+            showAlert("ERREUR DE VALIDATION", "Veuillez sélectionner un secteur.");
             return;
         }
         if (difficulty == null || difficulty.isBlank()) {
-            showAlert("VALIDATION ERROR", "Please select an intensity.");
+            showAlert("ERREUR DE VALIDATION", "Veuillez sélectionner une intensité.");
             return;
         }
         if (videoUrl.isEmpty()) {
-            showAlert("VALIDATION ERROR", "Intel source URL is required.");
+            showAlert("ERREUR DE VALIDATION", "L'URL de la source de renseignements est requise.");
             return;
         }
 

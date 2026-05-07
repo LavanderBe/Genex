@@ -12,6 +12,11 @@ public class Player extends User {
     private String nationality;
     private String city;
 
+    // Stats for accuracy and progression
+    private int tacticalXp;
+    private int totalAttempts;
+    private int correctAnswers;
+
     public Player(String username, String email, String password, String role, String prenom, String nom, String nickname, String cin, LocalDate birthday, String nationality, String city) {
         super(username, email, password, role);
         this.prenom = prenom;
@@ -37,7 +42,6 @@ public class Player extends User {
     public Player() {
         super();
     }
-
 
     public String getPrenom() {
         return prenom;
@@ -93,6 +97,19 @@ public class Player extends User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    // Stats methods
+    public int getTacticalXp() { return tacticalXp; }
+    public void setTacticalXp(int tacticalXp) { this.tacticalXp = tacticalXp; }
+    public int getTotalAttempts() { return totalAttempts; }
+    public void setTotalAttempts(int totalAttempts) { this.totalAttempts = totalAttempts; }
+    public int getCorrectAnswers() { return correctAnswers; }
+    public void setCorrectAnswers(int correctAnswers) { this.correctAnswers = correctAnswers; }
+
+    public double getAccuracy() {
+        if (totalAttempts == 0) return 0.0;
+        return (double) correctAnswers / totalAttempts * 100.0;
     }
 
     @Override
