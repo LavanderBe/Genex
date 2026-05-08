@@ -188,7 +188,7 @@ public class PlayerDashboard {
 
     @FXML private void showForums() {
         setActiveNav(navForumsButton);
-        loadModule("PlayerForums.fxml");
+        loadModule("/Fxml/Forum/Forum.fxml");
     }
 
     @FXML private void showProfile() {
@@ -211,8 +211,8 @@ public class PlayerDashboard {
             AnchorPane.setRightAnchor(module, 0.0);
         } catch (IOException e) {
             System.err.println("Module not found: " + fxmlPath);
-    }
         }
+    }
 
     private void showModuleError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
