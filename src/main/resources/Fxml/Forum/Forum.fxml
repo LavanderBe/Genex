@@ -8,12 +8,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
 
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/26"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -26,11 +26,11 @@
         <HBox alignment="CENTER" prefHeight="80.0" styleClass="top-nav">
             <HBox alignment="CENTER" spacing="0">
                 <Button text="▶ FORUM" styleClass="nav-link, active-link" onAction="#openForum"/>
-                <Button text="▶ POSTS" styleClass="nav-link" onAction="#openPosts"/>
+                <Button text="▶ PUBLICATIONS" styleClass="nav-link" onAction="#openPosts"/>
             </HBox>
         </HBox>
 
-        <VBox spacing="32.0" VBox.vgrow="ALWAYS">
+        <VBox spacing="20.0" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="40" right="60" bottom="40" left="60"/>
             </padding>
@@ -39,15 +39,23 @@
             <VBox spacing="8">
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Label text="▶" styleClass="campaign-icon"/>
-                    <Label text="TERMINAL // COMMUNITY SPACE" styleClass="subtitle-label"/>
+                    <Label text="TERMINAL // ESPACE COMMUNAUTÉ" styleClass="subtitle-label"/>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="FORUM MODULE" styleClass="title-label"/>
-                        <Label text="Create and manage community discussions. Keep communication clear and your team aligned."
+                        <Label text="MODULE FORUM" styleClass="title-label"/>
+                        <Label text="Créez et gérez les discussions de la communauté. Gardez une communication claire et votre équipe alignée."
                                styleClass="header-desc"/>
                     </VBox>
-                    <Button text="+ NEW FORUM" styleClass="primary-button" onAction="#handleClearForm"/>
+                    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="weather-widget">
+                        <padding>
+                            <Insets top="6" right="10" bottom="6" left="10"/>
+                        </padding>
+                        <ImageView fx:id="weatherIconView" fitHeight="22" fitWidth="22" preserveRatio="true"/>
+                        <Label fx:id="weatherLabel" text="🌡 Chargement météo..." styleClass="featured-meta, weather-text" maxWidth="220" textOverrun="ELLIPSIS"/>
+                        <Button text="↻" onAction="#handleRefreshHeaderData" styleClass="action-button, weather-refresh-button"/>
+                    </HBox>
+                    <Button fx:id="newForumButton" text="+ NOUVEAU FORUM" styleClass="primary-button" onAction="#handleClearForm"/>
                 </HBox>
             </VBox>
 
@@ -55,69 +63,86 @@
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <HBox alignment="CENTER_LEFT" styleClass="search-container" HBox.hgrow="ALWAYS">
                     <Label text="🔍" styleClass="search-icon"/>
-                    <TextField fx:id="searchField" promptText="Search forums..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
+                    <TextField fx:id="searchField" promptText="Rechercher des forums..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
                 </HBox>
-                <ComboBox fx:id="categoryFilterField" styleClass="modal-combo" prefWidth="150" promptText="Category"/>
-                <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="140" promptText="Status"/>
-                <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="150" promptText="Moderation"/>
+                <ComboBox fx:id="categoryFilterField" styleClass="modal-combo" prefWidth="150" promptText="Catégorie"/>
+                <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="140" promptText="Statut"/>
+                <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="150" promptText="Modération"/>
             </HBox>
 
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
-                <VBox spacing="24" styleClass="cards-container">
+                <VBox spacing="20" styleClass="cards-container">
                     <padding>
-                        <Insets top="8" right="8" bottom="8" left="8"/>
+                        <Insets top="4" right="8" bottom="8" left="8"/>
                     </padding>
 
+                    <VBox spacing="10">
+                        <Label text="📰 FEED NEWS GAMING" styleClass="field-label"/>
+                        <ScrollPane fitToHeight="false" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                    minHeight="190.0" prefHeight="190.0" maxHeight="190.0"
+                                    styleClass="custom-scroll, news-feed-scroll">
+                            <HBox fx:id="newsFeedContainer" spacing="14" styleClass="news-feed-row">
+                                <padding>
+                                    <Insets top="6" right="6" bottom="6" left="6"/>
+                                </padding>
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
+
                     <!-- Forum Management Card -->
-                    <VBox spacing="18" styleClass="modal-container">
+                    <VBox fx:id="forumManagementCard" spacing="18" styleClass="modal-container">
                         <padding>
                             <Insets top="24" right="24" bottom="24" left="24"/>
                         </padding>
-                        <Label text="⚙ FORUM MANAGEMENT" styleClass="modal-title"/>
+                        <Label text="⚙ GESTION DU FORUM" styleClass="modal-title"/>
 
                         <HBox spacing="20">
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="TITLE" styleClass="field-label"/>
-                                <TextField fx:id="titleField" promptText="Forum title" styleClass="modal-input"/>
+                                <Label text="TITRE" styleClass="field-label"/>
+                                <TextField fx:id="titleField" promptText="Titre du forum" styleClass="modal-input"/>
                             </VBox>
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="CREATED BY" styleClass="field-label"/>
-                                <TextField fx:id="createdByField" promptText="Creator name" styleClass="modal-input"/>
+                                <Label text="CRÉÉ PAR" styleClass="field-label"/>
+                                <TextField fx:id="createdByField" promptText="Nom du créateur" styleClass="modal-input"/>
                             </VBox>
                         </HBox>
 
                         <HBox spacing="20" alignment="CENTER_LEFT">
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="CATEGORY" styleClass="field-label"/>
+                                <Label text="CATÉGORIE" styleClass="field-label"/>
                                 <ComboBox fx:id="categoryField" styleClass="modal-combo"/>
                             </VBox>
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="TOPIC STATUS" styleClass="field-label"/>
+                                <Label text="STATUT DU SUJET" styleClass="field-label"/>
                                 <ComboBox fx:id="topicStatusField" styleClass="modal-combo"/>
                             </VBox>
                             <VBox spacing="10" alignment="CENTER_LEFT">
-                                <Label text="PINNED" styleClass="field-label"/>
-                                <CheckBox fx:id="pinnedField" text="Pin topic" styleClass="field-label"/>
+                                <Label text="ÉPINGLÉ" styleClass="field-label"/>
+                                <CheckBox fx:id="pinnedField" text="Épingler le sujet" styleClass="field-label"/>
                             </VBox>
                         </HBox>
 
                         <VBox spacing="10">
                             <Label text="DESCRIPTION" styleClass="field-label"/>
-                            <TextArea fx:id="descriptionArea" promptText="Forum description..." prefHeight="100"
-                                      wrapText="true" styleClass="modal-input"/>
+                            <HBox spacing="12" alignment="TOP_LEFT">
+                                <TextArea fx:id="descriptionArea" promptText="Description du forum..." prefHeight="100"
+                                          wrapText="true" styleClass="modal-input" HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="generateDescButton" text="✨ GÉNÉRER" onAction="#handleGenerateDescription" 
+                                        styleClass="action-button, primary-button" minHeight="40" wrapText="true" prefWidth="120"/>
+                            </HBox>
                         </VBox>
 
                         <HBox spacing="10" alignment="CENTER_LEFT">
-                            <Button text="✓ CREATE" onAction="#handleAddForum" styleClass="submit-button"/>
-                            <Button text="↻ UPDATE" onAction="#handleUpdateForum" styleClass="action-button"/>
-                            <Button text="✕ DELETE" onAction="#handleDeleteForum" styleClass="action-button"/>
-                            <Button text="📌 PIN" onAction="#handleTogglePin" styleClass="action-button"/>
-                            <Button text="✔ RESOLVED" onAction="#handleMarkResolved" styleClass="action-button"/>
-                            <Button text="⚠ REPORT" onAction="#handleReportForum" styleClass="action-button"/>
-                            <Button text="👁 HIDE" onAction="#handleHideForum" styleClass="action-button"/>
-                            <Button text="↺ RESTORE" onAction="#handleRestoreForum" styleClass="action-button"/>
+                            <Button fx:id="addForumButton" text="✓ CRÉER" onAction="#handleAddForum" styleClass="submit-button"/>
+                            <Button fx:id="updateForumButton" text="↻ METTRE À JOUR" onAction="#handleUpdateForum" styleClass="action-button, secondary-button"/>
+                            <Button fx:id="deleteForumButton" text="✕ SUPPRIMER" onAction="#handleDeleteForum" styleClass="action-button, danger-button"/>
+                            <Button fx:id="pinForumButton" text="📌 ÉPINGLER" onAction="#handleTogglePin" styleClass="action-button, secondary-button"/>
+                            <Button fx:id="resolveForumButton" text="✔ RÉSOLU" onAction="#handleMarkResolved" styleClass="action-button, secondary-button"/>
+                            <Button fx:id="reportForumButton" text="⚠ SIGNALER" onAction="#handleReportForum" styleClass="action-button, warning-button"/>
+                            <Button fx:id="hideForumButton" text="👁 MASQUER" onAction="#handleHideForum" styleClass="action-button, warning-button"/>
+                            <Button fx:id="restoreForumButton" text="↺ RESTAURER" onAction="#handleRestoreForum" styleClass="action-button, secondary-button"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Button text="✖ CLEAR" onAction="#handleClearForm" styleClass="action-button"/>
+                            <Button text="✖ EFFACER" onAction="#handleClearForm" styleClass="action-button, neutral-button"/>
                         </HBox>
                     </VBox>
 
@@ -126,20 +151,20 @@
                         <padding>
                             <Insets top="18" right="18" bottom="18" left="18"/>
                         </padding>
-                        <Label text="🔥 FEATURED FORUM" styleClass="field-label"/>
+                        <Label text="🔥 FORUM À LA UNE" styleClass="field-label"/>
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label fx:id="featuredTitleLabel" text="No forum yet" styleClass="featured-title"/>
-                            <Label fx:id="featuredMoodLabel" text="🔥 ACTIVE" styleClass="mood-badge mood-active"/>
+                            <Label fx:id="featuredTitleLabel" text="Aucun forum pour le moment" styleClass="featured-title"/>
+                            <Label fx:id="featuredMoodLabel" text="🔥 ACTIF" styleClass="mood-badge mood-active"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="featuredTrendLabel" text="TREND 0" styleClass="trend-chip"/>
+                            <Label fx:id="featuredTrendLabel" text="TENDANCE 0" styleClass="trend-chip"/>
                         </HBox>
-                        <Label fx:id="featuredMetaLabel" text="Created by -" styleClass="featured-meta"/>
-                        <Label fx:id="featuredDescLabel" text="Create your first forum to see it highlighted here." styleClass="featured-desc"/>
+                        <Label fx:id="featuredMetaLabel" text="Créé par -" styleClass="featured-meta"/>
+                        <Label fx:id="featuredDescLabel" text="Créez votre premier forum pour le voir mis en avant ici." styleClass="featured-desc"/>
                     </VBox>
 
                     <!-- Forum Cards List -->
                     <VBox spacing="16" prefWidth="1000">
-                        <Label text="📋 ALL FORUMS" styleClass="field-label"/>
+                        <Label text="📋 TOUS LES FORUMS" styleClass="field-label"/>
                         <FlowPane fx:id="forumCardsContainer" prefWrapLength="980" hgap="16" vgap="16" styleClass="cards-flow"/>
                     </VBox>
                 </VBox>
