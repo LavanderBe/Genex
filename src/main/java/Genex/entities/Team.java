@@ -11,6 +11,7 @@ public class Team {
     private String name;
     private LocalDate date;
     private String logoImage;
+    private String jerseyImage;
     private String contact;
     private Status status;
     private LocalDateTime createdAt;
@@ -53,6 +54,9 @@ public class Team {
     public String getLogoImage() { return logoImage; }
     public void setLogoImage(String logoImage) { this.logoImage = logoImage; }
 
+    public String getJerseyImage() { return jerseyImage; }
+    public void setJerseyImage(String jerseyImage) { this.jerseyImage = jerseyImage; }
+
     public String getContact() { return contact; }
     public void setContact(String contact) { this.contact = contact; }
 
@@ -65,15 +69,16 @@ public class Team {
     @Override
     public String toString() {
         return "Team{" +
-                "id='"         + id         + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", gameId='"    + gameId    + '\'' +
-                ", name='"      + name      + '\'' +
-                ", date="       + date             +
-                ", logoImage='" + logoImage + '\'' +
-                ", contact='"   + contact   + '\'' +
-                ", status="     + status          +
-                ", createdAt="  + createdAt        +
+                "id='"          + id          + '\'' +
+                ", createdBy='" + createdBy  + '\'' +
+                ", gameId='"    + gameId     + '\'' +
+                ", name='"      + name       + '\'' +
+                ", date="       + date              +
+                ", logoImage='" + logoImage  + '\'' +
+                ", jerseyImage='" + jerseyImage + '\'' +
+                ", contact='"   + contact    + '\'' +
+                ", status="     + status           +
+                ", createdAt="  + createdAt         +
                 '}';
     }
 }

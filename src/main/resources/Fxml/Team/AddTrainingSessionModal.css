@@ -129,6 +129,81 @@
     -fx-font-size: 13;
 }
 
+/* ComboBox - Better popup positioning */
+.combo-box {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.combo-box:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+}
+
+.combo-box .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.combo-box:hover .arrow {
+    -fx-background-color: white;
+}
+
+/* ComboBox Popup - Dark theme with visible text */
+.combo-box-popup .list-view {
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: rgba(139,13,13,0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0, 0, 5);
+    -fx-padding: 4 0;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white !important;
+    -fx-padding: 10 16;
+    -fx-font-size: 13px;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: rgba(139,13,13,0.4);
+    -fx-text-fill: white !important;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: rgba(139,13,13,0.6);
+    -fx-text-fill: white !important;
+    -fx-font-weight: bold;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-background-color: rgba(139,13,13,0.7);
+    -fx-text-fill: white !important;
+}
+
+/* ComboBox text color fix */
+.combo-box .text-input {
+    -fx-text-fill: white !important;
+}
+
+.combo-box .list-cell .text {
+    -fx-fill: white !important;
+}
+
 /* ChoiceBox Dropdown Menu - CRITICAL FIX */
 .choice-box .context-menu {
     -fx-background-color: #1a1a2e;

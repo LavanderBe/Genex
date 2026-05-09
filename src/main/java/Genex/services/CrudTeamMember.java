@@ -52,15 +52,31 @@ public class CrudTeamMember {
         if (teamId == null || playerId == null) {
             throw new IllegalArgumentException("teamId and playerId must not be null");
         }
-        // No-op if already a member
+        
+        // Check if player already has a team (unique constraint)
+        Team existingTeam = getTeamByPlayer(playerId);
+        if (existingTeam != null) {
+            System.out.println("Player already belongs to team: " + existingTeam.getName() + " (ID: " + existingTeam.getId() + ")");
+            // If it's the same team, just return (no-op)
+            if (existingTeam.getId().equals(teamId)) {
+                System.out.println("Player is already a member of this team — no-op");
+                return;
+            }
+            // If it's a different team, throw error
+            throw new IllegalStateException("Player already belongs to another team: " + existingTeam.getName());
+        }
+        
+        // Double-check membership (in case of race condition)
         if (isMember(teamId, playerId)) {
             System.out.println("Player is already a member of this team — no-op");
             return;
         }
+        
         // Enforce max members
         if (getMemberCount(teamId) >= MAX_MEMBERS) {
             throw new IllegalStateException("Team is full");
         }
+        
         String query = "INSERT INTO team_members (id, team_id, player_id, joined_at) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
@@ -69,9 +85,13 @@ public class CrudTeamMember {
             pst.setString(3, playerId);
             pst.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
             pst.executeUpdate();
-            System.out.println("Member added to team: " + teamId);
+            System.out.println("✅ Member added to team: " + teamId);
         } catch (SQLException e) {
-            System.err.println("Error adding member: " + e.getMessage());
+            System.err.println("❌ Error adding member: " + e.getMessage());
+            // Check if it's a duplicate key error
+            if (e.getMessage().contains("Duplicate") || e.getMessage().contains("unique")) {
+                System.err.println("⚠️ Duplicate member entry detected - player may already be in a team");
+            }
             throw new RuntimeException(e);
         }
     }

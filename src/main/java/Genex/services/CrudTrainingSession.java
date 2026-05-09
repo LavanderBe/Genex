@@ -12,6 +12,7 @@ public class CrudTrainingSession {
 
     private GoogleCalendarService calendarService;
     private TrainingNotificationService notificationService;
+    private CrudTeamMember crudTeamMember;
 
     public CrudTrainingSession() {
         try {
@@ -25,6 +26,7 @@ public class CrudTrainingSession {
         }
         
         notificationService = new TrainingNotificationService();
+        crudTeamMember = new CrudTeamMember();
     }
 
     public List<TrainingSession> getAllSessions() {

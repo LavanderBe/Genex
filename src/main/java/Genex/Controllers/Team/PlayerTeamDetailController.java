@@ -41,7 +41,9 @@ public class PlayerTeamDetailController {
     @FXML private VBox leftPanel;
     @FXML private VBox rightPanel;
     @FXML private ImageView teamLogo;
+    @FXML private ImageView teamJersey;
     @FXML private Text teamIconFallback;
+    @FXML private Text jerseyIconFallback;
     @FXML private Label infoGame;
     @FXML private Label infoContact;
     @FXML private Label infoStatus;
@@ -275,6 +277,7 @@ public class PlayerTeamDetailController {
     private void populateRightPanel() {
         if (team == null) return;
         loadLogo();
+        loadJersey();
         if (team.getGameId() != null) {
             String name = getGameNameById(team.getGameId());
             infoGame.setText(name != null ? name : "—");
@@ -303,6 +306,24 @@ public class PlayerTeamDetailController {
         }
         teamLogo.setVisible(false);
         teamIconFallback.setVisible(true);
+    }
+
+    private void loadJersey() {
+        if (team.getJerseyImage() != null && !team.getJerseyImage().isEmpty()) {
+            try {
+                File f = new File(team.getJerseyImage());
+                if (f.exists()) {
+                    teamJersey.setImage(new Image(f.toURI().toString()));
+                    teamJersey.setVisible(true);
+                    jerseyIconFallback.setVisible(false);
+                    return;
+                }
+            } catch (Exception e) {
+                System.err.println("Error loading jersey: " + e.getMessage());
+            }
+        }
+        teamJersey.setVisible(false);
+        jerseyIconFallback.setVisible(true);
     }
 
     private void loadMembers() {

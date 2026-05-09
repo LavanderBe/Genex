@@ -4,7 +4,7 @@ import Genex.entities.TrainingSession;
 import Genex.services.CrudTrainingSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -27,7 +27,7 @@ public class AddTrainingSessionModalController {
     private TextField txtTitle;
 
     @FXML
-    private ChoiceBox<TrainingSession.Type> choiceType;
+    private ComboBox<TrainingSession.Type> choiceType;
 
     @FXML
     private DatePicker dateSession;
@@ -39,7 +39,7 @@ public class AddTrainingSessionModalController {
     private TextField txtEndTime;
 
     @FXML
-    private ChoiceBox<TrainingSession.Status> choiceStatus;
+    private ComboBox<TrainingSession.Status> choiceStatus;
 
     @FXML
     private TextField txtLocation;

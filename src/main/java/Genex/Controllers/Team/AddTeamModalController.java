@@ -3,9 +3,12 @@ package Genex.Controllers.Team;
 import Genex.entities.Game;
 import Genex.entities.Team;
 import Genex.services.CrudGame;
+import Genex.services.GeminiImageGeneratorService;
 import Genex.utils.SessionManager;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -24,11 +27,15 @@ public class AddTeamModalController {
 
     @FXML private Label modalTitle;
     @FXML private TextField txtName;
-    @FXML private ChoiceBox<Game> choiceGame;
+    @FXML private ComboBox<Game> choiceGame;
     @FXML private TextField txtContact;
     @FXML private TextField txtLogoFileName;
-    @FXML private ChoiceBox<Team.Status> choiceStatus;
+    @FXML private TextField txtLogoDescription;
+    @FXML private TextField txtJerseyFileName;
+    @FXML private ComboBox<Team.Status> choiceStatus;
     @FXML private javafx.scene.control.Button btnCloseModal;
+    @FXML private javafx.scene.control.Button btnGenerateLogo;
+    @FXML private javafx.scene.control.Button btnGenerateJersey;
 
     // Error labels
     @FXML private Label errorName;
@@ -39,8 +46,10 @@ public class AddTeamModalController {
     private Runnable onCloseCallback;
     private Team teamToEdit;
     private String logoImagePath;
+    private String jerseyImagePath;
 
     private CrudGame crudGame = new CrudGame();
+    private GeminiImageGeneratorService aiService = new GeminiImageGeneratorService();
 
     @FXML
     public void initialize() {
@@ -136,6 +145,12 @@ public class AddTeamModalController {
             logoImagePath = team.getLogoImage();
             txtLogoFileName.setText(Paths.get(team.getLogoImage()).getFileName().toString());
         }
+
+        // Jersey
+        if (team.getJerseyImage() != null && !team.getJerseyImage().isEmpty()) {
+            jerseyImagePath = team.getJerseyImage();
+            txtJerseyFileName.setText(Paths.get(team.getJerseyImage()).getFileName().toString());
+        }
     }
 
     public void setOnSaveCallback(Consumer<Team> callback) {
@@ -179,6 +194,132 @@ public class AddTeamModalController {
     }
 
     @FXML
+    private void handleUploadJersey() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Choisir un maillot");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+        
+        Stage stage = (Stage) txtName.getScene().getWindow();
+        File file = fc.showOpenDialog(stage);
+        
+        if (file != null) {
+            try {
+                Path dir = Paths.get("uploads", "team-jerseys");
+                Files.createDirectories(dir);
+                String fileName = System.currentTimeMillis() + "_" + file.getName();
+                Files.copy(file.toPath(), dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+                jerseyImagePath = "uploads/team-jerseys/" + fileName;
+                txtJerseyFileName.setText(file.getName());
+            } catch (Exception e) {
+                txtJerseyFileName.setText("Erreur upload");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void handleGenerateLogo() {
+        String teamName = txtName.getText().trim();
+        Game selectedGame = choiceGame.getValue();
+        String customDescription = txtLogoDescription.getText().trim();
+        
+        if (teamName.isEmpty()) {
+            showError(errorName, "Entrez le nom de l'équipe d'abord");
+            return;
+        }
+        
+        if (selectedGame == null) {
+            showError(errorGameId, "Sélectionnez un jeu d'abord");
+            return;
+        }
+        
+        // Disable button and show loading
+        btnGenerateLogo.setDisable(true);
+        txtLogoFileName.setText("🎨 Génération en cours...");
+        
+        // Run in background thread
+        Task<String> task = new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                return aiService.generateTeamLogo(teamName, selectedGame.getNom(), customDescription);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            String imagePath = task.getValue();
+            if (imagePath != null) {
+                logoImagePath = imagePath;
+                txtLogoFileName.setText("✅ Logo généré avec AI");
+                System.out.println("✅ Logo generated: " + imagePath);
+            } else {
+                txtLogoFileName.setText("❌ Échec de la génération");
+                System.err.println("❌ Failed to generate logo");
+            }
+            btnGenerateLogo.setDisable(false);
+        });
+        
+        task.setOnFailed(e -> {
+            txtLogoFileName.setText("❌ Erreur de génération");
+            System.err.println("❌ Error: " + task.getException().getMessage());
+            task.getException().printStackTrace();
+            btnGenerateLogo.setDisable(false);
+        });
+        
+        new Thread(task).start();
+    }
+
+    @FXML
+    private void handleGenerateJersey() {
+        String teamName = txtName.getText().trim();
+        Game selectedGame = choiceGame.getValue();
+        String logoDescription = txtLogoDescription.getText().trim();
+        
+        if (teamName.isEmpty()) {
+            showError(errorName, "Entrez le nom de l'équipe d'abord");
+            return;
+        }
+        
+        if (selectedGame == null) {
+            showError(errorGameId, "Sélectionnez un jeu d'abord");
+            return;
+        }
+        
+        // Disable button and show loading
+        btnGenerateJersey.setDisable(true);
+        txtJerseyFileName.setText("👕 Génération en cours...");
+        
+        // Run in background thread
+        Task<String> task = new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                return aiService.generateTeamJersey(teamName, selectedGame.getNom(), logoDescription);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            String imagePath = task.getValue();
+            if (imagePath != null) {
+                jerseyImagePath = imagePath;
+                txtJerseyFileName.setText("✅ Maillot généré avec AI");
+                System.out.println("✅ Jersey generated: " + imagePath);
+            } else {
+                txtJerseyFileName.setText("❌ Échec de la génération");
+                System.err.println("❌ Failed to generate jersey");
+            }
+            btnGenerateJersey.setDisable(false);
+        });
+        
+        task.setOnFailed(e -> {
+            txtJerseyFileName.setText("❌ Erreur de génération");
+            System.err.println("❌ Error: " + task.getException().getMessage());
+            task.getException().printStackTrace();
+            btnGenerateJersey.setDisable(false);
+        });
+        
+        new Thread(task).start();
+    }
+
+    @FXML
     private void saveTeam() {
         if (!validateForm()) {
             return;
@@ -196,6 +337,7 @@ public class AddTeamModalController {
             
             team.setContact(txtContact.getText().trim());
             team.setLogoImage(logoImagePath);
+            team.setJerseyImage(jerseyImagePath);
             team.setStatus(choiceStatus.getValue());
 
             if (teamToEdit == null) {

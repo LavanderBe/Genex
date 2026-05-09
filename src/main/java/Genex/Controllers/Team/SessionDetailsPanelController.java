@@ -28,6 +28,7 @@ public class SessionDetailsPanelController {
     private List<TrainingSession> sessions;
     private String teamId;
     private boolean isCreator;
+    private String currentUserId; // Current logged-in user
     private Runnable onCloseCallback;
     private StackPane rootStackPane;
     private CrudTrainingSession crudTrainingSession;
@@ -53,8 +54,13 @@ public class SessionDetailsPanelController {
 
     public void setIsCreator(boolean isCreator) {
         this.isCreator = isCreator;
+        System.out.println("SessionDetailsPanelController.setIsCreator: " + isCreator);
         btnAddSession.setVisible(isCreator);
         btnAddSession.setManaged(isCreator);
+    }
+
+    public void setCurrentUserId(String userId) {
+        this.currentUserId = userId;
     }
 
     public void setOnCloseCallback(Runnable callback) {
@@ -247,6 +253,10 @@ public class SessionDetailsPanelController {
         
         // Action buttons (only for creator)
         if (isCreator) {
+            System.out.println("=== CREATING EDIT/DELETE BUTTONS ===");
+            System.out.println("Session: " + session.getTitle());
+            System.out.println("Is Creator: " + isCreator);
+            
             HBox buttonRow = new HBox(8);
             buttonRow.setAlignment(Pos.CENTER_RIGHT);
             
@@ -282,6 +292,14 @@ public class SessionDetailsPanelController {
             
             buttonRow.getChildren().addAll(btnEdit, btnDelete);
             card.getChildren().add(buttonRow);
+            
+            System.out.println("Edit/Delete buttons added to card!");
+            System.out.println("=====================================");
+        } else {
+            System.out.println("=== SKIPPING EDIT/DELETE BUTTONS ===");
+            System.out.println("Session: " + session.getTitle());
+            System.out.println("Is Creator: " + isCreator);
+            System.out.println("=====================================");
         }
         
         return card;

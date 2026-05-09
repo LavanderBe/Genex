@@ -319,13 +319,31 @@ public class PlayerTeamBrowserController {
                     // 1. Save team to DB
                     CrudTeam crudTeam = new CrudTeam();
                     crudTeam.addEntity(team);
+                    System.out.println("✅ Team created: " + team.getName() + " (ID: " + team.getId() + ")");
 
                     // 2. Fetch the saved team to get its generated ID
                     Team savedTeam = getLastCreatedTeamByUser(currentUserId);
 
                     // 3. Auto-add creator as a member
                     if (savedTeam != null) {
-                        crudTeamMember.addMember(savedTeam.getId(), currentUserId);
+                        System.out.println("🔄 Adding creator as team member...");
+                        try {
+                            crudTeamMember.addMember(savedTeam.getId(), currentUserId);
+                            System.out.println("✅ Creator added as team member");
+                        } catch (IllegalStateException ise) {
+                            // Player already in another team
+                            System.err.println("⚠️ Creator already in another team: " + ise.getMessage());
+                            // Delete the newly created team since creator can't join
+                            crudTeam.deleteEntity(savedTeam);
+                            rootStackPane.getChildren().remove(modalOverlay);
+                            Alert error = new Alert(Alert.AlertType.ERROR);
+                            error.setTitle("Erreur");
+                            error.setHeaderText("Vous êtes déjà membre d'une équipe");
+                            error.setContentText("Quittez votre équipe actuelle avant d'en créer une nouvelle.");
+                            error.showAndWait();
+                            showTeamList();
+                            return;
+                        }
                     }
 
                     // 4. Close modal
@@ -333,18 +351,20 @@ public class PlayerTeamBrowserController {
 
                     // 5. Navigate to the new team detail
                     if (savedTeam != null) {
+                        System.out.println("✅ Navigating to new team detail");
                         showTeamDetail(savedTeam);
                     } else {
+                        System.err.println("⚠️ Could not find saved team, returning to list");
                         showTeamList();
                     }
                 } catch (Exception ex) {
-                    System.err.println("Error creating team: " + ex.getMessage());
+                    System.err.println("❌ Error creating team: " + ex.getMessage());
                     ex.printStackTrace();
                     rootStackPane.getChildren().remove(modalOverlay);
                     Alert error = new Alert(Alert.AlertType.ERROR);
                     error.setTitle("Erreur");
                     error.setHeaderText(null);
-                    error.setContentText("Impossible de créer l'équipe.");
+                    error.setContentText("Impossible de créer l'équipe: " + ex.getMessage());
                     error.showAndWait();
                 }
             });

@@ -37,3 +37,13 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Security - Discord Bot Configuration ###
+src/main/resources/discord-config.properties
+
+### Security - AI API Keys ###
+src/main/resources/gemini-config.properties
+
+### Google Calendar Credentials ###
+src/main/resources/credentials.json
+tokens/

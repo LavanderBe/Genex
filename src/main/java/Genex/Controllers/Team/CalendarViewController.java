@@ -270,10 +270,27 @@ public class CalendarViewController {
             StackPane panelOverlay = loader.load();
             
             SessionDetailsPanelController controller = loader.getController();
+            
+            // IMPORTANT: Set these BEFORE setSessions() so displaySessions() has correct values
             controller.setDate(date);
-            controller.setSessions(sessions);
             controller.setTeamId(teamId);
             controller.setIsCreator(isCreator);
+            
+            // Pass current user ID for attendance tracking
+            String currentUserId = Genex.utils.SessionManager.getInstance().getCurrentUserId();
+            controller.setCurrentUserId(currentUserId);
+            
+            System.out.println("=== SESSION DETAILS PANEL DEBUG ===");
+            System.out.println("Current User ID: " + currentUserId);
+            System.out.println("Is Creator: " + isCreator);
+            System.out.println("Team ID: " + teamId);
+            System.out.println("Date: " + date);
+            System.out.println("Sessions count: " + sessions.size());
+            System.out.println("===================================");
+            
+            // Call setSessions() LAST because it triggers displaySessions()
+            controller.setSessions(sessions);
+            
             controller.setOnCloseCallback(() -> {
                 rootStackPane.getChildren().remove(panelOverlay);
                 refreshCalendar(); // Refresh calendar when panel closes
