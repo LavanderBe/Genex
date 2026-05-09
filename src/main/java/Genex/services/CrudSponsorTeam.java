@@ -101,8 +101,8 @@ public class CrudSponsorTeam {
 
         // Hydrate team stub
         Team t = new Team();
-        t.setId_team(rs.getInt("team_id"));
-        t.setNom_team(rs.getString("nom_team"));
+        t.setId(rs.getString("team_id"));
+        t.setName(rs.getString("nom_team"));
         st.setTeam(t);
 
         // Method

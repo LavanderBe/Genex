@@ -122,7 +122,7 @@ public class SponsorTeamController {
         try {
             ObservableList<Team> teams = FXCollections.observableArrayList(teamService.getAll());
             combTeam.setConverter(new StringConverter<>() {
-                @Override public String toString(Team t)   { return t == null ? "" : t.getNom_team(); }
+                @Override public String toString(Team t)   { return t == null ? "" : t.getName(); }
                 @Override public Team fromString(String s) { return null; }
             });
             combTeam.setItems(teams);
@@ -189,7 +189,7 @@ public class SponsorTeamController {
                 .filter(s -> s.getId().equals(st.getSponsorId()))
                 .findFirst().ifPresent(combSponsor::setValue);
         combTeam.getItems().stream()
-                .filter(t -> t.getId_team() == st.getTeamId())
+                .filter(t -> t.getId() == Integer.toString(st.getTeamId()))
                 .findFirst().ifPresent(combTeam::setValue);
         combMethod.setValue(st.getMethod());
         fieldBudget.setText(st.getBudgetAmount() != null ? st.getBudgetAmount().toPlainString() : "");

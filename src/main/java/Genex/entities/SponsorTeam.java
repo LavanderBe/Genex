@@ -59,7 +59,7 @@ public class SponsorTeam {
     public Team getTeam()                        { return team; }
     public void setTeam(Team team)               {
         this.team   = team;
-        this.teamId = team != null ? team.getId_team() : 0;
+        //this.teamId = team != null ? team.getId() : 0;
     }
 
     public SponsorMethod getMethod()                     { return method; }
@@ -84,7 +84,7 @@ public class SponsorTeam {
     }
 
     public String getTeamName() {
-        return team != null ? team.getNom_team() : "Team #" + teamId;
+        return team != null ? team.getName() : "Team #" + teamId;
     }
 
     public String getMethodLabel() {
