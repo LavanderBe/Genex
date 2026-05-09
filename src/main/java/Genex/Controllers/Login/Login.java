@@ -116,6 +116,11 @@ public class Login {
         if (cu.check_email(email)){
             User u=cu.getUser_withmail(email);
             if (u.verifyPassword(password)){
+                // Store user id and set session so boutique + other features can access current user
+                String userId = cu.getUser_Id(u.getUsername());
+                u.setId(userId);
+                Genex.utils.SessionManager.getInstance().setCurrentUser(u);
+
                 if (u.getRole().equals("admin"))
                 {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));

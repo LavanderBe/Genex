@@ -16,15 +16,23 @@ public class FinanceController {
     @FXML private StackPane        financeContent;
     @FXML private Label            breadcrumb;
 
-    private static final String PAGE_SPONSORS = "🏆  Sponsors";
-    private static final String PAGE_BUDGET   = "💰  Budgets";
+    private static final String PAGE_OVERVIEW            = "📊  Vue d'ensemble";
+    private static final String PAGE_SPONSORS            = "🏆  Sponsors";
+    private static final String PAGE_BUDGET              = "💰  Budgets";
+    private static final String PAGE_SPONSOR_TEAM        = "👥  Sponsors Equipes";
+    private static final String PAGE_SPONSOR_TOURNAMENT  = "🎮  Sponsors Tournois";
 
     @FXML
     public void initialize() {
-        pageSelector.setItems(FXCollections.observableArrayList(PAGE_SPONSORS, PAGE_BUDGET));
-        // Default: load Sponsors
-        pageSelector.setValue(PAGE_SPONSORS);
-        loadPage(PAGE_SPONSORS);
+        pageSelector.setItems(FXCollections.observableArrayList(
+                PAGE_OVERVIEW,
+                PAGE_SPONSORS,
+                PAGE_BUDGET,
+                PAGE_SPONSOR_TEAM,
+                PAGE_SPONSOR_TOURNAMENT
+        ));
+        pageSelector.setValue(PAGE_OVERVIEW);
+        loadPage(PAGE_OVERVIEW);
     }
 
     @FXML
@@ -34,9 +42,14 @@ public class FinanceController {
     }
 
     private void loadPage(String page) {
-        String fxmlPath = PAGE_SPONSORS.equals(page)
-                ? "/Fxml/Sponsors/Sponsors.fxml"
-                : "/Fxml/Budget/Budget.fxml";
+        String fxmlPath = switch (page) {
+            case PAGE_OVERVIEW           -> "/Fxml/Finance/FinanceOverview.fxml";
+            case PAGE_SPONSORS           -> "/Fxml/Sponsors/Sponsors.fxml";
+            case PAGE_BUDGET             -> "/Fxml/Budget/Budget.fxml";
+            case PAGE_SPONSOR_TEAM       -> "/Fxml/SponsorTeam/SponsorTeam.fxml";
+            case PAGE_SPONSOR_TOURNAMENT -> "/Fxml/SponsorTournament/SponsorTournament.fxml";
+            default                      -> "/Fxml/Finance/FinanceOverview.fxml";
+        };
 
         breadcrumb.setText("FINANCES  /  " + page.replaceAll("^[^a-zA-Z]+", "").trim().toUpperCase());
 

@@ -8,6 +8,7 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -76,14 +77,21 @@ public class PlayerDashboard {
     @FXML private void showTutorials() { loadModule("PlayerTutorials.fxml"); }
     @FXML private void showForums() { loadModule("PlayerForums.fxml"); }
     @FXML private void showProfile() { loadModule("PlayerProfile.fxml"); }
-    @FXML private void showBoutique() {loadModule("Boutique.fxml");}
+    @FXML private void showBoutique() { loadModule("/Fxml/Boutique/Boutique.fxml"); }
 
-    private void loadModule(String fxmlName) {
+    private void loadModule(String fxmlFile) {
         try {
-            Parent module = FXMLLoader.load(getClass().getResource(fxmlName));
-            contentArea.getChildren().setAll(module);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Node node = loader.load();
+            contentArea.getChildren().clear();
+            AnchorPane.setTopAnchor(node, 0.0);
+            AnchorPane.setBottomAnchor(node, 0.0);
+            AnchorPane.setLeftAnchor(node, 0.0);
+            AnchorPane.setRightAnchor(node, 0.0);
+            contentArea.getChildren().add(node);
+
         } catch (IOException e) {
-            System.err.println("Module not found: " + fxmlName);
+            e.printStackTrace();
         }
     }
 

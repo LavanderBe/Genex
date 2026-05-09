@@ -44,6 +44,19 @@
             <version>23.0.2</version>
             <scope>compile</scope>
         </dependency>
+        <!-- WebView for embedded Stripe payment -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>23.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Stripe Java SDK for online payments -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>32.1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
