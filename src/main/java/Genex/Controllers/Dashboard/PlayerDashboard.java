@@ -198,7 +198,7 @@ public class PlayerDashboard {
 
     @FXML private void showBoutique() {
         setActiveNav(navBoutiqueButton);
-        loadModule("Boutique.fxml");
+        loadModule("/Fxml/Boutique/Boutique.fxml");
     }
 
     private void loadModule(String fxmlPath) {

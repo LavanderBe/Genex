@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/23.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Genex.Controllers.Finance.FinanceOverviewController"
+            stylesheets="@Finance.css"
+            fitToWidth="true" styleClass="cards-scroll sub-root"
+            style="-fx-background: transparent; -fx-background-color: transparent;">
+
+    <VBox spacing="20" style="-fx-background-color: transparent;">
+        <padding><Insets top="20" right="28" bottom="28" left="28"/></padding>
+
+        <Label text="VUE D'ENSEMBLE — FINANCES" styleClass="form-section-title"/>
+
+        <!-- ── Row 1: Budget stats + health bar ──────────────────────── -->
+        <HBox spacing="16">
+
+            <!-- Budget numbers -->
+            <VBox styleClass="panel" spacing="12" HBox.hgrow="ALWAYS">
+                <Label text="BUDGETS" styleClass="panel-title"/>
+                <HBox spacing="10">
+                    <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Total" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTotalBudgets" text="—" styleClass="stat-number"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Alloue" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTotalAllocated" text="—" styleClass="stat-number"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Depense" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTotalSpent" text="—" styleClass="stat-number"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Restant" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTotalRemaining" text="—" styleClass="stat-number"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Budget health progress bar -->
+                <VBox spacing="6">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="SANTE BUDGETAIRE" styleClass="field-label"/>
+                        <Label fx:id="lblBudgetHealth" text="—" style="-fx-font-size:13px; -fx-font-weight:bold;"/>
+                    </HBox>
+                    <ProgressBar fx:id="budgetHealthBar" progress="0" maxWidth="Infinity"
+                                 prefHeight="14" styleClass="overview-progress"/>
+                    <HBox>
+                        <Label text="0%" styleClass="stat-icon-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="100%" styleClass="stat-icon-label"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Allocated vs Spent bar chart -->
+            <VBox styleClass="panel" spacing="8" prefWidth="380" minWidth="320">
+                <Label text="ALLOUE VS DEPENSE PAR ANNEE" styleClass="panel-title"/>
+                <BarChart fx:id="budgetChart" prefHeight="200" animated="false"
+                          styleClass="overview-chart" legendVisible="true">
+                    <xAxis><CategoryAxis label="" tickLabelFill="rgba(255,255,255,0.5)"/></xAxis>
+                    <yAxis><NumberAxis label="" tickLabelFill="rgba(255,255,255,0.5)"/></yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+        <!-- ── Row 2: Sponsor stats + type breakdown ─────────────────── -->
+        <HBox spacing="16">
+
+            <!-- Sponsor numbers -->
+            <VBox styleClass="panel" spacing="12" HBox.hgrow="ALWAYS">
+                <Label text="SPONSORS" styleClass="panel-title"/>
+                <HBox spacing="10">
+                    <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Total" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTotalSponsors" text="—" styleClass="stat-number"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Tournois" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTournamentSponsors" text="—" styleClass="stat-number"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Equipes" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblTeamSponsors" text="—" styleClass="stat-number"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label text="Valeur contrats" styleClass="stat-icon-label"/>
+                        <Label fx:id="lblContractValue" text="—" styleClass="stat-number"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Sponsor type breakdown bars -->
+                <VBox spacing="8" fx:id="sponsorBreakdownBox"/>
+            </VBox>
+
+            <!-- Marketplace stats -->
+            <VBox styleClass="panel" spacing="12" prefWidth="280" minWidth="240">
+                <Label text="MARKETPLACE" styleClass="panel-title"/>
+                <VBox styleClass="stat-card stat-purple" alignment="CENTER_LEFT" spacing="3">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="Total annonces" styleClass="stat-icon-label"/>
+                    <Label fx:id="lblTotalListings" text="—" styleClass="stat-number"/>
+                </VBox>
+                <VBox styleClass="stat-card stat-green" alignment="CENTER_LEFT" spacing="3">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="Disponibles" styleClass="stat-icon-label"/>
+                    <Label fx:id="lblActiveListings" text="—" styleClass="stat-number"/>
+                </VBox>
+                <VBox styleClass="stat-card stat-blue" alignment="CENTER_LEFT" spacing="3">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="Commandes" styleClass="stat-icon-label"/>
+                    <Label fx:id="lblTotalOrders" text="—" styleClass="stat-number"/>
+                </VBox>
+            </VBox>
+        </HBox>
+
+        <!-- ── Row 3: Top sponsors + expiring contracts ───────────────── -->
+        <HBox spacing="16">
+            <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="TOP 5 SPONSORS PAR VALEUR DE CONTRAT" styleClass="panel-title"/>
+                <VBox fx:id="topSponsorsBox" spacing="8"/>
+            </VBox>
+
+            <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblExpiringContracts" text="CONTRATS EXPIRANT BIENTOT"
+                       styleClass="panel-title"/>
+                <VBox fx:id="expiringContractsBox" spacing="6"/>
+            </VBox>
+        </HBox>
+
+    </VBox>
+</ScrollPane>

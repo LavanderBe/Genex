@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.SponsorTeam.SponsorTeamController"
+           styleClass="sub-root">
+
+    <VBox>
+
+        <!-- Top bar -->
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+            <VBox spacing="3">
+                <Label text="Sponsors Équipes" styleClass="page-title"/>
+                <Label text="Contrats de sponsoring liés aux équipes" styleClass="page-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" styleClass="search-field"
+                       promptText="🔍  Rechercher…" prefWidth="220"/>
+            <Button text="＋  AJOUTER" styleClass="btn-polygon" onAction="#handleAdd"
+                    prefWidth="150" prefHeight="40"/>
+        </HBox>
+
+        <!-- Stat cards -->
+        <HBox spacing="14" styleClass="stat-row">
+            <padding><Insets top="16" right="28" bottom="16" left="28"/></padding>
+            <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="🤝  Contrats" styleClass="stat-icon-label"/>
+                <Label fx:id="statTotal" text="0" styleClass="stat-number"/>
+                <Label text="Total contrats équipes" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="💰  Budget total" styleClass="stat-icon-label"/>
+                <Label fx:id="statBudget" text="0 TND" styleClass="stat-number"/>
+                <Label text="Montant engagé" styleClass="stat-label"/>
+            </VBox>
+        </HBox>
+
+        <!-- Table -->
+        <HBox spacing="14" VBox.vgrow="ALWAYS">
+            <padding><Insets right="28" bottom="20" left="28"/></padding>
+            <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="CONTRATS SPONSORS — ÉQUIPES" styleClass="panel-title"/>
+                <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colSponsor"    text="Sponsor"    prefWidth="140"/>
+                        <TableColumn fx:id="colTeam"       text="Équipe"     prefWidth="130"/>
+                        <TableColumn fx:id="colMethod"     text="Méthode"    prefWidth="150"/>
+                        <TableColumn fx:id="colBudget"     text="Budget"     prefWidth="110"/>
+                        <TableColumn fx:id="colStart"      text="Début"      prefWidth="100"/>
+                        <TableColumn fx:id="colEnd"        text="Fin"        prefWidth="100"/>
+                        <TableColumn fx:id="colActions"    text=""           prefWidth="80"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun contrat enregistré" styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </HBox>
+
+    </VBox>
+
+    <!-- ══ DRAWER ═══════════════════════════════════════════════════════ -->
+    <StackPane fx:id="drawerOverlay" styleClass="overlay-bg"
+               visible="false" managed="false" alignment="CENTER_RIGHT">
+        <VBox styleClass="drawer" prefWidth="400" maxWidth="400"
+              StackPane.alignment="CENTER_RIGHT">
+            <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+
+            <HBox alignment="CENTER_LEFT">
+                <Label fx:id="formTitle" text="Nouveau contrat équipe" styleClass="drawer-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕" styleClass="btn-close" onAction="#handleClear"/>
+            </HBox>
+            <Separator styleClass="drawer-sep">
+                <VBox.margin><Insets top="12" bottom="16"/></VBox.margin>
+            </Separator>
+
+            <!-- Sponsor -->
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="SPONSOR *" styleClass="field-label"/>
+                <ComboBox fx:id="combSponsor" styleClass="combo-field" maxWidth="Infinity"/>
+                <Label fx:id="errSponsor" styleClass="err-label" visible="false" managed="false"/>
+            </VBox>
+
+            <!-- Team -->
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="ÉQUIPE *" styleClass="field-label"/>
+                <ComboBox fx:id="combTeam" styleClass="combo-field" maxWidth="Infinity"/>
+                <Label fx:id="errTeam" styleClass="err-label" visible="false" managed="false"/>
+            </VBox>
+
+            <!-- Method -->
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="MÉTHODE DE SPONSORING" styleClass="field-label"/>
+                <ComboBox fx:id="combMethod" styleClass="combo-field" maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- Budget -->
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="BUDGET (TND)" styleClass="field-label"/>
+                <TextField fx:id="fieldBudget" styleClass="input-field" promptText="0.00"/>
+                <Label fx:id="errBudget" styleClass="err-label" visible="false" managed="false"/>
+            </VBox>
+
+            <!-- Contract duration -->
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="DÉBUT DU CONTRAT" styleClass="field-label"/>
+                <DatePicker fx:id="dateStart" styleClass="input-field" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="FIN DU CONTRAT" styleClass="field-label"/>
+                <DatePicker fx:id="dateEnd" styleClass="input-field" maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- Notes -->
+            <VBox spacing="6"><VBox.margin><Insets bottom="14"/></VBox.margin>
+                <Label text="NOTES" styleClass="field-label"/>
+                <TextField fx:id="fieldNotes" styleClass="input-field" promptText="Remarques…"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <HBox spacing="10">
+                <Button fx:id="btnSave" text="ENREGISTRER" styleClass="btn-primary"
+                        onAction="#handleSave" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
+                <Button text="ANNULER" styleClass="btn-secondary"
+                        onAction="#handleClear" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
+            </HBox>
+        </VBox>
+    </StackPane>
+
+</StackPane>

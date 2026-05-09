@@ -500,3 +500,56 @@
 .scroll-bar .track { -fx-background-color: rgba(31, 30, 78, 0.3); }
 .scroll-bar .increment-button,
 .scroll-bar .decrement-button { -fx-background-color: transparent; -fx-padding: 0; }
+
+/* ── Overview charts & progress ─────────────────────────────── */
+.overview-progress {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-background-radius: 0;
+    -fx-pref-height: 14;
+}
+
+.overview-progress .track {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-background-radius: 0;
+}
+
+.overview-progress .bar {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.overview-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.overview-chart .chart-plot-background {
+    -fx-background-color: rgba(255,255,255,0.03);
+}
+
+.overview-chart .chart-vertical-grid-lines {
+    -fx-stroke: rgba(255,255,255,0.05);
+}
+
+.overview-chart .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(255,255,255,0.07);
+}
+
+.overview-chart .axis {
+    -fx-tick-label-fill: rgba(255,255,255,0.4);
+    -fx-font-size: 10px;
+}
+
+.overview-chart .chart-legend {
+    -fx-background-color: transparent;
+}
+
+.overview-chart .chart-legend-item {
+    -fx-text-fill: rgba(255,255,255,0.5);
+    -fx-font-size: 11px;
+}
+
+.overview-chart .bar-chart-bar {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0 2 0 2;
+}

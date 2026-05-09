@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+<StackPane xmlns="http://javafx.com/javafx/23.0.2" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Boutique.BoutiqueController"
+           stylesheets="@Boutique.css" styleClass="boutique-root">
+
+  <VBox>
+    <!-- Header -->
+    <HBox styleClass="boutique-header" alignment="CENTER_LEFT" spacing="12">
+      <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+      <Label text="BOUTIQUE" styleClass="boutique-title"/>
+      <Label text="Achetez et vendez du materiel esports" styleClass="boutique-subtitle"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <TextField fx:id="searchField" styleClass="search-field" promptText="Rechercher..." prefWidth="180"/>
+      <ComboBox fx:id="filterType"      styleClass="filter-combo" prefWidth="150" promptText="Type"/>
+      <ComboBox fx:id="filterCondition" styleClass="filter-combo" prefWidth="130" promptText="Etat"/>
+      <TextField fx:id="filterMinPrice" styleClass="search-field" promptText="Min" prefWidth="70"/>
+      <TextField fx:id="filterMaxPrice" styleClass="search-field" promptText="Max" prefWidth="70"/>
+      <Button text="Filtrer" styleClass="btn-polygon" onAction="#applyFilterBtn" prefWidth="90" prefHeight="36"/>
+    </HBox>
+    <Region prefHeight="2" styleClass="boutique-accent-line"/>
+
+    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" styleClass="boutique-tabs" tabClosingPolicy="UNAVAILABLE">
+
+      <!-- BROWSE -->
+      <Tab text="Parcourir">
+        <ScrollPane fitToWidth="true" styleClass="cards-scroll">
+          <FlowPane fx:id="cardGrid" styleClass="card-grid" hgap="20" vgap="20"
+                    alignment="TOP_LEFT">
+            <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
+          </FlowPane>
+        </ScrollPane>
+      </Tab>
+
+      <!-- CART -->
+      <Tab text="Panier">
+        <VBox styleClass="tab-content" spacing="0">
+          <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+            <Label text="MON PANIER" styleClass="page-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="cartTotalLabel" text="Total : 0 TND" styleClass="buy-total"/>
+            <Button text="COMMANDER TOUT" styleClass="btn-polygon" onAction="#handleCheckoutCart"
+                    prefWidth="180" prefHeight="38"/>
+            <Button text="Vider" styleClass="btn-card-delete" onAction="#handleClearCart"
+                    prefHeight="38"/>
+          </HBox>
+          <TableView fx:id="cartTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+              <TableColumn fx:id="cartColName"    text="Article"   prefWidth="300"/>
+              <TableColumn fx:id="cartColPrice"   text="Prix unit" prefWidth="150"/>
+              <TableColumn fx:id="cartColQty"     text="Qte"       prefWidth="80"/>
+              <TableColumn fx:id="cartColTotal"   text="Total"     prefWidth="150"/>
+              <TableColumn fx:id="cartColActions" text=""          prefWidth="100"/>
+            </columns>
+            <placeholder><Label text="Votre panier est vide" styleClass="table-placeholder"/></placeholder>
+          </TableView>
+        </VBox>
+      </Tab>
+
+      <!-- WISHLIST -->
+      <Tab text="Favoris">
+        <ScrollPane fitToWidth="true" styleClass="cards-scroll">
+          <FlowPane fx:id="wishlistGrid" styleClass="card-grid" hgap="16" vgap="16">
+            <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+          </FlowPane>
+        </ScrollPane>
+      </Tab>
+
+      <!-- SELL -->
+      <Tab text="Vendre">
+        <ScrollPane fitToWidth="true" styleClass="sell-scroll">
+          <VBox alignment="TOP_CENTER">
+            <VBox spacing="16" styleClass="sell-form" maxWidth="860" minWidth="600">
+              <VBox.margin><Insets top="28" right="0" bottom="28" left="0"/></VBox.margin>
+              <padding><Insets top="0" right="40" bottom="0" left="40"/></padding>
+              <Label text="METTRE UN ARTICLE EN VENTE" styleClass="form-section-title"/>
+              <HBox spacing="24">
+                <VBox spacing="12" HBox.hgrow="ALWAYS">
+                  <VBox spacing="6">
+                    <Label text="NOM *" styleClass="field-label"/>
+                    <TextField fx:id="sellName" styleClass="input-field" promptText="Ex: RTX 4070"/>
+                    <Label fx:id="errSellName" styleClass="err-label" visible="false" managed="false"/>
+                  </VBox>
+                  <VBox spacing="6">
+                    <Label text="TYPE *" styleClass="field-label"/>
+                    <ComboBox fx:id="sellType" styleClass="combo-field" maxWidth="Infinity"/>
+                  </VBox>
+                  <VBox spacing="6">
+                    <Label text="ETAT" styleClass="field-label"/>
+                    <ComboBox fx:id="sellCondition" styleClass="combo-field" maxWidth="Infinity"/>
+                  </VBox>
+                  <VBox spacing="6">
+                    <Label text="PRIX (TND) *" styleClass="field-label"/>
+                    <TextField fx:id="sellPrice" styleClass="input-field" promptText="Ex: 299.99"/>
+                    <Label fx:id="errSellPrice" styleClass="err-label" visible="false" managed="false"/>
+                  </VBox>
+                  <VBox spacing="6">
+                    <Label text="QUANTITE (vide = article unique)" styleClass="field-label"/>
+                    <TextField fx:id="sellQty" styleClass="input-field" promptText="Ex: 5"/>
+                  </VBox>
+                </VBox>
+                <VBox spacing="12" HBox.hgrow="ALWAYS">
+                  <VBox spacing="8">
+                    <Label text="PHOTOS" styleClass="field-label"/>
+                    <Button text="Ajouter des photos" styleClass="btn-pick-img" onAction="#handlePickImages" prefHeight="40"/>
+                    <Label fx:id="sellImagesCount" text="Aucune image" styleClass="img-count-label"/>
+                    <HBox fx:id="sellImagesPreview" spacing="8" styleClass="img-preview-row"/>
+                  </VBox>
+                  <CheckBox fx:id="sellHasDelivery" text="Livraison disponible" styleClass="type-check"/>
+                  <VBox fx:id="sellPhoneRow" spacing="6">
+                    <Label text="TELEPHONE (livraison)" styleClass="field-label"/>
+                    <TextField fx:id="sellPhone" styleClass="input-field" promptText="+216 XX XXX XXX"/>
+                    <Label fx:id="errSellPhone" styleClass="err-label" visible="false" managed="false"/>
+                  </VBox>
+                </VBox>
+              </HBox>
+              <Button text="METTRE EN VENTE" styleClass="btn-polygon" onAction="#handleSell" prefHeight="44" prefWidth="220"/>
+            </VBox>
+          </VBox>
+        </ScrollPane>
+      </Tab>
+
+      <!-- MY LISTINGS -->
+      <Tab text="Mes annonces">
+        <VBox spacing="0">
+          <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="10">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <Label text="Commandes recues" styleClass="field-label"/>
+          </HBox>
+          <TableView fx:id="sellerOrdersTable" prefHeight="180" styleClass="data-table">
+            <columns>
+              <TableColumn fx:id="soColItem"    text="Article"  prefWidth="160"/>
+              <TableColumn fx:id="soColBuyer"   text="Acheteur" prefWidth="120"/>
+              <TableColumn fx:id="soColQty"     text="Qte"      prefWidth="50"/>
+              <TableColumn fx:id="soColStatus"  text="Statut"   prefWidth="120"/>
+              <TableColumn fx:id="soColActions" text=""         prefWidth="120"/>
+            </columns>
+            <placeholder><Label text="Aucune commande" styleClass="table-placeholder"/></placeholder>
+          </TableView>
+          <ScrollPane fitToWidth="true" styleClass="cards-scroll" VBox.vgrow="ALWAYS">
+            <FlowPane fx:id="myListingsGrid" styleClass="card-grid" hgap="20" vgap="20" alignment="TOP_LEFT">
+              <padding><Insets top="16" right="24" bottom="20" left="24"/></padding>
+            </FlowPane>
+          </ScrollPane>
+        </VBox>
+      </Tab>
+
+      <!-- MY ORDERS -->
+      <Tab text="Mes achats">
+        <TableView fx:id="myOrdersTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+          <columns>
+            <TableColumn fx:id="moColItem"        text="Article"   prefWidth="180"/>
+            <TableColumn fx:id="moColQty"         text="Qte"       prefWidth="50"/>
+            <TableColumn fx:id="moColMethod"      text="Paiement"  prefWidth="140"/>
+            <TableColumn fx:id="moColOrderStatus" text="Livraison" prefWidth="110"/>
+            <TableColumn fx:id="moColDate"        text="Date"      prefWidth="100"/>
+            <TableColumn fx:id="moColReview"      text=""          prefWidth="100"/>
+          </columns>
+          <placeholder><Label text="Aucun achat" styleClass="table-placeholder"/></placeholder>
+        </TableView>
+      </Tab>
+
+    </TabPane>
+  </VBox>
+
+  <!-- ══ PRODUCT VIEWER OVERLAY (buyer + vendor) ══════════════════════════ -->
+  <StackPane fx:id="productOverlay" styleClass="overlay-bg"
+             visible="false" managed="false" alignment="CENTER">
+    <HBox style="-fx-background-color: #0d0d1f; -fx-border-color: #8B0D0D; -fx-border-width: 2;"
+          prefWidth="980" prefHeight="600"
+          StackPane.alignment="CENTER">
+
+      <!-- LEFT: image viewer with arrows -->
+      <StackPane style="-fx-background-color: #060614; -fx-border-color: rgba(139,13,13,0.3); -fx-border-width: 0 1 0 0;"
+                 prefWidth="540" minWidth="400" HBox.hgrow="NEVER">
+        <StackPane fx:id="viewerImgContainer"
+                   style="-fx-background-color: #060614;"
+                   prefWidth="540" prefHeight="600">
+          <javafx.scene.image.ImageView fx:id="viewerImage"
+              fitWidth="560" fitHeight="560" preserveRatio="true"
+              StackPane.alignment="CENTER"/>
+        </StackPane>
+        <!-- Left arrow -->
+        <Button fx:id="viewerPrev" text="❮" styleClass="viewer-arrow viewer-arrow-left"
+                onAction="#viewerPrevImage" StackPane.alignment="CENTER_LEFT"/>
+        <!-- Right arrow -->
+        <Button fx:id="viewerNext" text="❯" styleClass="viewer-arrow viewer-arrow-right"
+                onAction="#viewerNextImage" StackPane.alignment="CENTER_RIGHT"/>
+        <!-- Image counter -->
+        <Label fx:id="viewerCounter" text="1 / 1" styleClass="viewer-counter"
+               StackPane.alignment="BOTTOM_CENTER">
+          <StackPane.margin><Insets bottom="12"/></StackPane.margin>
+        </Label>
+      </StackPane>
+
+      <!-- RIGHT: details panel -->
+      <VBox fx:id="viewerDetailsPane"
+            style="-fx-background-color: #0d0d1f;"
+            prefWidth="360" minWidth="320" HBox.hgrow="ALWAYS">
+        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+        <HBox alignment="CENTER_LEFT">
+          <Label fx:id="viewerPanelTitle" text="DETAIL" styleClass="drawer-title"/>
+          <Region HBox.hgrow="ALWAYS"/>
+          <Button text="✕" styleClass="btn-close" onAction="#closeProductViewer"/>
+        </HBox>
+        <Separator styleClass="drawer-sep"><VBox.margin><Insets top="10" bottom="14"/></VBox.margin></Separator>
+
+        <!-- Shown for BUYER -->
+        <VBox fx:id="buyerPanel" spacing="10">
+          <Label fx:id="vpName"      styleClass="buy-item-name"   text="—"/>
+          <Label fx:id="vpType"      styleClass="card-type"       text="—"/>
+          <Label fx:id="vpCondition" styleClass="buy-item-seller" text="—"/>
+          <Label fx:id="vpPrice"     styleClass="buy-item-price"  text="—"/>
+          <Label fx:id="vpSeller"    styleClass="buy-item-seller" text="—"/>
+          <Label fx:id="vpRating"    styleClass="buy-item-seller" text="—"/>
+          <Label fx:id="vpDelivery"  styleClass="buy-item-seller" text="—">
+            <VBox.margin><Insets bottom="8"/></VBox.margin>
+          </Label>
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="QUANTITE" styleClass="field-label"/>
+            <Spinner fx:id="vpQtySpinner" styleClass="input-field" prefWidth="90" editable="false"/>
+          </HBox>
+          <Label fx:id="vpTotal" styleClass="buy-total" text="Total : —">
+            <VBox.margin><Insets top="4" bottom="12"/></VBox.margin>
+          </Label>
+          <Region VBox.vgrow="ALWAYS"/>
+          <HBox spacing="10" alignment="CENTER">
+            <padding><Insets top="8" bottom="8"/></padding>
+            <Button text="🛒  AJOUTER AU PANIER" styleClass="btn-polygon"
+                    onAction="#handleAddToCart" prefHeight="40" prefWidth="200"/>
+            <Button text="Fermer" styleClass="btn-secondary"
+                    onAction="#closeProductViewer" prefHeight="40" prefWidth="90"/>
+          </HBox>
+        </VBox>
+
+        <!-- Shown for VENDOR (edit form) -->
+        <ScrollPane fx:id="vendorPanel" fitToWidth="true" styleClass="sell-scroll"
+                    visible="false" managed="false" VBox.vgrow="ALWAYS">
+          <VBox spacing="10">
+            <VBox spacing="5">
+              <Label text="NOM *" styleClass="field-label"/>
+              <TextField fx:id="editName" styleClass="input-field"/>
+              <Label fx:id="errEditName" styleClass="err-label" visible="false" managed="false"/>
+            </VBox>
+            <VBox spacing="5">
+              <Label text="TYPE *" styleClass="field-label"/>
+              <ComboBox fx:id="editType" styleClass="combo-field" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="5">
+              <Label text="ETAT" styleClass="field-label"/>
+              <ComboBox fx:id="editCondition" styleClass="combo-field" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="5">
+              <Label text="PRIX (TND) *" styleClass="field-label"/>
+              <TextField fx:id="editPrice" styleClass="input-field"/>
+              <Label fx:id="errEditPrice" styleClass="err-label" visible="false" managed="false"/>
+            </VBox>
+            <VBox spacing="5">
+              <Label text="QUANTITE" styleClass="field-label"/>
+              <TextField fx:id="editQty" styleClass="input-field"/>
+            </VBox>
+            <CheckBox fx:id="editHasDelivery" text="Livraison disponible" styleClass="type-check"/>
+            <VBox fx:id="editPhoneRow" spacing="5">
+              <Label text="TELEPHONE" styleClass="field-label"/>
+              <TextField fx:id="editPhone" styleClass="input-field"/>
+            </VBox>
+            <VBox spacing="5">
+              <Label text="PHOTOS" styleClass="field-label"/>
+              <Button text="Changer les photos" styleClass="btn-pick-img"
+                      onAction="#handleEditPickImages" prefHeight="34"/>
+              <Label fx:id="editImagesCount" text="—" styleClass="img-count-label"/>
+              <HBox fx:id="editImagesPreview" spacing="6" styleClass="img-preview-row"/>
+            </VBox>
+            <HBox spacing="8"><VBox.margin><Insets top="8"/></VBox.margin>
+              <Button text="ENREGISTRER" styleClass="btn-primary"
+                      onAction="#handleSaveEdit" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="40"/>
+              <Button text="Fermer" styleClass="btn-secondary"
+                      onAction="#closeProductViewer" prefHeight="40" prefWidth="80"/>
+            </HBox>
+          </VBox>
+        </ScrollPane>
+
+      </VBox>
+    </HBox>
+  </StackPane>
+
+  <!-- ══ BUY DRAWER (from cart checkout) ══════════════════════════════════ -->
+  <StackPane fx:id="buyDrawer" styleClass="overlay-bg"
+             visible="false" managed="false" alignment="CENTER_RIGHT">
+    <VBox styleClass="drawer" prefWidth="400" maxWidth="400" StackPane.alignment="CENTER_RIGHT">
+      <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+      <HBox alignment="CENTER_LEFT">
+        <Label text="CONFIRMER LA COMMANDE" styleClass="drawer-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="btn-close" onAction="#handleCancelBuy"/>
+      </HBox>
+      <Separator styleClass="drawer-sep"><VBox.margin><Insets top="12" bottom="14"/></VBox.margin></Separator>
+      <Label fx:id="buyItemName"      styleClass="buy-item-name"   text="—"/>
+      <Label fx:id="buyItemCondition" styleClass="buy-item-seller" text="—"><VBox.margin><Insets top="2" bottom="2"/></VBox.margin></Label>
+      <Label fx:id="buyItemPrice"     styleClass="buy-item-price"  text="—"><VBox.margin><Insets bottom="4"/></VBox.margin></Label>
+      <Label fx:id="buyItemSeller"    styleClass="buy-item-seller" text="—"><VBox.margin><Insets bottom="4"/></VBox.margin></Label>
+      <Label fx:id="buySellerRating"  styleClass="buy-item-seller" text="—"><VBox.margin><Insets bottom="16"/></VBox.margin></Label>
+      <HBox fx:id="buyImagesRow" spacing="8" styleClass="drawer-imgs"><VBox.margin><Insets bottom="12"/></VBox.margin></HBox>
+      <VBox spacing="6"><VBox.margin><Insets bottom="12"/></VBox.margin>
+        <Label text="QUANTITE" styleClass="field-label"/>
+        <Spinner fx:id="buyQtySpinner" styleClass="input-field" prefWidth="120" editable="false"/>
+      </VBox>
+      <VBox spacing="6"><VBox.margin><Insets bottom="12"/></VBox.margin>
+        <Label text="MODE DE PAIEMENT" styleClass="field-label"/>
+        <ComboBox fx:id="buyPaymentMethod" styleClass="combo-field" maxWidth="Infinity"/>
+      </VBox>
+      <Label fx:id="buyTotal" styleClass="buy-total" text="Total : —"><VBox.margin><Insets top="8" bottom="16"/></VBox.margin></Label>
+      <Label fx:id="errBuy" styleClass="err-label" visible="false" managed="false"><VBox.margin><Insets bottom="8"/></VBox.margin></Label>
+      <Region VBox.vgrow="ALWAYS"/>
+      <HBox spacing="10">
+        <Button text="CONFIRMER" styleClass="btn-primary" onAction="#handleConfirmBuy"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
+        <Button text="ANNULER" styleClass="btn-secondary" onAction="#handleCancelBuy"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
+      </HBox>
+    </VBox>
+  </StackPane>
+
+  <!-- ══ REVIEW DRAWER ════════════════════════════════════════════════════ -->
+  <StackPane fx:id="reviewDrawer" styleClass="overlay-bg"
+             visible="false" managed="false" alignment="CENTER_RIGHT">
+    <VBox styleClass="drawer" prefWidth="400" maxWidth="400" StackPane.alignment="CENTER_RIGHT">
+      <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+      <HBox alignment="CENTER_LEFT">
+        <Label text="LAISSER UN AVIS" styleClass="drawer-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="btn-close" onAction="#handleCancelReview"/>
+      </HBox>
+      <Separator styleClass="drawer-sep"><VBox.margin><Insets top="12" bottom="16"/></VBox.margin></Separator>
+      <Label fx:id="reviewItemLabel" text="—" styleClass="buy-item-name"><VBox.margin><Insets bottom="16"/></VBox.margin></Label>
+      <VBox spacing="6"><VBox.margin><Insets bottom="12"/></VBox.margin>
+        <Label text="NOTE (1 a 5)" styleClass="field-label"/>
+        <Spinner fx:id="reviewRating" styleClass="input-field" prefWidth="100" editable="false"/>
+      </VBox>
+      <VBox spacing="6"><VBox.margin><Insets bottom="16"/></VBox.margin>
+        <Label text="COMMENTAIRE" styleClass="field-label"/>
+        <TextArea fx:id="reviewComment" styleClass="input-field" prefHeight="80" promptText="Votre avis..."/>
+      </VBox>
+      <Region VBox.vgrow="ALWAYS"/>
+      <HBox spacing="10">
+        <Button text="ENVOYER" styleClass="btn-primary" onAction="#handleSubmitReview"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
+        <Button text="ANNULER" styleClass="btn-secondary" onAction="#handleCancelReview"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
+      </HBox>
+    </VBox>
+  </StackPane>
+  <!-- ══ STRIPE PAYMENT WEBVIEW ══════════════════════════════════════════ -->
+  <StackPane fx:id="stripeOverlay" styleClass="overlay-bg"
+             visible="false" managed="false">
+    <VBox styleClass="product-viewer" maxWidth="720" maxHeight="600"
+          alignment="TOP_CENTER" StackPane.alignment="CENTER">
+      <HBox styleClass="gallery-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+        <Label text="PAIEMENT SECURISE" styleClass="drawer-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕  Annuler" styleClass="btn-close" onAction="#closeStripeOverlay"/>
+      </HBox>
+      <javafx.scene.web.WebView fx:id="stripeWebView" VBox.vgrow="ALWAYS"
+                                prefWidth="720" prefHeight="540"/>
+    </VBox>
+  </StackPane>
+
+</StackPane>

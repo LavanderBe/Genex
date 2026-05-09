@@ -47,12 +47,6 @@
                 <Label fx:id="statTeam" text="0" styleClass="stat-number"/>
                 <Label text="Sponsors équipe" styleClass="stat-label"/>
             </VBox>
-            <VBox styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
-                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
-                <Label text="🏢  Centres" styleClass="stat-icon-label"/>
-                <Label fx:id="statCenter" text="0" styleClass="stat-number"/>
-                <Label text="Sponsors centre" styleClass="stat-label"/>
-            </VBox>
         </HBox>
 
         <!-- Table + chart -->
@@ -68,7 +62,7 @@
                         <TableColumn fx:id="colIndustry" text="Secteur" prefWidth="110"/>
                         <TableColumn fx:id="colType"     text="Type"    prefWidth="130"/>
                         <TableColumn fx:id="colEmail"    text="Email"   prefWidth="170"/>
-                        <TableColumn fx:id="colActions"  text=""        prefWidth="80"/>
+                        <TableColumn fx:id="colActions"  text=""        prefWidth="110"/>
                     </columns>
                     <placeholder>
                         <Label text="Aucun sponsor enregistré" styleClass="table-placeholder"/>
@@ -147,7 +141,6 @@
                 <HBox spacing="16">
                     <CheckBox fx:id="chkTournament" text="Tournoi"  styleClass="type-check"/>
                     <CheckBox fx:id="chkTeam"       text="Équipe"   styleClass="type-check"/>
-                    <CheckBox fx:id="chkCenter"     text="Centre"   styleClass="type-check"/>
                 </HBox>
             </VBox>
 
@@ -159,6 +152,35 @@
                 <Button text="ANNULER" styleClass="btn-secondary"
                         onAction="#handleClear" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
             </HBox>
+        </VBox>
+    </StackPane>
+
+    <!-- ══ NOTES OVERLAY ════════════════════════════════════════════════ -->
+    <StackPane fx:id="notesOverlay" styleClass="overlay-bg"
+               visible="false" managed="false" alignment="CENTER_RIGHT">
+        <VBox styleClass="drawer" prefWidth="400" maxWidth="400"
+              StackPane.alignment="CENTER_RIGHT">
+            <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+            <HBox alignment="CENTER_LEFT">
+                <Label fx:id="notesTitle" text="Notes" styleClass="drawer-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕" styleClass="btn-close" onAction="#handleCloseNotes"/>
+            </HBox>
+            <Separator styleClass="drawer-sep">
+                <VBox.margin><Insets top="12" bottom="14"/></VBox.margin>
+            </Separator>
+            <ListView fx:id="notesList" VBox.vgrow="ALWAYS" styleClass="data-table"
+                      prefHeight="300"/>
+            <Separator styleClass="drawer-sep">
+                <VBox.margin><Insets top="12" bottom="12"/></VBox.margin>
+            </Separator>
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="NOUVELLE NOTE" styleClass="field-label"/>
+                <TextArea fx:id="fieldNote" styleClass="input-field" prefHeight="80"
+                          promptText="Réunion, négociation, suivi..."/>
+            </VBox>
+            <Button text="AJOUTER LA NOTE" styleClass="btn-polygon"
+                    onAction="#handleAddNote" prefHeight="40" prefWidth="200"/>
         </VBox>
     </StackPane>
 

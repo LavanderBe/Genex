@@ -1,14 +1,15 @@
 package Genex.Controllers.Sponsors;
 
 import Genex.entities.Sponsor;
+import Genex.entities.SponsorNote;
 import Genex.services.CrudSponsor;
+import Genex.services.CrudSponsorNote;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
+import javafx.scene.control.cell.PropertyValueFactory;import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -16,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import java.io.File;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Sponsors {
@@ -33,13 +35,18 @@ public class Sponsors {
     @FXML private Label statTotal;
     @FXML private Label statTournament;
     @FXML private Label statTeam;
-    @FXML private Label statCenter;
 
     // ── Search ─────────────────────────────────────────────────────────────
     @FXML private TextField searchField;
 
     // ── Drawer ─────────────────────────────────────────────────────────────
     @FXML private StackPane drawerOverlay;
+
+    // ── Notes overlay ──────────────────────────────────────────────────────
+    @FXML private StackPane  notesOverlay;
+    @FXML private Label      notesTitle;
+    @FXML private ListView<String> notesList;
+    @FXML private TextArea   fieldNote;
 
     // ── Form fields ────────────────────────────────────────────────────────
     @FXML private Label     formTitle;
@@ -50,15 +57,16 @@ public class Sponsors {
     @FXML private TextField fieldLogo;
     @FXML private CheckBox  chkTournament;
     @FXML private CheckBox  chkTeam;
-    @FXML private CheckBox  chkCenter;
     @FXML private Button    btnSave;
     @FXML private Label     errName;
     @FXML private Label     errEmail;
 
     // ── State ──────────────────────────────────────────────────────────────
-    private CrudSponsor service;
+    private CrudSponsor     service;
+    private CrudSponsorNote noteService;
     private final ObservableList<Sponsor> data = FXCollections.observableArrayList();
-    private Sponsor editingTarget = null;
+    private Sponsor editingTarget  = null;
+    private Sponsor notesTarget    = null;
 
     // Requires the form  xxxx@xxx.xxx  — local part, @, domain label(s), dot, TLD
     private static final Pattern EMAIL_RE =
@@ -68,7 +76,8 @@ public class Sponsors {
     @FXML
     public void initialize() {
         try {
-            service = new CrudSponsor();
+            service     = new CrudSponsor();
+            noteService = new CrudSponsorNote();
         } catch (Exception e) {
             showAlert("Erreur DB", rootCause(e));
             return;
@@ -121,7 +130,6 @@ public class Sponsors {
                     switch (t.trim().toLowerCase()) {
                         case "tournoi" -> badge.getStyleClass().add("badge-tournament");
                         case "équipe"  -> badge.getStyleClass().add("badge-team");
-                        case "centre"  -> badge.getStyleClass().add("badge-center");
                         default        -> badge.getStyleClass().add("badge-tournament");
                     }
                     box.getChildren().add(badge);
@@ -162,8 +170,6 @@ public class Sponsors {
                 data.stream().filter(s -> s.getSponsorType() != null && s.getSponsorType().contains("Tournoi")).count()));
         statTeam.setText(String.valueOf(
                 data.stream().filter(s -> s.getSponsorType() != null && s.getSponsorType().contains("Équipe")).count()));
-        statCenter.setText(String.valueOf(
-                data.stream().filter(s -> s.getSponsorType() != null && s.getSponsorType().contains("Centre")).count()));
     }
 
     // ── Drawer ─────────────────────────────────────────────────────────────
@@ -228,7 +234,6 @@ public class Sponsors {
         String type = s.getSponsorType() != null ? s.getSponsorType() : "";
         chkTournament.setSelected(type.contains("Tournoi"));
         chkTeam.setSelected(type.contains("Équipe"));
-        chkCenter.setSelected(type.contains("Centre"));
         btnSave.setText("Mettre à jour");
         openDrawer();
     }
@@ -243,7 +248,6 @@ public class Sponsors {
         fieldLogo.clear();
         chkTournament.setSelected(false);
         chkTeam.setSelected(false);
-        chkCenter.setSelected(false);
         btnSave.setText("Enregistrer");
         hideErr(errName);
         hideErr(errEmail);
@@ -259,7 +263,6 @@ public class Sponsors {
         StringBuilder type = new StringBuilder();
         if (chkTournament.isSelected()) { if (type.length() > 0) type.append(", "); type.append("Tournoi"); }
         if (chkTeam.isSelected())       { if (type.length() > 0) type.append(", "); type.append("Équipe"); }
-        if (chkCenter.isSelected())     { if (type.length() > 0) type.append(", "); type.append("Centre"); }
         s.setSponsorType(type.toString());
         return s;
     }
@@ -284,11 +287,14 @@ public class Sponsors {
         Callback<TableColumn<Sponsor, Void>, TableCell<Sponsor, Void>> factory = col -> new TableCell<>() {
             private final Button editBtn   = new Button("✏");
             private final Button deleteBtn = new Button("🗑");
-            private final HBox   box       = new HBox(4, editBtn, deleteBtn);
+            private final Button notesBtn  = new Button("📝");
+            private final HBox   box       = new HBox(4, editBtn, deleteBtn, notesBtn);
             {
                 editBtn.getStyleClass().add("action-btn-edit");
                 deleteBtn.getStyleClass().add("action-btn-delete");
+                notesBtn.getStyleClass().add("action-btn-edit");
                 editBtn.setOnAction(e -> populateForm(getTableView().getItems().get(getIndex())));
+                notesBtn.setOnAction(e -> openNotes(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> {
                     Sponsor s = getTableView().getItems().get(getIndex());
                     Alert c = new Alert(Alert.AlertType.CONFIRMATION,
@@ -308,6 +314,48 @@ public class Sponsors {
             }
         };
         colActions.setCellFactory(factory);
+    }
+
+    // ── Notes ──────────────────────────────────────────────────────────────
+    private void openNotes(Sponsor s) {
+        notesTarget = s;
+        notesTitle.setText("Notes — " + s.getName());
+        loadNotesList();
+        notesOverlay.setVisible(true);
+        notesOverlay.setManaged(true);
+    }
+
+    private void loadNotesList() {
+        if (notesTarget == null) return;
+        try {
+            List<SponsorNote> notes = noteService.getNotesForSponsor(notesTarget.getId());
+            notesList.getItems().setAll(
+                notes.stream()
+                     .map(n -> "[" + n.getCreatedAtDisplay() + "] " + n.getAuthor() + " : " + n.getNote())
+                     .toList()
+            );
+        } catch (Exception e) { notesList.getItems().clear(); }
+    }
+
+    @FXML
+    private void handleAddNote() {
+        if (notesTarget == null || fieldNote.getText().isBlank()) return;
+        SponsorNote note = new SponsorNote();
+        note.setSponsorId(notesTarget.getId());
+        note.setAuthor("Admin");
+        note.setNote(fieldNote.getText().trim());
+        try {
+            noteService.addNote(note);
+            fieldNote.clear();
+            loadNotesList();
+        } catch (Exception e) { showAlert("Erreur", rootCause(e)); }
+    }
+
+    @FXML
+    private void handleCloseNotes() {
+        notesOverlay.setVisible(false);
+        notesOverlay.setManaged(false);
+        notesTarget = null;
     }
 
     private void showErr(Label l, String msg) { l.setText(msg); l.setVisible(true); l.setManaged(true); }
