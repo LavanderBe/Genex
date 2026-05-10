@@ -191,7 +191,7 @@ public class PlayerDashboard {
 
     @FXML private void showTournaments() {
         setActiveNav(navTournamentsButton);
-        loadModule("PlayerTournaments.fxml");
+        loadModule("/Fxml/Tournament/TournamentHub.fxml");
     }
 
     @FXML private void showTutorials() {

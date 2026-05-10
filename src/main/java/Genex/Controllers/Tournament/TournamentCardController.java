@@ -3,6 +3,7 @@ package Genex.Controllers.Tournament;
 import Genex.entities.Center;
 import Genex.entities.Game;
 import Genex.entities.Tounament;
+import Genex.entities.User;
 import Genex.services.CrudCenter;
 import Genex.services.CrudGame;
 import Genex.services.CrudTournament;
@@ -65,6 +66,34 @@ public class TournamentCardController {
     @FXML
     public void initialize() {
         System.out.println("TournamentCardController initialized");
+        
+        // Setup role-based button visibility
+        setupRoleBasedUI();
+    }
+
+    private void setupRoleBasedUI() {
+        // Get current user from session
+        User currentUser = Genex.utils.SessionManager.getInstance().getCurrentUser();
+        
+        System.out.println("=== setupRoleBasedUI ===");
+        System.out.println("Current user: " + (currentUser != null ? currentUser.getUsername() : "null"));
+        System.out.println("User role: " + (currentUser != null ? currentUser.getRole() : "null"));
+        
+        if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
+            // Player: Hide edit and delete buttons
+            System.out.println("Setting up PLAYER view - hiding edit/delete buttons");
+            btnEdit.setVisible(false);
+            btnEdit.setManaged(false);
+            btnDelete.setVisible(false);
+            btnDelete.setManaged(false);
+        } else {
+            // Admin: Show all buttons
+            System.out.println("Setting up ADMIN view - showing all buttons");
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
+            btnDelete.setVisible(true);
+            btnDelete.setManaged(true);
+        }
     }
 
     public void setTournament(Tounament tournament) {
@@ -143,7 +172,7 @@ public class TournamentCardController {
             txtCenter.setText("Centre non spécifié");
         }
 
-        // Set state badge
+        // Set state badge with participant count
         updateStateBadge();
     }
 
@@ -156,14 +185,49 @@ public class TournamentCardController {
         }
 
         try {
+            // Get participant count
+            Genex.services.CrudTournamentParticipant crudParticipant = new Genex.services.CrudTournamentParticipant();
+            int participantCount = crudParticipant.getParticipantCount(tournament.getTournamentId());
+            int maxPlayers = tournament.getMaxPlayers();
+
+            // Auto-update state based on participant count
+            // Only applies to REGISTRATION_OPEN and REGISTRATION_CLOSED states
+            // Other states (IN_PROGRESS, COMPLETED, CANCELLED) are manually set by admin
+            String currentState = tournament.getState();
+            boolean isRegistrationState = 
+                Tounament.TournamentState.REGISTRATION_OPEN.name().equals(currentState) ||
+                Tounament.TournamentState.REGISTRATION_CLOSED.name().equals(currentState);
+
+            if (isRegistrationState) {
+                CrudTournament crudTournament = new CrudTournament();
+                
+                if (participantCount >= maxPlayers && 
+                    Tounament.TournamentState.REGISTRATION_OPEN.name().equals(currentState)) {
+                    // Full → auto-close
+                    tournament.setState(Tounament.TournamentState.REGISTRATION_CLOSED.name());
+                    crudTournament.updateEntity(tournament, tournament.getTournamentId());
+                    System.out.println("Tournament auto-closed (max players reached)");
+                    
+                } else if (participantCount < maxPlayers && 
+                    Tounament.TournamentState.REGISTRATION_CLOSED.name().equals(currentState)) {
+                    // Space available → auto-reopen
+                    tournament.setState(Tounament.TournamentState.REGISTRATION_OPEN.name());
+                    crudTournament.updateEntity(tournament, tournament.getTournamentId());
+                    System.out.println("Tournament auto-reopened (space available)");
+                }
+            }
+
             Tounament.TournamentState state = Tounament.TournamentState.valueOf(tournament.getState());
-            txtStatus.setText(state.getDisplayName().toUpperCase());
+            
+            // Combine state and participant count in badge
+            String badgeText = state.getDisplayName().toUpperCase() + " • " + participantCount + "/" + maxPlayers;
+            txtStatus.setText(badgeText);
             
             // Remove all state classes first
             statusBadge.getStyleClass().removeAll("state-registration-open", "state-registration-closed", 
                     "state-in-progress", "state-completed", "state-cancelled");
             
-            // Add appropriate state class
+            // Add appropriate state class based on current state
             switch (state) {
                 case REGISTRATION_OPEN:
                     statusBadge.getStyleClass().add("state-registration-open");
@@ -181,16 +245,35 @@ public class TournamentCardController {
                     statusBadge.getStyleClass().add("state-cancelled");
                     break;
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             txtStatus.setText("INCONNU");
-            System.err.println("Invalid tournament state: " + tournament.getState());
+            System.err.println("Error updating state badge: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
     private void handleView() {
         System.out.println("View tournament: " + tournament.getTournamentName());
-        // TODO: Open tournament details view
+        
+        try {
+            // Load tournament detail page
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/TournamentDetail.fxml"));
+            Parent detailPage = loader.load();
+
+            // Pass tournament data and rootStackPane to detail controller
+            TournamentDetailController controller = loader.getController();
+            controller.setTournament(tournament);
+            controller.setRootStackPane(rootStackPane);
+
+            // Replace content in the rootStackPane (same as how TournamentHub was loaded)
+            rootStackPane.getChildren().clear();
+            rootStackPane.getChildren().add(detailPage);
+
+        } catch (Exception e) {
+            System.err.println("Error opening tournament detail page");
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -201,22 +284,12 @@ public class TournamentCardController {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/AddTournamentModal.fxml"));
-            Parent editTournamentForm = loader.load();
+            StackPane drawerOverlay = loader.load();
 
-            // 1. Apply Blur effect to the background
-            GaussianBlur blur = new GaussianBlur(15);
-            contentArea.setEffect(blur);
-            contentArea.setDisable(true);
+            // Add drawer overlay to the stack
+            rootStackPane.getChildren().add(drawerOverlay);
 
-            // 2. Wrap the form in a darkening overlay
-            VBox overlay = new VBox(editTournamentForm);
-            overlay.setAlignment(javafx.geometry.Pos.CENTER);
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
-
-            // 3. Add to the stack
-            rootStackPane.getChildren().add(overlay);
-
-            // 4. Get controller and set tournament data
+            // Get controller and set tournament data
             AddTournamentModalController controller = loader.getController();
             controller.setTournament(tournament);
             controller.setOnSaveCallback(updatedTournament -> {
@@ -226,10 +299,8 @@ public class TournamentCardController {
                 CrudTournament crudTournament = new CrudTournament();
                 crudTournament.updateEntity(updatedTournament, tournament.getTournamentId());
 
-                // Remove overlay
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                // Remove drawer overlay
+                rootStackPane.getChildren().remove(drawerOverlay);
 
                 // Refresh the hub
                 if (onUpdateCallback != null) {
@@ -239,13 +310,11 @@ public class TournamentCardController {
 
             // Handle close without saving
             controller.setOnCloseCallback(() -> {
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                rootStackPane.getChildren().remove(drawerOverlay);
             });
 
         } catch (Exception e) {
-            System.err.println("Error opening edit modal");
+            System.err.println("Error opening edit drawer");
             e.printStackTrace();
         }
     }

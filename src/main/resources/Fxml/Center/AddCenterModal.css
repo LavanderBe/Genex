@@ -1,99 +1,139 @@
 /* ═══════════════════════════════════════════════════
-   Add Center Modal - Matches AddPlayer Design
+   Add Center Drawer - Matches Sponsors Design
    ═══════════════════════════════════════════════════ */
 
-/* Main Container Background */
-.dialog-root {
-    -fx-background-color: linear-gradient(to bottom right, #0d0c2e, #1F1E4E);
-    -fx-background-radius: 18;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 18;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 30, 0.15, 0, 8);
+/* Overlay Background */
+.overlay-bg {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
 }
 
+/* Drawer Container */
+.drawer {
+    -fx-background-color: #0d0d1a;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1 0 0 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 40, 0.3, -10, 0);
+}
+
+/* Drawer Title */
+.drawer-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+/* Close Button */
+.btn-close {
+    -fx-background-color: rgba(255, 80, 80, 0.15);
+    -fx-text-fill: #ff6b6b;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255, 80, 80, 0.3);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-font-size: 18;
+    -fx-padding: 4 10;
+    -fx-cursor: hand;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.3);
+}
+
+/* Separator */
+.drawer-sep {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Field Labels */
+.field-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 12;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5;
+}
+
+/* Input Fields */
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.28);
+    -fx-font-size: 13;
+    -fx-padding: 10 12;
+}
+
+.input-field:focused {
+    -fx-border-color: rgba(124, 111, 255, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.18), 8, 0, 0, 0);
+}
+
+/* Error Labels */
+.err-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11;
+    -fx-font-weight: 500;
+    -fx-padding: 3 0 0 0;
+}
+
+/* Primary Button - Polygon Shape */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #5c4fff, #7c6fff);
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.4), 12, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #6b5fff, #9080ff);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.6), 16, 0, 0, 6);
+}
+
+.btn-primary:pressed {
+    -fx-translate-y: 0;
+    -fx-background-color: linear-gradient(to right, #4a3fe0, #6b5fff);
+}
+
+/* Secondary Button - Polygon Shape */
+.btn-secondary {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
+}
+
+/* ScrollPane */
 .scroll-pane {
     -fx-background-color: transparent;
     -fx-background: transparent;
-    -fx-border-color: transparent;
 }
 
 .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
 
-/* Title Styling */
-.dialog-title {
-    -fx-text-fill: white;
-    -fx-font-size: 24;
-    -fx-font-weight: 800;
-    -fx-padding: 0 0 10 0;
-    -fx-effect: dropshadow(gaussian, rgba(31, 30, 78, 0.8), 10, 0, 0, 0);
+.scroll-pane .thumb {
+    -fx-background-color: rgba(124, 111, 255, 0.35);
+    -fx-background-radius: 4;
 }
 
-/* Form Labels */
-.label {
-    -fx-text-fill: rgba(255, 255, 255, 0.7);
-    -fx-font-size: 13;
-    -fx-font-weight: 500;
-}
-
-/* Input Fields (TextField) */
-.text-field {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 10;
-    -fx-border-width: 1;
-    -fx-padding: 8 12;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: rgba(255, 255, 255, 0.3);
-}
-
-.text-field:focused {
-    -fx-border-color: rgba(139, 13, 13, 0.6);
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.2), 8, 0, 0, 0);
-}
-
-/* Error Labels */
-.error-label {
-    -fx-text-fill: #ff4d4d;
-    -fx-font-size: 11;
-    -fx-font-weight: 600;
-    -fx-padding: 2 0 0 5;
-}
-
-/* Primary Button (Same as Player) */
-.primary-btn {
-    -fx-background-color: linear-gradient(to right, #1F1E4E, #3b5bdb);
-    -fx-text-fill: white;
-    -fx-font-size: 13;
-    -fx-font-weight: 600;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
-    -fx-padding: 10 20;
-    -fx-effect: dropshadow(gaussian, rgba(59, 91, 219, 0.4), 10, 0, 0, 3);
-}
-
-.primary-btn:hover {
-    -fx-background-color: linear-gradient(to right, #2a297a, #4c6ef5);
-}
-
-/* Secondary/Cancel Button */
-.secondary-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-text-fill: rgba(255, 255, 255, 0.7);
-    -fx-font-size: 13;
-    -fx-font-weight: 600;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
-    -fx-padding: 10 20;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 10;
-}
-
-.secondary-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.12);
-    -fx-text-fill: white;
+.scroll-pane .track {
+    -fx-background-color: transparent;
 }

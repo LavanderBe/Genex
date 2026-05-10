@@ -95,22 +95,12 @@ public class CenterCardController {
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Center/AddCenterModal.fxml"));
-            Parent editCenterForm = loader.load();
+            StackPane drawerOverlay = loader.load();
 
-            // 1. Apply Blur effect to the background
-            GaussianBlur blur = new GaussianBlur(15);
-            contentArea.setEffect(blur);
-            contentArea.setDisable(true);
+            // Add drawer overlay to the stack
+            rootStackPane.getChildren().add(drawerOverlay);
 
-            // 2. Wrap the form in a darkening overlay
-            VBox overlay = new VBox(editCenterForm);
-            overlay.setAlignment(javafx.geometry.Pos.CENTER);
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
-
-            // 3. Add to the stack
-            rootStackPane.getChildren().add(overlay);
-
-            // 4. Get controller and set center data
+            // Get controller and set center data
             AddCenterModalController controller = loader.getController();
             controller.setCenter(center);
             controller.setOnSaveCallback(updatedCenter -> {
@@ -120,10 +110,8 @@ public class CenterCardController {
                 CrudCenter crudCenter = new CrudCenter();
                 crudCenter.updateEntity(updatedCenter, center.getCenterId());
                 
-                // Remove overlay
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                // Remove drawer overlay
+                rootStackPane.getChildren().remove(drawerOverlay);
                 
                 // Refresh the hub
                 if (onUpdateCallback != null) {
@@ -133,13 +121,11 @@ public class CenterCardController {
 
             // Handle close without saving
             controller.setOnCloseCallback(() -> {
-                rootStackPane.getChildren().remove(overlay);
-                contentArea.setEffect(null);
-                contentArea.setDisable(false);
+                rootStackPane.getChildren().remove(drawerOverlay);
             });
             
         } catch (Exception e) {
-            System.err.println("Error opening edit modal");
+            System.err.println("Error opening edit drawer");
             e.printStackTrace();
         }
     }

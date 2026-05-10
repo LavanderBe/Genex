@@ -16,10 +16,19 @@ public class Tounament {
     private LocalDateTime ends_at;
     private double prize_pool;
     private String state;
+    private int maxPlayers;
+    
+    // Challonge integration fields
+    private String challongeId;
+    private String challongeUrl;
+    private String challongeUrlSlug;  // URL slug for API calls
+    private boolean isSynced;
+    private boolean isStarted;
+    
     private List<TournamentParticipants> participants;
     //gvvfftftc
     public enum Format {
-        ROUND_ROBIN, SINGLE_ELIM, DOUBLE_ELIM
+        SINGLE_ELIM, DOUBLE_ELIM
     }
 
     public enum ParticipantType {
@@ -52,7 +61,7 @@ public class Tounament {
     // Full constructor
     public Tounament(String name, String game_id, String center_id, String format,
                      String participant_type, LocalDateTime starts_at,
-                     LocalDateTime ends_at, double prize_pool) {
+                     LocalDateTime ends_at, double prize_pool, int maxPlayers) {
         this.tournamentName = name;
         this.game_id = game_id;
         this.center_id = center_id;
@@ -61,6 +70,7 @@ public class Tounament {
         this.starts_at = starts_at;
         this.ends_at = ends_at;
         this.prize_pool = prize_pool;
+        this.maxPlayers = maxPlayers;
         this.state = TournamentState.REGISTRATION_OPEN.name();
         this.participants = new ArrayList<>();
     }
@@ -100,6 +110,24 @@ public class Tounament {
 
     public String getState() { return state; }
     public void setState(String state) { this.state = state; }
+
+    public int getMaxPlayers() { return maxPlayers; }
+    public void setMaxPlayers(int maxPlayers) { this.maxPlayers = maxPlayers; }
+
+    public String getChallongeId() { return challongeId; }
+    public void setChallongeId(String challongeId) { this.challongeId = challongeId; }
+
+    public String getChallongeUrl() { return challongeUrl; }
+    public void setChallongeUrl(String challongeUrl) { this.challongeUrl = challongeUrl; }
+    
+    public String getChallongeUrlSlug() { return challongeUrlSlug; }
+    public void setChallongeUrlSlug(String challongeUrlSlug) { this.challongeUrlSlug = challongeUrlSlug; }
+
+    public boolean isSynced() { return isSynced; }
+    public void setSynced(boolean synced) { isSynced = synced; }
+
+    public boolean isStarted() { return isStarted; }
+    public void setStarted(boolean started) { isStarted = started; }
 
     public List<TournamentParticipants> getParticipants() { return participants; }
     public void setParticipants(List<TournamentParticipants> participants) { this.participants = participants; }

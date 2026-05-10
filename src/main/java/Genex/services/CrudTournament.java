@@ -19,8 +19,9 @@ public class CrudTournament implements ICrud<Tounament> {
     public void addEntity(Tounament t) {
 
         String requete = "INSERT INTO tournaments " +
-                "(tournament_name, game_id, center_id, format, participant_type, starts_at, ends_at, prize_pool, state) " +
-                "VALUES (?,?,?,?,?,?,?,?,?)";
+                "(tournament_name, game_id, center_id, format, participant_type, starts_at, ends_at, prize_pool, state, max_players, " +
+                "challonge_id, challonge_url, challonge_url_slug, is_synced, is_started) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
@@ -33,6 +34,12 @@ public class CrudTournament implements ICrud<Tounament> {
             pst.setString(7, t.getEnds_at().toString());
             pst.setDouble(8, t.getPrize_pool());
             pst.setString(9, t.getState() != null ? t.getState() : Tounament.TournamentState.REGISTRATION_OPEN.name());
+            pst.setInt(10, t.getMaxPlayers());
+            pst.setString(11, t.getChallongeId());
+            pst.setString(12, t.getChallongeUrl());
+            pst.setString(13, t.getChallongeUrlSlug());
+            pst.setBoolean(14, t.isSynced());
+            pst.setBoolean(15, t.isStarted());
             pst.executeUpdate();
             System.out.println("Tournament added successfully");
         } catch (SQLException e) {
@@ -45,7 +52,8 @@ public class CrudTournament implements ICrud<Tounament> {
 
         String requete = "UPDATE tournaments SET " +
                 "tournament_name=?, game_id=?, center_id=?, format=?, participant_type=?, " +
-                "starts_at=?, ends_at=?, prize_pool=?, state=? WHERE id=?";
+                "starts_at=?, ends_at=?, prize_pool=?, state=?, max_players=?, " +
+                "challonge_id=?, challonge_url=?, challonge_url_slug=?, is_synced=?, is_started=? WHERE id=?";
 
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
@@ -58,7 +66,13 @@ public class CrudTournament implements ICrud<Tounament> {
             pst.setString(7, t.getEnds_at().toString());
             pst.setDouble(8, t.getPrize_pool());
             pst.setString(9, t.getState());
-            pst.setString(10, id);
+            pst.setInt(10, t.getMaxPlayers());
+            pst.setString(11, t.getChallongeId());
+            pst.setString(12, t.getChallongeUrl());
+            pst.setString(13, t.getChallongeUrlSlug());
+            pst.setBoolean(14, t.isSynced());
+            pst.setBoolean(15, t.isStarted());
+            pst.setString(16, id);
             pst.executeUpdate();
             System.out.println("Tournament updated successfully");
         } catch (SQLException e) {
@@ -101,6 +115,12 @@ public class CrudTournament implements ICrud<Tounament> {
                 t.setEnds_at(rs.getTimestamp("ends_at").toLocalDateTime());
                 t.setPrize_pool(rs.getDouble("prize_pool"));
                 t.setState(rs.getString("state"));
+                t.setMaxPlayers(rs.getInt("max_players"));
+                t.setChallongeId(rs.getString("challonge_id"));
+                t.setChallongeUrl(rs.getString("challonge_url"));
+                t.setChallongeUrlSlug(rs.getString("challonge_url_slug"));
+                t.setSynced(rs.getBoolean("is_synced"));
+                t.setStarted(rs.getBoolean("is_started"));
                 System.out.println("Tournament loaded");
             }
         } catch (SQLException e) {
@@ -129,6 +149,12 @@ public class CrudTournament implements ICrud<Tounament> {
                 t.setEnds_at(rs.getTimestamp("ends_at").toLocalDateTime());
                 t.setPrize_pool(rs.getDouble("prize_pool"));
                 t.setState(rs.getString("state"));
+                t.setMaxPlayers(rs.getInt("max_players"));
+                t.setChallongeId(rs.getString("challonge_id"));
+                t.setChallongeUrl(rs.getString("challonge_url"));
+                t.setChallongeUrlSlug(rs.getString("challonge_url_slug"));
+                t.setSynced(rs.getBoolean("is_synced"));
+                t.setStarted(rs.getBoolean("is_started"));
                 list.add(t);
             }
         } catch (SQLException e) {
