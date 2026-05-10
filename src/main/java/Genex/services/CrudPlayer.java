@@ -60,11 +60,11 @@ public class CrudPlayer {
             throw new RuntimeException(e);
         }
     }
-    public void deleteEntity(String cin) {
-        String requete = "DELETE FROM players WHERE cin=?";
+    public void deleteEntity(String id) {
+        String requete = "DELETE FROM players WHERE user_id=?";
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
-            pst.setString(1, cin);
+            pst.setString(1, id);
             pst.executeUpdate();
             System.out.println("player deleted successfully");
         } catch (SQLException e) {
@@ -80,6 +80,7 @@ public class CrudPlayer {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 Player p = new Player(rs.getDate("date_of_birth").toLocalDate(),rs.getString("first_name"),rs.getString("last_name"),rs.getString("nickname"), rs.getString("cin"),rs.getString("nationality"),rs.getString("city"));
+                p.setId(rs.getString("user_id"));
                 players.add(p);
             }
         } catch (SQLException e) {
@@ -154,6 +155,38 @@ public class CrudPlayer {
                 player.setTacticalXp(rs.getInt("tactical_xp"));
                 player.setTotalAttempts(rs.getInt("total_attempts"));
                 player.setCorrectAnswers(rs.getInt("correct_answers"));
+                return player;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+    public Player getPlayerByNickname(String nickname){
+        String query = "SELECT p.*, u.username, u.email, u.role " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "WHERE p.nickname = ?";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query)) {
+            pst.setString(1, nickname);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                Player player = new Player();
+                player.setId(rs.getString("user_id"));
+
+                player.setUsername(rs.getString("username"));
+                player.setEmail(rs.getString("email"));
+                player.setRole(rs.getString("role"));
+
+                player.setPrenom(rs.getString("first_name"));
+                player.setNom(rs.getString("last_name"));
+                player.setNickname(rs.getString("nickname"));
+                player.setCin(rs.getString("cin"));
+
+                Date birthDate = rs.getDate("date_of_birth");
+
+                player.setNationality(rs.getString("nationality"));
+                player.setCity(rs.getString("city"));
                 return player;
             }
         } catch (SQLException e) {

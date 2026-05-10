@@ -3,7 +3,6 @@ package Genex.entities;
 import java.time.LocalDate;
 
 public class Player extends User {
-    private String id;
     private String prenom;
     private String nom;
     private String nickname;
@@ -122,6 +121,9 @@ public class Player extends User {
                 ", birthday=" + birthday +
                 ", nationality='" + nationality + '\'' +
                 ", city='" + city + '\'' +
+                ", tacticalXp=" + tacticalXp +
+                ", totalAttempts=" + totalAttempts +
+                ", correctAnswers=" + correctAnswers +
                 '}';
     }
 }
