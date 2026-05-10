@@ -54,6 +54,7 @@ public class PlayerDashboard {
         sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername().toUpperCase());
         startPingAnimation();
         startPingService();
+        checkTrainingNotifications();
         // hook cleanup to window close
         pingLabel.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -65,7 +66,19 @@ public class PlayerDashboard {
             }
         });
     }
-
+    private void checkTrainingNotifications() {
+        javafx.application.Platform.runLater(() -> {
+            try {
+                System.out.println("=== CHECKING FOR TRAINING NOTIFICATIONS (PLAYER) ===");
+                // Show Windows system notifications
+                Genex.utils.TrainingNotificationHelper.checkAndShowNotifications();
+                System.out.println("=== NOTIFICATION CHECK COMPLETE (PLAYER) ===");
+            } catch (Exception e) {
+                System.err.println("Error checking notifications in PlayerDashboard: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
     @FXML
     private void toggleSidebar() {
         TranslateTransition slide = new TranslateTransition(Duration.millis(300), sidebarContainer);
@@ -263,6 +276,21 @@ public class PlayerDashboard {
             AnchorPane.setRightAnchor(module, 0.0);
         } catch (IOException e) {
             System.err.println("Module not found: " + fxmlPath);
+        }
+    }
+
+    private void loadModuleAbsolute(String absolutePath) {
+        try {
+            Parent module = FXMLLoader.load(getClass().getResource(absolutePath));
+            contentArea.getChildren().setAll(module);
+            // Anchor to fill the content area
+            javafx.scene.layout.AnchorPane.setTopAnchor(module, 0.0);
+            javafx.scene.layout.AnchorPane.setBottomAnchor(module, 0.0);
+            javafx.scene.layout.AnchorPane.setLeftAnchor(module, 0.0);
+            javafx.scene.layout.AnchorPane.setRightAnchor(module, 0.0);
+        } catch (IOException e) {
+            System.err.println("Module not found: " + absolutePath);
+            e.printStackTrace();
         }
     }
 

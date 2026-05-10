@@ -16,6 +16,7 @@ public class TrainingSession {
     private String location;
     private String notes;
     private Status status;
+    private String calendarEventId;
 
     public enum Type {
         SCRIM, AIM_TRAINING, STRATEGY, TEAM_PRACTICE, OTHER
@@ -73,6 +74,9 @@ public class TrainingSession {
 
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
+
+    public String getCalendarEventId() { return calendarEventId; }
+    public void setCalendarEventId(String calendarEventId) { this.calendarEventId = calendarEventId; }
 
     /**
      * Calculate duration in minutes from start and end time

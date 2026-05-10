@@ -47,6 +47,7 @@ public class Dashboard {
         //sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername());
         startPingAnimation();
         startPingService();
+        checkTrainingNotifications();
         // hook cleanup to window close
         pingLabel.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -58,6 +59,18 @@ public class Dashboard {
             }
         });
     }
+    private void checkTrainingNotifications() {
+        javafx.application.Platform.runLater(() -> {
+            try {
+                System.out.println("=== CHECKING FOR TRAINING NOTIFICATIONS ===");
+                // Show Windows system notifications
+                Genex.utils.TrainingNotificationHelper.checkAndShowNotifications();
+                System.out.println("=== NOTIFICATION CHECK COMPLETE ===");
+            } catch (Exception e) {
+                System.err.println("Error checking notifications in Dashboard: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });}
 
     private void startPingAnimation() {
         FadeTransition fade = new FadeTransition(Duration.seconds(1), pingDot);
@@ -327,3 +340,4 @@ public class Dashboard {
         }
     }
 }
+

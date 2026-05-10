@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@TeamHub.css"
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@TeamHub.css, @PlayerTeams.css"
            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="Genex.Controllers.Team.TeamHubController">
 
@@ -25,7 +25,7 @@
             <Label styleClass="page-title" text="Équipes" />
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="btnAddTeam" onAction="#openAddTeamDrawer"
-                    styleClass="action-blue-button" text="＋  AJOUTER" />
+                    styleClass="player-add-session-btn" text="＋  AJOUTER" />
             <TextField fx:id="searchField" prefWidth="250"
                        promptText="Rechercher une équipe..." styleClass="search-field" />
         </HBox>

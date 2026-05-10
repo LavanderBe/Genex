@@ -4,7 +4,7 @@ import Genex.entities.TrainingSession;
 import Genex.services.CrudTrainingSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -27,7 +27,7 @@ public class AddTrainingSessionModalController {
     private TextField txtTitle;
 
     @FXML
-    private ChoiceBox<TrainingSession.Type> choiceType;
+    private ComboBox<TrainingSession.Type> choiceType;
 
     @FXML
     private DatePicker dateSession;
@@ -39,7 +39,7 @@ public class AddTrainingSessionModalController {
     private TextField txtEndTime;
 
     @FXML
-    private ChoiceBox<TrainingSession.Status> choiceStatus;
+    private ComboBox<TrainingSession.Status> choiceStatus;
 
     @FXML
     private TextField txtLocation;
@@ -52,6 +52,9 @@ public class AddTrainingSessionModalController {
 
     @FXML
     private Button btnSave;
+
+    @FXML
+    private Button btnCloseModal;
 
     // Error labels
     @FXML
@@ -92,6 +95,11 @@ public class AddTrainingSessionModalController {
             choiceStatus.setValue(TrainingSession.Status.PLANNED);
         }
 
+        // Setup close button
+        if (btnCloseModal != null) {
+            btnCloseModal.setOnAction(e -> closeModal());
+        }
+
         // Setup validation listeners
         setupValidation();
     }
@@ -105,6 +113,12 @@ public class AddTrainingSessionModalController {
 
     public void setTeamId(String teamId) {
         this.teamId = teamId;
+    }
+
+    public void setPreselectedDate(LocalDate date) {
+        if (dateSession != null && date != null) {
+            dateSession.setValue(date);
+        }
     }
 
     public void setSession(TrainingSession session) {

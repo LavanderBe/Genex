@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Text?>
 
 <VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Genex.Controllers.Team.TeamCardController"
+      fx:controller="Genex.Controllers.Team.PlayerTeamCardController"
       styleClass="player-team-card"
       stylesheets="@PlayerTeams.css"
       spacing="12"
@@ -35,10 +35,6 @@
     <Text fx:id="teamName" styleClass="player-card-team-name" text="Team Name"
           wrappingWidth="220" textAlignment="CENTER" />
 
-    <!-- Status tag -->
-    <Text fx:id="teamTag" styleClass="player-card-status-tag" text="[ACTIVE]"
-          textAlignment="CENTER" />
-
     <!-- Game row -->
     <HBox spacing="6" alignment="CENTER_LEFT">
         <Text styleClass="player-card-info-label" text="Jeu:" />
@@ -48,17 +44,21 @@
     <!-- Contact row -->
     <HBox spacing="6" alignment="CENTER_LEFT">
         <Text styleClass="player-card-info-label" text="Contact:" />
-        <Text fx:id="teamType" styleClass="player-card-info-value" text="—" />
+        <Text fx:id="teamContact" styleClass="player-card-info-value" text="—" />
+    </HBox>
+
+    <!-- Member count row -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+        <Text styleClass="player-card-info-label" text="Membres:" />
+        <Text fx:id="memberCount" styleClass="player-member-count" text="0 / 5" />
     </HBox>
 
     <!-- Action buttons -->
     <HBox spacing="8" alignment="CENTER">
         <Button fx:id="btnView" text="Voir" styleClass="player-view-btn"
-                onAction="#handleView" prefWidth="100" />
-        <Button fx:id="btnEdit" text="Modifier" styleClass="player-join-btn"
-                onAction="#handleEdit" prefWidth="100" />
-        <Button fx:id="btnDelete" text="Supprimer" styleClass="player-delete-btn"
-                onAction="#handleDelete" prefWidth="100" />
+                onAction="#handleView" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+        <Button fx:id="btnJoin" text="Rejoindre" styleClass="player-join-btn"
+                onAction="#handleJoin" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
     </HBox>
 
 </VBox>

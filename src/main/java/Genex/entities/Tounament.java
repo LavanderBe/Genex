@@ -17,7 +17,7 @@ public class Tounament {
     private double prize_pool;
     private String state;
     private List<TournamentParticipants> participants;
-
+    //gvvfftftc
     public enum Format {
         ROUND_ROBIN, SINGLE_ELIM, DOUBLE_ELIM
     }
