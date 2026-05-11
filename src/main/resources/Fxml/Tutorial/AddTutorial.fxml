@@ -8,7 +8,7 @@
       styleClass="dialog-root"
       stylesheets="@Tutorial.css"
       spacing="0"
-      prefWidth="500">
+      prefWidth="640">
 
     <!-- Dialog Header -->
     <HBox styleClass="dialog-header" alignment="CENTER_LEFT" spacing="10">
@@ -45,10 +45,18 @@
             </VBox>
         </HBox>
 
-        <!-- Intel Source URL -->
-        <VBox spacing="6">
-            <Label text="SOURCE DES RENSEIGNEMENTS (URL)" styleClass="field-label"/>
-            <TextField fx:id="videoUrlField" promptText="HTTPS://YOUTUBE.COM/..." styleClass="dialog-field"/>
+        <!-- Liste dynamique des videos du module -->
+        <VBox spacing="8">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="VIDÉOS DU MODULE" styleClass="field-label" HBox.hgrow="ALWAYS"/>
+                <Button text="+ AJOUTER UNE VIDÉO" styleClass="save-btn" onAction="#handleAddVideo"/>
+            </HBox>
+            <Label fx:id="videosHintLabel" text="Au moins une vidéo est requise. Glissez-déposez l'ordre via les flèches." styleClass="card-desc" wrapText="true"/>
+            <ScrollPane fitToWidth="true" prefHeight="240" styleClass="dialog-scroll">
+                <VBox fx:id="videosContainer" spacing="10">
+                    <padding><Insets top="4" right="4" bottom="4" left="4"/></padding>
+                </VBox>
+            </ScrollPane>
         </VBox>
     </VBox>
 

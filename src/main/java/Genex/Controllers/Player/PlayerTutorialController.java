@@ -1,8 +1,9 @@
 package Genex.Controllers.Player;
 
 import Genex.entities.Tutorial;
+import Genex.services.CrudPlayerVideoProgress;
 import Genex.services.TutorialService;
-import Genex.Controllers.Player.VideoPlayerController;
+import Genex.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -34,6 +35,7 @@ public class PlayerTutorialController {
     @FXML private Label statusLabel;
 
     private TutorialService tutorialService;
+    private final CrudPlayerVideoProgress progressService = new CrudPlayerVideoProgress();
     private List<Tutorial> allTutorials = new ArrayList<>();
 
     public void initialize() {
@@ -208,36 +210,35 @@ public class PlayerTutorialController {
         setStatus(filtered.isEmpty() ? "AUCUN MODULE NE CORRESPOND À VOTRE FILTRE." : null);
     }
 
+    /* Progression reelle calculee depuis player_video_progress :
+       ratio des videos completees par le joueur courant. */
     private double computeProgress(Tutorial tutorial) {
-        String difficulty = tutorial.getDifficulty() != null ? tutorial.getDifficulty().toLowerCase() : "";
-        if (difficulty.contains("beginner")) {
-            return 0.35;
+        String playerId = SessionManager.getInstance().getCurrentUserId();
+        if (playerId == null) return 0;
+        try {
+            return progressService.getProgressPercent(playerId, tutorial.getId()) / 100.0;
+        } catch (Exception ex) {
+            return 0;
         }
-        if (difficulty.contains("intermediate")) {
-            return 0.6;
-        }
-        if (difficulty.contains("expert") || difficulty.contains("hard")) {
-            return 0.85;
-        }
-        return 0.25;
     }
 
     private void launchVideoPlayer(Tutorial tutorial) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Player/VideoPlayer.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Player/TutorialDetail.fxml"));
             Parent root = loader.load();
-            VideoPlayerController controller = loader.getController();
+            TutorialDetailController controller = loader.getController();
 
-            Stage videoStage = new Stage();
-            videoStage.setTitle(tutorial.getTitle() != null ? tutorial.getTitle() : "Lecteur vidéo");
-            videoStage.setScene(new Scene(root, 1280, 720));
-            videoStage.setResizable(true);
-            videoStage.setOnShown(event -> controller.setTutorial(tutorial, videoStage));
-            videoStage.show();
+            Stage detailStage = new Stage();
+            detailStage.setTitle(tutorial.getTitle() != null ? tutorial.getTitle() : "Module");
+            detailStage.setScene(new Scene(root, 980, 760));
+            detailStage.setResizable(true);
+            detailStage.setOnShown(event -> controller.setTutorial(tutorial, detailStage));
+            detailStage.setOnHidden(event -> loadModules()); // rafraichit la progression au retour
+            detailStage.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERREUR DU LECTEUR VIDÉO");
-            alert.setHeaderText("Impossible d'ouvrir le lecteur vidéo");
+            alert.setTitle("ERREUR D'OUVERTURE");
+            alert.setHeaderText("Impossible d'ouvrir le module");
             alert.setContentText("Erreur : " + e.getMessage());
             alert.showAndWait();
             e.printStackTrace();
