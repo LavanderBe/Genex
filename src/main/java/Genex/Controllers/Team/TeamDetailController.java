@@ -51,6 +51,10 @@ public class TeamDetailController {
 
     public void setTeam(Team team) {
         this.team = team;
+        System.out.println("=== TeamDetailController.setTeam() ===");
+        System.out.println("Team: " + (team != null ? team.getName() : "null"));
+        System.out.println("Logo path: " + (team != null ? team.getLogoImage() : "null"));
+        System.out.println("Jersey path: " + (team != null ? team.getJerseyImage() : "null"));
         updateTeamInfo();
         loadTeamVisuals();
         loadMembers();

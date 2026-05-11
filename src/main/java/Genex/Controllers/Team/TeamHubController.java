@@ -56,12 +56,16 @@ public class TeamHubController {
             AddTeamModalController controller = loader.getController();
             controller.setOnSaveCallback(team -> {
                 System.out.println("Saving team: " + team.getName());
+                System.out.println("Logo path: " + team.getLogoImage());
+                System.out.println("Jersey path: " + team.getJerseyImage());
 
                 // Save to database
                 crudTeam.addEntity(team);
 
                 // Remove modal overlay and reload
                 rootStackPane.getChildren().remove(modalOverlay);
+                
+                // Force reload from database to get fresh data
                 loadTeamsFromDatabase();
             });
 

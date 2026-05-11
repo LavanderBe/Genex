@@ -171,12 +171,25 @@ public class TeamCardController {
         }
 
         try {
+            // Reload team from database to get fresh data (including logo/jersey paths)
+            CrudTeam crudTeam = new CrudTeam();
+            Team freshTeam = crudTeam.getEntity(team.getId());
+            
+            if (freshTeam == null) {
+                System.err.println("ERROR: Could not reload team from database!");
+                freshTeam = team; // Fallback to existing team object
+            } else {
+                System.out.println("✅ Reloaded team from database");
+                System.out.println("Logo: " + freshTeam.getLogoImage());
+                System.out.println("Jersey: " + freshTeam.getJerseyImage());
+            }
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamDetail.fxml"));
             Parent detailRoot = loader.load();
 
-            // Get controller and set team
+            // Get controller and set team with fresh data
             TeamDetailController controller = loader.getController();
-            controller.setTeam(team);
+            controller.setTeam(freshTeam);
 
             // If we have a content container reference, load in same window
             if (contentContainer != null) {
@@ -198,7 +211,7 @@ public class TeamCardController {
                 System.out.println("✗ Content container is NULL - opening in NEW WINDOW (fallback)...");
                 Stage detailStage = new Stage();
                 detailStage.initModality(Modality.APPLICATION_MODAL);
-                detailStage.setTitle(team.getName() + " - Détails");
+                detailStage.setTitle(freshTeam.getName() + " - Détails");
 
                 Scene scene = new Scene(detailRoot);
                 detailStage.setScene(scene);

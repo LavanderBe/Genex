@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
 <StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@PlayerTeams.css"
@@ -25,7 +26,7 @@
                 <!-- ── Nav Bar ───────────────────────────────────────── -->
                 <HBox alignment="CENTER_LEFT" spacing="12"
                       style="-fx-background-color: #12122a; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 0 0 1 0; -fx-padding: 12 20 12 20;">
-                    <Button fx:id="btnBack" onAction="#handleBack" 
+                    <Button fx:id="btnBack" onAction="#handleBack"
                             style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.15); -fx-border-width: 1; -fx-border-radius: 6;"
                             text="← Retour" />
                     <Label fx:id="teamNameTitle"
@@ -59,24 +60,46 @@
                             <VBox fx:id="membersContainer" spacing="8" />
                         </VBox>
 
-                        <!-- RIGHT: Logo + Info -->
+                        <!-- RIGHT: Logo + Jersey + Info -->
                         <VBox spacing="14" HBox.hgrow="ALWAYS"
-                              alignment="TOP_CENTER"
                               style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18;">
 
-                            <!-- Logo -->
-                            <StackPane alignment="CENTER" maxHeight="100" minHeight="100">
-                                <Circle radius="44"
-                                        style="-fx-fill: #0d0d1a; -fx-stroke: #8B0D0D; -fx-stroke-width: 2;" />
-                                <ImageView fitWidth="76" fitHeight="76"
-                                           preserveRatio="true">
-                                    <clip>
-                                        <Circle radius="38" centerX="38" centerY="38" />
-                                    </clip>
-                                </ImageView>
-                                <Text style="-fx-fill: #8B0D0D; -fx-font-size: 28px;"
-                                      text="▶" />
-                            </StackPane>
+                            <!-- Top Row: Logo (Left) + Jersey (Right) -->
+                            <HBox spacing="16" alignment="TOP_LEFT">
+                                <!-- Logo (Smaller, Left Side) -->
+                                <VBox spacing="6" alignment="TOP_CENTER" prefWidth="120">
+                                    <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="LOGO" />
+                                    <StackPane alignment="CENTER" maxHeight="100" minHeight="100">
+                                        <Circle radius="44"
+                                                style="-fx-fill: #0d0d1a; -fx-stroke: #8B0D0D; -fx-stroke-width: 2;" />
+                                        <ImageView fx:id="teamLogoImage" fitWidth="76" fitHeight="76"
+                                                   preserveRatio="true">
+                                            <clip>
+                                                <Circle radius="38" centerX="38" centerY="38" />
+                                            </clip>
+                                        </ImageView>
+                                        <Text fx:id="teamLogoFallback" style="-fx-fill: #8B0D0D; -fx-font-size: 28px;"
+                                              text="▶" />
+                                    </StackPane>
+                                </VBox>
+
+                                <!-- Jersey (Larger, Right Side) -->
+                                <VBox spacing="6" alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="MAILLOT" />
+                                    <StackPane alignment="CENTER" prefHeight="180" maxHeight="180">
+                                        <Rectangle arcWidth="12" arcHeight="12" width="160" height="180"
+                                                   style="-fx-fill: #0d0d1a; -fx-stroke: #8B0D0D; -fx-stroke-width: 2;" />
+                                        <ImageView fx:id="teamJerseyImage" fitWidth="150" fitHeight="170"
+                                                   preserveRatio="true">
+                                            <clip>
+                                                <Rectangle width="150" height="170" arcWidth="10" arcHeight="10" />
+                                            </clip>
+                                        </ImageView>
+                                        <Text fx:id="teamJerseyFallback" style="-fx-fill: #8B0D0D; -fx-font-size: 48px;"
+                                              text="👕" />
+                                    </StackPane>
+                                </VBox>
+                            </HBox>
 
                             <!-- Info rows -->
                             <VBox spacing="3">
