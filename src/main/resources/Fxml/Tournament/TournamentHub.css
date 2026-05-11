@@ -33,6 +33,33 @@
     -fx-background-color: rgba(255, 255, 255, 0.12);
 }
 
+/* ──────────────── Search Suggestions Popup ──────────────── */
+.suggestions-box {
+    -fx-background-color: linear-gradient(to bottom, rgba(31, 30, 78, 0.98), rgba(15, 15, 35, 0.98));
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139, 13, 13, 0.6);
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0, 0, 4);
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-view-order: -1000;
+}
+
+.suggestion-item {
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.suggestion-item:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.3);
+}
+
 .icon-btn {
     -fx-background-color: rgba(255, 255, 255, 0.07);
     -fx-background-radius: 10;
@@ -134,9 +161,159 @@
     -fx-background-color: transparent;
 }
 
+.edge-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.edge-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.edge-scrollpane .scroll-bar:vertical,
+.edge-scrollpane .scroll-bar:horizontal {
+    -fx-background-color: rgba(31, 30, 78, 0.3);
+    -fx-background-radius: 0;
+    -fx-pref-width: 9;
+    -fx-pref-height: 9;
+}
+
+.edge-scrollpane .scroll-bar:vertical .thumb,
+.edge-scrollpane .scroll-bar:horizontal .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+
+.edge-scrollpane .scroll-bar:vertical .thumb:hover,
+.edge-scrollpane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #ff3333;
+}
+
+.edge-scrollpane .scroll-bar .increment-button,
+.edge-scrollpane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-shape: "";
+}
+
+.edge-scrollpane .scroll-bar .increment-arrow,
+.edge-scrollpane .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
 /* ──────────────── Cards Container ──────────────── */
 .tournaments-container {
     -fx-padding: 10 0;
+}
+
+/* Map */
+.map-section {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.7), rgba(5, 5, 15, 0.88));
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139, 13, 13, 0.55);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.16), 16, 0, 0, 2);
+}
+
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+
+.map-status-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.58);
+    -fx-font-size: 12;
+}
+
+.center-map-view {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.center-drawer-subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 12;
+}
+
+.center-info-block {
+    -fx-background-color: rgba(255, 255, 255, 0.055);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 14;
+}
+
+.center-info-line {
+    -fx-text-fill: rgba(255, 255, 255, 0.78);
+    -fx-font-size: 13;
+}
+
+.center-tournament-row {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.11);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 16 18;
+    -fx-min-height: 92;
+}
+
+.center-tournament-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+}
+
+.center-tournament-meta {
+    -fx-text-fill: rgba(255, 255, 255, 0.62);
+    -fx-font-size: 12;
+}
+
+.center-view-button {
+    -fx-background-color: linear-gradient(to right, #4f63d8, #6b55ff);
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 96 0 L 112 12 L 112 42 L 12 42 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.45), 12, 0, 0, 3);
+}
+
+.center-view-button:hover {
+    -fx-background-color: linear-gradient(to right, #5f75f0, #806cff);
+    -fx-translate-y: -2;
+}
+
+.center-close-button {
+    -fx-background-color: rgba(139, 13, 13, 0.26);
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 14;
+    -fx-font-weight: 800;
+    -fx-shape: "M 0 0 L 36 0 L 48 10 L 48 38 L 10 38 L 0 28 Z";
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 80, 80, 0.35);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.35), 10, 0, 0, 2);
+}
+
+.center-close-button:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.42);
+    -fx-text-fill: white;
+}
+
+.center-empty-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.58);
+    -fx-font-size: 13;
+    -fx-padding: 18 0;
 }
 
 /* ──────────────── Empty State ──────────────── */
@@ -149,13 +326,13 @@
 /* ─── Player Record Section ──────────────────────────────────────────── */
 
 .hub-record-section {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 15;
-    -fx-border-color: rgba(124, 111, 255, 0.35);
-    -fx-border-radius: 15;
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.68), rgba(5, 5, 15, 0.88));
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139, 13, 13, 0.55);
+    -fx-border-radius: 8;
     -fx-border-width: 1.5;
     -fx-padding: 20 25;
-    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.15), 20, 0, 0, 4);
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.18), 16, 0, 0, 2);
 }
 
 .hub-record-title {
@@ -171,9 +348,9 @@
 
 .hub-record-card {
     -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 12;
+    -fx-background-radius: 6;
     -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 12;
+    -fx-border-radius: 6;
     -fx-border-width: 1;
     -fx-padding: 18 10;
     -fx-min-width: 100;
@@ -218,4 +395,55 @@
     -fx-font-size: 11;
     -fx-font-weight: 700;
     -fx-letter-spacing: 1;
+}
+
+.participation-history-list {
+    -fx-padding: 12 0 0 0;
+}
+
+.history-section-title {
+    -fx-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: 800;
+}
+
+.history-row {
+    -fx-background-color: rgba(255, 255, 255, 0.055);
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(139, 13, 13, 0.35);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 14 16;
+}
+
+.history-row:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.16);
+    -fx-border-color: rgba(255, 82, 82, 0.62);
+}
+
+.history-name {
+    -fx-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 800;
+}
+
+.history-meta {
+    -fx-fill: rgba(255, 255, 255, 0.68);
+    -fx-font-size: 12;
+}
+
+.history-placement-badge {
+    -fx-background-color: rgba(92, 124, 250, 0.26);
+    -fx-border-color: rgba(92, 124, 250, 0.75);
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-min-width: 64;
+    -fx-min-height: 38;
+}
+
+.history-placement-text {
+    -fx-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 900;
 }

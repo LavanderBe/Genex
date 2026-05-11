@@ -15,6 +15,7 @@ public class LocalHttpServer {
             server = HttpServer.create(new InetSocketAddress("localhost",PORT), 0);
             // Serve captcha HTML
             server.createContext("/captcha.html", new StaticFileHandler("/html/captcha.html"));
+            server.createContext("/tournament-map.html", new StaticFileHandler("/html/tournament-map.html"));
 
             // Verification endpoint
             server.createContext("/api/verify-captcha", new CaptchaHandler());
