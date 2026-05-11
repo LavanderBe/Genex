@@ -16,7 +16,7 @@
 
 <StackPane fx:id="formOverlay" style="-fx-background-color: rgba(0,0,0,0.85);" stylesheets="@AddPlayer.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Player.AddPlayerController">
     <children>
-        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="850.0">
+        <AnchorPane fx:id="card" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="850.0">
             <children>
                 <!-- TACTICAL SHARD BACKGROUND -->
                 <SVGPath content="M 0 0 L 800 0 L 850 50 L 850 650 L 50 650 L 0 600 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="2.0" styleClass="form-shard-bg" />
@@ -29,7 +29,7 @@
                                 <Region prefHeight="30.0" prefWidth="5.0" style="-fx-background-color: #8B0D0D;" />
                                 <VBox>
                                     <children>
-                                        <Label styleClass="form-title" text="PLAYER // INITIALIZATION_PROTOCOL" textFill="WHITE" />
+                                        <Label fx:id="formTitle" styleClass="form-title" text="PLAYER // PROTOCOLE_D'INITIALIZATION" textFill="WHITE" />
                                         <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="LINKING_NEW_IDENTITY_TO_GENEX_CORE" textFill="#5c7cfa" />
                                     </children>
                                 </VBox>
@@ -53,12 +53,13 @@
                                             <TextField fx:id="natField" promptText="NATIONALITÉ" styleClass="hud-input" HBox.hgrow="ALWAYS" />
                                             <TextField fx:id="cityField" promptText="VILLE" styleClass="hud-input" HBox.hgrow="ALWAYS" />
                                         </HBox>
+                              <Label fx:id="Identification_Error" alignment="CENTER" prefHeight="17.0" prefWidth="350.0" textFill="#c60000" />
 
                                         <Region prefHeight="20" />
                                         <Label styleClass="section-header" text="[ VISUAL_ASSETS ]" />
                                         <HBox spacing="15">
-                                            <Button fx:id="btnUploadPic" prefWidth="160" styleClass="asset-btn" text="UPLOAD" />
-                                            <Button fx:id="btnCreateAvatar" prefWidth="160" styleClass="asset-btn" text="CRÉEE UN AVATAR" />
+                                            <Button fx:id="btnUploadPic" onAction="#handleUploadPic" prefWidth="160" styleClass="asset-btn" text="UPLOAD" />
+                                            <Button fx:id="btnCreateAvatar" onAction="#handleCreateAvatar" prefWidth="160" styleClass="asset-btn" text="CRÉEE UN AVATAR" />
                                         </HBox>
                                     </children>
                                 </VBox>
@@ -70,6 +71,7 @@
                                         <TextField fx:id="accountNameField" promptText="NOM DU COMPTE" styleClass="hud-input" />
                                         <TextField fx:id="emailField" promptText="EMAIL" styleClass="hud-input" />
                                         <PasswordField fx:id="passwordField" promptText="ACCESS_KEY" styleClass="hud-input" />
+                              <Label fx:id="SystemError" alignment="CENTER" prefHeight="17.0" prefWidth="410.0" textFill="#c60000" />
 
                                         <Region prefHeight="10" />
                                         <Label styleClass="section-header" text="[ NEURAL_GAME_LINKS ]" />
@@ -90,7 +92,7 @@
                         <HBox alignment="CENTER_RIGHT" spacing="20.0">
                             <children>
                                 <Button onAction="#handleCancel" prefHeight="45.0" prefWidth="150.0" styleClass="btn-abort" text="ABANDONNER" />
-                                <Button onAction="#handleSave" prefHeight="45.0" prefWidth="250.0" styleClass="btn-execute" text="INITIALISER" />
+                                <Button fx:id="btnExecute" onAction="#handleSave" prefHeight="45.0" prefWidth="250.0" styleClass="btn-execute" text="INITIALISER" />
                             </children>
                             <padding><Insets top="20" /></padding>
                         </HBox>

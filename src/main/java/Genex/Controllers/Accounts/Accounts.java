@@ -242,10 +242,6 @@ public class Accounts {
                 shakeNode(formOverlay);
                 return;
             }
-            if (crudUser.check_email(email)){
-                shakeNode(formOverlay);
-                return;
-            }
             User u=new User(username,email,password,role);
             String id=crudUser.getUser_Id(username);
             crudUser.updateEntity(u,id);

@@ -26,6 +26,7 @@ public class Games {
     @FXML private FlowPane gamesGrid;
     @FXML private StackPane addGameOverlay;
 
+
     // Form Fields
     @FXML private TextField nomField, genreField;
     @FXML private ComboBox<String> platformCombo, modeCombo;

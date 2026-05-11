@@ -195,4 +195,36 @@ public class CrudPlayer {
         return null;
     }
 
+    public List<Player> getEverythingPlayers(){
+        String query = "SELECT p.*, u.username, u.email, u.role " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id ";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query)) {
+            ResultSet rs = pst.executeQuery();
+            List <Player> allp=new ArrayList<>();
+            while (rs.next()) {
+                Player player = new Player();
+                player.setId(rs.getString("user_id"));
+
+                player.setUsername(rs.getString("username"));
+                player.setEmail(rs.getString("email"));
+                player.setRole(rs.getString("role"));
+
+                player.setPrenom(rs.getString("first_name"));
+                player.setNom(rs.getString("last_name"));
+                player.setNickname(rs.getString("nickname"));
+                player.setCin(rs.getString("cin"));
+
+                Date birthDate = rs.getDate("date_of_birth");
+
+                player.setNationality(rs.getString("nationality"));
+                player.setCity(rs.getString("city"));
+                allp.add(player);
+            }
+            return allp;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

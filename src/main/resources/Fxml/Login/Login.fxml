@@ -22,6 +22,29 @@
 <StackPane fx:id="rootPane" prefHeight="768.0" prefWidth="1366.0" style="-fx-background-color: black;" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Login.Login">
     <children>
         <MediaView fx:id="mediaView" preserveRatio="false" />
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <SVGPath fx:id="captchabackground" content="M448,0H64C28.6,0,0,28.6,0,64v256c0,35.4,28.6,64,64,64h128l-42.7,128l192-128H448c35.4,0,64-28.6,64-64V64C512,28.6,483.4,0,448,0z" layoutX="825.0" layoutY="185.0" rotate="90.0" scaleX="0.75" scaleY="1.2" visible="false">
+               <fill>
+                  <RadialGradient centerX="0.40055248618784534" centerY="0.5" radius="0.9">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.17738790810108185" green="0.17568226158618927" blue="0.18421052396297455" opacity="0.699999988079071" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.12156862765550613" green="0.11764705926179886" blue="0.30588236451148987" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </fill>
+            </SVGPath>
+                    <WebView fx:id="captchaWebView" layoutX="980.0" layoutY="286.0" maxHeight="284.0" maxWidth="344.0" minHeight="100.0" minWidth="320.0" prefHeight="284.0" prefWidth="344.0" visible="false" />
+         </children>
+      </AnchorPane>
 
         <!-- MAIN LOGIN CARD -->
         <AnchorPane fx:id="loginCard" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="450.0">
@@ -29,18 +52,18 @@
                 <!-- TALLER SHAPE (M 0 50 ... 650) -->
                 <SVGPath fx:id="Card" content="M 0 50 L 50 0 L 400 0 L 450 50 L 450 600 L 400 650 L 50 650 L 0 600 Z" strokeWidth="0.0">
                     <fill>
-                        <LinearGradient endX="0.5" endY="1.0" startX="0.5" startY="0.0">
+                        <LinearGradient endX="0.5" endY="1.0" startX="0.5">
                             <stops>
-                                <Stop><color><Color red="0.121" green="0.117" blue="0.305" opacity="0.85" /></color></Stop>
-                                <Stop offset="1.0"><color><Color red="0.009" green="0.012" blue="0.039" opacity="0.95" /></color></Stop>
+                                <Stop><color><Color red="0.12099999934434891" green="0.11699999868869781" blue="0.3050000071525574" opacity="0.8500000238418579" /></color></Stop>
+                                <Stop offset="1.0"><color><Color red="0.008999999612569809" green="0.012000000104308128" blue="0.039000000804662704" opacity="0.949999988079071" /></color></Stop>
                             </stops>
                         </LinearGradient>
                     </fill>
                     <stroke>
                         <LinearGradient endX="1.0" endY="1.0">
                             <stops>
-                                <Stop><color><Color red="0.238" green="0.178" blue="0.631" opacity="0.75" /></color></Stop>
-                                <Stop offset="1.0"><color><Color red="0.121" green="0.117" blue="0.305" opacity="0.85" /></color></Stop>
+                                <Stop><color><Color red="0.23800000548362732" green="0.17800000309944153" blue="0.6309999823570251" opacity="0.75" /></color></Stop>
+                                <Stop offset="1.0"><color><Color red="0.12156862765550613" green="0.11764705926179886" blue="0.30588236451148987" opacity="0.8500000238418579" /></color></Stop>
                             </stops>
                         </LinearGradient>
                     </stroke>
@@ -87,7 +110,7 @@
                         <VBox alignment="CENTER" spacing="8.0" style="-fx-background-color: rgba(31, 30, 78, 0.1); -fx-padding: 10; -fx-border-color: #1F1E4E; -fx-border-width: 0.5;">
                             <children>
                                 <Label style="-fx-font-size: 8px; -fx-letter-spacing: 2px;" text="NEURAL VERIFICATION" textFill="#5c7cfa" />
-                                <WebView fx:id="captchaWebView" maxHeight="100.0" maxWidth="320.0" minHeight="100.0" minWidth="320.0" prefHeight="100.0" prefWidth="320.0" />
+                        <Button fx:id="captchaBtn" onAction="#handleCaptcha" prefHeight="45.0" prefWidth="181.0" styleClass="edgy-button" text="CAPTCHA" />
                                 <Label fx:id="Errorcaptcha" style="-fx-font-size: 9px;" textFill="RED" visible="false" />
                             </children>
                         </VBox>
@@ -102,8 +125,10 @@
                                         <Label style="-fx-font-size: 8px;" text="SE CONNECTER VIA" textFill="#555588" />
                                         <HBox alignment="CENTER" spacing="15.0">
                                             <children>
-                                                <Button onAction="#handleGoogleLogin" prefWidth="120.0" styleClass="social-button,google-btn" text="GOOGLE" />
-                                                <Button onAction="#handleDiscordLogin" prefWidth="120.0" styleClass="social-button,discord-btn" text="DISCORD" />
+                                                <Button onAction="#handleGoogleLogin" prefWidth="120.0" styleClass="social-button,google-btn" text="GOOGLE">
+                                       <graphic>
+                                          <SVGPath />
+                                       </graphic></Button>
                                             </children>
                                         </HBox>
                                     </children>

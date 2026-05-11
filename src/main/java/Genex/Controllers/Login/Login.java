@@ -23,6 +23,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,6 +35,8 @@ public class Login {
 
     int nb_errors=3;
 
+
+    @FXML private SVGPath captchabackground;
 
     @FXML private WebView captchaWebView;
     @FXML private Label Errorcaptcha;
@@ -333,5 +336,11 @@ public class Login {
             captchaWebView.getEngine().executeScript("if(window.hcaptcha) hcaptcha.reset();");
             System.out.println("[Cleanup Webview] Mediaview stopped.");
         }
+    }
+
+    @FXML
+    void handleCaptcha(ActionEvent event) {
+        captchaWebView.setVisible(true);
+        captchabackground.setVisible(true);
     }
 }

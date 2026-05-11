@@ -1,6 +1,8 @@
 package Genex.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends User {
     private String prenom;
@@ -10,6 +12,8 @@ public class Player extends User {
     private LocalDate birthday;
     private String nationality;
     private String city;
+
+    private List<Game> games_played=new ArrayList<>();
 
     // Stats for accuracy and progression
     private int tacticalXp;

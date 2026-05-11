@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="rootPane" style="-fx-background-color: rgba(0,0,0,0.9);" stylesheets="@Avatar.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Player.AvatarController">
+    <children>
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="850.0">
+            <children>
+                <!-- TACTICAL SHARD BACKGROUND -->
+                <SVGPath content="M 0 0 L 800 0 L 850 50 L 850 550 L 50 550 L 0 500 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="2.0" styleClass="avatar-shard-bg" />
+
+                <HBox layoutX="40.0" layoutY="40.0" prefHeight="470.0" prefWidth="770.0" spacing="40.0">
+                    <children>
+
+                        <!-- LEFT: HOLOGRAPHIC PREVIEW -->
+                        <VBox alignment="TOP_CENTER" prefWidth="350.0" spacing="20.0">
+                            <children>
+                                <Label text="IDENTITY_VISUALIZATION" textFill="#8B0D0D" style="-fx-font-family: 'Arial Black'; -fx-font-size: 11px;" />
+
+                                <StackPane fx:id="avatarPreview" prefHeight="300.0" prefWidth="300.0" styleClass="preview-box">
+                                    <children>
+                                        <!-- Layered Images (Base -> Eyes -> Gear) -->
+                                        <ImageView fx:id="layerBase" fitHeight="280.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true" />
+                                        <ImageView fx:id="layerEyes" fitHeight="280.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true" />
+                                        <ImageView fx:id="layerGear" fitHeight="280.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true" />
+
+                                        <!-- HUD Crosshair Decoration -->
+                                        <SVGPath content="M 150 10 L 150 40 M 150 260 L 150 290 M 10 150 L 40 150 M 260 150 L 290 150" stroke="#1F1E4E" strokeWidth="1" />
+                                    </children>
+                                </StackPane>
+
+                                <Button onAction="#handleRandomize" prefWidth="200" styleClass="btn-random" text="RANDOMIZE_GENETICS" />
+                            </children>
+                        </VBox>
+
+                        <!-- RIGHT: PARAMETERS -->
+                        <VBox prefWidth="380.0" spacing="15.0">
+                            <children>
+                                <VBox spacing="2.0">
+                                    <children>
+                                        <Label text="AVATAR_CONSTRUCTOR" textFill="WHITE" style="-fx-font-family: 'Impact'; -fx-font-size: 24px;" />
+                                        <Label text="NEURAL_IMAGE_SYNTHESIS_V2" textFill="#5c7cfa" style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" />
+                                    </children>
+                                </VBox>
+
+                                <Separator opacity="0.2" />
+
+                                <VBox spacing="10">
+                                    <children>
+                                        <Label text="BASE_MODEL" styleClass="param-label" />
+                                        <ComboBox fx:id="baseCombo" prefWidth="380.0" styleClass="geek-combo" />
+
+                                        <Label text="CYBERNETIC_OPTICS" styleClass="param-label" />
+                                        <ComboBox fx:id="eyesCombo" prefWidth="380.0" styleClass="geek-combo" />
+
+                                        <Label text="TACTICAL_HEADGEAR" styleClass="param-label" />
+                                        <ComboBox fx:id="gearCombo" prefWidth="380.0" styleClass="geek-combo" />
+
+                                        <Label text="NEON_AURA_COLOR" styleClass="param-label" />
+                                        <ColorPicker fx:id="glowPicker" prefWidth="380.0" styleClass="geek-color-picker" />
+                                    </children>
+                                </VBox>
+
+                                <Region VBox.vgrow="ALWAYS" />
+
+                                <HBox spacing="15.0">
+                                    <children>
+                                        <Button onAction="#handleConfirm" prefHeight="45.0" prefWidth="230.0" styleClass="btn-execute" text="SAVE_IDENTITY" />
+                                        <Button onAction="#handleCancel" prefHeight="45.0" prefWidth="130.0" styleClass="btn-abort" text="ABORT" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

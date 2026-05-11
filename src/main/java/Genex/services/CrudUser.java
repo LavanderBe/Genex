@@ -55,6 +55,22 @@ public class CrudUser implements ICrud<User> {
 
     }
 
+    public void updateUser_without_password(User u,String id){
+        String requete="UPDATE users " +
+                "SET username=?,email=?" +
+                "WHERE id=? ";
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,u.getUsername());
+            pst.setString(2,u.getEmail());
+            pst.setString(3,id);
+            pst.executeUpdate();
+            System.out.println("User added successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void deleteEntity(User user) {
         String requete="DELETE FROM users " +

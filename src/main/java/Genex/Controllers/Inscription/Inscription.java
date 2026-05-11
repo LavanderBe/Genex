@@ -66,11 +66,11 @@ public class Inscription {
     private String pwd;
     @FXML
     public void initialize() {
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateStrengthIndicator(newValue);});
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {updateStrengthIndicator(newValue);});
         cinField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("([0-9]*)?") && newText.length() <= 8) {
+            if (newText.matches("([0-9]*)?") && newText.length() <= 8)
+            {
                 return change;
             }
             return null;
@@ -92,7 +92,6 @@ public class Inscription {
             mediaPlayer.setMute(true);
             mediaPlayer.play();
 
-            // Stretches video to fill screen
             mediaView.fitWidthProperty().bind(rootPane.widthProperty());
             mediaView.fitHeightProperty().bind(rootPane.heightProperty());
 

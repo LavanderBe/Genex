@@ -5,6 +5,7 @@ import Genex.entities.Player;
 import Genex.services.CrudPlayer;
 import Genex.services.CrudPlayer_Game;
 import javafx.animation.*;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,11 +28,18 @@ public class PlayerController {
     private final CrudPlayer_Game cpg=new CrudPlayer_Game();
     private final CrudPlayer cp = new CrudPlayer();
 
+    private List<Player> allPlayersMaster = FXCollections.observableArrayList();
+
     private HBox selectedBlade = null;
 
     @FXML
     public void initialize() {
+
+        allPlayersMaster = cp.getEntities();
         loadAllPlayers();
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {filterBlades(newValue.toLowerCase());});
+        System.out.println(allPlayersMaster);
     }
 
     @FXML
@@ -104,9 +112,10 @@ public class PlayerController {
         }
     }
 
+    //loading the entire player database
     private void loadAllPlayers() {
         playersList.getChildren().clear();
-        List<Player> players = cp.getEntities();
+        List<Player> players = cp.getEverythingPlayers();
 
         for (int i = 0; i < players.size(); i++) {
             HBox row = createPlayerRow(players.get(i), i);
@@ -114,6 +123,7 @@ public class PlayerController {
         }
     }
 
+    //creating a blade with animation
     private HBox createPlayerRow(Player player, int index) {
         HBox blade = new HBox(30);
         blade.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
@@ -152,13 +162,12 @@ public class PlayerController {
 
         Button modifyBtn = new Button("MODIFIER ");
         modifyBtn.getStyleClass().add("blade-btn-edit");
-        modifyBtn.setOnAction(e -> handleModify(player));
 
-        Button terminateBtn = new Button(" SUPPRIMER");
+        Button terminateBtn = new Button("SUPPRIMER");
         terminateBtn.getStyleClass().add("blade-btn-delete");
         terminateBtn.setOnAction(e -> handleTerminate(player, blade));
 
-        Button promoteBtn = new Button("PROMOTE");
+        Button promoteBtn = new Button("PROMOUVOIR");
         promoteBtn.getStyleClass().add("blade-btn-promote");
 
         promoteBtn.setOnAction(e -> {
@@ -229,8 +238,6 @@ public class PlayerController {
         // cp.promoteToCoach(player.getId());
         System.out.println("UPGRADING_PROTOCOL: " + player.getNickname() + " -> COACH");
 
-        // 2. VISUAL FEEDBACK: "The Promotion Flash"
-        // We create a white/gold flash to show the "Level Up"
         FadeTransition flash = new FadeTransition(Duration.millis(100), blade);
         flash.setFromValue(1.0);
         flash.setToValue(0.3);
@@ -250,8 +257,77 @@ public class PlayerController {
     }
 
     private void handleModify(Player p) {
-        System.out.println("Modifying protocol for: " + p.getNickname());
-        // Open your existing AddPlayer.fxml but in Edit mode
+        try {
+            System.out.println("updating player with this id "+p.getId());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Player/AddPlayer.fxml"));
+            Parent form = loader.load();
+
+            // 1. Get the controller and inject the player data
+            AddPlayerController controller = loader.getController();
+            controller.setPlayerData(p);
+
+            // 2. The rest of the "Smooth Load" logic (Copy-paste from addNewPlayer)
+            // 1. Setup the Overlay (The dark background)
+            StackPane overlay = new StackPane(form);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); // Start transparent
+            overlay.setOpacity(0);
+            rootStackPane.getChildren().add(overlay);
+
+            // 2. Setup Blur Effect
+            GaussianBlur blur = new GaussianBlur(0);
+            contentArea.setEffect(blur);
+
+            // 3. Setup the Form Panel start position (Slide in from top)
+            form.setTranslateY(-700);
+            form.setScaleX(0.9);
+            form.setScaleY(0.9);
+
+            // 4. ANIMATION SEQUENCE
+            // A. Fade in the darkness
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(400), overlay);
+            fadeIn.setToValue(1);
+
+            // B. Slide & Scale the form shard
+            TranslateTransition slideDown = new TranslateTransition(Duration.millis(500), form);
+            slideDown.setToY(0);
+
+            ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), form);
+            scaleUp.setToX(1.0);
+            scaleUp.setToY(1.0);
+
+            // C. Animate the Blur radius (Timeline is needed for the radius property)
+            Timeline blurTimeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
+                    new KeyFrame(Duration.millis(400), new KeyValue(blur.radiusProperty(), 15))
+            );
+
+            ParallelTransition entrance = new ParallelTransition(fadeIn, slideDown, scaleUp, blurTimeline);
+            entrance.play();
+
+            // 5. CALLBACK FOR CLOSING
+            controller.setOnCloseCallback(() -> {
+                // Reverse Animations
+                slideDown.setRate(-1);
+                scaleUp.setRate(-1);
+                fadeIn.setRate(-1);
+
+                Timeline unblurTimeline = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 15)),
+                        new KeyFrame(Duration.millis(400), new KeyValue(blur.radiusProperty(), 0))
+                );
+
+                ParallelTransition exit = new ParallelTransition(fadeIn, slideDown, scaleUp, unblurTimeline);
+                exit.setOnFinished(e -> {
+                    rootStackPane.getChildren().remove(overlay);
+                    contentArea.setEffect(null);
+                    loadAllPlayers(); // Refresh the list
+                });
+                exit.play();
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleTerminate(Player p, HBox node) {
@@ -267,7 +343,36 @@ public class PlayerController {
         pt.play();
     }
 
+    private void filterBlades(String query) {
+        if (query == null || query.isEmpty()) {
+            renderBlades(allPlayersMaster);
+            return;
+        }
+        System.out.println(allPlayersMaster);
 
+        List<Player> filteredList = allPlayersMaster.stream().filter(p -> p.getNom().toLowerCase().contains(query) || p.getNickname().toLowerCase().contains(query)).toList();
+
+        renderBlades(filteredList);
+    }
+
+    private void renderBlades(List<Player> playersToDisplay) {
+        // 1. Clear the visual container
+        playersList.getChildren().clear();
+
+        // 2. If no results, show a "System Warning"
+        if (playersToDisplay.isEmpty()) {
+            Label emptyLabel = new Label(">> [!] NO_ENTITY_MATCHES_QUERY");
+            emptyLabel.setStyle("-fx-text-fill: #8B0D0D; -fx-font-family: 'Consolas'; -fx-padding: 50;");
+            playersList.getChildren().add(emptyLabel);
+            return;
+        }
+
+        // 3. Loop and recreate the blades (Triggering the pop-up animations)
+        for (int i = 0; i < playersToDisplay.size(); i++) {
+            HBox row = createPlayerRow(playersToDisplay.get(i), i);
+            playersList.getChildren().add(row);
+        }
+    }
 
     private void handleBladeSelection(HBox blade, Player player) {
         // Remove highlight from previous selection
