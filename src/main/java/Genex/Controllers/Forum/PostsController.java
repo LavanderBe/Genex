@@ -66,8 +66,6 @@ public class PostsController {
     @FXML
     private ComboBox<String> forumNameField;
     @FXML
-    private ComboBox<String> authorNameField;
-    @FXML
     private TextField titleField;
     @FXML
     private ComboBox<String> postTypeField;
@@ -458,7 +456,6 @@ public class PostsController {
         statusFilterField.setValue("TOUS");
         moderationFilterField.setValue("TOUS");
 
-        authorNameField.setEditable(true);
     }
 
     private void loadHeaderInfo() {
@@ -710,7 +707,6 @@ public class PostsController {
     private void selectPost(Posts post) {
         selectedPostId = post.getId();
         forumNameField.setValue(forumNameForId(post.getForumId()));
-        authorNameField.setValue(authorNameForId(post.getAuthorId()));
         titleField.setText(safe(post.getTitle()));
         bodyArea.setText(safe(post.getBody()));
         tagField.setText(safe(post.getTag()));
@@ -902,12 +898,8 @@ public class PostsController {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le forum sélectionné est introuvable.");
             return false;
         }
-        if (isBlank(authorNameField.getValue())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Le nom auteur est obligatoire.");
-            return false;
-        }
         if (isBlank(resolveAuthorForCreate())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'auteur sélectionné est introuvable.");
+            showAlert(Alert.AlertType.WARNING, "Validation", "Aucun auteur connecté trouvé.");
             return false;
         }
         if (isBlank(titleField.getText())) {
@@ -935,15 +927,6 @@ public class PostsController {
             forumNameField.setValue(forumNameField.getItems().get(0));
         } else {
             forumNameField.setValue(null);
-        }
-        if (adminMode) {
-            if (!authorNameField.getItems().isEmpty()) {
-                authorNameField.setValue(authorNameField.getItems().get(0));
-            } else {
-                authorNameField.setValue(null);
-            }
-        } else {
-            authorNameField.setValue(resolveAuthorNameForCurrentUser());
         }
         titleField.clear();
         bodyArea.clear();
@@ -992,8 +975,6 @@ public class PostsController {
         hideNode(hidePostButton);
         hideNode(restorePostButton);
         forumNameField.setDisable(false);
-        authorNameField.setDisable(true);
-        authorNameField.setValue(resolveAuthorNameForCurrentUser());
     }
 
     private boolean requireAdminAction(String actionLabel) {
@@ -1036,27 +1017,17 @@ public class PostsController {
     }
 
     private String resolveAuthorForCreate() {
-        String selectedAuthorName = authorNameField.getValue();
-        if (isBlank(selectedAuthorName)) {
-            return "";
-        }
-
-        if (adminMode) {
-            String authorId = authorIdByName.get(selectedAuthorName);
-            if (!isBlank(authorId)) {
-                return authorId;
-            }
-            if (selectedAuthorName.length() > 2) {
-                return selectedAuthorName;
-            }
-            return "";
-        }
-
         if (!isBlank(currentUserId)) {
             return currentUserId;
         }
         if (!isBlank(currentUserName)) {
-            return safe(authorIdByName.get(currentUserName));
+            String authorId = safe(authorIdByName.get(currentUserName));
+            if (!isBlank(authorId)) {
+                return authorId;
+            }
+            if (currentUserName.length() > 2) {
+                return currentUserName;
+            }
         }
         return "";
     }
@@ -1091,7 +1062,6 @@ public class PostsController {
             authorNameById.put(user.getId(), user.getUsername());
             authorIdByName.putIfAbsent(user.getUsername(), user.getId());
         }
-        authorNameField.getItems().setAll(authorIdByName.keySet());
     }
 
     private String resolveForumIdForCreate() {

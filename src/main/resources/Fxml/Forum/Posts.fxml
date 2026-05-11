@@ -87,16 +87,10 @@
                         </padding>
                         <Label text="✍ GESTION DES POSTS" styleClass="modal-title"/>
 
-                        <HBox spacing="20">
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="NOM DU FORUM" styleClass="field-label"/>
-                                <ComboBox fx:id="forumNameField" promptText="Sélectionner un forum" styleClass="modal-combo"/>
-                            </VBox>
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="NOM AUTEUR" styleClass="field-label"/>
-                                <ComboBox fx:id="authorNameField" promptText="Sélectionner un auteur" styleClass="modal-combo"/>
-                            </VBox>
-                        </HBox>
+                        <VBox spacing="10">
+                            <Label text="NOM DU FORUM" styleClass="field-label"/>
+                            <ComboBox fx:id="forumNameField" promptText="Sélectionner un forum" styleClass="modal-combo"/>
+                        </VBox>
 
                         <VBox spacing="10">
                             <Label text="TITRE" styleClass="field-label"/>
