@@ -214,16 +214,22 @@ public class PlayerDashboard {
         loadModule("/Fxml/Boutique/Boutique.fxml");
     }
 
-    private void loadModule(String fxmlPath) {
+    private void loadModule(String fxmlFile) {
         try {
-            Parent module = FXMLLoader.load(getClass().getResource(fxmlPath));
-            contentArea.getChildren().setAll(module);
-            AnchorPane.setTopAnchor(module, 0.0);
-            AnchorPane.setBottomAnchor(module, 0.0);
-            AnchorPane.setLeftAnchor(module, 0.0);
-            AnchorPane.setRightAnchor(module, 0.0);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Node node = loader.load();
+            contentArea.getChildren().clear();
+            AnchorPane.setTopAnchor(node, 0.0);
+            AnchorPane.setBottomAnchor(node, 0.0);
+            AnchorPane.setLeftAnchor(node, 0.0);
+            AnchorPane.setRightAnchor(node, 0.0);
+            contentArea.getChildren().add(node);
+            FadeTransition ft = new FadeTransition(Duration.millis(300), node);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
         } catch (IOException e) {
-            System.err.println("Module not found: " + fxmlPath);
+            e.printStackTrace();
         }
     }
 

@@ -191,75 +191,34 @@ public class Dashboard {
     @FXML
     private void navFinancesBtn(ActionEvent event) {
         setActiveButton((Button) event.getSource());
-        loadView("/Fxml/Finance/Finance.fxml");
+        loadModule("/Fxml/Finance/Finance.fxml");
     }
 
     // ==================== Helpers ====================
 
     private void restoreDefaultContent() {
         // Reload the default dashboard overview
-        loadView("/Fxml/Dashboard/DashboardHome.fxml");
+        loadModule("/Fxml/Dashboard/DashboardHome.fxml");
     }
 
     @FXML
     void navTournamentBtn(ActionEvent event) {
-        try {
             setActiveButton((Button) event.getSource());
-            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Tournament/TournamentHub.fxml"));
-
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(root);
-
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-
-        } catch (IOException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Error loading Tournament Hub: " + ex.getMessage());
-        }
+            loadModule("/Fxml/Tournament/TournamentHub.fxml");
     }
 
     @FXML
     void navCenterBtn(ActionEvent event) {
-        try {
-            setActiveButton((Button) event.getSource());
-            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Center/CenterHub.fxml"));
-
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(root);
-
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-
-        } catch (IOException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Error loading Center Hub: " + ex.getMessage());
-        }
+        setActiveButton((Button) event.getSource());
+        loadModule("/Fxml/Center/CenterHub.fxml");
     }
     @FXML
     private void navForumBtn(ActionEvent event) {
         setActiveButton((Button) event.getSource());
-        loadView("/Fxml/Forum/Forum.fxml");
+        loadModule("/Fxml/Forum/Forum.fxml");
     }
 
-    private void loadView(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent newView = loader.load();
-            contentArea.getChildren().setAll(newView);
-            AnchorPane.setTopAnchor(newView, 0.0);
-            AnchorPane.setBottomAnchor(newView, 0.0);
-            AnchorPane.setLeftAnchor(newView, 0.0);
-            AnchorPane.setRightAnchor(newView, 0.0);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error loading view: " + fxmlPath);
-        }
-    }
+
 
     private void setActiveButton(Button clickedButton) {
         for (Node node : sidebarVbox.getChildren()) {
@@ -276,33 +235,9 @@ public class Dashboard {
 
     @FXML
     void navTeamBtn(ActionEvent event) {
-        try {
-            setActiveButton((Button) event.getSource());
+        setActiveButton((Button) event.getSource());
+        loadModule("/Fxml/Team/TeamHub.fxml");
 
-            // Load the Team Hub FXML with loader to get controller
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamHub.fxml"));
-            Parent root = loader.load();
-
-            // Get the controller and pass the contentArea as container
-            TeamHubController teamHubController = loader.getController();
-            teamHubController.setContentContainer(contentArea);
-
-            // Clear the existing content
-            contentArea.getChildren().clear();
-
-            // Add the new content
-            contentArea.getChildren().add(root);
-
-            // Ensure the new content scales to fit the AnchorPane
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-
-        } catch (IOException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Error loading Team Hub FXML: " + ex.getMessage());
-        }
     }
 
 
@@ -325,19 +260,9 @@ public class Dashboard {
 
     @FXML
     void navTutorialBtn(ActionEvent event) {
-        try {
-            setActiveButton((Button) event.getSource());
-            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Tutorial/Tutorial.fxml"));
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-        } catch (IOException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Error loading Tutorial view.");
-        }
+        setActiveButton((Button) event.getSource());
+        loadModule("/Fxml/Tutorial/Tutorial.fxml");
     }
+
 }
 

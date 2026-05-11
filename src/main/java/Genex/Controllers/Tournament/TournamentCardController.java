@@ -7,8 +7,10 @@ import Genex.entities.User;
 import Genex.services.CrudCenter;
 import Genex.services.CrudGame;
 import Genex.services.CrudTournament;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -17,6 +19,7 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -259,16 +262,22 @@ public class TournamentCardController {
         try {
             // Load tournament detail page
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/TournamentDetail.fxml"));
-            Parent detailPage = loader.load();
+            Node detailPage = loader.load();
 
             // Pass tournament data and rootStackPane to detail controller
             TournamentDetailController controller = loader.getController();
             controller.setTournament(tournament);
             controller.setRootStackPane(rootStackPane);
 
-            // Replace content in the rootStackPane (same as how TournamentHub was loaded)
+            // Replace content in the rootStackPane with fade transition
             rootStackPane.getChildren().clear();
             rootStackPane.getChildren().add(detailPage);
+            
+            // Apply fade transition
+            FadeTransition ft = new FadeTransition(Duration.millis(300), detailPage);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
 
         } catch (Exception e) {
             System.err.println("Error opening tournament detail page");
