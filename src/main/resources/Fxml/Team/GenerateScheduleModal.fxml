@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Team.GenerateScheduleModalController"
+           style="-fx-background-color: rgba(0, 0, 0, 0.7);"
+           alignment="CENTER">
+
+    <!-- Modal Container -->
+    <VBox maxWidth="700" maxHeight="650"
+          style="-fx-background-color: #1a1a2e; -fx-background-radius: 16; -fx-border-color: #8B0D0D; -fx-border-width: 2; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);">
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="12"
+              style="-fx-background-color: #12122a; -fx-background-radius: 16 16 0 0; -fx-padding: 16 20;">
+            <Label fx:id="modalTitle" text="🗓️ GÉNÉRER UN PLANNING OPTIMAL"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnCloseModal" text="✕"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4 10; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 0 5 L 5 0 L 15 0 L 20 5 L 20 15 L 15 20 L 5 20 L 0 15 Z';"
+                    onMouseEntered="#handleCloseHover" onMouseExited="#handleCloseExit" />
+        </HBox>
+
+        <!-- Content -->
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="16" style="-fx-padding: 20;">
+
+                <!-- Suggested Level Info -->
+                <VBox spacing="6" style="-fx-background-color: rgba(76, 175, 80, 0.1); -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: rgba(76, 175, 80, 0.3); -fx-border-width: 1; -fx-border-radius: 8;">
+                    <Label fx:id="lblSuggestedLevel" text="Niveau suggéré: Intermédiaire"
+                           style="-fx-text-fill: #4CAF50; -fx-font-weight: bold; -fx-font-size: 13px;" />
+                    <Label text="Le niveau est calculé automatiquement selon l'ancienneté de l'équipe, le nombre de membres et l'historique d'entraînement."
+                           wrapText="true"
+                           style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;" />
+                </VBox>
+
+                <!-- Level Selection -->
+                <VBox spacing="6">
+                    <Label text="Niveau de l'équipe"
+                           style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    <ComboBox fx:id="choiceLevel" maxWidth="Infinity"
+                              style="-fx-background-color: #0d0d1a; -fx-text-fill: white; -fx-font-size: 13px;" />
+                    <Label text="Détermine le nombre et l'intensité des sessions d'entraînement"
+                           style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 10px; -fx-font-style: italic;" />
+                </VBox>
+
+                <!-- Date de début -->
+                <VBox spacing="6">
+                    <Label text="Date de début"
+                           style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    <DatePicker fx:id="dateStart" maxWidth="Infinity"
+                                style="-fx-background-color: #0d0d1a; -fx-text-fill: white;" />
+                </VBox>
+
+                <!-- Repeat Options -->
+                <VBox spacing="6">
+                    <Label text="Durée du planning"
+                           style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="choiceRepeatCount" prefWidth="200"
+                                  style="-fx-background-color: #0d0d1a; -fx-text-fill: white; -fx-font-size: 13px;" />
+                        <Label fx:id="lblEndDate" text="→ Fin: 08/06/2026"
+                               style="-fx-text-fill: #4CAF50; -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Label text="Le planning hebdomadaire sera répété sur cette période"
+                           wrapText="true"
+                           style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 10px; -fx-font-style: italic;" />
+                </VBox>
+
+                <!-- Action Buttons -->
+                <HBox spacing="12">
+                    <Button fx:id="btnGenerate" text="🎯 Générer le Planning" HBox.hgrow="ALWAYS"
+                            style="-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';"
+                            onMouseEntered="#handleGenerateHover" onMouseExited="#handleGenerateExit" />
+                    <Button fx:id="btnReset" text="🔄 Réinitialiser" prefWidth="150"
+                            style="-fx-background-color: rgba(255,165,0,0.2); -fx-text-fill: #FFA500; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(255,165,0,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';"
+                            onMouseEntered="#handleResetHover" onMouseExited="#handleResetExit"
+                            onAction="#handleReset" />
+                </HBox>
+
+                <!-- Preview Area -->
+                <VBox spacing="6">
+                    <Label text="Prévisualisation"
+                           style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    <TextArea fx:id="txtPreview" prefRowCount="12" wrapText="true" editable="false"
+                              style="-fx-control-inner-background: #0d0d1a; -fx-text-fill: white; -fx-font-family: 'Consolas', 'Monaco', monospace; -fx-font-size: 11px; -fx-background-color: #0d0d1a; -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6;"
+                              promptText="Cliquez sur 'Générer le Planning' pour voir la prévisualisation..." />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Footer Actions -->
+        <HBox spacing="12" alignment="CENTER_RIGHT"
+              style="-fx-background-color: #12122a; -fx-background-radius: 0 0 16 16; -fx-padding: 16 20;">
+            <Button text="Annuler"
+                    style="-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 13px; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
+                    onAction="#closeModal" />
+            <Button fx:id="btnSave" text="💾 Sauvegarder le Planning"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
+                    onMouseEntered="#handleSaveHover" onMouseExited="#handleSaveExit" />
+        </HBox>
+
+    </VBox>
+
+</StackPane>

@@ -309,6 +309,13 @@ public class CalendarViewController {
     }
 
     public void refresh() {
+        // Auto-update past sessions before refreshing
+        if (teamId != null) {
+            int updatedCount = crudTrainingSession.autoUpdatePastSessionsForTeam(teamId);
+            if (updatedCount > 0) {
+                System.out.println("✅ Auto-updated " + updatedCount + " past sessions to COMPLETED");
+            }
+        }
         refreshCalendar();
     }
 }

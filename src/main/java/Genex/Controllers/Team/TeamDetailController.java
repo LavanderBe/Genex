@@ -55,6 +55,15 @@ public class TeamDetailController {
         System.out.println("Team: " + (team != null ? team.getName() : "null"));
         System.out.println("Logo path: " + (team != null ? team.getLogoImage() : "null"));
         System.out.println("Jersey path: " + (team != null ? team.getJerseyImage() : "null"));
+        
+        // Auto-update past sessions to COMPLETED
+        if (team != null) {
+            int updatedCount = crudTrainingSession.autoUpdatePastSessionsForTeam(team.getId());
+            if (updatedCount > 0) {
+                System.out.println("✅ Auto-updated " + updatedCount + " past sessions to COMPLETED");
+            }
+        }
+        
         updateTeamInfo();
         loadTeamVisuals();
         loadMembers();
@@ -66,6 +75,126 @@ public class TeamDetailController {
     private void openAddSessionModal() {
         // This method is no longer used - sessions are added through the calendar view
         // Kept for compatibility
+    }
+
+    // ── Open Generate Schedule Modal ─────────────────────────────────
+    @FXML
+    private void openGenerateScheduleModal() {
+        try {
+            System.out.println("Opening Generate Schedule Modal...");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/GenerateScheduleModal.fxml"));
+            StackPane modalOverlay = loader.load();
+
+            // Add modal overlay to the stack
+            rootStackPane.getChildren().add(modalOverlay);
+
+            // Get controller and set team
+            GenerateScheduleModalController controller = loader.getController();
+            controller.setTeam(team);
+
+            controller.setOnSaveCallback(sessions -> {
+                System.out.println("✅ Schedule saved: " + sessions.size() + " sessions");
+
+                // Remove modal overlay and refresh calendar
+                rootStackPane.getChildren().remove(modalOverlay);
+                if (calendarViewController != null) {
+                    calendarViewController.refresh();
+                }
+            });
+
+            controller.setOnCloseCallback(() -> {
+                rootStackPane.getChildren().remove(modalOverlay);
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error opening Generate Schedule Modal");
+            e.printStackTrace();
+        }
+    }
+
+    // ── Clear All Training Sessions ──────────────────────────────────
+    @FXML
+    private void clearAllTrainingSessions() {
+        if (team == null) return;
+
+        try {
+            // Get all sessions for this team
+            List<TrainingSession> sessions = crudTrainingSession.getSessionsByTeam(team.getId());
+
+            if (sessions.isEmpty()) {
+                javafx.scene.control.Alert info = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.INFORMATION);
+                info.setTitle("Information");
+                info.setHeaderText(null);
+                info.setContentText("Aucune session d'entraînement à supprimer.");
+                info.showAndWait();
+                return;
+            }
+
+            // Confirmation dialog
+            javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText("⚠️ ATTENTION : Action Irréversible");
+            confirm.setContentText(
+                    "Vous êtes sur le point de supprimer TOUTES les sessions d'entraînement de cette équipe.\n\n" +
+                            "📊 " + sessions.size() + " session(s) seront supprimées définitivement.\n\n" +
+                            "Cette action ne peut pas être annulée. Continuer ?"
+            );
+
+            // Custom button labels
+            javafx.scene.control.ButtonType btnConfirm = new javafx.scene.control.ButtonType(
+                    "Oui, tout supprimer", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+            javafx.scene.control.ButtonType btnCancel = new javafx.scene.control.ButtonType(
+                    "Annuler", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+            confirm.getButtonTypes().setAll(btnConfirm, btnCancel);
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == btnConfirm) {
+                    try {
+                        System.out.println("Deleting all training sessions for team: " + team.getName());
+
+                        // Delete all sessions
+                        int deletedCount = 0;
+                        for (TrainingSession session : sessions) {
+                            crudTrainingSession.deleteSession(session.getId());
+                            deletedCount++;
+                        }
+
+                        System.out.println("✅ Deleted " + deletedCount + " training sessions");
+
+                        // Refresh calendar
+                        if (calendarViewController != null) {
+                            calendarViewController.refresh();
+                        }
+
+                        // Show success message
+                        javafx.scene.control.Alert success = new javafx.scene.control.Alert(
+                                javafx.scene.control.Alert.AlertType.INFORMATION);
+                        success.setTitle("Succès");
+                        success.setHeaderText("✅ Planning Effacé");
+                        success.setContentText(deletedCount + " session(s) d'entraînement ont été supprimées.");
+                        success.showAndWait();
+
+                    } catch (Exception e) {
+                        System.err.println("Error deleting training sessions: " + e.getMessage());
+                        e.printStackTrace();
+
+                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(
+                                javafx.scene.control.Alert.AlertType.ERROR);
+                        error.setTitle("Erreur");
+                        error.setHeaderText(null);
+                        error.setContentText("Impossible de supprimer les sessions d'entraînement.");
+                        error.showAndWait();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error in clearAllTrainingSessions: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     // ── Called by TrainingSessionCardController to open edit modal ────

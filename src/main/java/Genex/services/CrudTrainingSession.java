@@ -299,6 +299,102 @@ public class CrudTrainingSession {
         return conflicts;
     }
 
+    /**
+     * Auto-update past sessions to COMPLETED status
+     * Marks all PLANNED or ONGOING sessions that have passed as COMPLETED
+     * @return Number of sessions updated
+     */
+    public int autoUpdatePastSessions() {
+        String query = "UPDATE training_sessions " +
+                "SET status = 'COMPLETED' " +
+                "WHERE status IN ('PLANNED', 'ONGOING') " +
+                "AND CONCAT(session_datetime, ' ', end_time) < NOW()";
+        
+        try {
+            Statement stmt = Myconnection.getInstance().getCnx().createStatement();
+            int updatedCount = stmt.executeUpdate(query);
+            
+            if (updatedCount > 0) {
+                System.out.println("✅ Auto-updated " + updatedCount + " past session(s) to COMPLETED");
+            }
+            
+            return updatedCount;
+        } catch (SQLException e) {
+            System.err.println("Error auto-updating past sessions: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Auto-update past sessions for a specific team
+     * @param teamId The team ID
+     * @return Number of sessions updated
+     */
+    public int autoUpdatePastSessionsForTeam(String teamId) {
+        String query = "UPDATE training_sessions " +
+                "SET status = 'COMPLETED' " +
+                "WHERE team_id = ? " +
+                "AND status IN ('PLANNED', 'ONGOING') " +
+                "AND CONCAT(session_datetime, ' ', end_time) < NOW()";
+        
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, teamId);
+            int updatedCount = pst.executeUpdate();
+            
+            if (updatedCount > 0) {
+                System.out.println("✅ Auto-updated " + updatedCount + " past session(s) to COMPLETED for team " + teamId);
+            }
+            
+            return updatedCount;
+        } catch (SQLException e) {
+            System.err.println("Error auto-updating past sessions for team: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Get sessions that should be marked as completed (past sessions still in PLANNED/ONGOING)
+     * @param teamId The team ID (optional, null for all teams)
+     * @return List of sessions that need status update
+     */
+    public List<TrainingSession> getPastSessionsNeedingUpdate(String teamId) {
+        List<TrainingSession> sessions = new ArrayList<>();
+        String query = "SELECT * FROM training_sessions " +
+                "WHERE status IN ('PLANNED', 'ONGOING') " +
+                "AND CONCAT(session_datetime, ' ', end_time) < NOW()";
+        
+        if (teamId != null) {
+            query += " AND team_id = ?";
+        }
+        
+        query += " ORDER BY session_datetime DESC";
+        
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            if (teamId != null) {
+                pst.setString(1, teamId);
+            }
+            
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                TrainingSession session = mapResultSetToSession(rs);
+                sessions.add(session);
+            }
+            
+            if (!sessions.isEmpty()) {
+                System.out.println("⚠️ Found " + sessions.size() + " past session(s) that need status update");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting past sessions needing update: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return sessions;
+    }
+
     private TrainingSession mapResultSetToSession(ResultSet rs) throws SQLException {
         TrainingSession session = new TrainingSession();
         session.setId(rs.getString("id"));
