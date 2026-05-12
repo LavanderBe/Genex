@@ -48,15 +48,15 @@ public class PlayerMainController {
             try {
                 Map<String, Double> rates = service.getRates("tnd");
                 List<String> lines = new ArrayList<>();
-                for (String code : new String[]{"usd", "eur"}) {
+                for (String code : new String[]{"usd", "eur","gbp","jpy"}) {
                     Double rate = rates.get(code);
                     if (rate == null) continue;
                     double inTND = rate > 0 ? 1.0 / rate : 0;
-                    lines.add(String.format("1 %-5s  =  %.4f TND", code.toUpperCase(), inTND));
+                    lines.add(String.format(" %-5s  =  %.4f TND", code.toUpperCase(), inTND));
                 }
                 Platform.runLater(() -> {
                     exchangeRatesList.setItems(FXCollections.observableArrayList(lines));
-                    exchangeLastUpdate.setText("Mis a jour : " + java.time.LocalTime.now().withNano(0));
+                    exchangeLastUpdate.setText("[SYS_TIME: " + java.time.LocalTime.now().withNano(0) + "]");
                 });
             } catch (Exception e) {
                 Platform.runLater(() ->
@@ -67,22 +67,20 @@ public class PlayerMainController {
         t.start();
     }
 
-    /** Force dark styling on the ListView cells via code since CSS inheritance can be tricky. */
+    /** Apply retro styling class to the ListView and its cells. */
     private void styleListView() {
+        exchangeRatesList.getStyleClass().add("retro-list");
         exchangeRatesList.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().remove("retro-cell");
                 if (empty || item == null) {
                     setText(null);
-                    setStyle("-fx-background-color: transparent;");
+                    setGraphic(null);
                 } else {
                     setText(item);
-                    setStyle("-fx-background-color: transparent;" +
-                             "-fx-text-fill: rgba(255,255,255,0.85);" +
-                             "-fx-font-family: Consolas, monospace;" +
-                             "-fx-font-size: 18px;" +
-                             "-fx-padding: 6 14;");
+                    getStyleClass().add("retro-cell");
                 }
             }
         });

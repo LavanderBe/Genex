@@ -83,4 +83,62 @@
 
 .combo-box .arrow-button {
     -fx-background-color: transparent;
-}
+}
+
+/* Retro Terminal ListView Style */
+.retro-list {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+/* Ensure all cells are transparent by default to avoid white lines */
+.retro-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: transparent;
+    -fx-cell-size: 34px;
+}
+
+.retro-list .retro-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff4d4d; /* Neon Red */
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    /* Retro Glow Effect */
+    -fx-effect: dropshadow(gaussian, rgba(255, 77, 77, 0.6), 10, 0, 0, 0);
+}
+
+.retro-list .retro-cell:filled:hover {
+    -fx-background-color: rgba(255, 77, 77, 0.1);
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, #ffffff, 15, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+/* Fix for the "white line" - ensure selection/focus doesn't show default colors */
+.retro-list .list-cell:selected, 
+.retro-list .list-cell:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.retro-list .retro-cell:selected {
+    -fx-background-color: rgba(255, 77, 77, 0.2);
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 0 0 0 4;
+}
+
+/* Remove default ListView borders and backgrounds */
+.retro-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.retro-list .scroll-bar:vertical,
+.retro-list .scroll-bar:horizontal {
+    -fx-opacity: 0.2;
+}
+
