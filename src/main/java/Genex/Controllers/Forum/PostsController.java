@@ -41,6 +41,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -63,6 +64,10 @@ public class PostsController {
     private ComboBox<String> statusFilterField;
     @FXML
     private ComboBox<String> moderationFilterField;
+    @FXML
+    private ComboBox<String> sortFilterField;
+    @FXML
+    private ComboBox<String> densityFilterField;
     @FXML
     private ComboBox<String> forumNameField;
     @FXML
@@ -91,6 +96,18 @@ public class PostsController {
     private HBox newsFeedContainer;
     @FXML
     private FlowPane postCardsContainer;
+    @FXML
+    private Label postsTotalCountLabel;
+    @FXML
+    private Label postsShownCountLabel;
+    @FXML
+    private Label postsResolvedCountLabel;
+    @FXML
+    private VBox postsEmptyStateBox;
+    @FXML
+    private Label postsEmptyStateLabel;
+    @FXML
+    private Button postsEmptyCreateButton;
     @FXML
     private Button newPostButton;
     @FXML
@@ -449,12 +466,16 @@ public class PostsController {
         typeFilterField.getItems().setAll("TOUS", "DISCUSSION", "QUESTION", "GUIDE", "ANNONCE");
         statusFilterField.getItems().setAll("TOUS", "ACTIF", "RÉSOLU", "ARCHIVÉ");
         moderationFilterField.getItems().setAll("TOUS", "VISIBLE", "MASQUÉ", "SIGNALÉ", "SPAM");
+        sortFilterField.getItems().setAll("PLUS RÉCENT", "A-Z", "PLUS ACTIF");
+        densityFilterField.getItems().setAll("CONFORT", "COMPACT");
 
         postTypeField.setValue("DISCUSSION");
         postStatusField.setValue("ACTIF");
         typeFilterField.setValue("TOUS");
         statusFilterField.setValue("TOUS");
         moderationFilterField.setValue("TOUS");
+        sortFilterField.setValue("PLUS RÉCENT");
+        densityFilterField.setValue("CONFORT");
 
     }
 
@@ -581,6 +602,8 @@ public class PostsController {
         typeFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
         statusFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
         moderationFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
+        sortFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
+        densityFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
     }
 
     private void loadPosts() {
@@ -592,11 +615,16 @@ public class PostsController {
 
     private void refreshPostCards() {
         postCardsContainer.getChildren().clear();
-        List<Posts> filtered = posts.stream().filter(this::matchesFilters).toList();
+        List<Posts> filtered = posts.stream()
+                .filter(this::matchesFilters)
+                .sorted(postComparator())
+                .toList();
         for (Posts post : filtered) {
             postCardsContainer.getChildren().add(createPostCard(post));
         }
         updateFeatured(filtered);
+        updateSidebarStats(filtered);
+        updateEmptyState(filtered);
     }
 
     private boolean matchesFilters(Posts post) {
@@ -614,6 +642,12 @@ public class PostsController {
                 return false;
             }
         }
+        String statusFilter = valueOrDefault(statusFilterField.getValue(), "TOUS");
+        if (!"TOUS".equals(statusFilter)) {
+            if (!statusFilter.equalsIgnoreCase(safe(post.getPostStatus()))) {
+                return false;
+            }
+        }
         String moderationFilter = valueOrDefault(moderationFilterField.getValue(), "TOUS");
         if (!"TOUS".equals(moderationFilter) && !moderationLabel(post).equals(moderationFilter)) {
             return false;
@@ -624,17 +658,25 @@ public class PostsController {
     private VBox createPostCard(Posts post) {
         ImageView imageView = buildPostImageView(post);
         boolean hasImage = imageView != null;
-        double cardWidth = hasImage ? 420 : 320;
+        boolean compactMode = "COMPACT".equals(valueOrDefault(densityFilterField.getValue(), "CONFORT"));
+        double cardWidth = hasImage ? (compactMode ? 390 : 450) : (compactMode ? 300 : 345);
 
-        VBox card = new VBox(8);
+        VBox card = new VBox(compactMode ? 6 : 8);
         card.getStyleClass().add("forum-card");
+        if (compactMode) {
+            card.getStyleClass().add("forum-card-compact");
+        }
+        if (!isBlank(selectedPostId) && selectedPostId.equals(post.getId())) {
+            card.getStyleClass().add("forum-card-selected");
+        }
         card.setPrefWidth(cardWidth);
         card.setMaxWidth(cardWidth);
-        card.setPadding(new Insets(18));
+        card.setPadding(new Insets(compactMode ? 14 : 18));
         card.setOnMouseClicked(e -> selectPost(post));
 
         Label title = new Label(post.getTitle());
         title.getStyleClass().add("forum-card-title");
+        title.getStyleClass().add("forum-card-title-main");
         title.setWrapText(true);
 
         // Afficher l'image si elle existe
@@ -646,16 +688,20 @@ public class PostsController {
         Label body = new Label(post.getBody() == null || post.getBody().isBlank() ? "Aucun contenu." : post.getBody());
         body.getStyleClass().add("forum-card-desc");
         body.setWrapText(true);
-        body.setMaxWidth(cardWidth - 30);
+        body.setMaxWidth(cardWidth - 34);
 
         Label meta = new Label("Forum " + forumDisplayName(post) + " • Auteur " + authorDisplayName(post) + " • ID " + safe(post.getId()));
-        meta.getStyleClass().add("forum-card-meta");
+        meta.getStyleClass().addAll("forum-card-meta", "forum-card-meta-muted");
 
         Label moderation = new Label("Modération: " + moderationLabel(post));
         moderation.getStyleClass().add("forum-card-meta");
 
         Label reactions = new Label(reactionSummary(post));
         reactions.getStyleClass().add("forum-card-meta");
+        
+        HBox badges = new HBox(8,
+                createBadge(safe(post.getPostStatus()).isBlank() ? "ACTIF" : safe(post.getPostStatus()), "status-badge"),
+                createBadge(moderationLabel(post), "moderation-badge"));
 
         Button deleteBtn = new Button("Supprimer");
         deleteBtn.getStyleClass().addAll("action-button", "danger-button");
@@ -690,8 +736,34 @@ public class PostsController {
         FlowPane repostActions = new FlowPane(14, 10, repostXBtn, repostFacebookBtn, repostLinkedInBtn);
         repostActions.getStyleClass().addAll("post-actions-row", "social-actions-row");
 
-        card.getChildren().addAll(title, body, meta, moderation, reactions, reactionActions, repostActions, actions);
+        card.getChildren().addAll(title, badges, body, meta, moderation, reactions, reactionActions, repostActions, actions);
         return card;
+    }
+
+    @FXML
+    private void handleSelectFirstUnread(ActionEvent event) {
+        Posts unread = posts.stream()
+                .filter(this::matchesFilters)
+                .sorted(postComparator())
+                .filter(post -> post.getViews() <= 0)
+                .findFirst()
+                .orElse(null);
+        if (unread == null) {
+            unread = posts.stream().filter(this::matchesFilters).sorted(postComparator()).findFirst().orElse(null);
+        }
+        if (unread != null) {
+            selectPost(unread);
+        }
+    }
+
+    @FXML
+    private void handleResetPostFilters(ActionEvent event) {
+        searchField.clear();
+        typeFilterField.setValue("TOUS");
+        statusFilterField.setValue("TOUS");
+        moderationFilterField.setValue("TOUS");
+        sortFilterField.setValue("PLUS RÉCENT");
+        densityFilterField.setValue("CONFORT");
     }
 
     private ImageView buildPostImageView(Posts post) {
@@ -725,6 +797,7 @@ public class PostsController {
         } else {
             imagePathField.clear();
         }
+        refreshPostCards();
     }
 
     private void updateFeatured(List<Posts> filtered) {
@@ -742,6 +815,58 @@ public class PostsController {
         featuredTrendLabel.setText("TENDANCE " + filtered.size());
         featuredMetaLabel.setText("Forum " + forumDisplayName(featured) + " • Par " + authorDisplayName(featured));
         featuredDescLabel.setText(safe(featured.getBody()).isBlank() ? "Aucun contenu." : safe(featured.getBody()));
+    }
+
+    private void updateSidebarStats(List<Posts> filtered) {
+        postsTotalCountLabel.setText("Posts: " + posts.size());
+        postsShownCountLabel.setText("Affichés: " + filtered.size());
+        long resolvedCount = filtered.stream()
+                .filter(post -> "RÉSOLU".equalsIgnoreCase(safe(post.getPostStatus())))
+                .count();
+        postsResolvedCountLabel.setText("Résolus: " + resolvedCount);
+    }
+
+    private void updateEmptyState(List<Posts> filtered) {
+        boolean visible = filtered.isEmpty();
+        postsEmptyStateBox.setVisible(visible);
+        postsEmptyStateBox.setManaged(visible);
+        if (!visible) {
+            return;
+        }
+        if (posts.isEmpty()) {
+            postsEmptyStateLabel.setText("Aucun post disponible. Créez une publication pour lancer la discussion.");
+            return;
+        }
+        postsEmptyStateLabel.setText("Aucun résultat avec ces filtres. Réinitialisez pour revoir les publications.");
+    }
+
+    private Comparator<Posts> postComparator() {
+        String sortMode = valueOrDefault(sortFilterField.getValue(), "PLUS RÉCENT");
+        return switch (sortMode) {
+            case "A-Z" -> Comparator.comparing(post -> normalize(post.getTitle()));
+            case "PLUS ACTIF" -> Comparator
+                    .comparingInt((Posts post) -> reactionScore(post) + Math.max(post.getViews(), 0))
+                    .reversed()
+                    .thenComparing((Posts post) -> post.getUpdatedAt(), Comparator.nullsLast(Comparator.reverseOrder()));
+            default -> Comparator.comparing((Posts post) -> post.getUpdatedAt(), Comparator.nullsLast(Comparator.reverseOrder()));
+        };
+    }
+
+    private int reactionScore(Posts post) {
+        if (isBlank(post.getId())) {
+            return 0;
+        }
+        ReactionCounter counter = reactionsByPostId.get(post.getId());
+        if (counter == null) {
+            return 0;
+        }
+        return counter.likes + counter.hearts + counter.laughs;
+    }
+
+    private Label createBadge(String text, String variantClass) {
+        Label badge = new Label(safe(text).isBlank() ? "-" : text);
+        badge.getStyleClass().addAll("card-badge", variantClass);
+        return badge;
     }
 
     private void synchronizePostMetadata() {
@@ -960,6 +1085,9 @@ public class PostsController {
         imagePathField.clear();
         postTypeField.setValue("DISCUSSION");
         postStatusField.setValue("ACTIF");
+        if (postCardsContainer != null) {
+            refreshPostCards();
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {
