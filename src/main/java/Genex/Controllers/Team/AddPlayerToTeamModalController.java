@@ -67,19 +67,26 @@ public class AddPlayerToTeamModalController {
 
     private void loadAvailablePlayers() {
         try {
+            System.out.println("=== Loading Available Players ===");
+            
             // Get all players from database
             List<Player> allPlayers = crudPlayer.getEntities();
+            System.out.println("Total players in database: " + allPlayers.size());
             
             // Filter out players who already have a team or are already in this team
             allAvailablePlayers = new ArrayList<>();
             List<Player> currentMembers = crudTeamMember.getMembersByTeam(team.getId());
+            System.out.println("Current team members: " + currentMembers.size());
             
             for (Player player : allPlayers) {
+                System.out.println("Checking player: " + player.getNickname() + " (ID: " + player.getId() + ")");
+                
                 // Skip if player already in this team
                 boolean alreadyInTeam = false;
                 for (Player member : currentMembers) {
                     if (member.getId() != null && member.getId().equals(player.getId())) {
                         alreadyInTeam = true;
+                        System.out.println("  ❌ Already in this team");
                         break;
                     }
                 }
@@ -88,11 +95,17 @@ public class AddPlayerToTeamModalController {
                 // Skip if player already has another team
                 if (player.getId() != null) {
                     Team playerTeam = crudTeamMember.getTeamByPlayer(player.getId());
-                    if (playerTeam != null) continue;
+                    if (playerTeam != null) {
+                        System.out.println("  ❌ Already has team: " + playerTeam.getName());
+                        continue;
+                    }
                 }
                 
+                System.out.println("  ✅ Available");
                 allAvailablePlayers.add(player);
             }
+            
+            System.out.println("Available players: " + allAvailablePlayers.size());
             
             if (allAvailablePlayers.isEmpty()) {
                 infoLabel.setText("Aucun joueur disponible. Tous les joueurs ont déjà une équipe.");
@@ -129,8 +142,8 @@ public class AddPlayerToTeamModalController {
             String firstName = player.getPrenom() != null ? player.getPrenom().toLowerCase() : "";
             String lastName = player.getNom() != null ? player.getNom().toLowerCase() : "";
             
-            if (nickname.contains(search) || username.contains(search) || 
-                firstName.contains(search) || lastName.contains(search)) {
+            if (nickname.startsWith(search) || username.startsWith(search) || 
+                firstName.startsWith(search) || lastName.startsWith(search)) {
                 filtered.add(player);
             }
         }

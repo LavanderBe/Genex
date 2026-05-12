@@ -42,9 +42,6 @@ public class AddTrainingSessionModalController {
     private ComboBox<TrainingSession.Status> choiceStatus;
 
     @FXML
-    private TextField txtLocation;
-
-    @FXML
     private TextArea txtNotes;
 
     @FXML
@@ -147,10 +144,6 @@ public class AddTrainingSessionModalController {
 
         if (session.getStatus() != null) {
             choiceStatus.setValue(session.getStatus());
-        }
-
-        if (session.getLocation() != null && !session.getLocation().trim().isEmpty()) {
-            txtLocation.setText(session.getLocation());
         }
 
         if (session.getNotes() != null) {
@@ -278,7 +271,6 @@ public class AddTrainingSessionModalController {
             session.setStartTime(startTime);
             session.setEndTime(endTime);
             session.setStatus(choiceStatus.getValue());
-            session.setLocation(txtLocation.getText().trim());
             session.setNotes(txtNotes.getText().trim());
             session.setTeamId(teamId);
 

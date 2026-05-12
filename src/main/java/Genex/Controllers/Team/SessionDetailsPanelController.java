@@ -211,13 +211,6 @@ public class SessionDetailsPanelController {
         timeRow.getChildren().addAll(timeLabel, durationLabel);
         card.getChildren().add(timeRow);
         
-        // Location
-        if (session.getLocation() != null && !session.getLocation().isEmpty()) {
-            Label locationLabel = new Label("📍 " + session.getLocation());
-            locationLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px;");
-            card.getChildren().add(locationLabel);
-        }
-        
         // Notes
         if (session.getNotes() != null && !session.getNotes().isEmpty()) {
             Label notesLabel = new Label(session.getNotes());
@@ -333,7 +326,7 @@ public class SessionDetailsPanelController {
 
     private String generateGoogleCalendarUrl(TrainingSession session) {
         // Google Calendar URL format:
-        // https://calendar.google.com/calendar/render?action=TEMPLATE&text=TITLE&dates=START/END&details=DESCRIPTION&location=LOCATION
+        // https://calendar.google.com/calendar/render?action=TEMPLATE&text=TITLE&dates=START/END&details=DESCRIPTION
         
         try {
             String title = java.net.URLEncoder.encode(session.getTitle(), "UTF-8");
@@ -355,17 +348,11 @@ public class SessionDetailsPanelController {
             }
             String details = java.net.URLEncoder.encode(description.toString(), "UTF-8");
             
-            String location = "";
-            if (session.getLocation() != null && !session.getLocation().isEmpty()) {
-                location = java.net.URLEncoder.encode(session.getLocation(), "UTF-8");
-            }
-            
             // Build URL
             String url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
                         "&text=" + title +
                         "&dates=" + startDate + "/" + endDate +
-                        "&details=" + details +
-                        "&location=" + location;
+                        "&details=" + details;
             
             return url;
             

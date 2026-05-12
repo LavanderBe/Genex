@@ -153,7 +153,7 @@ public class CrudTeamMember {
     // Returns the team the player belongs to, or null if none
     public Team getTeamByPlayer(String playerId) {
         String query =
-            "SELECT t.id, t.created_by, t.game_id, t.name, t.logo_image, t.contact, t.status, t.created_at " +
+            "SELECT t.id, t.created_by, t.game_id, t.name, t.logo_image, t.jersey_image, t.contact, t.status, t.created_at " +
             "FROM teams t " +
             "JOIN team_members tm ON tm.team_id = t.id " +
             "WHERE tm.player_id = ? " +
@@ -180,6 +180,7 @@ public class CrudTeamMember {
         team.setGameId(rs.getString("game_id"));
         team.setName(rs.getString("name"));
         team.setLogoImage(rs.getString("logo_image"));
+        team.setJerseyImage(rs.getString("jersey_image"));
         team.setContact(rs.getString("contact"));
         String statusStr = rs.getString("status");
         if (statusStr != null) {

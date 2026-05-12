@@ -39,9 +39,6 @@ public class TrainingSessionCardController {
     private Text sessionDurationText;
 
     @FXML
-    private Text sessionLocation;
-
-    @FXML
     private VBox notesContainer;
 
     @FXML
@@ -105,13 +102,6 @@ public class TrainingSessionCardController {
             } else {
                 sessionDuration.setText("--:-- - --:--");
                 sessionDurationText.setText(session.getFormattedDuration());
-            }
-
-            // Location - display from session or default
-            if (session.getLocation() != null && !session.getLocation().trim().isEmpty()) {
-                sessionLocation.setText(session.getLocation());
-            } else {
-                sessionLocation.setText("Non spécifié");
             }
 
             // Notes (optional) - only if the fields exist in FXML

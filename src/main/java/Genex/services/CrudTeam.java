@@ -79,21 +79,29 @@ public class CrudTeam {
                 int membersDeleted = pstMembers.executeUpdate();
                 System.out.println("✅ Deleted " + membersDeleted + " team members");
                 
-                // 2. Delete all training sessions for this team
+                // 2. Delete all training notifications for this team's sessions
+                String deleteNotificationsQuery = "DELETE FROM training_notifications WHERE session_id IN " +
+                        "(SELECT id FROM training_sessions WHERE team_id=?)";
+                PreparedStatement pstNotifications = conn.prepareStatement(deleteNotificationsQuery);
+                pstNotifications.setString(1, team.getId());
+                int notificationsDeleted = pstNotifications.executeUpdate();
+                System.out.println("✅ Deleted " + notificationsDeleted + " training notifications");
+                
+                // 3. Delete all training sessions for this team
                 String deleteSessionsQuery = "DELETE FROM training_sessions WHERE team_id=?";
                 PreparedStatement pstSessions = conn.prepareStatement(deleteSessionsQuery);
                 pstSessions.setString(1, team.getId());
                 int sessionsDeleted = pstSessions.executeUpdate();
                 System.out.println("✅ Deleted " + sessionsDeleted + " training sessions");
                 
-                // 3. Delete all team messages
+                // 4. Delete all team messages
                 String deleteMessagesQuery = "DELETE FROM team_messages WHERE team_id=?";
                 PreparedStatement pstMessages = conn.prepareStatement(deleteMessagesQuery);
                 pstMessages.setString(1, team.getId());
                 int messagesDeleted = pstMessages.executeUpdate();
                 System.out.println("✅ Deleted " + messagesDeleted + " team messages");
                 
-                // 4. Finally, delete the team itself
+                // 5. Finally, delete the team itself
                 String deleteTeamQuery = "DELETE FROM teams WHERE id=?";
                 PreparedStatement pstTeam = conn.prepareStatement(deleteTeamQuery);
                 pstTeam.setString(1, team.getId());

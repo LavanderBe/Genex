@@ -237,10 +237,7 @@ public class TrainingNotificationHelper {
                .append(" (").append(session.getFormattedDuration()).append(")\n");
         
         // Location
-        if (session.getLocation() != null && !session.getLocation().isEmpty()) {
-            message.append("📍 ").append(session.getLocation()).append("\n");
-        }
-        
+
         // Countdown
         LocalDateTime sessionStart = session.getSessionDatetime().with(session.getStartTime());
         Duration timeUntil = Duration.between(LocalDateTime.now(), sessionStart);

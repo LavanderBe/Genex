@@ -380,42 +380,42 @@ public class GenerateScheduleModalController {
     @FXML
     private void handleGenerateHover() {
         if (btnGenerate != null) {
-            btnGenerate.setStyle("-fx-background-color: #A01010; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
+            btnGenerate.setStyle("-fx-background-color: #A01010; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.8); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
         }
     }
 
     @FXML
     private void handleGenerateExit() {
         if (btnGenerate != null) {
-            btnGenerate.setStyle("-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
+            btnGenerate.setStyle("-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
         }
     }
 
     @FXML
     private void handleResetHover() {
         if (btnReset != null) {
-            btnReset.setStyle("-fx-background-color: rgba(255,165,0,0.4); -fx-text-fill: #FFB84D; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(255,165,0,0.6); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
+            btnReset.setStyle("-fx-background-color: rgba(139,13,13,0.5); -fx-text-fill: #ff8787; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.7); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
         }
     }
 
     @FXML
     private void handleResetExit() {
         if (btnReset != null) {
-            btnReset.setStyle("-fx-background-color: rgba(255,165,0,0.2); -fx-text-fill: #FFA500; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(255,165,0,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
+            btnReset.setStyle("-fx-background-color: rgba(139,13,13,0.3); -fx-text-fill: #ff6b6b; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';");
         }
     }
 
     @FXML
     private void handleSaveHover() {
         if (btnSave != null && !btnSave.isDisabled()) {
-            btnSave.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';");
+            btnSave.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(76,175,80,0.8); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';");
         }
     }
 
     @FXML
     private void handleSaveExit() {
         if (btnSave != null && !btnSave.isDisabled()) {
-            btnSave.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';");
+            btnSave.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(76,175,80,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';");
         }
     }
 }

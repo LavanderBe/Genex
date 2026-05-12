@@ -74,7 +74,7 @@ public class CrudTrainingSession {
 
     public void addSession(TrainingSession session) {
         String query = "INSERT INTO training_sessions (id, team_id, title, type, " +
-                "session_datetime, start_time, end_time, location, notes, status, calendar_event_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "session_datetime, start_time, end_time, notes, status, calendar_event_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             // Generate UUID for the session
             if (session.getId() == null || session.getId().isEmpty()) {
@@ -102,10 +102,9 @@ public class CrudTrainingSession {
             pst.setTimestamp(5, session.getSessionDatetime() != null ? Timestamp.valueOf(session.getSessionDatetime()) : null);
             pst.setTime(6, session.getStartTime() != null ? Time.valueOf(session.getStartTime()) : null);
             pst.setTime(7, session.getEndTime() != null ? Time.valueOf(session.getEndTime()) : null);
-            pst.setString(8, session.getLocation());
-            pst.setString(9, session.getNotes());
-            pst.setString(10, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(11, calendarEventId);
+            pst.setString(8, session.getNotes());
+            pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
+            pst.setString(10, calendarEventId);
 
             int rowsAffected = pst.executeUpdate();
             System.out.println("Training session added successfully. Rows affected: " + rowsAffected);
@@ -122,7 +121,7 @@ public class CrudTrainingSession {
 
     public void updateSession(TrainingSession session) {
         String query = "UPDATE training_sessions SET team_id=?, title=?, type=?, " +
-                "session_datetime=?, start_time=?, end_time=?, location=?, notes=?, status=?, calendar_event_id=? WHERE id=?";
+                "session_datetime=?, start_time=?, end_time=?, notes=?, status=?, calendar_event_id=? WHERE id=?";
         try {
             // Update calendar event
             if (calendarService != null && calendarService.isInitialized() && session.getCalendarEventId() != null) {
@@ -144,11 +143,10 @@ public class CrudTrainingSession {
             pst.setTimestamp(4, session.getSessionDatetime() != null ? Timestamp.valueOf(session.getSessionDatetime()) : null);
             pst.setTime(5, session.getStartTime() != null ? Time.valueOf(session.getStartTime()) : null);
             pst.setTime(6, session.getEndTime() != null ? Time.valueOf(session.getEndTime()) : null);
-            pst.setString(7, session.getLocation());
-            pst.setString(8, session.getNotes());
-            pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(10, session.getCalendarEventId());
-            pst.setString(11, session.getId());
+            pst.setString(7, session.getNotes());
+            pst.setString(8, session.getStatus() != null ? session.getStatus().name() : null);
+            pst.setString(9, session.getCalendarEventId());
+            pst.setString(10, session.getId());
             pst.executeUpdate();
             System.out.println("Training session updated successfully");
         } catch (SQLException e) {
@@ -421,7 +419,6 @@ public class CrudTrainingSession {
             session.setEndTime(endTime.toLocalTime());
         }
 
-        session.setLocation(rs.getString("location"));
         session.setNotes(rs.getString("notes"));
 
         String statusStr = rs.getString("status");

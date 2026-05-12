@@ -55,14 +55,6 @@
                         <Text fx:id="sessionDurationText" styleClass="info-box-value" text="2h 00min" />
                     </children>
                 </VBox>
-
-                <!-- Location Box -->
-                <VBox styleClass="info-box" spacing="4" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Text styleClass="info-box-label" text="LIEU" />
-                        <Text fx:id="sessionLocation" styleClass="info-box-value" text="Terrain A" />
-                    </children>
-                </VBox>
             </children>
         </HBox>
 

@@ -33,12 +33,6 @@
                            style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"
                            text="Team Name" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#openGenerateScheduleModal"
-                            style="-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 25 L 95 30 L 5 30 L 0 25 L 0 5 Z';"
-                            text="🗓️ Générer Planning" />
-                    <Button onAction="#clearAllTrainingSessions"
-                            style="-fx-background-color: rgba(139,13,13,0.3); -fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand; -fx-border-color: rgba(255,107,107,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 25 L 95 30 L 5 30 L 0 25 L 0 5 Z';"
-                            text="🗑️ Effacer Planning" />
                     <Text fx:id="teamTag"
                           style="-fx-fill: rgba(255,255,255,0.5); -fx-font-size: 14px;"
                           text="[ACTIVE]" />
@@ -125,6 +119,19 @@
                                 <Text fx:id="teamFounded" style="-fx-fill: white; -fx-font-size: 13px;" text="—" />
                             </VBox>
                         </VBox>
+                    </HBox>
+
+                    <!-- Schedule Management Buttons (Admin View) -->
+                    <HBox spacing="12" alignment="CENTER"
+                          style="-fx-background-color: rgba(139,13,13,0.1); -fx-border-color: rgba(139,13,13,0.3); -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 16;">
+                        
+                        <Button onAction="#openGenerateScheduleModal"
+                                style="-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 10 18; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
+                                text="▶ Générer Planning" />
+                        
+                        <Button onAction="#clearAllTrainingSessions"
+                                style="-fx-background-color: rgba(139,13,13,0.3); -fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 10 18; -fx-cursor: hand; -fx-border-color: rgba(255,107,107,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
+                                text="✖ Effacer Planning" />
                     </HBox>
 
                     <!-- Calendar View for Training Sessions -->

@@ -114,32 +114,32 @@ public class GeminiImageGeneratorService {
         String prompt;
         
         if (customDescription != null && !customDescription.trim().isEmpty()) {
-            // Use custom description if provided - focus on jersey ONLY, no people or mascots
-            prompt = String.format(
-                "esports gaming jersey shirt only, flat lay product photo, team %s playing %s. " +
-                "Design elements: %s. " +
-                "NO people, NO mascots, NO characters, ONLY the jersey garment. " +
-                "Front view of empty jersey on flat surface, professional product photography, " +
-                "short sleeves, athletic cut, sublimation print design, " +
-                "team name '%s' on chest, vibrant colors, realistic fabric texture, " +
-                "studio lighting, white background, 1024x1024",
-                teamName, gameName, customDescription.trim(), teamName
-            );
-        } else {
-            // Use default prompt - ONLY jersey garment, no mascots or people
-            prompt = String.format(
-                "esports gaming jersey shirt only, flat lay product photo, team %s playing %s. " +
-                "NO people, NO mascots, NO characters, ONLY the empty jersey garment. " +
-                "Front view of jersey laid flat on surface, professional product photography, " +
-                "short sleeves, athletic fit, vibrant abstract geometric patterns, " +
-                "bold gradient colors (blue, purple, orange, cyan), digital camouflage style, " +
-                "sublimation print with angular designs and dynamic lines, " +
-                "team name '%s' printed on chest in bold font, " +
-                "realistic polyester fabric texture, studio lighting, white background, 1024x1024",
-                teamName, gameName, teamName
-            );
-        }
-
+    prompt = String.format(
+        "PRODUCT PHOTOGRAPHY ONLY: A single esports jersey garment for team '%s' (%s), " +
+        "completely flat lay on a pure white surface, NO body, NO hands, NO arms, NO person, NO mannequin, NO model. " +
+        "The jersey is empty with zero human presence. " +
+        "Design: %s. " +
+        "athletic polyester cut, sublimation print, team name '%s' boldly printed on chest. " +
+        "Shot from directly above (top-down bird's eye view), perfectly centered, " +
+        "soft even studio lighting, no shadows, no wrinkles, isolated on white background. " +
+        "Style: professional apparel product catalog photo, 1024x1024.",
+        teamName, gameName, customDescription.trim(), teamName
+    );
+} else {
+    prompt = String.format(
+        "PRODUCT PHOTOGRAPHY ONLY: A single esports jersey garment for team '%s' (%s), " +
+        "completely flat lay on a pure white surface, NO body, NO hands, NO arms, NO person, NO mannequin, NO model. " +
+        "The jersey is empty with zero human presence. " +
+        "athletic polyester fit, sublimation print design. " +
+        "Bold geometric patterns with sharp angular lines, dynamic gradient (deep blue to electric purple to vivid orange and cyan), " +
+        "digital camo texture layered with glowing circuit-board or hex-grid overlay, " +
+        "team name '%s' printed in bold blocky esports font centered on chest, accent trim on collar and sleeves. " +
+        "Shot from directly above (top-down bird's eye view), perfectly centered, " +
+        "soft even studio lighting, no shadows, no wrinkles, isolated on white background. " +
+        "Style: professional apparel product catalog photo, 1024x1024.",
+        teamName, gameName, teamName
+    );
+}
         System.out.println("👕 Generating team jersey for: " + teamName);
         if (customDescription != null && !customDescription.trim().isEmpty()) {
             System.out.println("📝 Custom description: " + customDescription);

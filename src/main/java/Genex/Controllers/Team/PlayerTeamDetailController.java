@@ -36,7 +36,6 @@ public class PlayerTeamDetailController {
     @FXML private Button btnMonEquipe;
     @FXML private Button btnAutresEquipes;
     @FXML private Button btnQuitTeam;
-    @FXML private Button btnDeleteTeam;
     @FXML private HBox splitPanel;
     @FXML private VBox leftPanel;
     @FXML private VBox rightPanel;
@@ -53,6 +52,7 @@ public class PlayerTeamDetailController {
     @FXML private StackPane calendarViewContainer;
     @FXML private StackPane innerContainer;
     @FXML private StackPane swapPane;
+    @FXML private HBox scheduleManagementButtons;
 
     // ── State ────────────────────────────────────────────────────────
     private Team team;
@@ -63,6 +63,9 @@ public class PlayerTeamDetailController {
     private PlayerTeamBrowserController browserController;
     private TeamChatPanelController chatController;
     private CalendarViewController calendarViewController;
+    private javafx.stage.Popup searchPopup;
+    private javafx.scene.control.ListView<Team> searchSuggestions;
+    private javafx.scene.control.TextField otherTeamsSearchField;
 
     @FXML
     public void initialize() {
@@ -202,6 +205,131 @@ public class PlayerTeamDetailController {
         // Kept for compatibility
     }
 
+    // ── Open Generate Schedule Modal ─────────────────────────────────
+    @FXML
+    private void openGenerateScheduleModal() {
+        if (!isCreator) {
+            System.out.println("Only team creator can generate schedule");
+            return;
+        }
+
+        try {
+            System.out.println("Opening Generate Schedule Modal...");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/GenerateScheduleModal.fxml"));
+            StackPane modalOverlay = loader.load();
+
+            // Add modal overlay to the stack
+            swapPane.getChildren().add(modalOverlay);
+
+            // Get controller and set team
+            GenerateScheduleModalController controller = loader.getController();
+            controller.setTeam(team);
+
+            controller.setOnSaveCallback(sessions -> {
+                System.out.println("✅ Schedule saved: " + sessions.size() + " sessions");
+
+                // Remove modal overlay and refresh calendar
+                swapPane.getChildren().remove(modalOverlay);
+                if (calendarViewController != null) {
+                    calendarViewController.refresh();
+                }
+            });
+
+            controller.setOnCloseCallback(() -> {
+                swapPane.getChildren().remove(modalOverlay);
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error opening Generate Schedule Modal");
+            e.printStackTrace();
+        }
+    }
+
+    // ── Clear All Training Sessions ──────────────────────────────────
+    @FXML
+    private void clearAllTrainingSessions() {
+        if (team == null || !isCreator) return;
+
+        try {
+            // Get all sessions for this team
+            List<TrainingSession> sessions = crudTrainingSession.getSessionsByTeam(team.getId());
+
+            if (sessions.isEmpty()) {
+                javafx.scene.control.Alert info = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.INFORMATION);
+                info.setTitle("Information");
+                info.setHeaderText(null);
+                info.setContentText("Aucune session d'entraînement à supprimer.");
+                info.showAndWait();
+                return;
+            }
+
+            // Confirmation dialog
+            javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText("⚠️ ATTENTION : Action Irréversible");
+            confirm.setContentText(
+                    "Vous êtes sur le point de supprimer TOUTES les sessions d'entraînement de cette équipe.\n\n" +
+                            "📊 " + sessions.size() + " session(s) seront supprimées définitivement.\n\n" +
+                            "Cette action ne peut pas être annulée. Continuer ?"
+            );
+
+            // Custom button labels
+            javafx.scene.control.ButtonType btnConfirm = new javafx.scene.control.ButtonType(
+                    "Oui, tout supprimer", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+            javafx.scene.control.ButtonType btnCancel = new javafx.scene.control.ButtonType(
+                    "Annuler", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+            confirm.getButtonTypes().setAll(btnConfirm, btnCancel);
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == btnConfirm) {
+                    try {
+                        System.out.println("Deleting all training sessions for team: " + team.getName());
+
+                        // Delete all sessions
+                        int deletedCount = 0;
+                        for (TrainingSession session : sessions) {
+                            crudTrainingSession.deleteSession(session.getId());
+                            deletedCount++;
+                        }
+
+                        System.out.println("✅ Deleted " + deletedCount + " training sessions");
+
+                        // Refresh calendar
+                        if (calendarViewController != null) {
+                            calendarViewController.refresh();
+                        }
+
+                        // Show success message
+                        javafx.scene.control.Alert success = new javafx.scene.control.Alert(
+                                javafx.scene.control.Alert.AlertType.INFORMATION);
+                        success.setTitle("Succès");
+                        success.setHeaderText("✅ Planning Effacé");
+                        success.setContentText(deletedCount + " session(s) d'entraînement ont été supprimées.");
+                        success.showAndWait();
+
+                    } catch (Exception e) {
+                        System.err.println("Error deleting training sessions: " + e.getMessage());
+                        e.printStackTrace();
+
+                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(
+                                javafx.scene.control.Alert.AlertType.ERROR);
+                        error.setTitle("Erreur");
+                        error.setHeaderText(null);
+                        error.setContentText("Impossible de supprimer les sessions d'entraînement.");
+                        error.showAndWait();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error in clearAllTrainingSessions: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     // ── Private helpers ──────────────────────────────────────────────
 
     private void setTeamInternal(Team team, boolean viewOnly) {
@@ -238,9 +366,12 @@ public class PlayerTeamDetailController {
             boolean showQuit = isMember && !isCreator;
             btnQuitTeam.setVisible(showQuit);
             btnQuitTeam.setManaged(showQuit);
-            // Delete button only for creator
-            btnDeleteTeam.setVisible(isCreator);
-            btnDeleteTeam.setManaged(isCreator);
+            
+            // Schedule management buttons only for creator
+            if (scheduleManagementButtons != null) {
+                scheduleManagementButtons.setVisible(isCreator);
+                scheduleManagementButtons.setManaged(isCreator);
+            }
         }
 
         showMainContent();
@@ -312,15 +443,24 @@ public class PlayerTeamDetailController {
         if (team.getJerseyImage() != null && !team.getJerseyImage().isEmpty()) {
             try {
                 File f = new File(team.getJerseyImage());
+                System.out.println("Loading jersey for team: " + team.getName());
+                System.out.println("Jersey path: " + team.getJerseyImage());
+                System.out.println("File exists: " + f.exists());
                 if (f.exists()) {
                     teamJersey.setImage(new Image(f.toURI().toString()));
                     teamJersey.setVisible(true);
                     jerseyIconFallback.setVisible(false);
+                    System.out.println("✅ Jersey loaded successfully");
                     return;
+                } else {
+                    System.out.println("⚠️ Jersey file not found");
                 }
             } catch (Exception e) {
-                System.err.println("Error loading jersey: " + e.getMessage());
+                System.err.println("❌ Error loading jersey: " + e.getMessage());
+                e.printStackTrace();
             }
+        } else {
+            System.out.println("ℹ️ No jersey path set for team: " + (team != null ? team.getName() : "null"));
         }
         teamJersey.setVisible(false);
         jerseyIconFallback.setVisible(true);
@@ -604,15 +744,40 @@ public class PlayerTeamDetailController {
     }
 
     private void loadOtherTeams() {
+        System.out.println("=== Loading Other Teams ===");
         innerContainer.getChildren().clear();
         try {
             VBox wrapper = new VBox(16);
             wrapper.setPadding(new Insets(20));
             wrapper.setStyle("-fx-background-color: #0d0d1a;");
 
+            // Title and Search Bar
+            HBox headerBox = new HBox(16);
+            headerBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            
             Label title = new Label("Autres équipes");
             title.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
-            wrapper.getChildren().add(title);
+            
+            // Search field
+            otherTeamsSearchField = new javafx.scene.control.TextField();
+            otherTeamsSearchField.setPromptText("Rechercher une équipe...");
+            otherTeamsSearchField.setPrefWidth(300);
+            otherTeamsSearchField.setStyle(
+                "-fx-background-color: #1a1a2e;" +
+                "-fx-text-fill: white;" +
+                "-fx-prompt-text-fill: rgba(255,255,255,0.4);" +
+                "-fx-border-color: rgba(139,13,13,0.4);" +
+                "-fx-border-width: 1;" +
+                "-fx-border-radius: 6;" +
+                "-fx-background-radius: 6;" +
+                "-fx-padding: 8 12;"
+            );
+            
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+            
+            headerBox.getChildren().addAll(title, spacer, otherTeamsSearchField);
+            wrapper.getChildren().add(headerBox);
 
             FlowPane flow = new FlowPane();
             flow.setHgap(16);
@@ -620,33 +785,38 @@ public class PlayerTeamDetailController {
             flow.setPrefWrapLength(1100);
 
             List<Team> allTeams = new CrudTeam().getAll();
-            boolean hasOthers = false;
+            System.out.println("Total teams found: " + allTeams.size());
             
             // Get current user's team to exclude it
             String currentUserId = SessionManager.getInstance().getCurrentUserId();
             Team myTeam = crudTeamMember.getTeamByPlayer(currentUserId);
+            System.out.println("Current user's team: " + (myTeam != null ? myTeam.getName() : "none"));
 
+            List<Team> otherTeamsList = new java.util.ArrayList<>();
             for (Team t : allTeams) {
-                if (t.getStatus() != Team.Status.ACTIVE) continue;
+                System.out.println("Processing team: " + t.getName() + " (Status: " + t.getStatus() + ")");
                 // Exclude the user's own team from the list
-                if (myTeam != null && t.getId().equals(myTeam.getId())) continue;
-                hasOthers = true;
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/Fxml/Team/PlayerTeamCard.fxml"));
-                Parent card = loader.load();
-                PlayerTeamCardController cc = loader.getController();
-                cc.setTeam(t);
-                cc.setBrowserController(browserController);
-                cc.setReadOnly(true);
-                flow.getChildren().add(card);
+                if (myTeam != null && t.getId().equals(myTeam.getId())) {
+                    System.out.println("  Skipping - user's own team");
+                    continue;
+                }
+                otherTeamsList.add(t);
             }
 
-            if (!hasOthers) {
+            // Display all other teams initially
+            displayOtherTeamsCards(flow, otherTeamsList);
+
+            if (otherTeamsList.isEmpty()) {
+                System.out.println("No other teams available");
                 Label empty = new Label("Aucune autre équipe disponible.");
                 empty.setStyle("-fx-text-fill: rgba(255,255,255,0.35); -fx-font-style: italic;");
                 wrapper.getChildren().add(empty);
             } else {
+                System.out.println("Adding " + otherTeamsList.size() + " team cards to view");
                 wrapper.getChildren().add(flow);
+                
+                // Setup search autocomplete
+                setupOtherTeamsSearch(otherTeamsSearchField, otherTeamsList, flow);
             }
 
             ScrollPane scroll = new ScrollPane(wrapper);
@@ -655,9 +825,122 @@ public class PlayerTeamDetailController {
             scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
             StackPane.setAlignment(scroll, Pos.TOP_LEFT);
             innerContainer.getChildren().add(scroll);
+            System.out.println("✅ Other teams loaded successfully");
         } catch (Exception e) {
-            System.err.println("Error loading other teams");
+            System.err.println("❌ Error loading other teams");
             e.printStackTrace();
+        }
+    }
+    
+    private void setupOtherTeamsSearch(javafx.scene.control.TextField searchField, List<Team> allTeams, FlowPane flow) {
+        // Create suggestions dropdown
+        searchSuggestions = new javafx.scene.control.ListView<>();
+        searchSuggestions.setPrefWidth(searchField.getWidth());
+        searchSuggestions.setPrefHeight(200);
+        searchSuggestions.setMaxHeight(200);
+        searchSuggestions.setStyle(
+            "-fx-background-color: #1a1a2e;" +
+            "-fx-border-color: #8B0D0D;" +
+            "-fx-border-width: 2;" +
+            "-fx-border-radius: 8;" +
+            "-fx-background-radius: 8;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 15, 0, 0, 5);"
+        );
+        
+        // Create popup
+        searchPopup = new javafx.stage.Popup();
+        searchPopup.setAutoHide(true);
+        searchPopup.getContent().add(searchSuggestions);
+        
+        // Custom cell factory
+        searchSuggestions.setCellFactory(lv -> new javafx.scene.control.ListCell<Team>() {
+            @Override
+            protected void updateItem(Team team, boolean empty) {
+                super.updateItem(team, empty);
+                if (empty || team == null) {
+                    setText(null);
+                    setGraphic(null);
+                    setStyle("-fx-background-color: transparent;");
+                } else {
+                    VBox container = new VBox(4);
+                    container.setStyle("-fx-padding: 8;");
+                    
+                    Label nameLabel = new Label(team.getName());
+                    nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;");
+                    
+                    Label contactLabel = new Label(team.getContact() != null ? team.getContact() : "—");
+                    contactLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;");
+                    
+                    container.getChildren().addAll(nameLabel, contactLabel);
+                    setGraphic(container);
+                    setText(null);
+                    
+                    setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+                    setOnMouseEntered(e -> setStyle("-fx-background-color: rgba(139,13,13,0.3); -fx-padding: 0;"));
+                    setOnMouseExited(e -> setStyle("-fx-background-color: transparent; -fx-padding: 0;"));
+                }
+            }
+        });
+        
+        // Handle selection
+        searchSuggestions.setOnMouseClicked(e -> {
+            Team selected = searchSuggestions.getSelectionModel().getSelectedItem();
+            if (selected != null && browserController != null) {
+                browserController.showTeamDetailViewOnly(selected);
+                searchPopup.hide();
+                searchField.clear();
+            }
+        });
+        
+        // Listen to text changes
+        searchField.textProperty().addListener((obs, old, val) -> {
+            if (val == null || val.trim().isEmpty()) {
+                searchPopup.hide();
+            } else {
+                String searchText = val.toLowerCase();
+                List<Team> matches = allTeams.stream()
+                    .filter(t -> t.getName().toLowerCase().startsWith(searchText))
+                    .limit(5)
+                    .toList();
+                
+                if (!matches.isEmpty()) {
+                    searchSuggestions.getItems().setAll(matches);
+                    
+                    if (!searchPopup.isShowing()) {
+                        javafx.geometry.Bounds bounds = searchField.localToScreen(searchField.getBoundsInLocal());
+                        if (bounds != null) {
+                            searchPopup.show(searchField, bounds.getMinX(), bounds.getMaxY());
+                        }
+                    }
+                } else {
+                    searchPopup.hide();
+                }
+            }
+        });
+        
+        // Update popup width
+        searchField.widthProperty().addListener((obs, old, newWidth) -> {
+            searchSuggestions.setPrefWidth(newWidth.doubleValue());
+        });
+    }
+    
+    private void displayOtherTeamsCards(FlowPane flow, List<Team> teams) {
+        flow.getChildren().clear();
+        for (Team t : teams) {
+            try {
+                System.out.println("  Loading card for team: " + t.getName());
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/Fxml/Team/PlayerTeamCard.fxml"));
+                Parent card = loader.load();
+                PlayerTeamCardController cc = loader.getController();
+                cc.setTeam(t);
+                cc.setBrowserController(browserController);
+                cc.setReadOnly(true);
+                flow.getChildren().add(card);
+            } catch (Exception e) {
+                System.err.println("Error loading team card: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 

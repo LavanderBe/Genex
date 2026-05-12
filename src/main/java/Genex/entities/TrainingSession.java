@@ -13,7 +13,6 @@ public class TrainingSession {
     private LocalDateTime sessionDatetime;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String location;
     private String notes;
     private Status status;
     private String calendarEventId;
@@ -32,14 +31,13 @@ public class TrainingSession {
     // Full constructor
     public TrainingSession(String teamId, String title, Type type,
                            LocalDateTime sessionDatetime, LocalTime startTime,
-                           LocalTime endTime, String location, String notes, Status status) {
+                           LocalTime endTime, String notes, Status status) {
         this.teamId          = teamId;
         this.title           = title;
         this.type            = type;
         this.sessionDatetime = sessionDatetime;
         this.startTime       = startTime;
         this.endTime         = endTime;
-        this.location        = location;
         this.notes           = notes;
         this.status          = status;
     }
@@ -65,9 +63,6 @@ public class TrainingSession {
 
     public LocalTime getEndTime() { return endTime; }
     public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
-
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
@@ -119,7 +114,6 @@ public class TrainingSession {
                 ", startTime="       + startTime               +
                 ", endTime="         + endTime                 +
                 ", duration='"       + getFormattedDuration() + '\'' +
-                ", location='"       + location         + '\'' +
                 ", notes='"          + notes            + '\'' +
                 ", status="          + status                  +
                 '}';
