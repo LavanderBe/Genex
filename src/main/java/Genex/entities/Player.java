@@ -13,6 +13,8 @@ public class Player extends User {
     private String nationality;
     private String city;
 
+    private String avatar_url;
+
     private List<Game> games_played=new ArrayList<>();
 
     // Stats for accuracy and progression
@@ -100,6 +102,22 @@ public class Player extends User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getAvatar_url() {
+        return avatar_url;
+    }
+
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
+    }
+
+    public List<Game> getGames_played() {
+        return games_played;
+    }
+
+    public void setGames_played(List<Game> games_played) {
+        this.games_played = games_played;
     }
 
     // Stats methods

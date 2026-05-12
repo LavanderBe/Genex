@@ -1,0 +1,80 @@
+/* --- THE SHARD --- */
+.avatar-shard-bg {
+    -fx-fill: linear-gradient(to bottom right, #1F1E4E, #050508, #000000);
+    -fx-stroke: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.5), 30, 0.4, 0, 0);
+}
+
+/* --- THE SCANNER BOX --- */
+.scanner-box {
+    -fx-background-color: rgba(31, 30, 78, 0.15);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    /* Carbon Fiber Texture simulation */
+    -fx-background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+    -fx-effect: innershadow(three-pass-box, rgba(92, 124, 250, 0.2), 20, 0, 0, 0);
+}
+
+.param-label {
+    -fx-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+/* --- INPUTS --- */
+.hud-input {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Consolas";
+}
+
+.hud-input:focused {
+    -fx-border-color: #8B0D0D;
+    -fx-text-fill: white;
+}
+
+.hud-combo {
+    -fx-background-color: rgba(31, 30, 78, 0.4);
+    -fx-border-color: #1F1E4E;
+}
+.hud-combo .label { -fx-text-fill: white; -fx-font-family: "Consolas"; }
+
+/* --- BUTTONS --- */
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: #444466;
+    -fx-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-border-style: dashed;
+}
+.btn-secondary:hover { -fx-border-color: white; -fx-text-fill: white; }
+
+.btn-execute {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 92 0 L 100 15 L 100 100 L 0 100 Z";
+    -fx-cursor: hand;
+}
+.btn-execute:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #1F1E4E;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 20, 0.5, 0, 0);
+}
+
+.btn-abort {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 8 0 L 100 0 L 100 100 L 0 100 L 0 15 Z";
+}
+
+/* Spinner Glow */
+.cyber-spinner .progress {
+    -fx-background-color: #5C7CFA;
+}

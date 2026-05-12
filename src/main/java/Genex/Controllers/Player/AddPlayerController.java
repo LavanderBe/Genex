@@ -1,5 +1,6 @@
 package Genex.Controllers.Player;
 
+import Genex.Controllers.Avatar.AvatarController;
 import Genex.entities.Game;
 import Genex.entities.Player;
 import Genex.entities.User;
@@ -7,12 +8,16 @@ import Genex.services.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -288,7 +293,21 @@ public class AddPlayerController {
 
     @FXML
     void handleCreateAvatar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Player/Avatar/Avatar.fxml"));
+            Parent root = loader.load();
+            AvatarController con = loader.getController();
 
+            StackPane overlay = new StackPane(root);
+            overlay.setStyle("-fx-background-color: rgba(0,0,0,0.8);");
+            card.getChildren().add(overlay);
+
+            con.setOnSaveCallback(() -> {
+                card.getChildren().remove(overlay);
+                // Optionally update the player image in the form here
+            });
+
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
     private void shakeNode(javafx.scene.Node node) {
