@@ -45,14 +45,14 @@ public class BudgetController {
 
     // ── Form fields ────────────────────────────────────────────────────────
     @FXML private Label             formTitle;
-    @FXML private TextField         fieldCenterId;
+
     @FXML private ComboBox<Sponsor> combSponsor;
     @FXML private TextField         fieldYear;
     @FXML private TextField         fieldAllocated;
     @FXML private TextField         fieldSpent;
     @FXML private TextField         fieldDoc;
     @FXML private Button            btnSave;
-    @FXML private Label             errCenter;
+
     @FXML private Label             errYear;
     @FXML private Label             errAllocated;
 
@@ -195,7 +195,7 @@ public class BudgetController {
     private void populateForm(Budget b) {
         editingTarget = b;
         formTitle.setText("Modifier le budget");
-        fieldCenterId.setText(b.getCenterId() != null ? b.getCenterId() : "");
+
         fieldYear.setText(String.valueOf(b.getFiscalYear()));
         fieldAllocated.setText(b.getAllocatedAmount().toPlainString());
         fieldSpent.setText(b.getSpentAmount().toPlainString());
@@ -209,19 +209,21 @@ public class BudgetController {
     private void clearForm() {
         editingTarget = null;
         formTitle.setText("Nouveau budget");
-        fieldCenterId.clear();
+
         fieldYear.clear();
         fieldAllocated.clear();
         fieldSpent.clear();
         fieldDoc.clear();
         combSponsor.setValue(null);
         btnSave.setText("Enregistrer");
-        hideErr(errCenter); hideErr(errYear); hideErr(errAllocated);
+        hideErr(errYear); hideErr(errAllocated);
     }
 
     private Budget buildFromForm() {
         Budget b = new Budget();
-        b.setCenterId(fieldCenterId.getText().trim());
+        if (editingTarget != null) {
+            b.setCenterId(editingTarget.getCenterId());
+        }
         b.setFiscalYear(Integer.parseInt(fieldYear.getText().trim()));
         b.setAllocatedAmount(new BigDecimal(fieldAllocated.getText().trim()));
         String spent = fieldSpent.getText().trim();
@@ -232,12 +234,9 @@ public class BudgetController {
 
     private boolean validateForm() {
         boolean ok = true;
-        hideErr(errCenter); hideErr(errYear); hideErr(errAllocated);
+        hideErr(errYear); hideErr(errAllocated);
 
-        if (fieldCenterId.getText().isBlank()) {
-            showErr(errCenter, "L'ID du centre est obligatoire.");
-            ok = false;
-        }
+
         try { Integer.parseInt(fieldYear.getText().trim()); }
         catch (NumberFormatException e) {
             showErr(errYear, "Année invalide.");

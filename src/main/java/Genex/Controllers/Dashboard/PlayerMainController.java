@@ -81,7 +81,7 @@ public class PlayerMainController {
                     setStyle("-fx-background-color: transparent;" +
                              "-fx-text-fill: rgba(255,255,255,0.85);" +
                              "-fx-font-family: Consolas, monospace;" +
-                             "-fx-font-size: 13px;" +
+                             "-fx-font-size: 18px;" +
                              "-fx-padding: 6 14;");
                 }
             }

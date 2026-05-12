@@ -1,164 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.*?>
+
 
 <!-- Embeddable panel — loads inside Finance hub, no sidebar -->
-<StackPane xmlns="http://javafx.com/javafx/23.0.2"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="Genex.Controllers.Budget.BudgetController"
-           styleClass="sub-root">
+
+<StackPane styleClass="sub-root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Budget.BudgetController">
 
     <VBox>
 
         <!-- Top bar -->
-        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
-            <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <padding><Insets bottom="14" left="28" right="28" top="14" /></padding>
             <VBox spacing="3">
-                <Label text="Gestion des Budgets" styleClass="page-title"/>
-                <Label text="Suivez les budgets par centre et sponsor" styleClass="page-subtitle"/>
+                <Label styleClass="page-title" text="Gestion des Budgets" />
+                <Label styleClass="page-subtitle" text="Suivez les budgets par centre et sponsor" />
             </VBox>
-            <Region HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="searchField" styleClass="search-field"
-                       promptText="🔍  Rechercher…" prefWidth="220"/>
-            <Button text="＋  AJOUTER" styleClass="btn-polygon" onAction="#handleAdd"
-                    prefWidth="150" prefHeight="40"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="searchField" prefWidth="220" promptText="🔍  Rechercher…" styleClass="search-field" />
+            <Button onAction="#handleAdd" prefHeight="40" prefWidth="150" styleClass="btn-polygon" text="＋  AJOUTER" />
         </HBox>
 
         <!-- Stat cards -->
         <HBox spacing="14" styleClass="stat-row">
-            <padding><Insets top="16" right="28" bottom="16" left="28"/></padding>
-            <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
-                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
-                <Label text="📋  Total" styleClass="stat-icon-label"/>
-                <Label fx:id="statTotal" text="0" styleClass="stat-number"/>
-                <Label text="Budgets" styleClass="stat-label"/>
+            <padding><Insets bottom="16" left="28" right="28" top="16" /></padding>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="📋  Total" />
+                <Label fx:id="statTotal" styleClass="stat-number" text="0" />
+                <Label styleClass="stat-label" text="Budgets" />
             </VBox>
-            <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
-                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
-                <Label text="✅  Alloué" styleClass="stat-icon-label"/>
-                <Label fx:id="statAllocated" text="0 TND" styleClass="stat-number"/>
-                <Label text="Total alloué" styleClass="stat-label"/>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-green" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="✅  Alloué" />
+                <Label fx:id="statAllocated" styleClass="stat-number" text="0 TND" />
+                <Label styleClass="stat-label" text="Total alloué" />
             </VBox>
-            <VBox styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
-                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
-                <Label text="💸  Dépensé" styleClass="stat-icon-label"/>
-                <Label fx:id="statSpent" text="0 TND" styleClass="stat-number"/>
-                <Label text="Total dépensé" styleClass="stat-label"/>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="💸  Dépensé" />
+                <Label fx:id="statSpent" styleClass="stat-number" text="0 TND" />
+                <Label styleClass="stat-label" text="Total dépensé" />
             </VBox>
-            <VBox styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
-                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
-                <Label text="💰  Restant" styleClass="stat-icon-label"/>
-                <Label fx:id="statRemaining" text="0 TND" styleClass="stat-number"/>
-                <Label text="Total restant" styleClass="stat-label"/>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="💰  Restant" />
+                <Label fx:id="statRemaining" styleClass="stat-number" text="0 TND" />
+                <Label styleClass="stat-label" text="Total restant" />
             </VBox>
         </HBox>
 
         <!-- Table + chart -->
         <HBox spacing="14" VBox.vgrow="ALWAYS">
-            <padding><Insets right="28" bottom="20" left="28"/></padding>
+            <padding><Insets bottom="20" left="28" right="28" /></padding>
 
-            <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
-                <Label text="LISTE DES BUDGETS" styleClass="panel-title"/>
-                <TableView fx:id="budgetTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <VBox spacing="10" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="panel-title" text="LISTE DES BUDGETS" />
+                <TableView fx:id="budgetTable" styleClass="data-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCenter"    text="Centre"   prefWidth="150"/>
-                        <TableColumn fx:id="colSponsor"   text="Sponsor"  prefWidth="120"/>
-                        <TableColumn fx:id="colYear"      text="Année"    prefWidth="65"/>
-                        <TableColumn fx:id="colAllocated" text="Alloué"   prefWidth="100"/>
-                        <TableColumn fx:id="colSpent"     text="Dépensé"  prefWidth="100"/>
-                        <TableColumn fx:id="colRemaining" text="Restant"  prefWidth="100"/>
-                        <TableColumn fx:id="colActions"   text=""         prefWidth="80"/>
+                        <TableColumn fx:id="colCenter" prefWidth="150" text="Centre" />
+                        <TableColumn fx:id="colSponsor" prefWidth="120" text="Sponsor" />
+                        <TableColumn fx:id="colYear" prefWidth="65" text="Année" />
+                        <TableColumn fx:id="colAllocated" prefWidth="100" text="Alloué" />
+                        <TableColumn fx:id="colSpent" prefWidth="100" text="Dépensé" />
+                        <TableColumn fx:id="colRemaining" prefWidth="100" text="Restant" />
+                        <TableColumn fx:id="colActions" prefWidth="80" text="" />
                     </columns>
                     <placeholder>
-                        <Label text="Aucun budget enregistré" styleClass="table-placeholder"/>
+                        <Label styleClass="table-placeholder" text="Aucun budget enregistré" />
                     </placeholder>
                 </TableView>
             </VBox>
 
-            <VBox styleClass="panel" spacing="10" prefWidth="250" minWidth="220">
-                <Label text="ALLOUÉ VS DÉPENSÉ" styleClass="panel-title"/>
-                <Label text="📊  Graphiques disponibles prochainement"
-                       styleClass="table-placeholder" VBox.vgrow="ALWAYS" wrapText="true"/>
+            <VBox minWidth="220" prefWidth="250" spacing="10" styleClass="panel">
+                <Label styleClass="panel-title" text="ALLOUÉ VS DÉPENSÉ" />
+                <Label styleClass="table-placeholder" text="📊  Graphiques disponibles prochainement" wrapText="true" VBox.vgrow="ALWAYS" />
             </VBox>
         </HBox>
 
     </VBox>
 
-    <!-- ══ DRAWER OVERLAY ═══════════════════════════════════════════════ -->
-    <StackPane fx:id="drawerOverlay" styleClass="overlay-bg"
-               visible="false" managed="false" alignment="CENTER_RIGHT">
+    <!-- ══ CYBER MODAL OVERLAY ══════════════════════════════════════════ -->
+    <StackPane fx:id="drawerOverlay" managed="false" styleClass="overlay-bg" visible="false">
+        <children>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="480.0" prefWidth="750.0" styleClass="compact-shard">
+                <children>
+                    <!-- Background Hardware Plate -->
+                    <SVGPath content="M 0 0 L 710 0 L 750 40 L 750 480 L 40 480 L 0 440 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="1.5" />
 
-        <VBox styleClass="drawer" prefWidth="380" maxWidth="380"
-              StackPane.alignment="CENTER_RIGHT">
-            <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+                    <!-- Side Red Accent Bar -->
+                    <Region layoutX="0" layoutY="100" prefHeight="280" prefWidth="3" style="-fx-background-color: #8B0D0D;" />
 
-            <HBox alignment="CENTER_LEFT">
-                <Label fx:id="formTitle" text="Nouveau budget" styleClass="drawer-title"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="✕" styleClass="btn-close" onAction="#handleClear"/>
-            </HBox>
+                    <VBox layoutX="40.0" layoutY="35.0" prefHeight="410.0" prefWidth="670.0" spacing="20.0">
+                        <children>
+                            <!-- Header -->
+                            <HBox alignment="CENTER_LEFT">
+                                <children>
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="formTitle" styleClass="hud-title" text="NOUVEAU BUDGET" />
+                                            <Label styleClass="hud-subtitle" text="INITIALISATION_BUDGETAIRE" />
+                                        </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#handleClear" styleClass="btn-close" text="✕" />
+                                </children>
+                            </HBox>
 
-            <Separator styleClass="drawer-sep">
-                <VBox.margin><Insets top="12" bottom="16"/></VBox.margin>
-            </Separator>
+                            <Separator styleClass="drawer-sep" />
 
-            <VBox spacing="6">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="ID DU CENTRE *" styleClass="field-label"/>
-                <TextField fx:id="fieldCenterId" styleClass="input-field" promptText="UUID du centre"/>
-                <Label fx:id="errCenter" styleClass="err-label" visible="false" managed="false"/>
-            </VBox>
+                            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <!-- Left Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="SPONSOR (OPTIONNEL)" />
+                                                <ComboBox fx:id="combSponsor" maxWidth="Infinity" promptText="— Fonds internes —" styleClass="hud-combo" />
+                                            </VBox>
 
-            <VBox spacing="6">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="SPONSOR (OPTIONNEL)" styleClass="field-label"/>
-                <ComboBox fx:id="combSponsor" styleClass="combo-field"
-                          promptText="— Fonds internes —" maxWidth="Infinity"/>
-            </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="ANNÉE FISCALE *" />
+                                                <TextField fx:id="fieldYear" promptText="Ex: 2025" styleClass="hud-input" />
+                                                <Label fx:id="errYear" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
 
-            <VBox spacing="6">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="ANNÉE FISCALE *" styleClass="field-label"/>
-                <TextField fx:id="fieldYear" styleClass="input-field" promptText="Ex: 2025"/>
-                <Label fx:id="errYear" styleClass="err-label" visible="false" managed="false"/>
-            </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="MONTANT ALLOUÉ (TND) *" />
+                                                <TextField fx:id="fieldAllocated" promptText="Ex: 50000.00" styleClass="hud-input" />
+                                                <Label fx:id="errAllocated" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
 
-            <VBox spacing="6">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="MONTANT ALLOUÉ (TND) *" styleClass="field-label"/>
-                <TextField fx:id="fieldAllocated" styleClass="input-field" promptText="Ex: 50000.00"/>
-                <Label fx:id="errAllocated" styleClass="err-label" visible="false" managed="false"/>
-            </VBox>
+                                    <!-- Right Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="MONTANT DÉPENSÉ (TND)" />
+                                                <TextField fx:id="fieldSpent" promptText="0.00" styleClass="hud-input" />
+                                            </VBox>
 
-            <VBox spacing="6">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="MONTANT DÉPENSÉ (TND)" styleClass="field-label"/>
-                <TextField fx:id="fieldSpent" styleClass="input-field" promptText="0.00"/>
-            </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="JUSTIFICATIF (PDF / PNG / JPEG)" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                                    <children>
+                                                        <TextField fx:id="fieldDoc" editable="false" promptText="Aucun fichier" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                                        <Button onAction="#handlePickDoc" styleClass="btn-pick" text="📁" />
+                                                    </children>
+                                                </HBox>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
 
-            <!-- Document file picker — PDF + images -->
-            <VBox spacing="6">
-                <VBox.margin><Insets bottom="14"/></VBox.margin>
-                <Label text="JUSTIFICATIF (PDF / PNG / JPEG)" styleClass="field-label"/>
-                <HBox spacing="8" alignment="CENTER_LEFT">
-                    <TextField fx:id="fieldDoc" styleClass="input-field"
-                               promptText="Choisir un fichier…"
-                               editable="false" HBox.hgrow="ALWAYS"/>
-                    <Button text="📁" styleClass="btn-pick" onAction="#handlePickDoc"/>
-                </HBox>
-            </VBox>
+                            <Region VBox.vgrow="ALWAYS" />
 
-            <Region VBox.vgrow="ALWAYS"/>
-
-            <HBox spacing="10">
-                <Button fx:id="btnSave" text="ENREGISTRER" styleClass="btn-primary"
-                        onAction="#handleSave" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
-                <Button text="ANNULER" styleClass="btn-secondary"
-                        onAction="#handleClear" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
-            </HBox>
-        </VBox>
+                            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                                <children>
+                                    <Button fx:id="btnSave" onAction="#handleSave" prefHeight="40.0" prefWidth="200.0" styleClass="confirm-btn" text="ENREGISTRER" />
+                                    <Button onAction="#handleClear" prefHeight="40.0" prefWidth="120.0" styleClass="cancel-btn" text="ANNULER" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </children>
     </StackPane>
 
 </StackPane>
