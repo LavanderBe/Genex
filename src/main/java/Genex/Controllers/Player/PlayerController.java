@@ -37,9 +37,8 @@ public class PlayerController {
 
         allPlayersMaster = cp.getEntities();
         loadAllPlayers();
-
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {filterBlades(newValue.toLowerCase());});
-        System.out.println(allPlayersMaster);
+
     }
 
     @FXML

@@ -42,6 +42,18 @@ public class CrudPlayer_Game {
         }
     }
 
+    public void deleteAllGames_ForPlayer(Player p){
+        String requete="DELETE FROM player_games WHERE (player_id=?)";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, p.getId());
+            pst.executeUpdate();
+            System.out.println("all games unlinked for the  player successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Game> get_GamesPlayed(Player p){
         String requete = "SELECT g.* " +
                 "FROM player_games pg " +

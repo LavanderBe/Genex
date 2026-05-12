@@ -2,6 +2,7 @@ package Genex.Controllers.Player;
 
 import Genex.entities.Game;
 import Genex.entities.Player;
+import Genex.entities.User;
 import Genex.services.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -50,6 +51,7 @@ public class AddPlayerController {
         pseudoField.setText(player.getNickname());
         cinField.setText(player.getCin());
         dobPicker.setValue(player.getBirthday());
+        System.out.println(player.getBirthday());
         natField.setText(player.getNationality());
         cityField.setText(player.getCity());
 
@@ -61,7 +63,7 @@ public class AddPlayerController {
         // 2. EDGY VISUAL UPDATES
         formTitle.setText("RECALIBRATE // PLAYER_ENTITY");
         formTitle.setTextFill(javafx.scene.paint.Color.web("#8B0D0D")); // Red for Edit
-        btnExecute.setText("UPDATE_PROTOCOL");
+        btnExecute.setText("MODIFIER");
 
         // 3. AUTO-SELECT GAMES
         // Assuming player.getPlayedGames() returns a list of Game names or IDs
@@ -75,6 +77,7 @@ public class AddPlayerController {
                 cb.setSelected(true);
             }
         }
+        accountNameField.setDisable(true);
     }
 
     @FXML
@@ -131,9 +134,68 @@ public class AddPlayerController {
         LocalDate limit = LocalDate.now().minusYears(13);
         if (isEditMode)
         {
-            accountNameField.setDisable(true);
+
+            // Basic Validation
+            if (email.isEmpty() || !UserControl.isValidEmail(email)) {
+                showError(SystemError, "EMAIL INVALIDE");
+                shakeNode(card);
+                return;
+            }
+            if (nom.isEmpty() || prenom.isEmpty() || pseudo.isEmpty() || cin.isEmpty() || nat.isEmpty() || ville.isEmpty() || dob == null) {
+                showError(Identification_Error, "TOUS LES CHAMPS SONT REQUIS");
+                shakeNode(card);
+                return;
+            }
+            if (cin.length()<8){
+                showError(Identification_Error, "CIN INVALIDE");
+                shakeNode(card);
+                return;
+            }
+
+            // --- SMART UNIQUENESS CHECK ---
+            // We only check the DB if the value is DIFFERENT from the original one
+
+            if (!email.equals(playerToEdit.getEmail()) && crudUser.check_email(email)) {
+                showError(SystemError, "EMAIL DÉJÀ LIÉ À UN AUTRE COMPTE");
+                shakeNode(card); return;
+            }
+
+            if (!pseudo.equals(playerToEdit.getNickname()) && cp.check_nickname_exists(pseudo)) {
+                showError(Identification_Error, "PSEUDONYME DÉJÀ UTILISÉ");
+                shakeNode(card); return;
+            }
+
+            if (!cin.equals(playerToEdit.getCin()) && cp.check_cin_exists(cin)) {
+                showError(Identification_Error, "CIN DÉJÀ ENREGISTRÉ");
+                shakeNode(card); return;
+            }
+            String oldcin=playerToEdit.getCin();
+            playerToEdit.setNom(nom);
+            playerToEdit.setPrenom(prenom);
+            playerToEdit.setNickname(pseudo);
+            playerToEdit.setCin(cin);
+            playerToEdit.setBirthday(dob);
+            playerToEdit.setNationality(nat);
+            playerToEdit.setCity(ville);
+            playerToEdit.setEmail(email);
+
+            if (pwd != null && !pwd.isEmpty()) {
+                playerToEdit.updatepassword(pwd);
+            }
+            else {
+                User u=crudUser.getUser_withId(playerToEdit.getId());
+                playerToEdit.setPassword_hash(u.getPassword_hash());
+                playerToEdit.setSalt(u.getSalt());
+            }
 
 
+            crudUser.updateEntity(playerToEdit,playerToEdit.getId());
+            cp.updateEntity(playerToEdit,cin);
+            cpg.deleteAllGames_ForPlayer(playerToEdit);
+            for (String name : selectedGameNames) {
+                Game g = cg.getGameByName(name);
+                cpg.addEntity(playerToEdit, g);
+            }
 
             isEditMode=false;
             if (onCloseCallback != null) {

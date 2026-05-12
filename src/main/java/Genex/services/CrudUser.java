@@ -225,6 +225,29 @@ public class CrudUser implements ICrud<User> {
         }
     }
 
+    public User getUser_withId(String id){
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE id=?";
+        try {
+            PreparedStatement pst =Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,id);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                User u=new User((rs.getString("username")),
+                        rs.getString("email"),
+                        rs.getString("salt"),
+                        rs.getString("password_hash"),
+                        rs.getString("role"));
+                u.setId(rs.getString("id"));
+                return u;
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String requete = "SELECT id, username, email, role, created_at FROM users";

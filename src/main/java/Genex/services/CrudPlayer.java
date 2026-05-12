@@ -185,6 +185,8 @@ public class CrudPlayer {
 
                 Date birthDate = rs.getDate("date_of_birth");
 
+                player.setBirthday(birthDate.toLocalDate());
+
                 player.setNationality(rs.getString("nationality"));
                 player.setCity(rs.getString("city"));
                 return player;
@@ -217,6 +219,7 @@ public class CrudPlayer {
 
                 Date birthDate = rs.getDate("date_of_birth");
 
+                player.setBirthday(birthDate.toLocalDate());
                 player.setNationality(rs.getString("nationality"));
                 player.setCity(rs.getString("city"));
                 allp.add(player);
