@@ -24,8 +24,8 @@ public class CrudPlayer {
     }
 
     public void addEntity(Player p) {
-        String requete = "INSERT INTO players (first_name, last_name, nickname, cin, date_of_birth, nationality, city,user_id) " +
-                "VALUES (?,?,?,?,?,?,?,?)";
+        String requete = "INSERT INTO players (first_name, last_name, nickname, cin, date_of_birth, nationality, city, user_id, avatar_url) " +
+                "VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1, p.getPrenom());
@@ -36,6 +36,7 @@ public class CrudPlayer {
             pst.setString(6, p.getNationality());
             pst.setString(7, p.getCity());
             pst.setString(8, p.getId());
+            pst.setString(9, p.getAvatar_url());
             pst.executeUpdate();
             System.out.println("player added successfully");
         } catch (SQLException e) {
@@ -43,7 +44,7 @@ public class CrudPlayer {
         }
     }
     public void updateEntity(Player p,String cin) {
-        String requete = "UPDATE players SET first_name=?, last_name=?, nickname=?, cin=?, date_of_birth=?, nationality=?, city=? WHERE cin=?";
+        String requete = "UPDATE players SET first_name=?, last_name=?, nickname=?, cin=?, date_of_birth=?, nationality=?, city=?, avatar_url=? WHERE cin=?";
         try {
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1, p.getPrenom());
@@ -53,7 +54,8 @@ public class CrudPlayer {
             pst.setDate(5, Date.valueOf(p.getBirthday()));
             pst.setString(6, p.getNationality());
             pst.setString(7, p.getCity());
-            pst.setString(8, cin);
+            pst.setString(8, p.getAvatar_url());
+            pst.setString(9, cin);
             pst.executeUpdate();
             System.out.println("player updated successfully");
         } catch (SQLException e) {
@@ -155,6 +157,7 @@ public class CrudPlayer {
                 player.setTacticalXp(rs.getInt("tactical_xp"));
                 player.setTotalAttempts(rs.getInt("total_attempts"));
                 player.setCorrectAnswers(rs.getInt("correct_answers"));
+                player.setAvatar_url(rs.getString("avatar_url"));
                 return player;
             }
         } catch (SQLException e) {
@@ -189,6 +192,7 @@ public class CrudPlayer {
 
                 player.setNationality(rs.getString("nationality"));
                 player.setCity(rs.getString("city"));
+                player.setAvatar_url(rs.getString("avatar_url"));
                 return player;
             }
         } catch (SQLException e) {
@@ -222,6 +226,7 @@ public class CrudPlayer {
                 player.setBirthday(birthDate.toLocalDate());
                 player.setNationality(rs.getString("nationality"));
                 player.setCity(rs.getString("city"));
+                player.setAvatar_url(rs.getString("avatar_url"));
                 allp.add(player);
             }
             return allp;

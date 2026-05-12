@@ -12,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -132,9 +134,33 @@ public class PlayerController {
         StackPane avatar = new StackPane();
         avatar.setPrefSize(45, 45);
         avatar.getStyleClass().add("avatar-slot");
-        Label initial = new Label(player.getNickname().substring(0, 1).toUpperCase());
-        initial.setTextFill(Color.WHITE);
-        avatar.getChildren().add(initial);
+
+        String url = player.getAvatar_url(); // Assuming this getter exists in your Player entity
+
+        System.out.println(player.getUsername()+"  "+url);
+
+        if (url != null && !url.isEmpty()) {
+            ImageView iv = new ImageView();
+            Image avatarImg = new Image(url, true);
+
+            iv.setImage(avatarImg);
+            iv.setFitWidth(40);
+            iv.setFitHeight(40);
+            iv.setPreserveRatio(true);
+            iv.setOpacity(0.5);
+            avatarImg.progressProperty().addListener((obs, old, progress) -> {
+                if (progress.doubleValue() == 1.0) iv.setOpacity(1.0);
+            });
+
+            avatar.getChildren().add(iv);
+        } else {
+            Label initial = new Label(player.getNickname().substring(0, 1).toUpperCase());
+            initial.setTextFill(Color.WHITE);
+            initial.getStyleClass().add("avatar-initial-label"); // Added for CSS control
+            avatar.getChildren().add(initial);
+        }
+
+
 
         VBox identity = new VBox(2);
         Label nick = new Label(player.getNickname().toUpperCase());
@@ -195,10 +221,8 @@ public class PlayerController {
             Tooltip.install(gameTag, new Tooltip("STABLE_CONNECTION: " + gName));
         }
 
-        blade.getChildren().addAll(avatar, identity, specs,gamesLinked, spacer, actions);
+        blade.getChildren().addAll(avatar,identity,specs,gamesLinked,spacer,actions);
 
-
-        //  Entrance Animation
         blade.setOpacity(0);
         blade.setTranslateX(-100);
 
@@ -220,7 +244,7 @@ public class PlayerController {
         });
 
         modifyBtn.setOnMouseClicked(event -> {
-            event.consume(); // Prevents the blade's click event from firing
+            event.consume();
             handleModify(player);
         });
 
@@ -260,13 +284,9 @@ public class PlayerController {
             System.out.println("updating player with this id "+p.getId());
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Player/AddPlayer.fxml"));
             Parent form = loader.load();
-
-            // 1. Get the controller and inject the player data
             AddPlayerController controller = loader.getController();
             controller.setPlayerData(p);
 
-            // 2. The rest of the "Smooth Load" logic (Copy-paste from addNewPlayer)
-            // 1. Setup the Overlay (The dark background)
             StackPane overlay = new StackPane(form);
             overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); // Start transparent
             overlay.setOpacity(0);

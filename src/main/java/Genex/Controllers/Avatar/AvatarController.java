@@ -26,6 +26,18 @@ public class AvatarController {
     private String currentStyle = "bottts";
     private Runnable onSaveCallback;
 
+
+    public interface AvatarListener {
+        void onAvatarGenerated(String url);
+    }
+
+    private AvatarListener listener;
+
+    public void setAvatarListener(AvatarListener listener) {
+        this.listener = listener;
+    }
+
+
     @FXML
     public void initialize() {
         styleCombo.getItems().addAll("bottts", "adventurer", "avataaars", "pixel-art", "notionists", "micah","personas","thumbs");
@@ -81,9 +93,13 @@ public class AvatarController {
 
     @FXML
     private void handleSave() {
-        String finalUrl = "https://api.dicebear.com/7.x/" + styleCombo.getValue() + "/png?seed=" + seedField.getText();
-        System.out.println("Saving Avatar Link: " + finalUrl);
-        if (onSaveCallback != null) onSaveCallback.run();
+        String style = styleCombo.getValue();
+        String seed = seedField.getText();
+        String color = glowPicker.getValue().toString().substring(2, 8);
+        String finalUrl = "https://api.dicebear.com/7.x/" + style + "/png?seed=" + seed + "&backgroundColor=" + color;
+        if (listener != null) {
+            listener.onAvatarGenerated(finalUrl);
+        }
     }
 
     @FXML
@@ -100,8 +116,6 @@ public class AvatarController {
         ft.setCycleCount(Animation.INDEFINITE);
         ft.setAutoReverse(true);
         ft.play();
-
-        // Stop glitch when loading disappears
         loadingOverlay.visibleProperty().addListener((obs, wasV, isV) -> {
             if (!isV) {
                 ft.stop();

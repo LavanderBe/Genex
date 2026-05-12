@@ -9,14 +9,18 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +48,8 @@ public class AddPlayerController {
     private List<CheckBox> gameCheckboxes = new ArrayList<>();
     private Player playerToEdit;
     private boolean isEditMode = false;
+
+    private String temporaryAvatarUrl = "";
 
 
     public void setPlayerData(Player player) {
@@ -140,7 +146,6 @@ public class AddPlayerController {
         if (isEditMode)
         {
 
-            // Basic Validation
             if (email.isEmpty() || !UserControl.isValidEmail(email)) {
                 showError(SystemError, "EMAIL INVALIDE");
                 shakeNode(card);
@@ -156,9 +161,6 @@ public class AddPlayerController {
                 shakeNode(card);
                 return;
             }
-
-            // --- SMART UNIQUENESS CHECK ---
-            // We only check the DB if the value is DIFFERENT from the original one
 
             if (!email.equals(playerToEdit.getEmail()) && crudUser.check_email(email)) {
                 showError(SystemError, "EMAIL DÉJÀ LIÉ À UN AUTRE COMPTE");
@@ -183,6 +185,7 @@ public class AddPlayerController {
             playerToEdit.setNationality(nat);
             playerToEdit.setCity(ville);
             playerToEdit.setEmail(email);
+            playerToEdit.setAvatar_url(temporaryAvatarUrl);
 
             if (pwd != null && !pwd.isEmpty()) {
                 playerToEdit.updatepassword(pwd);
@@ -195,7 +198,7 @@ public class AddPlayerController {
 
 
             crudUser.updateEntity(playerToEdit,playerToEdit.getId());
-            cp.updateEntity(playerToEdit,cin);
+            cp.updateEntity(playerToEdit,oldcin);
             cpg.deleteAllGames_ForPlayer(playerToEdit);
             for (String name : selectedGameNames) {
                 Game g = cg.getGameByName(name);
@@ -265,6 +268,8 @@ public class AddPlayerController {
         }
 
         Player p=new Player(username,email,pwd,"player",prenom,nom,pseudo,cin,dob,nat,ville);
+        p.setAvatar_url(temporaryAvatarUrl);
+        System.out.println(temporaryAvatarUrl);
         cp.addPlayer_admin(p);
         p.setId(crudUser.getUser_Id(p.getUsername()));
         for (String name:selectedGameNames){
@@ -288,8 +293,25 @@ public class AddPlayerController {
 
     @FXML
     void handleUploadPic(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("GENEX // SELECT_IDENTITY_ASSET");
 
+        // Set extension filters (Only images)
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        // Get the current stage from the event source
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile != null) {
+            this.temporaryAvatarUrl = selectedFile.toURI().toString();
+
+            System.out.println("Local Asset Linked: " + this.temporaryAvatarUrl);
+        }
     }
+
 
     @FXML
     void handleCreateAvatar(ActionEvent event) {
@@ -302,9 +324,14 @@ public class AddPlayerController {
             overlay.setStyle("-fx-background-color: rgba(0,0,0,0.8);");
             card.getChildren().add(overlay);
 
+            con.setAvatarListener(url -> {
+                this.temporaryAvatarUrl = url;
+                System.out.println("Neural Link Established with: " + url);
+                card.getChildren().remove(overlay);
+            });
             con.setOnSaveCallback(() -> {
                 card.getChildren().remove(overlay);
-                // Optionally update the player image in the form here
+
             });
 
         } catch (IOException e) { e.printStackTrace(); }

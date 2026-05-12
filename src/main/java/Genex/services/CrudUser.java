@@ -65,7 +65,7 @@ public class CrudUser implements ICrud<User> {
             pst.setString(2,u.getEmail());
             pst.setString(3,id);
             pst.executeUpdate();
-            System.out.println("User added successfully");
+            System.out.println("User updated successfully");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
