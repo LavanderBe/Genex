@@ -622,9 +622,14 @@ public class PostsController {
     }
 
     private VBox createPostCard(Posts post) {
+        ImageView imageView = buildPostImageView(post);
+        boolean hasImage = imageView != null;
+        double cardWidth = hasImage ? 420 : 320;
+
         VBox card = new VBox(8);
         card.getStyleClass().add("forum-card");
-        card.setPrefWidth(420);
+        card.setPrefWidth(cardWidth);
+        card.setMaxWidth(cardWidth);
         card.setPadding(new Insets(18));
         card.setOnMouseClicked(e -> selectPost(post));
 
@@ -633,23 +638,15 @@ public class PostsController {
         title.setWrapText(true);
 
         // Afficher l'image si elle existe
-        if (post.getMediaUrl() != null && !post.getMediaUrl().isBlank() && "image".equals(post.getMediaType())) {
-            try {
-                ImageView imageView = new ImageView();
-                imageView.setImage(new Image("file:" + post.getMediaUrl()));
-                imageView.setPreserveRatio(true);
-                imageView.setFitWidth(380);
-                imageView.setFitHeight(220);
-                card.getChildren().add(imageView);
-            } catch (Exception e) {
-                System.out.println("Erreur chargement image: " + e.getMessage());
-            }
+        if (hasImage) {
+            imageView.setFitWidth(cardWidth - 40);
+            card.getChildren().add(imageView);
         }
 
         Label body = new Label(post.getBody() == null || post.getBody().isBlank() ? "Aucun contenu." : post.getBody());
         body.getStyleClass().add("forum-card-desc");
         body.setWrapText(true);
-        body.setMaxWidth(390);
+        body.setMaxWidth(cardWidth - 30);
 
         Label meta = new Label("Forum " + forumDisplayName(post) + " • Auteur " + authorDisplayName(post) + " • ID " + safe(post.getId()));
         meta.getStyleClass().add("forum-card-meta");
@@ -659,13 +656,6 @@ public class PostsController {
 
         Label reactions = new Label(reactionSummary(post));
         reactions.getStyleClass().add("forum-card-meta");
-
-        Button editBtn = new Button("Modifier");
-        editBtn.getStyleClass().addAll("action-button", "secondary-button");
-        editBtn.setOnAction(e -> {
-            e.consume();
-            selectPost(post);
-        });
 
         Button deleteBtn = new Button("Supprimer");
         deleteBtn.getStyleClass().addAll("action-button", "danger-button");
@@ -688,7 +678,7 @@ public class PostsController {
 
         HBox actions = new HBox(8);
         if (canManagePost(post)) {
-            actions.getChildren().addAll(editBtn, spacer, deleteBtn);
+            actions.getChildren().addAll(spacer, deleteBtn);
         } else {
             Label readOnlyBadge = new Label("Lecture seule");
             readOnlyBadge.getStyleClass().add("forum-card-meta");
@@ -702,6 +692,24 @@ public class PostsController {
 
         card.getChildren().addAll(title, body, meta, moderation, reactions, reactionActions, repostActions, actions);
         return card;
+    }
+
+    private ImageView buildPostImageView(Posts post) {
+        if (isBlank(post.getMediaUrl()) || !"image".equalsIgnoreCase(safe(post.getMediaType()))) {
+            return null;
+        }
+        try {
+            Image image = new Image("file:" + post.getMediaUrl(), false);
+            if (image.isError()) {
+                return null;
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setPreserveRatio(true);
+            imageView.setFitHeight(220);
+            return imageView;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void selectPost(Posts post) {
@@ -799,19 +807,36 @@ public class PostsController {
         String encodedUrl = URLEncoder.encode(postRef, StandardCharsets.UTF_8);
         String encodedText = URLEncoder.encode(shareText, StandardCharsets.UTF_8);
 
-        String shareUrl;
-        switch (network) {
-            case "FACEBOOK" -> shareUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl + "&quote=" + encodedText;
-            case "LINKEDIN" -> shareUrl = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl;
-            default -> shareUrl = "https://x.com/intent/tweet?text=" + encodedText + "&url=" + encodedUrl;
-        }
+        String shareUrl = socialShareUrl(network, encodedUrl, encodedText);
+        String officialUrl = socialOfficialUrl(network);
 
         try {
             openExternalUrl(shareUrl);
-            showAlert(Alert.AlertType.INFORMATION, "Repost", "Ouverture du partage " + network + "...");
+            showAlert(Alert.AlertType.INFORMATION, "Repost", "Ouverture de " + network + "...");
         } catch (IOException | URISyntaxException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le lien de partage.\n" + shareUrl);
+            try {
+                openExternalUrl(officialUrl);
+                showAlert(Alert.AlertType.INFORMATION, "Repost", "Ouverture du site officiel " + network + "...");
+            } catch (IOException | URISyntaxException fallbackError) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir " + network + ".\n" + officialUrl);
+            }
         }
+    }
+
+    private String socialShareUrl(String network, String encodedUrl, String encodedText) {
+        return switch (network) {
+            case "FACEBOOK" -> "https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl + "&quote=" + encodedText;
+            case "LINKEDIN" -> "https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl;
+            default -> "https://x.com/intent/tweet?text=" + encodedText + "&url=" + encodedUrl;
+        };
+    }
+
+    private String socialOfficialUrl(String network) {
+        return switch (network) {
+            case "FACEBOOK" -> "https://www.facebook.com/";
+            case "LINKEDIN" -> "https://www.linkedin.com/";
+            default -> "https://x.com/";
+        };
     }
 
     private void openExternalUrl(String url) throws IOException, URISyntaxException {
