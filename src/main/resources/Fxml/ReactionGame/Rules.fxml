@@ -5,23 +5,18 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="866.0" prefWidth="1366.0" style="-fx-background-color: black;" stylesheets="@Rules.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.ReactionGame.RulesController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="866.0" prefWidth="1366.0" styleClass="bg" stylesheets="@Rules.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.ReactionGame.RulesController">
     <children>
-        <!-- LAYER 0: VIDEO BACKGROUND -->
-        <MediaView fx:id="mediaView" preserveRatio="false" />
-
-        <!-- LAYER 1: NEURAL DARK OVERLAY -->
-        <Region styleClass="dark-overlay" />
 
         <!-- LAYER 2: DECORATIVE HUD LINES -->
         <AnchorPane mouseTransparent="true">
@@ -36,7 +31,7 @@
             <children>
 
                 <!-- HEADER BAR -->
-                <HBox alignment="CENTER_LEFT" prefHeight="120.0" spacing="30.0" styleClass="header-bar">
+                <HBox alignment="CENTER" prefHeight="120.0" spacing="30.0" styleClass="header-bar">
                     <padding>
                         <Insets left="100.0" right="100.0" />
                     </padding>
@@ -75,7 +70,10 @@
                             <children>
                                 <StackPane fx:id="imageContainer" styleClass="image-frame-container">
                                     <children>
-                                        <ImageView fx:id="gamePoster" fitHeight="380.0" fitWidth="550.0" pickOnBounds="true" />
+                                        <ImageView fx:id="gamePoster" fitHeight="380.0" fitWidth="550.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../Images/Rules.png" />
+                                 </image></ImageView>
                                         <Region styleClass="hud-corner-accent" StackPane.alignment="TOP_LEFT" />
                                     </children>
                                 </StackPane>
@@ -114,7 +112,7 @@
                                             <font>
                                                 <Font size="10.0" />
                                             </font></Label>
-                                        <ProgressBar fx:id="syncProgress" prefHeight="12.0" prefWidth="600.0" progress="0.45" styleClass="cyber-progress-bar" />
+                                        <ProgressBar fx:id="syncProgress" prefHeight="103.0" prefWidth="558.0" progress="0.0" styleClass="cyber-progress-bar" />
                                     </children>
                                 </VBox>
                             </children>

@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -27,44 +29,27 @@ import java.net.URL;
 public class RulesController {
 
     @FXML private StackPane rootPane;
-    @FXML private MediaView mediaView;
+
     @FXML private VBox rulesContaine;
     @FXML private Label rulesLabel;
     @FXML private Label neonTitle;
     @FXML private ProgressBar syncProgress;
     @FXML private Label gameNameLabel;
     @FXML private Button btnStart;
+    @FXML private ImageView backgroundImageView;
+    @FXML private ImageView gameposter;
 
     private MediaPlayer bgMusic;
-    private MediaPlayer bgVideo;
 
     @FXML
     public void initialize() {
         btnStart.setDisable(true);
-        setupBackgroundMedia();
+        btnStart.setOpacity(0.5);
         startAmbientMusic();
         startTypewriterEffect();
         startFloatingAnimation();
         simulateNeuralSync();
         startNeonBreathing();
-
-    }
-
-    private void setupBackgroundMedia() {
-        try {
-            URL resource = getClass().getResource("/Videos/Briefing.mp4");
-            if (resource != null) {
-                bgVideo = new MediaPlayer(new Media(resource.toExternalForm()));
-                mediaView.setMediaPlayer(bgVideo);
-                bgVideo.setCycleCount(MediaPlayer.INDEFINITE);
-                bgVideo.setMute(true);
-                bgVideo.play();
-                mediaView.fitWidthProperty().bind(rootPane.widthProperty());
-                mediaView.fitHeightProperty().bind(rootPane.heightProperty());
-            }
-        } catch (Exception e) {
-            System.err.println("GENEX // VIDEO_FAILURE: " + e.getMessage());
-        }
     }
 
     private void startAmbientMusic() {
@@ -83,12 +68,12 @@ public class RulesController {
     }
 
     private void startTypewriterEffect() {
-        String fullText = "> SCANNING POUR LES CHEATS... [DONE]\n" +
-                "> VERIFICATION DE L'IDENTITE DU JOUEUR... [DONE]\n" +
-                "> RULE 01: BEHAVIORAL CODE 104 ACTIVE.\n" +
-                "> RULE 02: LATENCY SPIKES RESULT IN DISCONNECT.\n" +
-                "> RULE 03: USE OF EXPLOITS IS PERMANENT BAN.\n" +
-                "> RULE 04: HAVE FUN OR BE TERMINATED.";
+        String fullText = "> INITIALISATION DU PROTOCOLE SIGNAL FLASH... [DONE]\n" +
+                "> SCANNING DES SYNAPSES VISUELLES... [DONE]\n" +
+                "> REGLE 01: NE LISEZ PAS LE MOT ÉCRIT.\n" +
+                "> REGLE 02: VOCALISEZ UNIQUEMENT LA COULEUR DE L'ANCRE.\n" +
+                "> REGLE 03: TOUTE HÉSITATION ENTRAÎNE UNE ERREUR SYSTÈME.\n" +
+                "> REGLE 04: PERFORMANCE OPTIMALE REQUISE POUR ÉVITER LE REBOOT.";
 
         final IntegerProperty i = new SimpleIntegerProperty(0);
         Timeline timeline = new Timeline();
@@ -130,15 +115,17 @@ public class RulesController {
     }
 
     private void simulateNeuralSync() {
-        syncProgress.setProgress(0);
+        syncProgress.setProgress(0.01);
         Timeline task = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(syncProgress.progressProperty(), 0)),
-                new KeyFrame(Duration.seconds(8), new KeyValue(syncProgress.progressProperty(), 1.0))
+                new KeyFrame(Duration.ZERO, new KeyValue(syncProgress.progressProperty(), 0.01)),
+                new KeyFrame(Duration.seconds(10), new KeyValue(syncProgress.progressProperty(), 1.0))
         );
         task.setOnFinished(e -> {
             System.out.println("GENEX // SYSTEM_SYNC_COMPLETE");
             btnStart.setDisable(false);
+            btnStart.setOpacity(1.0);
         });
+
         task.play();
     }
 
@@ -150,6 +137,8 @@ public class RulesController {
             Stage stage = (Stage) rootPane.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setMaximized(true);
+            stage.setMaximized(true);
+            stage.show();
             terminateNeuralLink();
         } catch (IOException e) {
             e.printStackTrace();
@@ -175,11 +164,6 @@ public class RulesController {
             bgMusic.stop();
             bgMusic.dispose();
             System.out.println("[CLEANUP SYSTEM] MUSIC DISPOSED");
-        }
-        if (bgVideo != null) {
-            bgVideo.stop();
-            bgVideo.dispose();
-            System.out.println("[CLEANUP SYSTEM] IMAGE DISPOSED");
         }
     }
 

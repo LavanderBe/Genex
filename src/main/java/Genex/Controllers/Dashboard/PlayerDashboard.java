@@ -57,9 +57,6 @@ public class PlayerDashboard {
 
     @FXML
     public void initialize() {
-                User u=new CrudUser().getUser_withmail("maxime@max.co");
-                Player p=new CrudPlayer().getPlayerInfo(u.getId());
-                SessionManager.getInstance().setCurrentUser(p);
         sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername().toUpperCase());
         RoleLabel.setText(SessionManager.getInstance().getCurrentPlayer().getRole().toUpperCase());
         setupAvatar();
