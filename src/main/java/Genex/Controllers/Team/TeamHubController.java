@@ -22,6 +22,8 @@ public class TeamHubController {
     @FXML private VBox contentArea;
     @FXML private TextField searchField;
     @FXML private Button btnAddTeam;
+    @FXML private Button btnRanking;
+    @FXML private Button btnBackFromRanking;
     @FXML private FlowPane teamCardsContainer;
 
     private CrudTeam crudTeam;
@@ -43,6 +45,11 @@ public class TeamHubController {
     public void setContentContainer(javafx.scene.layout.Pane contentContainer) {
         this.mainContentContainer = contentContainer;
         if (allTeams != null && !allTeams.isEmpty()) displayTeams(allTeams);
+    }
+
+    @FXML
+    private void backToTeamList() {
+        loadTeamsFromDatabase();
     }
 
     // ── Open Add Team Modal (Tournament pattern) ────────────────────
@@ -125,6 +132,7 @@ public class TeamHubController {
     @FXML
     private void openRankingView() {
         teamCardsContainer.getChildren().clear();
+        showRankingHeader();
 
         VBox rankingBoard = new VBox(10);
         rankingBoard.setPrefWidth(900);
@@ -146,6 +154,32 @@ public class TeamHubController {
         }
 
         teamCardsContainer.getChildren().add(rankingBoard);
+    }
+
+    private void showRankingHeader() {
+        if (btnBackFromRanking != null) {
+            btnBackFromRanking.setVisible(true);
+            btnBackFromRanking.setManaged(true);
+        }
+        btnAddTeam.setVisible(false);
+        btnAddTeam.setManaged(false);
+        btnRanking.setVisible(false);
+        btnRanking.setManaged(false);
+        searchField.setVisible(false);
+        searchField.setManaged(false);
+    }
+
+    private void showTeamListHeader() {
+        if (btnBackFromRanking != null) {
+            btnBackFromRanking.setVisible(false);
+            btnBackFromRanking.setManaged(false);
+        }
+        btnAddTeam.setVisible(true);
+        btnAddTeam.setManaged(true);
+        btnRanking.setVisible(true);
+        btnRanking.setManaged(true);
+        searchField.setVisible(true);
+        searchField.setManaged(true);
     }
 
     private javafx.scene.layout.HBox createRankingRow(TeamRankingEntry entry) {
@@ -308,6 +342,7 @@ public class TeamHubController {
     private void loadTeamsFromDatabase() {
         try {
             System.out.println("Loading teams from database...");
+            showTeamListHeader();
             allTeams = crudTeam.getAll();
             System.out.println("Loaded " + allTeams.size() + " teams");
             displayTeams(allTeams);

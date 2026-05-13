@@ -79,9 +79,24 @@ public class CrudTeam {
                 int membersDeleted = pstMembers.executeUpdate();
                 System.out.println("✅ Deleted " + membersDeleted + " team members");
                 
-                // 2. Delete all training notifications for this team's sessions
-                String deleteNotificationsQuery = "DELETE FROM training_notifications WHERE session_id IN " +
-                        "(SELECT id FROM training_sessions WHERE team_id=?)";
+                try {
+                    String deleteAttendanceQuery = "DELETE FROM training_attendance WHERE team_id=?";
+                    PreparedStatement pstAttendance = conn.prepareStatement(deleteAttendanceQuery);
+                    pstAttendance.setString(1, team.getId());
+                    int attendanceDeleted = pstAttendance.executeUpdate();
+                    System.out.println("Deleted " + attendanceDeleted + " attendance rows");
+                } catch (SQLException attendanceError) {
+                    String message = attendanceError.getMessage() != null
+                            ? attendanceError.getMessage().toLowerCase()
+                            : "";
+                    if (!message.contains("training_attendance")) {
+                        throw attendanceError;
+                    }
+                    System.out.println("Attendance table not available yet, skipping attendance cleanup");
+                }
+
+                // 2. Delete all training notifications for this team
+                String deleteNotificationsQuery = "DELETE FROM training_notifications WHERE team_id=?";
                 PreparedStatement pstNotifications = conn.prepareStatement(deleteNotificationsQuery);
                 pstNotifications.setString(1, team.getId());
                 int notificationsDeleted = pstNotifications.executeUpdate();

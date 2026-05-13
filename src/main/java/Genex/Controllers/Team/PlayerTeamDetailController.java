@@ -178,7 +178,6 @@ public class PlayerTeamDetailController {
             if (response == javafx.scene.control.ButtonType.OK) {
                 try {
                     crudTeamMember.removeMember(team.getId(), currentUserId);
-                    if (browserController != null) browserController.showTeamList();
                 } catch (Exception e) {
                     System.err.println("Error quitting team: " + e.getMessage());
                     javafx.scene.control.Alert error = new javafx.scene.control.Alert(
@@ -187,7 +186,10 @@ public class PlayerTeamDetailController {
                     error.setHeaderText(null);
                     error.setContentText("Impossible de quitter l'équipe.");
                     error.showAndWait();
+                    return;
                 }
+                this.team = null;
+                if (browserController != null) browserController.showTeamList();
             }
         });
     }
@@ -206,8 +208,6 @@ public class PlayerTeamDetailController {
             if (response == javafx.scene.control.ButtonType.OK) {
                 try {
                     new Genex.services.CrudTeam().deleteEntity(team);
-                    // Navigate back to the team list
-                    if (browserController != null) browserController.showTeamList();
                 } catch (Exception e) {
                     System.err.println("Error deleting team: " + e.getMessage());
                     javafx.scene.control.Alert error = new javafx.scene.control.Alert(
@@ -216,7 +216,10 @@ public class PlayerTeamDetailController {
                     error.setHeaderText(null);
                     error.setContentText("Impossible de supprimer l'équipe.");
                     error.showAndWait();
+                    return;
                 }
+                this.team = null;
+                if (browserController != null) browserController.showTeamList();
             }
         });
     }
@@ -287,7 +290,8 @@ public class PlayerTeamDetailController {
             StackPane modalOverlay = loader.load();
 
             // Add modal overlay to the stack
-            swapPane.getChildren().add(modalOverlay);
+            StackPane overlayHost = detailRootStackPane != null ? detailRootStackPane : swapPane;
+            overlayHost.getChildren().add(modalOverlay);
 
             // Get controller and set team
             GenerateScheduleModalController controller = loader.getController();
@@ -297,14 +301,14 @@ public class PlayerTeamDetailController {
                 System.out.println("✅ Schedule saved: " + sessions.size() + " sessions");
 
                 // Remove modal overlay and refresh calendar
-                swapPane.getChildren().remove(modalOverlay);
+                overlayHost.getChildren().remove(modalOverlay);
                 if (calendarViewController != null) {
                     calendarViewController.refresh();
                 }
             });
 
             controller.setOnCloseCallback(() -> {
-                swapPane.getChildren().remove(modalOverlay);
+                overlayHost.getChildren().remove(modalOverlay);
             });
 
         } catch (Exception e) {
@@ -746,9 +750,9 @@ public class PlayerTeamDetailController {
         presenceRow.setAlignment(Pos.CENTER_LEFT);
 
         List<TrainingAttendance.Status> statuses =
-                crudTrainingAttendance.getRecentPresence(team.getId(), player.getId(), 6);
+                crudTrainingAttendance.getRecentPresence(team.getId(), player.getId(), 3);
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 3; i++) {
             TrainingAttendance.Status status = i < statuses.size() ? statuses.get(i) : null;
             Label chip = new Label(status == TrainingAttendance.Status.PRESENT ? "P" :
                     status == TrainingAttendance.Status.ABSENT ? "A" : "-");
@@ -874,7 +878,7 @@ public class PlayerTeamDetailController {
             
             calendarViewController = loader.getController();
             calendarViewController.setTeamId(team.getId());
-            calendarViewController.setRootStackPane(swapPane);
+            calendarViewController.setRootStackPane(detailRootStackPane != null ? detailRootStackPane : swapPane);
             calendarViewController.setIsCreator(isCreator);
             calendarViewController.setOnRefreshCallback(this::loadMembers);
             

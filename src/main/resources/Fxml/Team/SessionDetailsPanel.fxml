@@ -16,7 +16,7 @@
            alignment="CENTER">
 
     <!-- Panel Container -->
-    <VBox spacing="0" maxWidth="600" maxHeight="700"
+    <VBox spacing="0" maxWidth="560" maxHeight="540"
           style="-fx-background-color: #1a1a2e; -fx-border-color: rgba(139,13,13,0.6); -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12;">
 
         <!-- Header with Close Button -->

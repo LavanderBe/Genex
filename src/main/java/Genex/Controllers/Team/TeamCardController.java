@@ -176,8 +176,11 @@ public class TeamCardController {
             Team freshTeam = crudTeam.getEntity(team.getId());
             
             if (freshTeam == null) {
-                System.err.println("ERROR: Could not reload team from database!");
-                freshTeam = team; // Fallback to existing team object
+                System.err.println("Team no longer exists in database. Refreshing list.");
+                if (onUpdateCallback != null) {
+                    onUpdateCallback.run();
+                }
+                return;
             } else {
                 System.out.println("✅ Reloaded team from database");
                 System.out.println("Logo: " + freshTeam.getLogoImage());
@@ -351,17 +354,23 @@ public class TeamCardController {
                 CrudTeam crudTeam = new CrudTeam();
                 crudTeam.deleteEntity(team);
 
-                System.out.println("Team deleted: " + team.getName());
-
-                // Refresh the hub
-                if (onUpdateCallback != null) {
-                    onUpdateCallback.run();
-                }
-
             } catch (Exception e) {
                 System.err.println("Error deleting team");
                 e.printStackTrace();
                 showAlert("Erreur", "Impossible de supprimer l'équipe.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            System.out.println("Team deleted: " + team.getName());
+            team = null;
+
+            if (onUpdateCallback != null) {
+                try {
+                    onUpdateCallback.run();
+                } catch (Exception refreshError) {
+                    System.err.println("Team deleted, but refreshing the list failed");
+                    refreshError.printStackTrace();
+                }
             }
         }
     }

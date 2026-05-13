@@ -12,7 +12,7 @@
            alignment="CENTER">
 
     <!-- Modal Container -->
-    <VBox maxWidth="700" maxHeight="650"
+    <VBox prefWidth="620" maxWidth="620" maxHeight="560"
           style="-fx-background-color: #1a1a2e; -fx-background-radius: 16; -fx-border-color: #8B0D0D; -fx-border-width: 2; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);">
 
         <!-- Header -->
@@ -92,7 +92,7 @@
                 <VBox spacing="6">
                     <Label text="Prévisualisation"
                            style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
-                    <TextArea fx:id="txtPreview" prefRowCount="12" wrapText="true" editable="false"
+                    <TextArea fx:id="txtPreview" prefRowCount="7" wrapText="true" editable="false"
                               style="-fx-control-inner-background: #0d0d1a; -fx-text-fill: white; -fx-font-family: 'Consolas', 'Monaco', monospace; -fx-font-size: 11px; -fx-background-color: #0d0d1a; -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6;"
                               promptText="Cliquez sur 'Générer le Planning' pour voir la prévisualisation..." />
                 </VBox>
