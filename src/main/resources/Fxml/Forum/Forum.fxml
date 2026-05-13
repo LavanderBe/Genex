@@ -105,10 +105,6 @@
                                 <Label text="TITRE" styleClass="field-label"/>
                                 <TextField fx:id="titleField" promptText="Titre du forum" styleClass="modal-input"/>
                             </VBox>
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="CRÉÉ PAR" styleClass="field-label"/>
-                                <TextField fx:id="createdByField" promptText="Nom du créateur" styleClass="modal-input"/>
-                            </VBox>
                         </HBox>
 
                         <HBox spacing="20" alignment="CENTER_LEFT">

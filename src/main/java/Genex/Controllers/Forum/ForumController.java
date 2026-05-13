@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletableFuture;
 
 public class ForumController {
@@ -60,8 +61,6 @@ public class ForumController {
     private ComboBox<String> densityFilterField;
     @FXML
     private TextField titleField;
-    @FXML
-    private TextField createdByField;
     @FXML
     private ComboBox<String> categoryField;
     @FXML
@@ -179,11 +178,20 @@ public class ForumController {
         if (!validateForumForm()) {
             return;
         }
+        String creatorLogin = currentUserLogin();
+        if (isBlank(creatorLogin)) {
+            showAlert(Alert.AlertType.WARNING, "Session requise", "Le créateur est automatiquement défini depuis le login. Veuillez vous reconnecter.");
+            return;
+        }
+        if (creatorLogin.length() > MAX_CREATED_BY_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le login utilisateur ne doit pas dépasser " + MAX_CREATED_BY_LENGTH + " caractères.");
+            return;
+        }
         try {
             Forum forum = new Forum(
                     titleField.getText().trim(),
                     descriptionArea.getText() == null ? "" : descriptionArea.getText().trim(),
-                    createdByField.getText().trim()
+                    creatorLogin
             );
             forum.setCreatedAt(LocalDateTime.now());
             crudForum.addEntity(forum);
@@ -222,11 +230,14 @@ public class ForumController {
         })
         .exceptionally(e -> {
             Platform.runLater(() -> {
-                System.err.println("[GROQ] Erreur: " + e.getMessage());
-                e.printStackTrace();
+                Throwable cause = e instanceof CompletionException && e.getCause() != null ? e.getCause() : e;
+                String errorMessage = cause.getMessage() == null || cause.getMessage().isBlank()
+                        ? "Erreur inconnue"
+                        : cause.getMessage();
+                System.err.println("[GROQ] Erreur: " + errorMessage);
                 generateDescButton.setDisable(false);
                 generateDescButton.setText("✨ GÉNÉRER");
-                showAlert(Alert.AlertType.ERROR, "Erreur Groq", "Erreur: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Erreur Groq", errorMessage);
             });
             return null;
         });
@@ -245,10 +256,11 @@ public class ForumController {
             return;
         }
         try {
+            Forum selectedForum = findForumById(selectedForumId);
             Forum forum = new Forum();
             forum.setTitle(titleField.getText().trim());
             forum.setDescription(descriptionArea.getText() == null ? "" : descriptionArea.getText().trim());
-            forum.setCreatedBy(createdByField.getText().trim());
+            forum.setCreatedBy(resolveCreatorForUpdate(selectedForum));
             crudForum.updateEntity(forum, selectedForumId);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum modifié avec succès.");
             clearFormFields();
@@ -633,7 +645,6 @@ public class ForumController {
         selectedForumId = forum.getId();
         titleField.setText(safe(forum.getTitle()));
         descriptionArea.setText(safe(forum.getDescription()));
-        createdByField.setText(safe(forum.getCreatedBy()));
         refreshForumCards();
     }
 
@@ -721,14 +732,6 @@ public class ForumController {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le titre ne doit pas dépasser " + MAX_TITLE_LENGTH + " caractères.");
             return false;
         }
-        if (isBlank(createdByField.getText())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ « Créé par » est obligatoire.");
-            return false;
-        }
-        if (createdByField.getText().length() > MAX_CREATED_BY_LENGTH) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ « Créé par » ne doit pas dépasser " + MAX_CREATED_BY_LENGTH + " caractères.");
-            return false;
-        }
         if (!isBlank(descriptionArea.getText()) && descriptionArea.getText().length() > MAX_DESCRIPTION_LENGTH) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La description ne doit pas dépasser " + MAX_DESCRIPTION_LENGTH + " caractères.");
             return false;
@@ -739,7 +742,6 @@ public class ForumController {
     private void clearFormFields() {
         selectedForumId = null;
         titleField.clear();
-        createdByField.clear();
         descriptionArea.clear();
         categoryField.setValue("GÉNÉRAL");
         topicStatusField.setValue("OUVERT");
@@ -808,6 +810,21 @@ public class ForumController {
         return value == null ? "" : value;
     }
 
+    private String currentUserLogin() {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return "";
+        }
+        return safe(currentUser.getUsername()).trim();
+    }
+
+    private String resolveCreatorForUpdate(Forum selectedForum) {
+        if (selectedForum != null && !isBlank(selectedForum.getCreatedBy())) {
+            return selectedForum.getCreatedBy().trim();
+        }
+        return currentUserLogin();
+    }
+
     private void resolveCurrentRole() {
         User currentUser = SessionManager.getInstance().getCurrentUser();
         adminMode = currentUser != null && "ADMIN".equalsIgnoreCase(currentUser.getRole());
@@ -830,7 +847,6 @@ public class ForumController {
         hideNode(forumActionsSidebarCard);
         hideNode(forumEmptyCreateButton);
         titleField.setEditable(false);
-        createdByField.setEditable(false);
         descriptionArea.setEditable(false);
         categoryField.setDisable(true);
         topicStatusField.setDisable(true);

@@ -144,6 +144,8 @@ public class PostsController {
     private final List<User> users = new ArrayList<>();
     private final Map<String, ModerationState> moderationByPostId = new HashMap<>();
     private final Map<String, ReactionCounter> reactionsByPostId = new HashMap<>();
+    // Tracks which user reacted to which post and which reaction they chose
+    private final Map<String, Map<String, ReactionType>> userReactionsByPostId = new HashMap<>();
     private final Map<String, String> forumNameById = new HashMap<>();
     private final Map<String, String> forumIdByName = new LinkedHashMap<>();
     private final Map<String, String> authorNameById = new HashMap<>();
@@ -203,6 +205,14 @@ public class PostsController {
                 case LIKE -> likes++;
                 case HEART -> hearts++;
                 case LAUGH -> laughs++;
+            }
+        }
+
+        private void decrement(ReactionType type) {
+            switch (type) {
+                case LIKE -> likes = Math.max(0, likes - 1);
+                case HEART -> hearts = Math.max(0, hearts - 1);
+                case LAUGH -> laughs = Math.max(0, laughs - 1);
             }
         }
 
@@ -333,6 +343,7 @@ public class PostsController {
             if (!isBlank(post.getId())) {
                 moderationByPostId.put(post.getId(), isSpam ? ModerationState.SPAM : ModerationState.VISIBLE);
                 reactionsByPostId.putIfAbsent(post.getId(), new ReactionCounter());
+                userReactionsByPostId.putIfAbsent(post.getId(), new HashMap<>());
             }
 
             StringBuilder message = new StringBuilder("Post créé avec succès.");
@@ -386,6 +397,7 @@ public class PostsController {
 
             moderationByPostId.put(selectedPostId, isSpam ? ModerationState.SPAM : ModerationState.VISIBLE);
             reactionsByPostId.putIfAbsent(selectedPostId, new ReactionCounter());
+            userReactionsByPostId.putIfAbsent(selectedPostId, new HashMap<>());
 
             StringBuilder message = new StringBuilder("Post modifié avec succès.");
             if (isSpam) {
@@ -417,6 +429,7 @@ public class PostsController {
             crudPosts.deleteEntity(post);
             moderationByPostId.remove(selectedPostId);
             reactionsByPostId.remove(selectedPostId);
+            userReactionsByPostId.remove(selectedPostId);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Post supprimé avec succès.");
             clearFormFields();
             loadPosts();
@@ -888,6 +901,7 @@ public class PostsController {
         }
         reactionsByPostId.keySet().removeIf(id -> !existingIds.contains(id));
         moderationByPostId.keySet().removeIf(id -> !existingIds.contains(id));
+        userReactionsByPostId.keySet().removeIf(id -> !existingIds.contains(id));
     }
 
     private String reactionSummary(Posts post) {
@@ -913,7 +927,30 @@ public class PostsController {
             if (isBlank(post.getId())) {
                 return;
             }
-            reactionsByPostId.computeIfAbsent(post.getId(), key -> new ReactionCounter()).increment(reactionType);
+            User currentUser = SessionManager.getInstance().getCurrentUser();
+            if (currentUser == null || isBlank(currentUser.getId())) {
+                showAlert(Alert.AlertType.WARNING, "Connexion requise", "Connecte-toi pour réagir à un post.");
+                return;
+            }
+            String userId = currentUser.getId();
+            Map<String, ReactionType> reactionsForPost = userReactionsByPostId.computeIfAbsent(post.getId(), k -> new HashMap<>());
+            ReactionType existing = reactionsForPost.get(userId);
+            ReactionCounter counter = reactionsByPostId.computeIfAbsent(post.getId(), key -> new ReactionCounter());
+
+            if (existing == null) {
+                // first reaction
+                reactionsForPost.put(userId, reactionType);
+                counter.increment(reactionType);
+            } else if (existing == reactionType) {
+                // toggle off (remove reaction)
+                reactionsForPost.remove(userId);
+                counter.decrement(reactionType);
+            } else {
+                // switch reaction (replace existing with new)
+                reactionsForPost.put(userId, reactionType);
+                counter.decrement(existing);
+                counter.increment(reactionType);
+            }
             refreshPostCards();
         });
         return button;
