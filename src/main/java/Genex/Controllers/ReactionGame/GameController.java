@@ -39,7 +39,7 @@ public class GameController {
 
     private String targetColor;
     private int score = 0;
-    private final int WINNING_SCORE = 5;
+    private final int WINNING_SCORE = 20;
     private volatile boolean running = true;
 
     private long startTimeMillis;
