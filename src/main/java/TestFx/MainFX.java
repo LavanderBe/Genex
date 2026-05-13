@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/Dashboard.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("GENEX");
         primaryStage.setScene(scene);

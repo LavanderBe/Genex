@@ -1,14 +1,12 @@
 package Genex.services;
 
-import java.sql.Date;
-import java.sql.ResultSet;
+import java.sql.*;
 
 import Genex.entities.Player;
 import Genex.utils.Myconnection;
 
 import java.time.LocalDate;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -234,5 +232,88 @@ public class CrudPlayer {
             throw new RuntimeException(e);
         }
     }
+
+    public Player getPlayerInfo(String id){
+        String requete = "SELECT p.*, u.username, u.email, u.role " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "WHERE id=? ";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setString(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                Player player = new Player();
+                player.setId(rs.getString("user_id"));
+
+                player.setUsername(rs.getString("username"));
+                player.setEmail(rs.getString("email"));
+                player.setRole(rs.getString("role"));
+
+                player.setPrenom(rs.getString("first_name"));
+                player.setNom(rs.getString("last_name"));
+                player.setNickname(rs.getString("nickname"));
+                player.setCin(rs.getString("cin"));
+
+                Date birthDate = rs.getDate("date_of_birth");
+
+                player.setBirthday(birthDate.toLocalDate());
+                player.setNationality(rs.getString("nationality"));
+                player.setCity(rs.getString("city"));
+                player.setAvatar_url(rs.getString("avatar_url"));
+                player.setGames_played(new CrudPlayer_Game().get_GamesPlayed(player));
+                System.out.println(player);
+                System.out.println(player.getUsername());
+                return player;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public boolean sendPromotionRequest(Player p){
+        String requete="INSERT INTO promotion_requests (player_id, date) " +
+                "Values (?,?)";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, p.getId());
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            pst.setTimestamp(2, now);
+            pst.executeUpdate();
+            System.out.println("Request sent successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isPromotionSent(Player p){
+        String requete="SELECT * " +
+                "FROM promotion_requests " +
+                "WHERE player_id=?";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, p.getId());
+            ResultSet rs =pst.executeQuery();
+            if (rs.next()) return true;
+            else return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteRequest(Player p){
+        String requete="DELETE FROM promotion_requests WHERE player_id=? ";
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1, p.getId());
+            pst.executeUpdate();
+            System.out.printf("Request deleted succesfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 }

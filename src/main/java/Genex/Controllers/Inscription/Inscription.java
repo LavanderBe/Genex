@@ -67,6 +67,7 @@ public class Inscription {
     @FXML
     public void initialize() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {updateStrengthIndicator(newValue);});
+        setupAgeRestriction();
         cinField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
             if (newText.matches("([0-9]*)?") && newText.length() <= 8)
@@ -315,5 +316,18 @@ public class Inscription {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private void setupAgeRestriction() {
+        LocalDate maxAllowedDate = LocalDate.now().minusYears(13);
+        dobPicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (date.isAfter(maxAllowedDate)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #1a0505; -fx-text-fill: #444444;");
+                }
+            }
+        });
     }
 }

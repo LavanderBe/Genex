@@ -4,6 +4,7 @@ import Genex.entities.Game;
 import Genex.entities.Player;
 import Genex.services.CrudPlayer;
 import Genex.services.CrudPlayer_Game;
+import Genex.services.CrudUser;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -29,6 +30,7 @@ public class PlayerController {
 
     private final CrudPlayer_Game cpg=new CrudPlayer_Game();
     private final CrudPlayer cp = new CrudPlayer();
+    private final CrudUser cu=new CrudUser();
 
     private List<Player> allPlayersMaster = FXCollections.observableArrayList();
 
@@ -49,47 +51,29 @@ public class PlayerController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Player/AddPlayer.fxml"));
             Parent addPlayerForm = loader.load();
             AddPlayerController formController = loader.getController();
-
-            // 1. Setup the Overlay (The dark background)
             StackPane overlay = new StackPane(addPlayerForm);
             overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0);"); // Start transparent
             overlay.setOpacity(0);
             rootStackPane.getChildren().add(overlay);
-
-            // 2. Setup Blur Effect
             GaussianBlur blur = new GaussianBlur(0);
             contentArea.setEffect(blur);
-
-            // 3. Setup the Form Panel start position (Slide in from top)
             addPlayerForm.setTranslateY(-700);
             addPlayerForm.setScaleX(0.9);
             addPlayerForm.setScaleY(0.9);
-
-            // 4. ANIMATION SEQUENCE
-            // A. Fade in the darkness
             FadeTransition fadeIn = new FadeTransition(Duration.millis(400), overlay);
             fadeIn.setToValue(1);
-
-            // B. Slide & Scale the form shard
             TranslateTransition slideDown = new TranslateTransition(Duration.millis(500), addPlayerForm);
             slideDown.setToY(0);
-
             ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), addPlayerForm);
             scaleUp.setToX(1.0);
             scaleUp.setToY(1.0);
-
-            // C. Animate the Blur radius (Timeline is needed for the radius property)
             Timeline blurTimeline = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
                     new KeyFrame(Duration.millis(400), new KeyValue(blur.radiusProperty(), 15))
             );
-
             ParallelTransition entrance = new ParallelTransition(fadeIn, slideDown, scaleUp, blurTimeline);
             entrance.play();
-
-            // 5. CALLBACK FOR CLOSING
             formController.setOnCloseCallback(() -> {
-                // Reverse Animations
                 slideDown.setRate(-1);
                 scaleUp.setRate(-1);
                 fadeIn.setRate(-1);
@@ -103,7 +87,7 @@ public class PlayerController {
                 exit.setOnFinished(e -> {
                     rootStackPane.getChildren().remove(overlay);
                     contentArea.setEffect(null);
-                    loadAllPlayers(); // Refresh the list
+                    loadAllPlayers();
                 });
                 exit.play();
             });
@@ -135,9 +119,7 @@ public class PlayerController {
         avatar.setPrefSize(45, 45);
         avatar.getStyleClass().add("avatar-slot");
 
-        String url = player.getAvatar_url(); // Assuming this getter exists in your Player entity
-
-        System.out.println(player.getUsername()+"  "+url);
+        String url = player.getAvatar_url();
 
         if (url != null && !url.isEmpty()) {
             ImageView iv = new ImageView();
@@ -156,7 +138,7 @@ public class PlayerController {
         } else {
             Label initial = new Label(player.getNickname().substring(0, 1).toUpperCase());
             initial.setTextFill(Color.WHITE);
-            initial.getStyleClass().add("avatar-initial-label"); // Added for CSS control
+            initial.getStyleClass().add("avatar-initial-label");
             avatar.getChildren().add(initial);
         }
 
@@ -172,8 +154,14 @@ public class PlayerController {
 
         VBox specs = new VBox(5);
         specs.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        Label role = new Label("PROTOCOLE: " + player.getRole());
+        Label role = new Label("PROTOCOLE: JOUEUR");
+        role.setId("role");
         role.setStyle("-fx-text-fill: #5c7cfa; -fx-font-family: 'Consolas'; -fx-font-size: 10px;");
+        if (player.getRole().equals("coach")){
+            role.setText("PROTOCOLE: COACH");
+            role.setStyle("-fx-text-fill: #ffbb33;");
+        }
+
         Label level = new Label("NOM: "+ player.getNom() + " "+player.getPrenom());
         level.setStyle("-fx-text-fill: #444466; -fx-font-family: 'Consolas'; -fx-font-size: 10px;");
         specs.getChildren().addAll(role, level);
@@ -192,16 +180,26 @@ public class PlayerController {
         terminateBtn.getStyleClass().add("blade-btn-delete");
         terminateBtn.setOnAction(e -> handleTerminate(player, blade));
 
-        Button promoteBtn = new Button("PROMOUVOIR");
-        promoteBtn.getStyleClass().add("blade-btn-promote");
-
-        promoteBtn.setOnAction(e -> {
-            e.consume();
-            handlePromotion(player, blade);
-        });
-
-        actions.getChildren().addAll(promoteBtn, modifyBtn, terminateBtn);
-
+        if (player.getRole().equals("player")){
+            Button promoteBtn = new Button("PROMOUVOIR");
+            promoteBtn.getStyleClass().add("blade-btn-promote");
+            promoteBtn.setId("promotionBtn");
+            promoteBtn.setOnAction(e -> {
+                e.consume();
+                handlePromotion(player, blade);
+            });
+            actions.getChildren().addAll(promoteBtn, modifyBtn, terminateBtn);
+        }
+        else {
+            Button promoteBtn = new Button("RETROGRADER");
+            promoteBtn.getStyleClass().add("blade-btn-promote");
+            promoteBtn.setId("promotionBtn");
+            promoteBtn.setOnAction(e -> {
+                e.consume();
+                handlePromotion(player, blade);
+            });
+            actions.getChildren().addAll(promoteBtn, modifyBtn, terminateBtn);
+        }
         FlowPane gamesLinked = new FlowPane();
         gamesLinked.setHgap(8);
         gamesLinked.setVgap(5);
@@ -257,26 +255,46 @@ public class PlayerController {
     }
 
     private void handlePromotion(Player player, HBox blade) {
-        // 1. Database Update
-        // cp.promoteToCoach(player.getId());
-        System.out.println("UPGRADING_PROTOCOL: " + player.getNickname() + " -> COACH");
 
-        FadeTransition flash = new FadeTransition(Duration.millis(100), blade);
-        flash.setFromValue(1.0);
-        flash.setToValue(0.3);
-        flash.setCycleCount(4);
-        flash.setAutoReverse(true);
+        if (player.getRole().equals("player")){
+            cu.promoteToCoach(player);
+            player.setRole("coach");
+            Label role=(Label) blade.lookup("#role");
+            Button promote=(Button) blade.lookup("#promotionBtn");
 
-        flash.setOnFinished(e -> {
-            // Update the role label inside the blade dynamically
-            // (Assuming you have a reference to the role label)
-            // roleLabel.setText("PROTOCOL: COACH");
-            // roleLabel.setStyle("-fx-text-fill: #ffbb33;"); // Gold color
+            FadeTransition flash = new FadeTransition(Duration.millis(100), blade);
+            flash.setFromValue(1.0);
+            flash.setToValue(0.3);
+            flash.setCycleCount(4);
+            flash.setAutoReverse(true);
+            flash.setOnFinished(e -> {
+                role.setText("PROTOCOLE: COACH");
+                role.setStyle("-fx-text-fill: #ffbb33; -fx-font-family: 'Consolas'; -fx-font-size: 10px;");
+                promote.setText("RETROGRADER");
+            });
+            flash.play();
+        }
+        else {
+            cu.demoteToPlayer(player);
+            cp.deleteRequest(player);
+            player.setRole("player");
+            Label role=(Label) blade.lookup("#role");
+            Button promote=(Button) blade.lookup("#promotionBtn");
 
-            System.out.println("PROMOTION_SYNC_COMPLETE");
-        });
+            FadeTransition flash = new FadeTransition(Duration.millis(100), blade);
+            flash.setFromValue(1.0);
+            flash.setToValue(0.3);
+            flash.setCycleCount(4);
+            flash.setAutoReverse(true);
+            flash.setOnFinished(e -> {
+                role.setText("PROTOCOLE: JOUEUR");
+                role.setStyle("-fx-text-fill: #5c7cfa; -fx-font-family: 'Consolas'; -fx-font-size: 10px;");
+                promote.setText("PROMOUVOIR");
+            });
+            flash.play();
+        }
 
-        flash.play();
+
     }
 
     private void handleModify(Player p) {
@@ -405,5 +423,6 @@ public class PlayerController {
 
         // Optional: Load more details about the player in a side panel
     }
+
 
 }

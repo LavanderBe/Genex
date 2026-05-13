@@ -143,6 +143,8 @@ public class Player extends User {
                 ", birthday=" + birthday +
                 ", nationality='" + nationality + '\'' +
                 ", city='" + city + '\'' +
+                ", avatar_url='" + avatar_url + '\'' +
+                ", games_played=" + games_played +
                 ", tacticalXp=" + tacticalXp +
                 ", totalAttempts=" + totalAttempts +
                 ", correctAnswers=" + correctAnswers +

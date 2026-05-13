@@ -295,19 +295,11 @@ public class AddPlayerController {
     void handleUploadPic(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("GENEX // SELECT_IDENTITY_ASSET");
-
-        // Set extension filters (Only images)
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        // Get the current stage from the event source
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
-
         if (selectedFile != null) {
             this.temporaryAvatarUrl = selectedFile.toURI().toString();
-
             System.out.println("Local Asset Linked: " + this.temporaryAvatarUrl);
         }
     }
@@ -334,7 +326,9 @@ public class AddPlayerController {
 
             });
 
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void shakeNode(javafx.scene.Node node) {

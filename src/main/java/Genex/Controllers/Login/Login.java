@@ -1,7 +1,9 @@
 package Genex.Controllers.Login;
 
 import Genex.Server.LocalHttpServer;
+import Genex.entities.Player;
 import Genex.entities.User;
+import Genex.services.CrudPlayer;
 import Genex.services.CrudUser;
 import Genex.services.GoogleAuthService;
 import Genex.services.UserControl;
@@ -154,8 +156,8 @@ public class Login {
             if (cu.check_email(email)) {
                 User u = cu.getUser_withmail(email);
                 if (u.verifyPassword(password)) {
-                    SessionManager.getInstance().setCurrentUser(u);
                     if (u.getRole().equals("admin")) {
+                        SessionManager.getInstance().setCurrentUser(u);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
                         Parent root = null;
                         try {
@@ -173,6 +175,8 @@ public class Login {
                         stage.show();
                         cleanup();
                     } else {
+                        Player p=new CrudPlayer().getPlayerInfo(u.getId());
+                        SessionManager.getInstance().setCurrentUser(p);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
                         Parent root = null;
                         try {
@@ -298,7 +302,6 @@ public class Login {
             u.setSalt("NO_SALT_GOOGLE");
             cu.addEntity(u);
             u=cu.getUser_withmail(email);
-            //TODO :load first time login to finish player info
         }
         SessionManager.getInstance().setCurrentUser(u);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));

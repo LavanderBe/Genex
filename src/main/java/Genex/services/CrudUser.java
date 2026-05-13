@@ -272,4 +272,35 @@ public class CrudUser implements ICrud<User> {
         return users;
     }
 
+    public boolean promoteToCoach(User p){
+        String requete="UPDATE users " +
+                "SET role='coach' " +
+                "WHERE id=? ";
+        System.out.println(p.getId());
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,p.getId());
+            pst.executeUpdate();
+            System.out.println("User promoted successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean demoteToPlayer(User p){
+        String requete="UPDATE users " +
+                "SET role='player' " +
+                "WHERE id=? ";
+        System.out.println(p.getId());
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,p.getId());
+            pst.executeUpdate();
+            System.out.println("User demoted successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
