@@ -22,10 +22,10 @@
 
         <!-- Header -->
         <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label styleClass="page-title" text="Équipes" />
             <Button fx:id="btnBackFromRanking" onAction="#backToTeamList"
                     visible="false" managed="false"
                     styleClass="player-view-btn" text="RETOUR" />
+            <Label styleClass="page-title" text="Équipes" />
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="btnAddTeam" onAction="#openAddTeamDrawer"
                     styleClass="player-add-session-btn" text="＋  AJOUTER" />
