@@ -132,17 +132,7 @@ public class FinanceOverviewController {
 
         budgetChart.getData().addAll(allocSeries, spentSeries);
 
-        // Style the bars after adding data
-        javafx.application.Platform.runLater(() -> {
-            allocSeries.getData().forEach(d -> {
-                if (d.getNode() != null)
-                    d.getNode().setStyle("-fx-bar-fill: #5c7cfa;");
-            });
-            spentSeries.getData().forEach(d -> {
-                if (d.getNode() != null)
-                    d.getNode().setStyle("-fx-bar-fill: #8B0D0D;");
-            });
-        });
+        // CSS handles colors via .default-color0 and .default-color1
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -183,46 +173,29 @@ public class FinanceOverviewController {
     private void buildSponsorBreakdown(int total, int tournoi, int equipe) {
         sponsorBreakdownBox.getChildren().clear();
         if (total == 0) return;
-        addBreakdownBar(sponsorBreakdownBox, "Tournois", tournoi, total, "#5c7cfa");
-        addBreakdownBar(sponsorBreakdownBox, "Equipes",  equipe,  total, "#22c55e");
+        addBreakdownBar(sponsorBreakdownBox, "Tournois", tournoi, total, "progress-cyan");
+        addBreakdownBar(sponsorBreakdownBox, "Equipes",  equipe,  total, "progress-magenta");
     }
 
     private void addBreakdownBar(VBox parent, String label, int count, int total, String color) {
         double pct = total > 0 ? (count * 100.0 / total) : 0;
-
         HBox row = new HBox(10);
         row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        Label lbl = new Label(label);
-        lbl.setStyle("-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px; -fx-min-width: 70;");
+        Label lbl = new Label(label.toUpperCase());
+        lbl.setStyle("-fx-text-fill: rgba(255,255,255,0.45); -fx-font-family: 'Consolas'; -fx-font-size: 10px; -fx-min-width: 80;");
 
-        // Bar track
-        StackPane track = new StackPane();
-        track.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 0; -fx-pref-height: 10;");
-        HBox.setHgrow(track, Priority.ALWAYS);
+        ProgressBar bar = new ProgressBar(pct / 100.0);
+        bar.getStyleClass().addAll("cyber-progress", color);
+        HBox.setHgrow(bar, Priority.ALWAYS);
+        bar.setMaxWidth(Double.MAX_VALUE);
 
-        // Bar fill
-        Region fill = new Region();
-        fill.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 0;");
-        fill.setPrefWidth(0);
-        track.getChildren().add(fill);
-        StackPane.setAlignment(fill, javafx.geometry.Pos.CENTER_LEFT);
+        Label countLbl = new Label(count + " [" + String.format("%.0f", pct) + "%]");
+        countLbl.setStyle("-fx-text-fill: rgba(255,255,255,0.45); -fx-font-family: 'Consolas'; -fx-font-size: 10px; -fx-min-width: 80;");
 
-        Label countLbl = new Label(count + "  (" + String.format("%.0f", pct) + "%)");
-        countLbl.setStyle("-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 11px; -fx-min-width: 70;");
-
-        row.getChildren().addAll(lbl, track, countLbl);
+        row.getChildren().addAll(lbl, bar, countLbl);
         parent.getChildren().add(row);
 
-        // Animate bar width after layout
-        javafx.application.Platform.runLater(() -> {
-            double trackW = track.getWidth();
-            if (trackW > 0) fill.setPrefWidth(trackW * pct / 100.0);
-            else {
-                track.widthProperty().addListener((obs, o, w) ->
-                        fill.setPrefWidth(w.doubleValue() * pct / 100.0));
-            }
-        });
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -278,8 +251,8 @@ public class FinanceOverviewController {
                                 ? e.getValue().divide(maxVal, 4, RoundingMode.HALF_UP).doubleValue() : 0;
                         bar.setProgress(progress);
                         bar.setMaxWidth(Double.MAX_VALUE);
-                        bar.setPrefHeight(8);
-                        bar.setStyle("-fx-accent: #8B0D0D;");
+                        bar.setPrefHeight(6);
+                        bar.getStyleClass().addAll("cyber-progress", "progress-red");
 
                         row.getChildren().addAll(header, bar);
                         topSponsorsBox.getChildren().add(row);
