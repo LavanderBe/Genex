@@ -1,7 +1,9 @@
 package Genex.Controllers.Login;
 
 import Genex.Server.LocalHttpServer;
+import Genex.entities.Player;
 import Genex.entities.User;
+import Genex.services.CrudPlayer;
 import Genex.services.CrudUser;
 import Genex.services.GoogleAuthService;
 import Genex.services.UserControl;
@@ -23,10 +25,14 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
@@ -34,6 +40,8 @@ public class Login {
 
     int nb_errors=3;
 
+
+    @FXML private SVGPath captchabackground;
 
     @FXML private WebView captchaWebView;
     @FXML private Label Errorcaptcha;
@@ -151,8 +159,8 @@ public class Login {
             if (cu.check_email(email)) {
                 User u = cu.getUser_withmail(email);
                 if (u.verifyPassword(password)) {
-                    SessionManager.getInstance().setCurrentUser(u);
                     if (u.getRole().equals("admin")) {
+                        SessionManager.getInstance().setCurrentUser(u);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/dashboard.fxml"));
                         Parent root = null;
                         try {
@@ -170,6 +178,8 @@ public class Login {
                         stage.show();
                         cleanup();
                     } else {
+                        Player p=new CrudPlayer().getPlayerInfo(u.getId());
+                        SessionManager.getInstance().setCurrentUser(p);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
                         Parent root = null;
                         try {
@@ -286,18 +296,26 @@ public class Login {
         System.out.println(email+" "+name);
         CrudUser cu = new CrudUser();
         User u;
-        // 1. Check if this Google user already exists in your WAMP DB
+        Player p;
         if (cu.check_email(email)) {
             u=cu.getUser_withmail(email);
+            p=new CrudPlayer().getPlayerInfo(u.getId());
         } else {
-            u = new User(name,email,"nothing","player");
-            u.setPassword_hash("OAUTH_USER_SECURE");
-            u.setSalt("NO_SALT_GOOGLE");
-            cu.addEntity(u);
-            u=cu.getUser_withmail(email);
-            //TODO :load first time login to finish player info
+            p=new Player();
+            p.setUsername(name);
+            p.setEmail(email);
+            p.setRole("player");
+            p.setNickname(name);
+            p.setCin("000000000");
+            p.setPassword_hash("google auth");
+            p.setSalt("google auth");
+            p.setBirthday(LocalDate.now());
+            p.setNom(name);
+            p.setPrenom(name);
+            p.setCreated_at(LocalDateTime.now());
+            new CrudPlayer().addPlayer_admin(p);
         }
-        SessionManager.getInstance().setCurrentUser(u);
+        SessionManager.getInstance().setCurrentUser(p);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
         Parent root = null;
         try {
@@ -333,5 +351,11 @@ public class Login {
             captchaWebView.getEngine().executeScript("if(window.hcaptcha) hcaptcha.reset();");
             System.out.println("[Cleanup Webview] Mediaview stopped.");
         }
+    }
+
+    @FXML
+    void handleCaptcha(ActionEvent event) {
+        captchaWebView.setVisible(true);
+        captchabackground.setVisible(true);
     }
 }

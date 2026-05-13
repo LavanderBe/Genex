@@ -106,7 +106,7 @@ public class CrudGame {
     }
 
     public Game getGameByName(String name){
-        String requete="SELECT name " +
+        String requete="SELECT * " +
                 "FROM games " +
                 "where name=?";
         try {
@@ -122,6 +122,7 @@ public class CrudGame {
                         rs.getInt("max_players_per_match"),
                         rs.getString("icon_url")
                 );
+                g.setId(rs.getString("id"));
                 return g;
             }
             else return null;

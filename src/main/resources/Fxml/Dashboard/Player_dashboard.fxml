@@ -58,16 +58,23 @@
                                 <HBox alignment="CENTER_LEFT" spacing="12.0">
                                     <padding><Insets left="15.0" right="15.0" /></padding>
                                     <children>
-                                        <Circle fill="#1F1E4E" radius="14.0" stroke="#8B0D0D" />
+                                        <StackPane fx:id="avatarContainer" prefHeight="32.0" prefWidth="32.0" styleClass="avatar-mini-slot">
+                                        </StackPane>
                                         <VBox alignment="CENTER_LEFT">
                                             <children>
                                                 <Label fx:id="sessionUser" text="placeholder" textFill="WHITE">
                                                     <font><Font name="System Bold" size="13.0" /></font>
                                                 </Label>
-                                                <Label style="-fx-font-size: 8px;" text="OPERATOR_LEVEL 12" textFill="#8B0D0D" />
+                                                <Label fx:id="RoleLabel" style="-fx-font-size: 8px;" text="OPERATOR_LEVEL 12" textFill="#8B0D0D" />
                                             </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
                                         </VBox>
                                     </children>
+                           <StackPane.margin>
+                              <Insets left="5.0" />
+                           </StackPane.margin>
                                 </HBox>
                             </children>
                         </StackPane>

@@ -44,7 +44,7 @@ public class Dashboard {
 
     @FXML
     public void initialize() {
-        //sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername());
+        sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername());
         startPingAnimation();
         startPingService();
         checkTrainingNotifications();

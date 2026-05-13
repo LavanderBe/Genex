@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<AnchorPane fx:id="maincard" prefHeight="800.0" prefWidth="1100.0" style="-fx-background-color: transparent;" stylesheets="@Profile.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Profile.ProfileController">
+    <children>
+        <ScrollPane fx:id="mainPane" fitToWidth="true" styleClass="edge-scrollpane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <content>
+                <HBox spacing="30.0" style="-fx-padding: 40;">
+                    <children>
+
+                        <!-- LEFT COLUMN: IDENTITY CARD -->
+                        <VBox prefWidth="350.0" spacing="20.0" styleClass="identity-card">
+                            <children>
+                                <!-- AVATAR AREA -->
+                                <VBox alignment="CENTER" spacing="15.0">
+                                    <children>
+                                        <StackPane fx:id="avatarFrame" prefHeight="250.0" prefWidth="250.0" styleClass="avatar-large-slot">
+                                            <children>
+                                                <ImageView fx:id="profileAvatar" fitHeight="178.0" fitWidth="191.0" pickOnBounds="true" preserveRatio="true" />
+                                                <SVGPath content="M 125 10 L 125 40 M 125 210 L 125 240 M 10 125 L 40 125 M 210 125 L 240 125" stroke="#8B0D0D" strokeWidth="1" />
+                                            </children>
+                                        </StackPane>
+
+                                        <!-- AVATAR ACTIONS -->
+                                        <HBox alignment="CENTER" spacing="10.0">
+                                            <children>
+                                                <Button onAction="#handleUploadAvatar" prefWidth="140.0" styleClass="btn-asset" text="UPLOAD__AVATAR" />
+                                                <Button onAction="#handleOpenAvatarCreator" prefWidth="140.0" styleClass="btn-asset-blue" text="MODIFIER__AVATAR" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox alignment="CENTER" spacing="5.0">
+                                    <children>
+                                        <Label fx:id="displayUsername" styleClass="neon-title-small" text="USER_NULL" textFill="WHITE" />
+                              <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" style="-fx-font-size: 12;" styleClass="form-label" text="NOM_UNIQUE" />
+                                        <Label fx:id="displayRole" style="-fx-font-family: 'Consolas'; -fx-font-size: 11px;" text="ROLE: PLAYER" textFill="#5c7cfa" />
+                                    </children>
+                                </VBox>
+
+                                <Separator opacity="0.2" />
+
+                                <!-- GAME LINKS SECTION -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <Label styleClass="section-header" text="[ ACTIVE_GAME_LINKS ]" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <!-- EDIT GAMES BUTTON -->
+                                                <Button onAction="#handleEditGames" styleClass="btn-edit-mini" text="MODIFIER JEUX" />
+                                            </children>
+                                        </HBox>
+                                        <FlowPane fx:id="gamesFlowPane" hgap="10.0" vgap="10.0">
+                                            <!-- Game Tags injected here -->
+                                        </FlowPane>
+                                    </children>
+                                </VBox>
+
+                                <Region VBox.vgrow="ALWAYS" />
+
+                                <Button fx:id="btnPromote" onAction="#requestCoachPromotion" prefWidth="350" styleClass="btn-promote" text="DEVENIR__COACH" />
+                            </children>
+                            <padding><Insets bottom="30.0" left="25.0" right="25.0" top="30.0" /></padding>
+                        </VBox>
+
+                        <!-- RIGHT COLUMN: RECALIBRATION TERMINAL -->
+                        <VBox fx:id="dataShard" spacing="25.0" styleClass="data-shard" HBox.hgrow="ALWAYS">
+                            <children>
+                                <VBox>
+                                    <children>
+                                        <Label style="-fx-font-family: 'Impact'; -fx-font-size: 28px;" text="POFILE_JOUEUR // SETTINGS" textFill="WHITE" />
+                                        <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="ENTITY_PARAMETERS_IN_GENEX_CORE" textFill="#5c7cfa" />
+                                    </children>
+                                </VBox>
+
+                                <GridPane hgap="30.0" vgap="20.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                    </columnConstraints>
+                                    <children>
+                                        <VBox spacing="5">
+                                            <children>
+                                                <Label styleClass="form-label" text="PRÉNOM" />
+                                                <TextField fx:id="prenomField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.columnIndex="1">
+                                            <children>
+                                                <Label styleClass="form-label" text="NOM" />
+                                                <TextField fx:id="nomField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.rowIndex="1">
+                                            <children>
+                                                <Label styleClass="form-label" text="NICKNAME" />
+                                                <TextField fx:id="pseudoField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <children>
+                                                <Label styleClass="form-label" text="CIN" />
+                                                <TextField fx:id="cinField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.rowIndex="2">
+                                            <children>
+                                                <Label styleClass="form-label" text="DATE DE NAISSANCE" />
+                                                <DatePicker fx:id="dobPicker" prefWidth="400" styleClass="edgy-datepicker" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                            <children>
+                                                <Label styleClass="form-label" text="E-MAIL" />
+                                                <TextField fx:id="emailField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.rowIndex="3">
+                                            <children>
+                                                <Label styleClass="form-label" text="NATIONALITÉ" />
+                                                <TextField fx:id="natField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                            <children>
+                                                <Label styleClass="form-label" text="VILLE" />
+                                                <TextField fx:id="cityField" styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                           <rowConstraints>
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                           </rowConstraints>
+                                </GridPane>
+
+                                <Separator opacity="0.1" />
+
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label styleClass="section-header" text="[ SECURITY_ACCESS_OVERRIDE ]" />
+                                        <HBox spacing="20.0">
+                                            <children>
+                                                <PasswordField fx:id="newPasswordField" promptText="MOT DE PASSE" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                                <PasswordField fx:id="confirmPasswordField" promptText="CONFIRMER MOT DE PASSE" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                                    <children>
+                                        <Label fx:id="statusLabel" style="-fx-font-family: 'Consolas'; -fx-font-size: 11px;" text="SYSTEM_READY" textFill="#22c55e" visible="false" />
+                                        <Button onAction="#handleSaveProfile" prefHeight="45.0" prefWidth="250.0" styleClass="btn-execute" text="SAUVEGARDER" />
+                                    </children>
+                                    <padding><Insets top="20" /></padding>
+                                </HBox>
+                            </children>
+                            <padding><Insets bottom="40.0" left="40.0" right="40.0" top="40.0" /></padding>
+                        </VBox>
+
+                    </children>
+                </HBox>
+            </content>
+        </ScrollPane>
+        <StackPane fx:id="gameOverlay" managed="false" style="-fx-background-color: rgba(0,0,0,0.85);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="400.0">
+                    <children>
+                        <!-- Background Plate -->
+                        <SVGPath content="M 0 0 L 360 0 L 400 40 L 400 450 L 40 450 L 0 410 Z" fill="#050508" stroke="#5C7CFA" strokeWidth="2.0" />
+
+                        <VBox layoutX="30.0" layoutY="30.0" prefWidth="340.0" spacing="20.0">
+                            <children>
+                                <VBox spacing="2.0">
+                                    <children>
+                                        <Label style="-fx-font-family: 'Impact'; -fx-font-size: 18px;" text="GAME_LINK // RECALIBRATION" textFill="WHITE" />
+                                        <Label style="-fx-font-size: 8px; -fx-letter-spacing: 2px;" text="SELECT_ACTIVE_NEURAL_STREAMS" textFill="#5c7cfa" />
+                                    </children>
+                                </VBox>
+
+                                <ScrollPane fitToWidth="true" prefHeight="250.0" styleClass="games-scrollpane">
+                                    <content>
+                                        <VBox fx:id="selectionContainer" spacing="10.0" style="-fx-padding: 10;">
+                                            <!-- Dynamically generated checkboxes go here -->
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                                <HBox alignment="CENTER" spacing="15.0">
+                                    <children>
+                                        <Button onAction="#handleSaveGameLinks" prefHeight="40.0" prefWidth="180.0" styleClass="btn-execute" text="SYNC_LINKS" />
+                                        <Button onAction="#toggleGameOverlay" prefHeight="40.0" prefWidth="120.0" styleClass="btn-abort" text="ABORT" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </children>
+        </StackPane>
+    </children>
+</AnchorPane>

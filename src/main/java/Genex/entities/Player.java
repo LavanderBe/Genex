@@ -1,9 +1,10 @@
 package Genex.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends User {
-    private String id;
     private String prenom;
     private String nom;
     private String nickname;
@@ -11,6 +12,10 @@ public class Player extends User {
     private LocalDate birthday;
     private String nationality;
     private String city;
+
+    private String avatar_url;
+
+    private List<Game> games_played=new ArrayList<>();
 
     // Stats for accuracy and progression
     private int tacticalXp;
@@ -99,6 +104,22 @@ public class Player extends User {
         this.city = city;
     }
 
+    public String getAvatar_url() {
+        return avatar_url;
+    }
+
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
+    }
+
+    public List<Game> getGames_played() {
+        return games_played;
+    }
+
+    public void setGames_played(List<Game> games_played) {
+        this.games_played = games_played;
+    }
+
     // Stats methods
     public int getTacticalXp() { return tacticalXp; }
     public void setTacticalXp(int tacticalXp) { this.tacticalXp = tacticalXp; }
@@ -122,6 +143,11 @@ public class Player extends User {
                 ", birthday=" + birthday +
                 ", nationality='" + nationality + '\'' +
                 ", city='" + city + '\'' +
+                ", avatar_url='" + avatar_url + '\'' +
+                ", games_played=" + games_played +
+                ", tacticalXp=" + tacticalXp +
+                ", totalAttempts=" + totalAttempts +
+                ", correctAnswers=" + correctAnswers +
                 '}';
     }
 }

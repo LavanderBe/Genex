@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="866.0" prefWidth="1366.0" styleClass="bg" stylesheets="@Rules.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.ReactionGame.RulesController">
+    <children>
+
+        <!-- LAYER 2: DECORATIVE HUD LINES -->
+        <AnchorPane mouseTransparent="true">
+            <children>
+                <Line endX="3000.0" layoutY="215.0" style="-fx-stroke-width: 5;" styleClass="hud-line-glow" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                <Line endX="3000.0" layoutY="950.0" styleClass="hud-line-glow" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            </children>
+        </AnchorPane>
+
+        <!-- LAYER 3: INTERFACE CONTENT -->
+        <VBox alignment="CENTER" spacing="50.0">
+            <children>
+
+                <!-- HEADER BAR -->
+                <HBox alignment="CENTER" prefHeight="120.0" spacing="30.0" styleClass="header-bar">
+                    <padding>
+                        <Insets left="100.0" right="100.0" />
+                    </padding>
+                    <children>
+                        <VBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label fx:id="neonTitle" styleClass="neon-title-massive" text="GENEX // REACTION MISSION" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="50.0" />
+                                    </font>
+                                </Label>
+                                <Label styleClass="subtitle-text" text="NORTH AFRICA TRAINNING CORE" textFill="#5c7cfa">
+                                    <font>
+                                        <Font name="Consolas" size="12.0" />
+                                    </font></Label>
+                            </children>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_RIGHT" spacing="5.0">
+                            <children>
+                                <Label styleClass="protocol-label" text="VOSK_PROTOCOL" textFill="#8b0d0d">
+                                    <font>
+                                        <Font name="Impact" size="24.0" />
+                                    </font></Label>
+                                <Label styleClass="encryption-label" text="ENCRYPTION: VERSION 6.7" textFill="#444466" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- CENTER MODULES -->
+                <HBox alignment="CENTER" spacing="80.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <!-- LEFT: GAME ASSET MODULE -->
+                        <VBox alignment="CENTER" spacing="25.0">
+                            <children>
+                                <StackPane fx:id="imageContainer" styleClass="image-frame-container">
+                                    <children>
+                                        <ImageView fx:id="gamePoster" fitHeight="380.0" fitWidth="550.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../Images/Rules.png" />
+                                 </image></ImageView>
+                                        <Region styleClass="hud-corner-accent" StackPane.alignment="TOP_LEFT" />
+                                    </children>
+                                </StackPane>
+                                <Label fx:id="gameNameLabel" styleClass="game-title-main" text="SIGNAL FLASH" textFill="WHITE">
+                                    <font>
+                                        <Font name="Impact" size="40.0" />
+                                    </font></Label>
+                            </children>
+                        </VBox>
+
+                        <!-- RIGHT: FLOATING RULES TERMINAL -->
+                        <VBox fx:id="rulesContaine" prefWidth="600.0" spacing="15.0" styleClass="floating-terminal-box">
+                            <children>
+                                <Label styleClass="section-tag" text="[ REGLE DE LA MISSION ET ENGAGEMENTS ]" textFill="#8b0d0d">
+                                    <font>
+                                        <Font name="Consolas Bold" size="12.0" />
+                                    </font></Label>
+                                <ScrollPane fitToWidth="true" prefHeight="400.0" styleClass="terminal-scroll-area">
+                                    <content>
+                                        <VBox spacing="15.0" style="-fx-background-color: transparent;">
+                                            <children>
+                                                <Label fx:id="rulesLabel" lineSpacing="12.0" styleClass="terminal-text" text="&gt; SCANNING FOR CHEATS... [DONE]&#10;&gt; VERIFYING PLAYER IDENTITY... [DONE]&#10;&gt; RULE 01: BEHAVIORAL CODE 104 ACTIVE.&#10;&gt; RULE 02: LATENCY SPIKES RESULT IN DISCONNECT.&#10;&gt; RULE 03: USE OF EXPLOITS IS PERMANENT BAN.&#10;&gt; RULE 04: HAVE FUN OR BE TERMINATED." textFill="#5c7cfa" wrapText="true">
+                                                    <font>
+                                                        <Font name="Consolas" size="16.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <Label styleClass="loading-status-text" text="PREPARATION DE L'ENVIRONMENT" textFill="#444466">
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font></Label>
+                                        <ProgressBar fx:id="syncProgress" prefHeight="103.0" prefWidth="558.0" progress="0.0" styleClass="cyber-progress-bar" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- FOOTER ACTIONS -->
+                <HBox alignment="CENTER" prefHeight="180.0" spacing="60.0" styleClass="footer-bar">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleBack" prefHeight="65.0" prefWidth="280.0" styleClass="btn-abort-massive" text="MENU PRINCIPAL" />
+                        <Button fx:id="btnStart" mnemonicParsing="false" onAction="#handleStart" prefHeight="65.0" prefWidth="480.0" styleClass="btn-deploy-massive" text="JOUER" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+   <padding>
+      <Insets bottom="25.0" top="10.0" />
+   </padding>
+</StackPane>

@@ -1,7 +1,11 @@
 package Genex.Controllers.Dashboard;
 
+
+import Genex.entities.Player;
 import Genex.services.ExchangeService;
 import Genex.entities.User;
+import Genex.services.CrudPlayer;
+import Genex.services.CrudUser;
 import Genex.utils.PingService;
 import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
@@ -23,18 +27,25 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.collections.FXCollections;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
-import java.net.URL;
 
 public class PlayerDashboard {
 
+    @FXML private Label RoleLabel;
+    @FXML private StackPane avatarContainer;
     @FXML private BorderPane mainPane;
     @FXML private VBox sidebarContainer;
     @FXML private AnchorPane contentArea;
@@ -57,6 +68,8 @@ public class PlayerDashboard {
     @FXML
     public void initialize() {
         sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername().toUpperCase());
+        RoleLabel.setText(SessionManager.getInstance().getCurrentPlayer().getRole().toUpperCase());
+        setupAvatar();
         startPingAnimation();
         startPingService();
         // Show main hub by default
@@ -98,7 +111,6 @@ public class PlayerDashboard {
                 isSidebarVisible = false;
             });
         } else {
-            // Slide In
             mainPane.setLeft(sidebarContainer);
             sidebarContainer.setTranslateX(-180);
             slide.setToX(0);
@@ -183,43 +195,51 @@ public class PlayerDashboard {
 
     @FXML
     private void handleProfileClick() {
-        System.out.println("Switching to Profile Module...");
-        loadModule("PlayerProfile.fxml");
+        setActiveNav(navProfileButton);
+        loadModule("/Fxml/Profile/Profile.fxml");
+        setupAvatar();
     }
 
     @FXML private void showMain() {
         setActiveNav(navMainButton);
         loadModule("/Fxml/Dashboard/PlayerMain.fxml");
+        setupAvatar();
     }
 
     @FXML private void showTeams() {
         setActiveNav(navTeamsButton);
         loadModule("/Fxml/Team/PlayerTeams.fxml");
+        setupAvatar();
     }
 
     @FXML private void showTournaments() {
         setActiveNav(navTournamentsButton);
         loadModule("/Fxml/Tournament/TournamentHub.fxml");
+        setupAvatar();
     }
 
     @FXML private void showTutorials() {
         setActiveNav(navTutorialsButton);
         loadModule("/Fxml/Player/PlayerHub.fxml");
+        setupAvatar();
     }
 
     @FXML private void showForums() {
         setActiveNav(navForumsButton);
         loadModule("/Fxml/Forum/Forum.fxml");
+        setupAvatar();
     }
 
     @FXML private void showProfile() {
         setActiveNav(navProfileButton);
-        loadModule("PlayerProfile.fxml");
+        loadModule("/Fxml/Profile/Profile.fxml");
+        setupAvatar();
     }
 
     @FXML private void showBoutique() {
         setActiveNav(navBoutiqueButton);
         loadModule("/Fxml/Boutique/Boutique.fxml");
+        setupAvatar();
     }
 
     private void loadModule(String fxmlPath) {
@@ -230,6 +250,10 @@ public class PlayerDashboard {
             AnchorPane.setBottomAnchor(module, 0.0);
             AnchorPane.setLeftAnchor(module, 0.0);
             AnchorPane.setRightAnchor(module, 0.0);
+            FadeTransition ft = new FadeTransition(Duration.millis(300), module);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
         } catch (IOException e) {
             System.err.println("Module not found: " + fxmlPath);
         }
@@ -287,6 +311,25 @@ public class PlayerDashboard {
         }
     }
 
+    private void setupAvatar(){
+
+
+        String url=SessionManager.getInstance().getCurrentPlayer().getAvatar_url();
+        if (url != null && !url.isEmpty()) {
+            ImageView iv = new ImageView(new Image(url, true));
+            iv.setFitHeight(28);
+            iv.setFitWidth(28);
+            iv.setPreserveRatio(true);
+            avatarContainer.getChildren().clear();
+            avatarContainer.getChildren().add(iv);
+        } else {
+            Label initial = new Label(SessionManager.getInstance().getCurrentUser().getUsername().substring(0, 1).toUpperCase());
+            initial.setTextFill(Color.WHITE);
+            initial.setStyle("-fx-font-family: 'Impact'; -fx-font-size: 14px;");
+            avatarContainer.getChildren().clear();
+            avatarContainer.getChildren().add(initial);
+        }
+    }
     private void loadModuleAbsolute(String absolutePath) {
         try {
             Parent module = FXMLLoader.load(getClass().getResource(absolutePath));

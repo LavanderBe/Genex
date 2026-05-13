@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="rootPane" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;" stylesheets="@Game.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.ReactionGame.GameController">
+    <children>
+        <!-- LAYER 0: VIDEO BACKGROUND -->
+        <MediaView fx:id="mediaView" preserveRatio="false" />
+
+        <!-- LAYER 1: HUD SCANLINES -->
+        <Region mouseTransparent="true" styleClass="cyber-overlay" />
+
+        <!-- LAYER 2: THE MAIN CONTENT -->
+        <VBox alignment="CENTER" spacing="50.0">
+            <children>
+
+                <!-- CENTER TITLE -->
+                <VBox alignment="CENTER" spacing="5.0">
+                    <children>
+                        <Label styleClass="main-game-title" text="GENEX // SIGNAL FLASH" textFill="WHITE">
+                            <font>
+                                <Font name="Impact" size="56.0" />
+                            </font>
+                        </Label>
+                        <Label styleClass="status-subtext" text="TRAINNING GROUNDS" textFill="#5c7cfa" />
+                    </children>
+                </VBox>
+
+                <!-- THE BIG UNIFIED WHITE FRAME -->
+                <StackPane maxWidth="1500.0" prefHeight="500.0" styleClass="big-white-frame" VBox.vgrow="NEVER">
+                    <children>
+                        <!-- THE 8 LABELS GRID (NO INDIVIDUAL FRAMES) -->
+                        <GridPane fx:id="dataGrid" alignment="CENTER">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="200.0" valignment="CENTER" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="200.0" valignment="CENTER" vgrow="ALWAYS" />
+                            </rowConstraints>
+                            <children>
+                                <Label fx:id="slot0" styleClass="clean-data-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Label fx:id="slot1" styleClass="clean-data-label" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <Label fx:id="slot2" styleClass="clean-data-label" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                <Label fx:id="slot3" styleClass="clean-data-label" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                                <Label fx:id="slot4" styleClass="clean-data-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Label fx:id="slot5" styleClass="clean-data-label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label fx:id="slot6" styleClass="clean-data-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <Label fx:id="slot7" styleClass="clean-data-label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            </children>
+                        </GridPane>
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+                    </padding>
+                </StackPane>
+
+                <!-- FOOTER HUD INFO -->
+                <HBox alignment="CENTER" spacing="100.0">
+                    <children>
+                        <Label fx:id="timeLabel" styleClass="footer-hud-text" text="TEMPS: 0s" textFill="#22c55e" />
+                        <Label fx:id="wordcountLabel" styleClass="footer-hud-text" text="WORDS : 0/20" textFill="#5c7cfa" />
+                        <Label fx:id="playerLabel" styleClass="footer-hud-text" text="JOUEUR :" textFill="#22c55e" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+   <padding>
+      <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+   </padding>
+</StackPane>

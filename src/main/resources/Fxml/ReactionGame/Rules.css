@@ -1,0 +1,144 @@
+/* --- GLOBAL THEME --- */
+.bg{
+    -fx-background-color:
+        /* Layer 1: Subtle Scanlines (Texture) */
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255, 255, 255, 0.02) 50%, transparent 50%),
+                /* Layer 2: The Core Gradient (Dark to Light Blue) */
+            linear-gradient(to top right, #050508, #1F1E4E 60%, #3a3a8a);
+
+    -fx-background-size: 100% 4px, 100% 100%;
+
+}
+
+.root {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-cursor: crosshair;
+}
+
+.dark-overlay {
+    /* Subtle blue tint to the darkness */
+    -fx-background-color: radial-gradient(center 50% 50%, radius 100%, rgba(31, 30, 78, 0.1), rgba(2, 2, 8, 0.95));
+}
+
+.hud-line-glow {
+    /* Make the lines very thin and slightly blurred */
+    -fx-stroke-width: 0.5;
+    -fx-opacity: 0.2;
+}
+
+
+/* --- TITLES --- */
+.neon-title-massive {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 5px;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 30, 0.5, 0, 0);
+}
+
+.game-title-main {
+    -fx-font-family: "Impact";
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 20, 0.4, 0, 0);
+}
+
+/* --- THE FLOATING TERMINAL --- */
+.floating-terminal-box {
+    -fx-background-color: rgba(31, 30, 78, 0.1);
+    -fx-border-color: rgba(92, 124, 250, 0.3);
+    -fx-border-width: 1;
+    -fx-padding: 20;
+    /* This will be animated in Java to float */
+}
+
+.terminal-scroll-area {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-background: transparent;
+    -fx-border-color: #1F1E4E;
+}
+
+.terminal-scroll-area .viewport {
+    -fx-background-color: transparent;
+}
+
+.terminal-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #5C7CFA;
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.4), 2, 0, 0, 0);
+}
+
+/* --- IMAGE MODULE --- */
+.image-frame-container {
+    -fx-background-color: black;
+    -fx-border-color: #5C7CFA;
+    -fx-border-width: 2;
+    -fx-shape: "M 0 0 L 94 0 L 100 15 L 100 100 L 6 100 L 0 85 Z";
+}
+
+.hud-corner-accent {
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 4 0 0 4;
+}
+
+/* --- PROGRESS BAR --- */
+.cyber-progress-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+}
+
+.cyber-progress-bar .bar {
+    /* This makes the filling part look like a laser beam */
+    -fx-background-color: linear-gradient(to right, #1F1E4E, #5C7CFA, #22c55e);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.cyber-progress-bar .track {
+    -fx-background-color: rgba(0, 0, 0, 0.8);
+    -fx-background-radius: 0;
+}
+
+/* --- BUTTONS --- */
+.btn-deploy-massive {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 24px;
+    -fx-letter-spacing: 2px;
+    -fx-cursor: hand;
+    -fx-shape: "M 0 0 L 96 0 L 100 30 L 100 100 L 0 100 Z";
+}
+
+.btn-deploy-massive:hover {
+    -fx-translate-y: -3;
+    -fx-background-color: white;
+    -fx-text-fill: #1F1E4E;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0.5, 0, 0);
+}
+
+.btn-abort-massive {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-border-width: 3;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-shape: "M 4 0 L 100 0 L 100 100 L 0 100 L 0 30 Z";
+}
+
+.btn-abort-massive:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}
+
+/* Scrollbar Style */
+.terminal-scroll-area .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-width: 6;
+}
+.terminal-scroll-area .scroll-bar:vertical .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}

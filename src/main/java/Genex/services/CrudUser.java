@@ -55,6 +55,22 @@ public class CrudUser implements ICrud<User> {
 
     }
 
+    public void updateUser_without_password(User u,String id){
+        String requete="UPDATE users " +
+                "SET username=?,email=?" +
+                "WHERE id=? ";
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,u.getUsername());
+            pst.setString(2,u.getEmail());
+            pst.setString(3,id);
+            pst.executeUpdate();
+            System.out.println("User updated successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void deleteEntity(User user) {
         String requete="DELETE FROM users " +
@@ -234,6 +250,29 @@ public class CrudUser implements ICrud<User> {
         return users;
     }
 
+    public User getUser_withId(String id){
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE id=?";
+        try {
+            PreparedStatement pst =Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,id);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                User u=new User((rs.getString("username")),
+                        rs.getString("email"),
+                        rs.getString("salt"),
+                        rs.getString("password_hash"),
+                        rs.getString("role"));
+                u.setId(rs.getString("id"));
+                return u;
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String requete = "SELECT id, username, email, role, created_at FROM users";
@@ -258,4 +297,35 @@ public class CrudUser implements ICrud<User> {
         return users;
     }
 
+    public boolean promoteToCoach(User p){
+        String requete="UPDATE users " +
+                "SET role='coach' " +
+                "WHERE id=? ";
+        System.out.println(p.getId());
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,p.getId());
+            pst.executeUpdate();
+            System.out.println("User promoted successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean demoteToPlayer(User p){
+        String requete="UPDATE users " +
+                "SET role='player' " +
+                "WHERE id=? ";
+        System.out.println(p.getId());
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,p.getId());
+            pst.executeUpdate();
+            System.out.println("User demoted successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

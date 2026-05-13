@@ -1,164 +1,217 @@
-/* ═══════════════════════════════════════════════════
-   players-style.css — Nexus Esports Hub
-   Primary: #1F1E4E | Secondary: #8B0D0D
-   ═══════════════════════════════════════════════════ */
+.player-root {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255, 255, 255, 0.02) 50%, transparent 50%),
+            linear-gradient(to bottom right, #050508, #0a0a1a);
+    -fx-background-size: 100% 4px, 100% 100%;
+}
 
-/* Main Container */
-.main-content {
+/* 2. THE SCROLLPANE (CRITICAL FIX)
+   JavaFX ScrollPanes have a white/gray 'viewport'. We must kill it. */
+.cyber-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent; /* This targets the internal region */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.cyber-scrollpane > .viewport {
     -fx-background-color: transparent;
 }
 
-/* Page Title */
-.page-title {
-    -fx-text-fill: white;
-    -fx-font-size: 28;
-    -fx-font-weight: 800;
-    -fx-effect: dropshadow(gaussian, rgba(31, 30, 78, 0.5), 10, 0, 0, 0);
-}
-
-/* ──────────────── Search Bar ──────────────── */
-.search-field {
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
-    -fx-padding: 8 15;
-    -fx-font-size: 13;
-}
-
-.search-field:focused {
-    -fx-border-color: rgba(139, 13, 13, 0.7);
-    -fx-background-color: rgba(255, 255, 255, 0.12);
-}
-
-.icon-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-background-radius: 10;
-    -fx-text-fill: white;
-    -fx-cursor: hand;
-    -fx-padding: 8 12;
-}
-
-.icon-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
-}
-
-/* ──────────────── Player Cards ──────────────── */
-.players-grid {
-    -fx-padding: 10 0;
-}
-
-.player-card {
-    -fx-background-color: rgba(15, 14, 45, 0.65);
-    -fx-background-radius: 18;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 18;
-    -fx-border-width: 1;
-    -fx-cursor: hand;
-    -fx-transition: all 0.3s ease;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
-}
-
-.player-card:hover {
-    -fx-background-color: rgba(31, 30, 78, 0.8);
-    -fx-border-color: rgba(139, 13, 13, 0.5);
-    -fx-translate-y: -5;
-    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.3), 20, 0, 0, 8);
-}
-
-.player-card .name-label {
-    -fx-text-fill: white;
-    -fx-font-size: 18;
-    -fx-font-weight: 700;
-}
-
-.player-card .nick-label {
-    -fx-text-fill: #8B0D0D;
-    -fx-font-size: 14;
-    -fx-font-weight: 600;
-    -fx-letter-spacing: 1;
-}
-
-.player-card .role-label {
-    -fx-text-fill: rgba(255, 255, 255, 0.5);
-    -fx-font-size: 12;
-}
-
-/* ──────────────── ScrollPane Styling ──────────────── */
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
-}
-
-.scroll-pane .viewport {
+.cyber-scrollpane .content {
     -fx-background-color: transparent;
 }
 
-.scroll-pane .thumb {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 5;
+/* Custom Red Scrollbar */
+.cyber-scrollpane .scroll-bar:vertical {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-width: 6px;
 }
-
-.scroll-pane .track {
-    -fx-background-color: transparent;
-}
-
-/* ──────────────── Action Buttons inside Card ──────────────── */
-.card-edit-btn {
-    -fx-background-color: rgba(59, 91, 219, 0.2);
-    -fx-text-fill: #7ec8f7;
-    -fx-background-radius: 8;
-}
-
-.card-edit-btn:hover {
-    -fx-background-color: #3b5bdb;
-    -fx-text-fill: white;
-}
-
-.card-delete-btn {
-    -fx-background-color: rgba(139, 13, 13, 0.15);
-    -fx-text-fill: #f87171;
-    -fx-background-radius: 8;
-}
-
-.card-delete-btn:hover {
+.cyber-scrollpane .scroll-bar:vertical .thumb {
     -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+
+/* 3. THE PLAYER BLADE (THE ROW) */
+.player-blade {
+    /* Glassmorphism: Dark Blue Translucent */
+    -fx-background-color: linear-gradient(to right, rgba(31, 30, 78, 0.6), rgba(5, 5, 8, 0.9));
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-padding: 12 25;
+
+    /* This creates a "Left-hand Accent Bar" */
+    -fx-border-color: transparent transparent transparent #1F1E4E;
+    -fx-border-width: 0 0 0 4;
+}
+
+.player-blade:hover {
+    -fx-background-color: linear-gradient(to right, rgba(139, 13, 13, 0.15), rgba(5, 5, 8, 0.95));
+    -fx-border-color: transparent transparent transparent #8B0D0D; /* Glow red bar on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.4), 20, 0, 0, 0);
+}
+
+/* 4. AVATAR HEX SLOT */
+.avatar-slot {
+    -fx-background-color: #050508;
+    -fx-border-color: #5C7CFA;
+    -fx-border-width: 1.5;
+    /* Clipping corners for avatar */
+    -fx-shape: "M 10 0 L 90 0 L 100 10 L 100 90 L 90 100 L 10 100 L 0 90 L 0 10 Z";
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.4), 10, 0, 0, 0);
+}
+
+/* 5. TYPOGRAPHY */
+.neon-title {
+    -fx-font-family: "Impact";
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 15, 0.4, 0, 0);
+    -fx-letter-spacing: 4px;
+}
+
+.blade-nick {
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 18px;
     -fx-text-fill: white;
 }
 
-/* ──────────────── Modal Overlay ──────────────── */
-.modal-overlay {
-    -fx-background-color: rgba(0, 0, 0, 0.75);
-    -fx-alignment: center;
+.blade-name {
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B0D0D;
+    -fx-letter-spacing: 2px;
 }
 
-/* PRIMARY BLUE BUTTON - CYBER LOOK */
-.action-blue-button {
-    -fx-background-color: #5c7cfa;
+/* 6. BUTTONS */
+/* --- UNIVERSAL BUTTON HEIGHT & FONT --- */
+.blade-btn-promote, .blade-btn-edit, .blade-btn-delete {
+    -fx-min-height: 35px;
+    -fx-max-height: 35px;
+    -fx-font-family: "Impact";
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 0 20 0 20; /* Consistent horizontal padding */
+    -fx-background-color: transparent;
+}
+
+/* --- PROMOTE (The Start Block) --- */
+.blade-btn-promote {
+    -fx-border-color: #ffbb33;
+    -fx-text-fill: #ffbb33;
+    /* Slanted right: Ends at 85% width */
+    -fx-shape: "M 0 0 L 100 0 L 85 100 L 0 100 Z";
+}
+.blade-btn-promote:hover {
+    -fx-background-color: #ffbb33;
+    -fx-text-fill: black;
+}
+
+/* --- MODIFY (The Middle Block) --- */
+.blade-btn-edit {
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    /* Slanted both sides: Starts at 15% and ends at 85% */
+    -fx-shape: "M 15 0 L 100 0 L 85 100 L 0 100 Z";
+    -fx-translate-x: -15; /* Dock into Promote */
+}
+.blade-btn-edit:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+/* --- TERMINATE (The End Block) --- */
+.blade-btn-delete {
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    /* Slanted left: Starts at 15% */
+    -fx-shape: "M 15 0 L 100 0 L 100 100 L 0 100 Z";
+    -fx-translate-x: -30; /* Dock into Edit */
+}
+.blade-btn-delete:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}
+
+/* 7. SEARCH TERMINAL */
+.terminal-search-box {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 0 0 0 4; /* Left Accent bar */
+    -fx-padding: 8 15;
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+}
+
+.terminal-input {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5c7cfa;
+    -fx-font-family: "Consolas";
+    -fx-prompt-text-fill: #3a3a5e;
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+}
+
+.initialize-btn {
+    -fx-background-color: #5C7CFA;
     -fx-text-fill: white;
     -fx-font-family: "Arial Black";
-    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z"; /* Cuts the corners off */
+    -fx-font-size: 11px;
+    -fx-shape: "M 0 0 L 95 0 L 100 10 L 100 100 L 0 100 Z";
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0.4, 0, 0);
 }
 
-.action-blue-button:hover {
-    -fx-background-color: #7d97ff;
-    -fx-translate-y: -2;
+.initialize-btn:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #5C7CFA;
 }
 
-/* CANCEL RED BUTTON - EDGY */
-.action-red-button {
-    -fx-background-color: #ff5252;
-    -fx-text-fill: white;
-    -fx-font-family: "Arial Black";
-    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z"; /* Opposite cut */
-    -fx-cursor: hand;
+/* --- NEURAL GAME TAGS --- */
+.game-data-tag {
+    -fx-text-fill: #5C7CFA; /* Neon Blue */
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: rgba(92, 124, 250, 0.3);
+    -fx-border-width: 1;
+    /* Asymmetric "Tech" corners */
+    -fx-shape: "M 0 0 L 95 0 L 100 20 L 100 100 L 5 100 L 0 80 Z";
+    -fx-cursor: help;
 }
-.action-red-button:hover {
-    -fx-background-color: #f54c4c;
-    -fx-translate-y: -2;
+
+.game-data-tag:hover {
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #8B0D0D; /* Changes to Red on hover */
+    -fx-background-color: rgba(139, 13, 13, 0.2);
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 10, 0, 0, 0);
+    -fx-translate-y: -2; /* Slight float up */
+}
+
+/* Red Pulsing effect for the brackets (Optional geeky detail) */
+.game-data-tag {
+    -fx-letter-spacing: 1px;
+}
+
+/* --- PROMOTE BUTTON (UPGRADE PROTOCOL) --- */
+
+.blade-btn-promote:hover {
+    -fx-background-color: #ffbb33;
+    -fx-text-fill: #050508;
+    -fx-effect: dropshadow(three-pass-box, #ffbb33, 15, 0.5, 0, 0);
+}
+
+/* Update the specs color if they are a coach */
+.status-coach {
+    -fx-text-fill: #ffbb33;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 187, 51, 0.4), 10, 0, 0, 0);
+}
+
+.player-blade:hover .actions-container {
+    -fx-translate-y: -2; /* The whole button unit lifts up slightly */
+    -fx-animation: pulse-glow 1s infinite alternate;
+}
+@keyframes pulse-glow {
+    from { -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.2), 5, 0, 0, 0); }
+    to { -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.6), 20, 0, 0, 0); }
 }

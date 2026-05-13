@@ -3,9 +3,6 @@ package Genex.utils;
 import Genex.entities.User;
 import Genex.entities.Player;
 
-/**
- * Singleton class to manage the current logged-in user session
- */
 public class SessionManager {
 
     private static SessionManager instance;
