@@ -138,6 +138,7 @@
                                             <VBox spacing="5">
                                                 <Label styleClass="field-label" text="FIN DU CONTRAT" />
                                                 <DatePicker fx:id="dateEnd" maxWidth="Infinity" styleClass="hud-input" />
+                                                <Label fx:id="errDate" managed="false" styleClass="err-label" visible="false" />
                                             </VBox>
 
                                             <VBox spacing="5">

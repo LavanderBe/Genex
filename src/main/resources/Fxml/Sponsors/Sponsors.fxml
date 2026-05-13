@@ -72,11 +72,6 @@
                 </TableView>
             </VBox>
 
-            <VBox styleClass="panel" spacing="10" prefWidth="250" minWidth="220">
-                <Label text="RÉPARTITION PAR TYPE" styleClass="panel-title"/>
-                <Label text="📊  Graphiques disponibles prochainement"
-                       styleClass="table-placeholder" VBox.vgrow="ALWAYS" wrapText="true"/>
-            </VBox>
         </HBox>
 
     </VBox>

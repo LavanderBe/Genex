@@ -126,26 +126,30 @@
 
       <!-- MY LISTINGS -->
       <Tab text="Mes annonces">
-        <VBox spacing="0">
-          <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="10">
-            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-            <Label text="Commandes recues" styleClass="field-label"/>
+        <ScrollPane fitToWidth="true" styleClass="cards-scroll">
+          <FlowPane fx:id="myListingsGrid" styleClass="card-grid" hgap="20" vgap="20" alignment="TOP_LEFT">
+            <padding><Insets top="16" right="24" bottom="20" left="24"/></padding>
+          </FlowPane>
+        </ScrollPane>
+      </Tab>
+
+      <!-- MY SALES -->
+      <Tab text="Mes ventes">
+        <VBox spacing="0" styleClass="tab-content">
+          <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+            <Label text="COMMANDES REÇUES" styleClass="page-title"/>
           </HBox>
-          <TableView fx:id="sellerOrdersTable" prefHeight="180" styleClass="data-table">
+          <TableView fx:id="sellerOrdersTable" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
-              <TableColumn fx:id="soColItem"    text="Article"  prefWidth="160"/>
-              <TableColumn fx:id="soColBuyer"   text="Acheteur" prefWidth="120"/>
-              <TableColumn fx:id="soColQty"     text="Qte"      prefWidth="50"/>
-              <TableColumn fx:id="soColStatus"  text="Statut"   prefWidth="120"/>
-              <TableColumn fx:id="soColActions" text=""         prefWidth="120"/>
+              <TableColumn fx:id="soColItem"    text="Article"  prefWidth="220"/>
+              <TableColumn fx:id="soColBuyer"   text="Acheteur" prefWidth="180"/>
+              <TableColumn fx:id="soColQty"     text="Qte"      prefWidth="60"/>
+              <TableColumn fx:id="soColStatus"  text="Statut"   prefWidth="150"/>
+              <TableColumn fx:id="soColActions" text=""         prefWidth="140"/>
             </columns>
-            <placeholder><Label text="Aucune commande" styleClass="table-placeholder"/></placeholder>
+            <placeholder><Label text="Aucune commande enregistrée" styleClass="table-placeholder"/></placeholder>
           </TableView>
-          <ScrollPane fitToWidth="true" styleClass="cards-scroll" VBox.vgrow="ALWAYS">
-            <FlowPane fx:id="myListingsGrid" styleClass="card-grid" hgap="20" vgap="20" alignment="TOP_LEFT">
-              <padding><Insets top="16" right="24" bottom="20" left="24"/></padding>
-            </FlowPane>
-          </ScrollPane>
         </VBox>
       </Tab>
 

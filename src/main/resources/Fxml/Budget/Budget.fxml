@@ -85,10 +85,6 @@
                 </TableView>
             </VBox>
 
-            <VBox minWidth="220" prefWidth="250" spacing="10" styleClass="panel">
-                <Label styleClass="panel-title" text="ALLOUÉ VS DÉPENSÉ" />
-                <Label styleClass="table-placeholder" text="📊  Graphiques disponibles prochainement" wrapText="true" VBox.vgrow="ALWAYS" />
-            </VBox>
         </HBox>
 
     </VBox>
