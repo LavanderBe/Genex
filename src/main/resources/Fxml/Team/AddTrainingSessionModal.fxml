@@ -19,7 +19,7 @@
            styleClass="overlay-bg" stylesheets="@AddTrainingSessionModal.css"
            alignment="CENTER_RIGHT">
 
-    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" StackPane.alignment="CENTER_RIGHT">
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" maxHeight="650" StackPane.alignment="CENTER_RIGHT">
         <padding>
             <Insets top="28" right="28" bottom="28" left="28" />
         </padding>
@@ -95,12 +95,6 @@
                     <Label fx:id="errorEndTime" styleClass="err-label" visible="false" managed="false" />
                 </VBox>
 
-                <!-- Location -->
-                <VBox spacing="6">
-                    <Label text="LIEU" styleClass="field-label" />
-                    <TextField fx:id="txtLocation" styleClass="input-field" promptText="Salle d'entraînement" />
-                </VBox>
-
                 <!-- Notes -->
                 <VBox spacing="6">
                     <Label text="NOTES" styleClass="field-label" />
@@ -113,11 +107,9 @@
         <!-- Action Buttons -->
         <HBox spacing="10">
             <VBox.margin>
-                <Insets top="20" />
+                <Insets top="14" />
             </VBox.margin>
-            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveSession" 
-                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
-            <Button text="ANNULER" styleClass="btn-secondary" onAction="#closeModal" 
+            <Button fx:id="btnSave" text="ENREGISTRER" styleClass="btn-primary" onAction="#saveSession" 
                     HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
         </HBox>
 

@@ -79,21 +79,44 @@ public class CrudTeam {
                 int membersDeleted = pstMembers.executeUpdate();
                 System.out.println("✅ Deleted " + membersDeleted + " team members");
                 
-                // 2. Delete all training sessions for this team
+                try {
+                    String deleteAttendanceQuery = "DELETE FROM training_attendance WHERE team_id=?";
+                    PreparedStatement pstAttendance = conn.prepareStatement(deleteAttendanceQuery);
+                    pstAttendance.setString(1, team.getId());
+                    int attendanceDeleted = pstAttendance.executeUpdate();
+                    System.out.println("Deleted " + attendanceDeleted + " attendance rows");
+                } catch (SQLException attendanceError) {
+                    String message = attendanceError.getMessage() != null
+                            ? attendanceError.getMessage().toLowerCase()
+                            : "";
+                    if (!message.contains("training_attendance")) {
+                        throw attendanceError;
+                    }
+                    System.out.println("Attendance table not available yet, skipping attendance cleanup");
+                }
+
+                // 2. Delete all training notifications for this team
+                String deleteNotificationsQuery = "DELETE FROM training_notifications WHERE team_id=?";
+                PreparedStatement pstNotifications = conn.prepareStatement(deleteNotificationsQuery);
+                pstNotifications.setString(1, team.getId());
+                int notificationsDeleted = pstNotifications.executeUpdate();
+                System.out.println("✅ Deleted " + notificationsDeleted + " training notifications");
+                
+                // 3. Delete all training sessions for this team
                 String deleteSessionsQuery = "DELETE FROM training_sessions WHERE team_id=?";
                 PreparedStatement pstSessions = conn.prepareStatement(deleteSessionsQuery);
                 pstSessions.setString(1, team.getId());
                 int sessionsDeleted = pstSessions.executeUpdate();
                 System.out.println("✅ Deleted " + sessionsDeleted + " training sessions");
                 
-                // 3. Delete all team messages
+                // 4. Delete all team messages
                 String deleteMessagesQuery = "DELETE FROM team_messages WHERE team_id=?";
                 PreparedStatement pstMessages = conn.prepareStatement(deleteMessagesQuery);
                 pstMessages.setString(1, team.getId());
                 int messagesDeleted = pstMessages.executeUpdate();
                 System.out.println("✅ Deleted " + messagesDeleted + " team messages");
                 
-                // 4. Finally, delete the team itself
+                // 5. Finally, delete the team itself
                 String deleteTeamQuery = "DELETE FROM teams WHERE id=?";
                 PreparedStatement pstTeam = conn.prepareStatement(deleteTeamQuery);
                 pstTeam.setString(1, team.getId());
@@ -159,6 +182,36 @@ public class CrudTeam {
         }
 
         return list;
+    }
+
+    /**
+     * Check if a team name already exists (case-insensitive)
+     * @param name The team name to check
+     * @param excludeId Optional team ID to exclude from check (for updates)
+     * @return true if name exists, false otherwise
+     */
+    public boolean teamNameExists(String name, String excludeId) {
+        String query = "SELECT COUNT(*) FROM teams WHERE LOWER(name) = LOWER(?)";
+        if (excludeId != null) {
+            query += " AND id != ?";
+        }
+
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, name.trim());
+            if (excludeId != null) {
+                pst.setString(2, excludeId);
+            }
+            
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking team name: " + e.getMessage());
+        }
+        
+        return false;
     }
 
     private Team mapResultSetToTeam(ResultSet rs) throws SQLException {

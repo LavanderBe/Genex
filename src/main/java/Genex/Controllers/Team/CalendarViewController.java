@@ -2,7 +2,6 @@ package Genex.Controllers.Team;
 
 import Genex.entities.TrainingSession;
 import Genex.services.CrudTrainingSession;
-import Genex.services.GoogleCalendarService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -28,7 +27,6 @@ public class CalendarViewController {
     private YearMonth currentMonth;
     private String teamId;
     private CrudTrainingSession crudTrainingSession;
-    private GoogleCalendarService googleCalendarService;
     private StackPane rootStackPane;
     private boolean isCreator;
     
@@ -38,7 +36,6 @@ public class CalendarViewController {
     @FXML
     public void initialize() {
         crudTrainingSession = new CrudTrainingSession();
-        googleCalendarService = new GoogleCalendarService();
         currentMonth = YearMonth.now();
         setupDayHeaders();
     }
@@ -290,6 +287,12 @@ public class CalendarViewController {
             
             // Call setSessions() LAST because it triggers displaySessions()
             controller.setSessions(sessions);
+            controller.setOnAttendanceUpdatedCallback(() -> {
+                refreshCalendar();
+                if (onRefreshCallback != null) {
+                    onRefreshCallback.run();
+                }
+            });
             
             controller.setOnCloseCallback(() -> {
                 rootStackPane.getChildren().remove(panelOverlay);
@@ -309,6 +312,16 @@ public class CalendarViewController {
     }
 
     public void refresh() {
+        // Auto-update past sessions before refreshing
+        if (teamId != null) {
+            int updatedCount = crudTrainingSession.autoUpdatePastSessionsForTeam(teamId);
+            if (updatedCount > 0) {
+                if (onRefreshCallback != null) {
+                    onRefreshCallback.run();
+                }
+                System.out.println("✅ Auto-updated " + updatedCount + " past sessions to COMPLETED");
+            }
+        }
         refreshCalendar();
     }
 }

@@ -71,7 +71,6 @@ public class GoogleCalendarService {
         try {
             Event event = new Event()
                     .setSummary(session.getTitle())
-                    .setLocation(session.getLocation())
                     .setDescription(buildDescription(session));
 
             // Set start and end times
@@ -119,7 +118,6 @@ public class GoogleCalendarService {
 
             // Update event details
             event.setSummary(session.getTitle());
-            event.setLocation(session.getLocation());
             event.setDescription(buildDescription(session));
 
             // Update start and end times

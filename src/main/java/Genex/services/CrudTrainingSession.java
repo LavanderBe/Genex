@@ -74,24 +74,11 @@ public class CrudTrainingSession {
 
     public void addSession(TrainingSession session) {
         String query = "INSERT INTO training_sessions (id, team_id, title, type, " +
-                "session_datetime, start_time, end_time, location, notes, status, calendar_event_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "session_datetime, start_time, end_time, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             // Generate UUID for the session
             if (session.getId() == null || session.getId().isEmpty()) {
                 session.setId(java.util.UUID.randomUUID().toString());
-            }
-            
-            // Create calendar event first
-            String calendarEventId = null;
-            if (calendarService != null && calendarService.isInitialized()) {
-                try {
-                    calendarEventId = calendarService.createEvent(session);
-                    session.setCalendarEventId(calendarEventId);
-                    System.out.println("Calendar event created with ID: " + calendarEventId);
-                } catch (Exception e) {
-                    System.err.println("Warning: Failed to create calendar event: " + e.getMessage());
-                    // Continue with database operation even if calendar fails
-                }
             }
 
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
@@ -102,10 +89,8 @@ public class CrudTrainingSession {
             pst.setTimestamp(5, session.getSessionDatetime() != null ? Timestamp.valueOf(session.getSessionDatetime()) : null);
             pst.setTime(6, session.getStartTime() != null ? Time.valueOf(session.getStartTime()) : null);
             pst.setTime(7, session.getEndTime() != null ? Time.valueOf(session.getEndTime()) : null);
-            pst.setString(8, session.getLocation());
-            pst.setString(9, session.getNotes());
-            pst.setString(10, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(11, calendarEventId);
+            pst.setString(8, session.getNotes());
+            pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
 
             int rowsAffected = pst.executeUpdate();
             System.out.println("Training session added successfully. Rows affected: " + rowsAffected);
@@ -122,21 +107,8 @@ public class CrudTrainingSession {
 
     public void updateSession(TrainingSession session) {
         String query = "UPDATE training_sessions SET team_id=?, title=?, type=?, " +
-                "session_datetime=?, start_time=?, end_time=?, location=?, notes=?, status=?, calendar_event_id=? WHERE id=?";
+                "session_datetime=?, start_time=?, end_time=?, notes=?, status=? WHERE id=?";
         try {
-            // Update calendar event
-            if (calendarService != null && calendarService.isInitialized() && session.getCalendarEventId() != null) {
-                try {
-                    boolean updated = calendarService.updateEvent(session);
-                    if (updated) {
-                        System.out.println("Calendar event updated successfully");
-                    }
-                } catch (Exception e) {
-                    System.err.println("Warning: Failed to update calendar event: " + e.getMessage());
-                    // Continue with database operation even if calendar fails
-                }
-            }
-
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
             pst.setString(1, session.getTeamId());
             pst.setString(2, session.getTitle());
@@ -144,13 +116,14 @@ public class CrudTrainingSession {
             pst.setTimestamp(4, session.getSessionDatetime() != null ? Timestamp.valueOf(session.getSessionDatetime()) : null);
             pst.setTime(5, session.getStartTime() != null ? Time.valueOf(session.getStartTime()) : null);
             pst.setTime(6, session.getEndTime() != null ? Time.valueOf(session.getEndTime()) : null);
-            pst.setString(7, session.getLocation());
-            pst.setString(8, session.getNotes());
-            pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(10, session.getCalendarEventId());
-            pst.setString(11, session.getId());
+            pst.setString(7, session.getNotes());
+            pst.setString(8, session.getStatus() != null ? session.getStatus().name() : null);
+            pst.setString(9, session.getId());
             pst.executeUpdate();
             System.out.println("Training session updated successfully");
+            if (session.getStatus() == TrainingSession.Status.COMPLETED) {
+                new CrudTrainingAttendance().finalizeMissingAttendance(session);
+            }
         } catch (SQLException e) {
             System.err.println("Error updating session: " + e.getMessage());
             e.printStackTrace();
@@ -299,6 +272,102 @@ public class CrudTrainingSession {
         return conflicts;
     }
 
+    /**
+     * Auto-update past sessions to COMPLETED status
+     * Marks all PLANNED or ONGOING sessions that have passed as COMPLETED
+     * @return Number of sessions updated
+     */
+    public int autoUpdatePastSessions() {
+        String query = "UPDATE training_sessions " +
+                "SET status = 'COMPLETED' " +
+                "WHERE status IN ('PLANNED', 'ONGOING') " +
+                "AND CONCAT(session_datetime, ' ', end_time) < NOW()";
+        
+        try {
+            Statement stmt = Myconnection.getInstance().getCnx().createStatement();
+            int updatedCount = stmt.executeUpdate(query);
+            
+            if (updatedCount > 0) {
+                System.out.println("✅ Auto-updated " + updatedCount + " past session(s) to COMPLETED");
+            }
+            
+            return updatedCount;
+        } catch (SQLException e) {
+            System.err.println("Error auto-updating past sessions: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Auto-update past sessions for a specific team
+     * @param teamId The team ID
+     * @return Number of sessions updated
+     */
+    public int autoUpdatePastSessionsForTeam(String teamId) {
+        String query = "UPDATE training_sessions " +
+                "SET status = 'COMPLETED' " +
+                "WHERE team_id = ? " +
+                "AND status IN ('PLANNED', 'ONGOING') " +
+                "AND CONCAT(session_datetime, ' ', end_time) < NOW()";
+        
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, teamId);
+            int updatedCount = pst.executeUpdate();
+            
+            if (updatedCount > 0) {
+                System.out.println("✅ Auto-updated " + updatedCount + " past session(s) to COMPLETED for team " + teamId);
+            }
+            
+            return updatedCount;
+        } catch (SQLException e) {
+            System.err.println("Error auto-updating past sessions for team: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Get sessions that should be marked as completed (past sessions still in PLANNED/ONGOING)
+     * @param teamId The team ID (optional, null for all teams)
+     * @return List of sessions that need status update
+     */
+    public List<TrainingSession> getPastSessionsNeedingUpdate(String teamId) {
+        List<TrainingSession> sessions = new ArrayList<>();
+        String query = "SELECT * FROM training_sessions " +
+                "WHERE status IN ('PLANNED', 'ONGOING') " +
+                "AND CONCAT(session_datetime, ' ', end_time) < NOW()";
+        
+        if (teamId != null) {
+            query += " AND team_id = ?";
+        }
+        
+        query += " ORDER BY session_datetime DESC";
+        
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            if (teamId != null) {
+                pst.setString(1, teamId);
+            }
+            
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                TrainingSession session = mapResultSetToSession(rs);
+                sessions.add(session);
+            }
+            
+            if (!sessions.isEmpty()) {
+                System.out.println("⚠️ Found " + sessions.size() + " past session(s) that need status update");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting past sessions needing update: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return sessions;
+    }
+
     private TrainingSession mapResultSetToSession(ResultSet rs) throws SQLException {
         TrainingSession session = new TrainingSession();
         session.setId(rs.getString("id"));
@@ -325,16 +394,12 @@ public class CrudTrainingSession {
             session.setEndTime(endTime.toLocalTime());
         }
 
-        session.setLocation(rs.getString("location"));
         session.setNotes(rs.getString("notes"));
 
         String statusStr = rs.getString("status");
         if (statusStr != null) {
             session.setStatus(TrainingSession.Status.valueOf(statusStr));
         }
-
-        // Get calendar_event_id
-        session.setCalendarEventId(rs.getString("calendar_event_id"));
 
         return session;
     }

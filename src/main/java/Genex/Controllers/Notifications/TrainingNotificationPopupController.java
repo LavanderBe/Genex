@@ -127,12 +127,7 @@ public class TrainingNotificationPopupController {
         
         detailsBox.getChildren().addAll(dateLabel, timeLabel);
 
-        // Location
-        if (session.getLocation() != null && !session.getLocation().isEmpty()) {
-            Label locationLabel = new Label("📍 " + session.getLocation());
-            locationLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 13px;");
-            detailsBox.getChildren().add(locationLabel);
-        }
+
 
         // Time until session
         LocalDateTime sessionStart = session.getSessionDatetime().with(session.getStartTime());

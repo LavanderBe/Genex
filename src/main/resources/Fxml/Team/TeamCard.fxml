@@ -52,13 +52,13 @@
     </HBox>
 
     <!-- Action buttons -->
-    <HBox spacing="8" alignment="CENTER">
+    <VBox spacing="8" alignment="CENTER">
         <Button fx:id="btnView" text="Voir" styleClass="player-view-btn"
-                onAction="#handleView" prefWidth="100" />
+                onAction="#handleView" maxWidth="Infinity" />
         <Button fx:id="btnEdit" text="Modifier" styleClass="player-join-btn"
-                onAction="#handleEdit" prefWidth="100" />
+                onAction="#handleEdit" maxWidth="Infinity" />
         <Button fx:id="btnDelete" text="Supprimer" styleClass="player-delete-btn"
-                onAction="#handleDelete" prefWidth="100" />
-    </HBox>
+                onAction="#handleDelete" maxWidth="Infinity" />
+    </VBox>
 
 </VBox>

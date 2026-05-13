@@ -42,9 +42,6 @@ public class AddTrainingSessionModalController {
     private ComboBox<TrainingSession.Status> choiceStatus;
 
     @FXML
-    private TextField txtLocation;
-
-    @FXML
     private TextArea txtNotes;
 
     @FXML
@@ -149,10 +146,6 @@ public class AddTrainingSessionModalController {
             choiceStatus.setValue(session.getStatus());
         }
 
-        if (session.getLocation() != null && !session.getLocation().trim().isEmpty()) {
-            txtLocation.setText(session.getLocation());
-        }
-
         if (session.getNotes() != null) {
             txtNotes.setText(session.getNotes());
         }
@@ -223,9 +216,14 @@ public class AddTrainingSessionModalController {
 
     @FXML
     private void saveSession() {
+        System.out.println("=== SAVE SESSION BUTTON CLICKED ===");
+        
         if (!validateForm()) {
+            System.out.println("❌ Form validation failed");
             return;
         }
+
+        System.out.println("✓ Form validation passed");
 
         try {
             // Parse date and time first for conflict check
@@ -278,7 +276,6 @@ public class AddTrainingSessionModalController {
             session.setStartTime(startTime);
             session.setEndTime(endTime);
             session.setStatus(choiceStatus.getValue());
-            session.setLocation(txtLocation.getText().trim());
             session.setNotes(txtNotes.getText().trim());
             session.setTeamId(teamId);
 
