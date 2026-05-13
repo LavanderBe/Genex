@@ -7,6 +7,7 @@ import Genex.services.CrudForum;
 import Genex.services.CrudPosts;
 import Genex.services.CrudUser;
 import Genex.services.NewsService;
+import Genex.services.TelegramNotificationService;
 import Genex.utils.SessionManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -137,6 +138,7 @@ public class PostsController {
     private final CrudForum crudForum = new CrudForum();
     private final CrudUser crudUser = new CrudUser();
     private final NewsService newsService = new NewsService();
+    private final TelegramNotificationService telegramNotificationService = new TelegramNotificationService();
     private final List<Posts> posts = new ArrayList<>();
     private final List<Forum> forums = new ArrayList<>();
     private final List<User> users = new ArrayList<>();
@@ -324,6 +326,7 @@ public class PostsController {
             post.setCreatedAt(LocalDateTime.now());
             post.setUpdatedAt(LocalDateTime.now());
             crudPosts.addEntity(post);
+            String telegramStatus = notifyPlayerPostCreationOnTelegram(post);
 
             recordUserPostTimestamp(authorId);
 
@@ -339,6 +342,7 @@ public class PostsController {
             if (hadFilteredSpeech) {
                 message.append(" " + badwordCount + " gros mot(s) détecté(s) et filtré(s).");
             }
+            message.append(telegramStatus);
             showAlert(Alert.AlertType.INFORMATION, "Succès", message.toString());
             clearFormFields();
             loadPosts();
@@ -1096,6 +1100,28 @@ public class PostsController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private String notifyPlayerPostCreationOnTelegram(Posts post) {
+        if (!isCurrentUserPlayer()) {
+            return "";
+        }
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        String forumName = forumNameForId(post.getForumId());
+        try {
+            telegramNotificationService.sendPlayerPostCreatedNotification(post, currentUser, forumName);
+            return "\nNotification Telegram envoyée.";
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "\nPost créé, mais la notification Telegram a été interrompue.";
+        } catch (IOException | IllegalStateException e) {
+            return "\nPost créé, mais notification Telegram non envoyée: " + e.getMessage();
+        }
+    }
+
+    private boolean isCurrentUserPlayer() {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        return currentUser != null && "PLAYER".equalsIgnoreCase(currentUser.getRole());
     }
 
     private boolean isBlank(String value) {

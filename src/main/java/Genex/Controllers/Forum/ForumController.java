@@ -5,6 +5,7 @@ import Genex.entities.User;
 import Genex.services.CrudForum;
 import Genex.services.GroqService;
 import Genex.services.NewsService;
+import Genex.services.TelegramNotificationService;
 import Genex.services.TemperatureService;
 import Genex.utils.SessionManager;
 import javafx.application.Platform;
@@ -128,6 +129,7 @@ public class ForumController {
     private final TemperatureService temperatureService = new TemperatureService();
     private final NewsService newsService = new NewsService();
     private final GroqService groqService = new GroqService();
+    private final TelegramNotificationService telegramNotificationService = new TelegramNotificationService();
     private final List<Forum> forums = new ArrayList<>();
     private final Map<String, String> forumStatusById = new HashMap<>();
     private boolean adminMode;
@@ -185,7 +187,8 @@ public class ForumController {
             );
             forum.setCreatedAt(LocalDateTime.now());
             crudForum.addEntity(forum);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum créé avec succès.");
+            String telegramStatus = notifyForumCreationOnTelegram(forum);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum créé avec succès." + telegramStatus);
             clearFormFields();
             loadForums();
         } catch (Exception e) {
@@ -265,10 +268,12 @@ public class ForumController {
             return;
         }
         try {
+            Forum selectedForum = findForumById(selectedForumId);
             Forum forum = new Forum();
             forum.setId(selectedForumId);
             crudForum.deleteEntity(forum);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum supprimé avec succès.");
+            String telegramStatus = notifyForumDeletionOnTelegram(selectedForum);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum supprimé avec succès." + telegramStatus);
             clearFormFields();
             loadForums();
         } catch (Exception e) {
@@ -750,6 +755,41 @@ public class ForumController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private String notifyForumCreationOnTelegram(Forum forum) {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        try {
+            telegramNotificationService.sendForumCreatedNotification(forum, currentUser);
+            return "\nNotification Telegram envoyée.";
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "\nForum créé, mais la notification Telegram a été interrompue.";
+        } catch (IOException | IllegalStateException e) {
+            return "\nForum créé, mais notification Telegram non envoyée: " + e.getMessage();
+        }
+    }
+
+    private String notifyForumDeletionOnTelegram(Forum forum) {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        try {
+            telegramNotificationService.sendForumDeletedNotification(forum == null ? new Forum() : forum, currentUser);
+            return "\nNotification Telegram envoyée.";
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "\nForum supprimé, mais la notification Telegram a été interrompue.";
+        } catch (IOException | IllegalStateException e) {
+            return "\nForum supprimé, mais notification Telegram non envoyée: " + e.getMessage();
+        }
+    }
+
+    private Forum findForumById(String forumId) {
+        for (Forum forum : forums) {
+            if (forumId.equals(forum.getId())) {
+                return forum;
+            }
+        }
+        return null;
     }
 
     private boolean isBlank(String value) {
