@@ -136,14 +136,11 @@ public class AddPlayerToTeamModalController {
         String search = searchText.toLowerCase().trim();
         List<Player> filtered = new ArrayList<>();
         
+        // Search only by nickname for better performance
         for (Player player : allAvailablePlayers) {
             String nickname = player.getNickname() != null ? player.getNickname().toLowerCase() : "";
-            String username = player.getUsername() != null ? player.getUsername().toLowerCase() : "";
-            String firstName = player.getPrenom() != null ? player.getPrenom().toLowerCase() : "";
-            String lastName = player.getNom() != null ? player.getNom().toLowerCase() : "";
             
-            if (nickname.startsWith(search) || username.startsWith(search) || 
-                firstName.startsWith(search) || lastName.startsWith(search)) {
+            if (nickname.startsWith(search)) {
                 filtered.add(player);
             }
         }

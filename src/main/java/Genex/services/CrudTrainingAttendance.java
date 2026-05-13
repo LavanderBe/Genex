@@ -50,33 +50,68 @@ public class CrudTrainingAttendance {
         }
     }
 
-    public void markAttendance(String sessionId, String teamId, String playerId, TrainingAttendance.Status status) {
+    public boolean markAttendance(String sessionId, String teamId, String playerId, TrainingAttendance.Status status) {
+        System.out.println("=== MARKING ATTENDANCE ===");
+        System.out.println("Session ID: " + sessionId);
+        System.out.println("Team ID: " + teamId);
+        System.out.println("Player ID: " + playerId);
+        System.out.println("Status: " + status);
+        
         String query = "INSERT INTO training_attendance (id, session_id, team_id, player_id, status, recorded_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE status=VALUES(status), recorded_at=VALUES(recorded_at)";
 
         try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query)) {
-            pst.setString(1, UUID.randomUUID().toString());
+            String attendanceId = UUID.randomUUID().toString();
+            Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+            
+            pst.setString(1, attendanceId);
             pst.setString(2, sessionId);
             pst.setString(3, teamId);
             pst.setString(4, playerId);
             pst.setString(5, status.name());
-            pst.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-            pst.executeUpdate();
+            pst.setTimestamp(6, now);
+            
+            System.out.println("Executing query: " + query);
+            System.out.println("Parameters: id=" + attendanceId + ", session=" + sessionId + 
+                             ", team=" + teamId + ", player=" + playerId + 
+                             ", status=" + status.name() + ", time=" + now);
+            
+            int rowsAffected = pst.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected);
+            System.out.println("Attendance marked successfully!");
+            System.out.println("=========================");
         } catch (SQLException e) {
-            System.err.println("Error marking attendance: " + e.getMessage());
+            System.err.println("=== SQL ERROR MARKING ATTENDANCE ===");
+            System.err.println("Error message: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+            e.printStackTrace();
+            System.err.println("====================================");
             throw new RuntimeException(e);
         }
+
+        if (status == TrainingAttendance.Status.ABSENT) {
+            Player player = crudTeamMember.getMembersByTeam(teamId).stream()
+                    .filter(member -> playerId.equals(member.getId()))
+                    .findFirst()
+                    .orElse(null);
+            return kickIfNeeded(teamId, player);
+        }
+
+        return false;
     }
 
     public List<TrainingAttendance.Status> getRecentPresence(String teamId, String playerId, int limit) {
         List<TrainingAttendance.Status> statuses = new ArrayList<>();
-        String query = "SELECT ta.status " +
+        String query = "SELECT recent.status FROM (" +
+                "SELECT ts.session_datetime, ta.status " +
                 "FROM training_sessions ts " +
                 "LEFT JOIN training_attendance ta ON ta.session_id = ts.id AND ta.player_id = ? " +
-                "WHERE ts.team_id = ? AND ts.status = 'COMPLETED' " +
+                "WHERE ts.team_id = ? AND (ts.status = 'COMPLETED' OR ta.status IS NOT NULL) " +
                 "ORDER BY ts.session_datetime DESC " +
-                "LIMIT ?";
+                "LIMIT ?" +
+                ") recent ORDER BY recent.session_datetime ASC";
 
         try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query)) {
             pst.setString(1, playerId);
@@ -109,6 +144,22 @@ public class CrudTrainingAttendance {
         return 0;
     }
 
+    public TrainingAttendance.Status getAttendanceStatus(String sessionId, String playerId) {
+        String query = "SELECT status FROM training_attendance WHERE session_id=? AND player_id=?";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query)) {
+            pst.setString(1, sessionId);
+            pst.setString(2, playerId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return TrainingAttendance.Status.valueOf(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error loading attendance status: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     /**
      * When a session is completed, any current member without a PRESENT record is marked ABSENT.
      * Players reaching three absences are removed from the team and a system chat message is posted.
@@ -125,8 +176,9 @@ public class CrudTrainingAttendance {
             if (member.getId().equals(creatorId)) continue;
             if (!hasAttendance(session.getId(), member.getId())) {
                 markAttendance(session.getId(), session.getTeamId(), member.getId(), TrainingAttendance.Status.ABSENT);
+            } else {
+                kickIfNeeded(session.getTeamId(), member);
             }
-            kickIfNeeded(session.getTeamId(), member);
         }
     }
 
@@ -144,9 +196,16 @@ public class CrudTrainingAttendance {
         return false;
     }
 
-    private void kickIfNeeded(String teamId, Player player) {
+    private boolean kickIfNeeded(String teamId, Player player) {
+        if (player == null || player.getId() == null) return false;
+
+        Team team = new CrudTeam().getEntity(teamId);
+        if (team != null && player.getId().equals(team.getCreatedBy())) {
+            return false;
+        }
+
         int absences = getAbsenceCount(teamId, player.getId());
-        if (absences < ABSENCE_LIMIT) return;
+        if (absences < ABSENCE_LIMIT) return false;
 
         String playerName = player.getNickname() != null && !player.getNickname().isBlank()
                 ? player.getNickname()
@@ -159,6 +218,7 @@ public class CrudTrainingAttendance {
                 playerName + " a ete retire de l'equipe apres 3 absences aux entrainements.");
         message.setMessageType(TeamMessage.MessageType.SYSTEM);
         crudTeamMessage.addMessage(message);
+        return true;
     }
 
     public void deletePlayerAttendance(String teamId, String playerId) {

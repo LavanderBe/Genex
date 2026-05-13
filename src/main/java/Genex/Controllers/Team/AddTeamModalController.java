@@ -3,6 +3,7 @@ package Genex.Controllers.Team;
 import Genex.entities.Game;
 import Genex.entities.Team;
 import Genex.services.CrudGame;
+import Genex.services.CrudTeam;
 import Genex.services.GeminiImageGeneratorService;
 import Genex.utils.SessionManager;
 import javafx.application.Platform;
@@ -49,6 +50,7 @@ public class AddTeamModalController {
     private String jerseyImagePath;
 
     private CrudGame crudGame = new CrudGame();
+    private CrudTeam crudTeam = new CrudTeam();
     private GeminiImageGeneratorService aiService = new GeminiImageGeneratorService();
 
     @FXML
@@ -108,9 +110,27 @@ public class AddTeamModalController {
     }
 
     private void setupValidation() {
-        txtName.textProperty().addListener((obs, old, val) -> hideError(errorName));
+        // Real-time team name validation
+        txtName.textProperty().addListener((obs, old, val) -> {
+            hideError(errorName);
+            if (!val.trim().isEmpty()) {
+                // Check if team name already exists
+                String excludeId = teamToEdit != null ? teamToEdit.getId() : null;
+                if (crudTeam.teamNameExists(val.trim(), excludeId)) {
+                    showError(errorName, "Ce nom d'équipe existe déjà");
+                }
+            }
+        });
+        
         choiceGame.valueProperty().addListener((obs, old, val) -> hideError(errorGameId));
-        txtContact.textProperty().addListener((obs, old, val) -> hideError(errorContact));
+        
+        // Real-time email validation
+        txtContact.textProperty().addListener((obs, old, val) -> {
+            hideError(errorContact);
+            if (!val.trim().isEmpty() && !isValidEmail(val.trim())) {
+                showError(errorContact, "Format email invalide");
+            }
+        });
     }
 
     public void setTeam(Team team) {
@@ -361,22 +381,41 @@ public class AddTeamModalController {
     private boolean validateForm() {
         boolean valid = true;
 
-        if (txtName.getText().trim().isEmpty()) {
-            showError(errorName, "Le nom est requis");
+        // Validate contact email first
+        if (txtContact.getText().trim().isEmpty()) {
+            showError(errorContact, "Le contact est requis");
+            valid = false;
+        } else if (!isValidEmail(txtContact.getText().trim())) {
+            showError(errorContact, "Email invalide (ex: exemple@domaine.com)");
             valid = false;
         }
 
+        // Validate team name
+        if (txtName.getText().trim().isEmpty()) {
+            showError(errorName, "Le nom est requis");
+            valid = false;
+        } else {
+            // Check if team name already exists
+            String excludeId = teamToEdit != null ? teamToEdit.getId() : null;
+            if (crudTeam.teamNameExists(txtName.getText().trim(), excludeId)) {
+                showError(errorName, "Ce nom d'équipe existe déjà");
+                valid = false;
+            }
+        }
+
+        // Validate game selection
         if (choiceGame.getValue() == null) {
             showError(errorGameId, "Le jeu est requis");
             valid = false;
         }
 
-        if (txtContact.getText().trim().isEmpty()) {
-            showError(errorContact, "Le contact est requis");
-            valid = false;
-        }
-
         return valid;
+    }
+
+    private boolean isValidEmail(String email) {
+        // Email regex pattern
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
     }
 
     private void showError(Label errorLabel, String message) {

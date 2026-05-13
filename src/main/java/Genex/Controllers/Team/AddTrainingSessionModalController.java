@@ -216,9 +216,14 @@ public class AddTrainingSessionModalController {
 
     @FXML
     private void saveSession() {
+        System.out.println("=== SAVE SESSION BUTTON CLICKED ===");
+        
         if (!validateForm()) {
+            System.out.println("❌ Form validation failed");
             return;
         }
+
+        System.out.println("✓ Form validation passed");
 
         try {
             // Parse date and time first for conflict check

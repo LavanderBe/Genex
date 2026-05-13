@@ -287,6 +287,12 @@ public class CalendarViewController {
             
             // Call setSessions() LAST because it triggers displaySessions()
             controller.setSessions(sessions);
+            controller.setOnAttendanceUpdatedCallback(() -> {
+                refreshCalendar();
+                if (onRefreshCallback != null) {
+                    onRefreshCallback.run();
+                }
+            });
             
             controller.setOnCloseCallback(() -> {
                 rootStackPane.getChildren().remove(panelOverlay);

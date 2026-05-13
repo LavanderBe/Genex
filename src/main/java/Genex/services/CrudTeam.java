@@ -184,6 +184,36 @@ public class CrudTeam {
         return list;
     }
 
+    /**
+     * Check if a team name already exists (case-insensitive)
+     * @param name The team name to check
+     * @param excludeId Optional team ID to exclude from check (for updates)
+     * @return true if name exists, false otherwise
+     */
+    public boolean teamNameExists(String name, String excludeId) {
+        String query = "SELECT COUNT(*) FROM teams WHERE LOWER(name) = LOWER(?)";
+        if (excludeId != null) {
+            query += " AND id != ?";
+        }
+
+        try {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
+            pst.setString(1, name.trim());
+            if (excludeId != null) {
+                pst.setString(2, excludeId);
+            }
+            
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking team name: " + e.getMessage());
+        }
+        
+        return false;
+    }
+
     private Team mapResultSetToTeam(ResultSet rs) throws SQLException {
         Team team = new Team();
         team.setId(rs.getString("id"));

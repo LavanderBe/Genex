@@ -74,24 +74,11 @@ public class CrudTrainingSession {
 
     public void addSession(TrainingSession session) {
         String query = "INSERT INTO training_sessions (id, team_id, title, type, " +
-                "session_datetime, start_time, end_time, notes, status, calendar_event_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "session_datetime, start_time, end_time, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             // Generate UUID for the session
             if (session.getId() == null || session.getId().isEmpty()) {
                 session.setId(java.util.UUID.randomUUID().toString());
-            }
-            
-            // Create calendar event first
-            String calendarEventId = null;
-            if (calendarService != null && calendarService.isInitialized()) {
-                try {
-                    calendarEventId = calendarService.createEvent(session);
-                    session.setCalendarEventId(calendarEventId);
-                    System.out.println("Calendar event created with ID: " + calendarEventId);
-                } catch (Exception e) {
-                    System.err.println("Warning: Failed to create calendar event: " + e.getMessage());
-                    // Continue with database operation even if calendar fails
-                }
             }
 
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
@@ -104,7 +91,6 @@ public class CrudTrainingSession {
             pst.setTime(7, session.getEndTime() != null ? Time.valueOf(session.getEndTime()) : null);
             pst.setString(8, session.getNotes());
             pst.setString(9, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(10, calendarEventId);
 
             int rowsAffected = pst.executeUpdate();
             System.out.println("Training session added successfully. Rows affected: " + rowsAffected);
@@ -121,21 +107,8 @@ public class CrudTrainingSession {
 
     public void updateSession(TrainingSession session) {
         String query = "UPDATE training_sessions SET team_id=?, title=?, type=?, " +
-                "session_datetime=?, start_time=?, end_time=?, notes=?, status=?, calendar_event_id=? WHERE id=?";
+                "session_datetime=?, start_time=?, end_time=?, notes=?, status=? WHERE id=?";
         try {
-            // Update calendar event
-            if (calendarService != null && calendarService.isInitialized() && session.getCalendarEventId() != null) {
-                try {
-                    boolean updated = calendarService.updateEvent(session);
-                    if (updated) {
-                        System.out.println("Calendar event updated successfully");
-                    }
-                } catch (Exception e) {
-                    System.err.println("Warning: Failed to update calendar event: " + e.getMessage());
-                    // Continue with database operation even if calendar fails
-                }
-            }
-
             PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(query);
             pst.setString(1, session.getTeamId());
             pst.setString(2, session.getTitle());
@@ -145,8 +118,7 @@ public class CrudTrainingSession {
             pst.setTime(6, session.getEndTime() != null ? Time.valueOf(session.getEndTime()) : null);
             pst.setString(7, session.getNotes());
             pst.setString(8, session.getStatus() != null ? session.getStatus().name() : null);
-            pst.setString(9, session.getCalendarEventId());
-            pst.setString(10, session.getId());
+            pst.setString(9, session.getId());
             pst.executeUpdate();
             System.out.println("Training session updated successfully");
             if (session.getStatus() == TrainingSession.Status.COMPLETED) {
@@ -428,9 +400,6 @@ public class CrudTrainingSession {
         if (statusStr != null) {
             session.setStatus(TrainingSession.Status.valueOf(statusStr));
         }
-
-        // Get calendar_event_id
-        session.setCalendarEventId(rs.getString("calendar_event_id"));
 
         return session;
     }

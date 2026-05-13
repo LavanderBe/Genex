@@ -109,7 +109,7 @@
             <VBox.margin>
                 <Insets top="14" />
             </VBox.margin>
-            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveSession" 
+            <Button fx:id="btnSave" text="ENREGISTRER" styleClass="btn-primary" onAction="#saveSession" 
                     HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
         </HBox>
 

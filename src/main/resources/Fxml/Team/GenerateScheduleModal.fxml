@@ -13,11 +13,11 @@
 
     <!-- Modal Container -->
     <VBox prefWidth="620" maxWidth="620" maxHeight="560"
-          style="-fx-background-color: #1a1a2e; -fx-background-radius: 16; -fx-border-color: #8B0D0D; -fx-border-width: 2; -fx-border-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);">
+          style="-fx-background-color: #09070f; -fx-background-radius: 0; -fx-border-color: #8B0D0D; -fx-border-width: 2; -fx-border-radius: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);">
 
         <!-- Header -->
         <HBox alignment="CENTER_LEFT" spacing="12"
-              style="-fx-background-color: #12122a; -fx-background-radius: 16 16 0 0; -fx-padding: 16 20;">
+              style="-fx-background-color: #120812; -fx-background-radius: 0; -fx-padding: 16 20;">
             <Label fx:id="modalTitle" text="GÉNÉRER UN PLANNING OPTIMAL"
                    style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
             <Region HBox.hgrow="ALWAYS" />
@@ -32,7 +32,7 @@
             <VBox spacing="16" style="-fx-padding: 20;">
 
                 <!-- Suggested Level Info -->
-                <VBox spacing="6" style="-fx-background-color: rgba(76, 175, 80, 0.1); -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: rgba(76, 175, 80, 0.3); -fx-border-width: 1; -fx-border-radius: 8;">
+                <VBox spacing="6" style="-fx-background-color: rgba(76, 175, 80, 0.1); -fx-background-radius: 0; -fx-padding: 12; -fx-border-color: rgba(76, 175, 80, 0.3); -fx-border-width: 1; -fx-border-radius: 0;">
                     <Label fx:id="lblSuggestedLevel" text="Niveau suggéré: Intermédiaire"
                            style="-fx-text-fill: #4CAF50; -fx-font-weight: bold; -fx-font-size: 13px;" />
                     <Label text="Le niveau est calculé automatiquement selon l'ancienneté de l'équipe, le nombre de membres et l'historique d'entraînement."
@@ -45,7 +45,7 @@
                     <Label text="Niveau de l'équipe"
                            style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
                     <ComboBox fx:id="choiceLevel" maxWidth="Infinity"
-                              style="-fx-background-color: #0d0d1a; -fx-text-fill: white; -fx-font-size: 13px;" />
+                              style="-fx-background-color: #090918; -fx-text-fill: white; -fx-font-size: 13px;" />
                     <Label text="Détermine le nombre et l'intensité des sessions d'entraînement"
                            style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 10px; -fx-font-style: italic;" />
                 </VBox>
@@ -56,7 +56,7 @@
                            style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
                     <HBox spacing="12" alignment="CENTER_LEFT">
                         <DatePicker fx:id="dateStart" prefWidth="200"
-                                    style="-fx-background-color: #0d0d1a; -fx-text-fill: white;" />
+                                    style="-fx-background-color: #090918; -fx-text-fill: white;" />
                         <Label fx:id="lblCalendar" text="📅 Calendrier"
                                style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 12px;" />
                     </HBox>
@@ -68,7 +68,7 @@
                            style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
                     <HBox spacing="12" alignment="CENTER_LEFT">
                         <ComboBox fx:id="choiceRepeatCount" prefWidth="200"
-                                  style="-fx-background-color: #0d0d1a; -fx-text-fill: white; -fx-font-size: 13px;" />
+                                  style="-fx-background-color: #090918; -fx-text-fill: white; -fx-font-size: 13px;" />
                         <Label fx:id="lblEndDate" text="→ Fin: 08/06/2026"
                                style="-fx-text-fill: #4CAF50; -fx-font-size: 12px; -fx-font-weight: bold;" />
                     </HBox>
@@ -83,7 +83,7 @@
                             style="-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';"
                             onMouseEntered="#handleGenerateHover" onMouseExited="#handleGenerateExit" />
                     <Button fx:id="btnReset" text="⟲ Réinitialiser" prefWidth="150"
-                            style="-fx-background-color: rgba(139,13,13,0.3); -fx-text-fill: #ff6b6b; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';"
+                            style="-fx-background-color: rgba(139,13,13,0.3); -fx-text-fill: #FF5252; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 35 L 95 40 L 5 40 L 0 35 L 0 5 Z';"
                             onMouseEntered="#handleResetHover" onMouseExited="#handleResetExit"
                             onAction="#handleReset" />
                 </HBox>
@@ -93,7 +93,7 @@
                     <Label text="Prévisualisation"
                            style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px; -fx-font-weight: bold;" />
                     <TextArea fx:id="txtPreview" prefRowCount="7" wrapText="true" editable="false"
-                              style="-fx-control-inner-background: #0d0d1a; -fx-text-fill: white; -fx-font-family: 'Consolas', 'Monaco', monospace; -fx-font-size: 11px; -fx-background-color: #0d0d1a; -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6;"
+                              style="-fx-control-inner-background: #090918; -fx-text-fill: white; -fx-font-family: 'Consolas', 'Monaco', monospace; -fx-font-size: 11px; -fx-background-color: #090918; -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 1; -fx-border-radius: 0; -fx-background-radius: 0;"
                               promptText="Cliquez sur 'Générer le Planning' pour voir la prévisualisation..." />
                 </VBox>
 
@@ -102,7 +102,7 @@
 
         <!-- Footer Actions -->
         <HBox spacing="12" alignment="CENTER_RIGHT"
-              style="-fx-background-color: #12122a; -fx-background-radius: 0 0 16 16; -fx-padding: 16 20;">
+              style="-fx-background-color: #120812; -fx-background-radius: 0; -fx-padding: 16 20;">
             <Button fx:id="btnSave" text="✔ Sauvegarder Planning"
                     style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(76,175,80,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
                     onMouseEntered="#handleSaveHover" onMouseExited="#handleSaveExit" />

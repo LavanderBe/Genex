@@ -4,8 +4,7 @@ import Genex.entities.TrainingSession;
 import Genex.entities.TrainingAttendance;
 import Genex.services.CrudTrainingAttendance;
 import Genex.services.CrudTrainingSession;
-import Genex.services.DiscordTrainingSessionService;
-import Genex.services.QRCodeService;
+import Genex.services.CrudTeamMember;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -35,18 +34,15 @@ public class SessionDetailsPanelController {
     private boolean isCreator;
     private String currentUserId; // Current logged-in user
     private Runnable onCloseCallback;
+    private Runnable onAttendanceUpdatedCallback;
     private StackPane rootStackPane;
     private CrudTrainingSession crudTrainingSession;
     private CrudTrainingAttendance crudTrainingAttendance;
-    private DiscordTrainingSessionService discordTrainingSessionService;
-    private QRCodeService qrCodeService;
 
     @FXML
     public void initialize() {
         crudTrainingSession = new CrudTrainingSession();
         crudTrainingAttendance = new CrudTrainingAttendance();
-        discordTrainingSessionService = new DiscordTrainingSessionService();
-        qrCodeService = new QRCodeService();
     }
 
     public void setDate(LocalDate date) {
@@ -76,6 +72,10 @@ public class SessionDetailsPanelController {
 
     public void setOnCloseCallback(Runnable callback) {
         this.onCloseCallback = callback;
+    }
+
+    public void setOnAttendanceUpdatedCallback(Runnable callback) {
+        this.onAttendanceUpdatedCallback = callback;
     }
 
     public void setRootStackPane(StackPane rootStackPane) {
@@ -255,7 +255,28 @@ public class SessionDetailsPanelController {
         calendarButtonRow.getChildren().add(btnAddToCalendar);
         card.getChildren().add(calendarButtonRow);
 
-        addDiscordPresenceSection(card, session);
+        // Add "Mark Attendance" button for team creator
+        if (isCreator) {
+            Button btnMarkAttendance = new Button("✓ Marquer les présences");
+            btnMarkAttendance.setStyle(
+                "-fx-background-color: rgba(76,175,80,0.3); " +
+                "-fx-text-fill: #69db7c; " +
+                "-fx-font-size: 11px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 8 16; " +
+                "-fx-background-radius: 6; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: rgba(76,175,80,0.5); " +
+                "-fx-border-width: 1; " +
+                "-fx-border-radius: 6;"
+            );
+            btnMarkAttendance.setOnAction(e -> openAttendanceModal(session));
+            
+            HBox attendanceButtonRow = new HBox();
+            attendanceButtonRow.setAlignment(Pos.CENTER_LEFT);
+            attendanceButtonRow.getChildren().add(btnMarkAttendance);
+            card.getChildren().add(attendanceButtonRow);
+        }
         
         // Action buttons (only for creator)
         if (isCreator) {
@@ -311,90 +332,220 @@ public class SessionDetailsPanelController {
         return card;
     }
 
-    private void addDiscordPresenceSection(VBox card, TrainingSession session) {
-        if (!discordTrainingSessionService.isJoinWindowOpen(session)) {
-            return;
-        }
-
-        String joinUrl = discordTrainingSessionService.getJoinUrl(session);
-        if (joinUrl == null || joinUrl.isBlank()) {
-            Label missingConfig = new Label("Discord sera disponible ici quand le lien du bot/serveur sera configure.");
-            missingConfig.setWrapText(true);
-            missingConfig.setStyle("-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 11px; -fx-font-style: italic;");
-            card.getChildren().add(missingConfig);
-            return;
-        }
-
-        HBox discordBox = new HBox(14);
-        discordBox.setAlignment(Pos.CENTER_LEFT);
-        discordBox.setStyle(
-                "-fx-background-color: rgba(88,101,242,0.12); " +
-                "-fx-border-color: rgba(88,101,242,0.35); " +
-                "-fx-border-width: 1; " +
-                "-fx-border-radius: 8; " +
-                "-fx-background-radius: 8; " +
-                "-fx-padding: 12;"
-        );
-
-        ImageView qrView = new ImageView(qrCodeService.createQrImage(joinUrl, 112));
-        qrView.setFitWidth(112);
-        qrView.setFitHeight(112);
-
-        VBox details = new VBox(8);
-        Label title = new Label("Salon vocal Discord ouvert");
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;");
-
-        Label hint = new Label("Scannez le QR code ou ouvrez Discord, puis confirmez votre presence.");
-        hint.setWrapText(true);
-        hint.setStyle("-fx-text-fill: rgba(255,255,255,0.65); -fx-font-size: 11px;");
-
-        HBox actions = new HBox(8);
-        Button btnOpenDiscord = new Button("Ouvrir Discord");
-        btnOpenDiscord.setStyle("-fx-background-color: #5865F2; -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 7 12; -fx-background-radius: 6; -fx-cursor: hand;");
-        btnOpenDiscord.setOnAction(e -> openUrl(joinUrl));
-
-        Button btnPresent = new Button("Confirmer presence");
-        btnPresent.setStyle("-fx-background-color: rgba(76,175,80,0.25); -fx-text-fill: #69db7c; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 7 12; -fx-background-radius: 6; -fx-border-color: rgba(76,175,80,0.45); -fx-border-radius: 6; -fx-border-width: 1; -fx-cursor: hand;");
-        btnPresent.setOnAction(e -> markCurrentUserPresent(session, btnPresent));
-
-        actions.getChildren().addAll(btnOpenDiscord, btnPresent);
-        details.getChildren().addAll(title, hint, actions);
-        HBox.setHgrow(details, Priority.ALWAYS);
-
-        discordBox.getChildren().addAll(qrView, details);
-        card.getChildren().add(discordBox);
-    }
-
-    private void markCurrentUserPresent(TrainingSession session, Button button) {
-        if (currentUserId == null || currentUserId.isBlank()) return;
-
+    private void openAttendanceModal(TrainingSession session) {
+        if (rootStackPane == null || teamId == null) return;
+        
         try {
-            crudTrainingAttendance.markAttendance(
-                    session.getId(),
-                    session.getTeamId(),
-                    currentUserId,
-                    TrainingAttendance.Status.PRESENT
+            // Create a simple modal to mark attendance
+            VBox modal = new VBox(16);
+            modal.setStyle(
+                "-fx-background-color: #1a1a2e; " +
+                "-fx-background-radius: 16; " +
+                "-fx-border-color: #8B0D0D; " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 16; " +
+                "-fx-padding: 24; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);"
             );
-            button.setText("Presence confirmee");
-            button.setDisable(true);
+            modal.setMaxWidth(450);
+            
+            // Header
+            HBox header = new HBox(12);
+            header.setAlignment(Pos.CENTER_LEFT);
+            Label title = new Label("Marquer les présences");
+            title.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            Button btnClose = new Button("✕");
+            btnClose.setStyle(
+                "-fx-background-color: transparent; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 18px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-cursor: hand; " +
+                "-fx-padding: 4 10; " +
+                "-fx-border-color: rgba(255,255,255,0.3); " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 8;"
+            );
+            header.getChildren().addAll(title, spacer, btnClose);
+            
+            Label subtitle = new Label(session.getTitle() + " - " + session.getSessionDatetime().toLocalDate());
+            subtitle.setStyle("-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px;");
+            
+            // Get team members
+            CrudTeamMember crudTeamMember = new CrudTeamMember();
+            List<Genex.entities.Player> members = crudTeamMember.getMembersByTeam(teamId);
+            
+            VBox membersBox = new VBox(8);
+            
+            for (Genex.entities.Player member : members) {
+                HBox memberRow = new HBox(12);
+                memberRow.setAlignment(Pos.CENTER_LEFT);
+                memberRow.setStyle(
+                    "-fx-background-color: rgba(255,255,255,0.05); " +
+                    "-fx-padding: 10; " +
+                    "-fx-background-radius: 8;"
+                );
+                
+                Label nameLabel = new Label(member.getNickname() != null ? member.getNickname() : member.getUsername());
+                nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13px;");
+                HBox.setHgrow(nameLabel, Priority.ALWAYS);
+                final Button[] absentButton = new Button[1];
+                
+                Button btnPresent = new Button("✓ Présent");
+                btnPresent.setStyle(
+                    "-fx-background-color: rgba(76,175,80,0.3); " +
+                    "-fx-text-fill: #69db7c; " +
+                    "-fx-font-size: 11px; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-padding: 6 12; " +
+                    "-fx-background-radius: 6; " +
+                    "-fx-cursor: hand;"
+                );
+                btnPresent.setOnAction(e -> {
+                    System.out.println("=== PRESENT BUTTON CLICKED ===");
+                    System.out.println("Member: " + (member.getNickname() != null ? member.getNickname() : member.getUsername()));
+                    System.out.println("Member ID: " + member.getId());
+                    System.out.println("Session ID: " + session.getId());
+                    System.out.println("Team ID: " + teamId);
+                    
+                    try {
+                        boolean kicked = crudTrainingAttendance.markAttendance(
+                            session.getId(),
+                            teamId,
+                            member.getId(),
+                            TrainingAttendance.Status.PRESENT
+                        );
+                        notifyAttendanceUpdated();
+                        if (kicked) {
+                            markMemberKicked(memberRow, nameLabel);
+                        } else {
+                            applyAttendanceSelection(btnPresent, absentButton[0], TrainingAttendance.Status.PRESENT);
+                            lockAttendanceSelection(btnPresent, absentButton[0]);
+                        }
+                        System.out.println("Button updated successfully!");
+                    } catch (Exception ex) {
+                        System.err.println("Error in button handler: " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                    System.out.println("==============================");
+                });
+                
+                Button btnAbsent = new Button("✗ Absent");
+                absentButton[0] = btnAbsent;
+                btnAbsent.setStyle(
+                    "-fx-background-color: rgba(226,74,74,0.3); " +
+                    "-fx-text-fill: #E24A4A; " +
+                    "-fx-font-size: 11px; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-padding: 6 12; " +
+                    "-fx-background-radius: 6; " +
+                    "-fx-cursor: hand;"
+                );
+                btnAbsent.setOnAction(e -> {
+                    System.out.println("=== ABSENT BUTTON CLICKED ===");
+                    System.out.println("Member: " + (member.getNickname() != null ? member.getNickname() : member.getUsername()));
+                    System.out.println("Member ID: " + member.getId());
+                    System.out.println("Session ID: " + session.getId());
+                    System.out.println("Team ID: " + teamId);
+                    
+                    try {
+                        boolean kicked = crudTrainingAttendance.markAttendance(
+                            session.getId(),
+                            teamId,
+                            member.getId(),
+                            TrainingAttendance.Status.ABSENT
+                        );
+                        notifyAttendanceUpdated();
+                        if (kicked) {
+                            markMemberKicked(memberRow, nameLabel);
+                        } else {
+                            applyAttendanceSelection(btnPresent, btnAbsent, TrainingAttendance.Status.ABSENT);
+                            lockAttendanceSelection(btnPresent, btnAbsent);
+                        }
+                        System.out.println("Button updated successfully!");
+                    } catch (Exception ex) {
+                        System.err.println("Error in button handler: " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                    System.out.println("=============================");
+                });
+
+                TrainingAttendance.Status savedStatus =
+                        crudTrainingAttendance.getAttendanceStatus(session.getId(), member.getId());
+                if (savedStatus != null) {
+                    applyAttendanceSelection(btnPresent, btnAbsent, savedStatus);
+                    lockAttendanceSelection(btnPresent, btnAbsent);
+                }
+                
+                memberRow.getChildren().addAll(nameLabel, btnPresent, btnAbsent);
+                membersBox.getChildren().add(memberRow);
+            }
+            
+            javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(membersBox);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setMaxHeight(300);
+            scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+            
+            modal.getChildren().addAll(header, subtitle, scrollPane);
+            
+            StackPane overlay = new StackPane(modal);
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7);");
+            overlay.setAlignment(Pos.CENTER);
+            
+            btnClose.setOnAction(e -> rootStackPane.getChildren().remove(overlay));
+            overlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == overlay) {
+                    rootStackPane.getChildren().remove(overlay);
+                }
+            });
+            
+            rootStackPane.getChildren().add(overlay);
+            
         } catch (Exception e) {
-            System.err.println("Error confirming attendance: " + e.getMessage());
+            System.err.println("Error opening attendance modal: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void openUrl(String url) {
-        try {
-            if (java.awt.Desktop.isDesktopSupported()) {
-                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-                if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
-                    desktop.browse(new java.net.URI(url));
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error opening URL: " + e.getMessage());
-            e.printStackTrace();
+    private void notifyAttendanceUpdated() {
+        if (onAttendanceUpdatedCallback != null) {
+            onAttendanceUpdatedCallback.run();
         }
+    }
+
+    private void applyAttendanceSelection(Button btnPresent, Button btnAbsent, TrainingAttendance.Status selectedStatus) {
+        boolean presentSelected = selectedStatus == TrainingAttendance.Status.PRESENT;
+
+        btnPresent.setText("✓ Présent");
+        btnPresent.setDisable(false);
+        btnPresent.setMouseTransparent(false);
+        btnPresent.setFocusTraversable(true);
+        btnPresent.setStyle(presentSelected
+                ? "-fx-background-color: rgba(76,175,80,0.55); -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand;"
+                : "-fx-background-color: rgba(76,175,80,0.3); -fx-text-fill: #69db7c; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand;");
+
+        btnAbsent.setText("✗ Absent");
+        btnAbsent.setDisable(false);
+        btnAbsent.setMouseTransparent(false);
+        btnAbsent.setFocusTraversable(true);
+        btnAbsent.setStyle(!presentSelected
+                ? "-fx-background-color: rgba(226,74,74,0.55); -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand;"
+                : "-fx-background-color: rgba(226,74,74,0.3); -fx-text-fill: #E24A4A; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand;");
+    }
+
+    private void markMemberKicked(HBox memberRow, Label nameLabel) {
+        nameLabel.setText(nameLabel.getText() + " (retiré)");
+        memberRow.setDisable(true);
+        memberRow.setOpacity(0.55);
+    }
+
+    private void lockAttendanceSelection(Button btnPresent, Button btnAbsent) {
+        btnPresent.setMouseTransparent(true);
+        btnPresent.setFocusTraversable(false);
+        btnAbsent.setMouseTransparent(true);
+        btnAbsent.setFocusTraversable(false);
     }
 
     private void openGoogleCalendarLink(TrainingSession session) {
