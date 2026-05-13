@@ -13,12 +13,15 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
+<StackPane fx:id="detailRootStackPane"
+           style="-fx-background-color: #0d0d1a;"
+           stylesheets="@PlayerTeams.css"
+           xmlns="http://javafx.com/javafx/26"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Team.PlayerTeamDetailController">
+
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-            style="-fx-background-color: #0d0d1a; -fx-background: #0d0d1a;"
-            stylesheets="@PlayerTeams.css"
-            xmlns="http://javafx.com/javafx/26"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Genex.Controllers.Team.PlayerTeamDetailController">
+            style="-fx-background-color: #0d0d1a; -fx-background: #0d0d1a;">
 
     <content>
         <VBox fx:id="rootVBox" spacing="0"
@@ -38,11 +41,18 @@
                         <Button fx:id="btnAutresEquipes" text="Autres Équipes"
                                 styleClass="player-tab-btn"
                                 onAction="#handleAutresEquipes" />
+                        <Button fx:id="btnRanking" text="Ranking"
+                                styleClass="player-tab-btn"
+                                onAction="#handleRanking" />
                     </HBox>
                     <Region HBox.hgrow="ALWAYS" />
                     <Button fx:id="btnQuitTeam" text="Quitter l'équipe"
                             styleClass="player-quit-btn"
                             onAction="#handleQuitTeam"
+                            visible="false" managed="false" />
+                    <Button fx:id="btnDeleteTeam" text="✖ Supprimer Équipe"
+                            styleClass="player-delete-btn"
+                            onAction="#handleDeleteTeam"
                             visible="false" managed="false" />
                 </HBox>
 
@@ -131,6 +141,12 @@
                                 <Label style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 10px; -fx-font-weight: bold;" text="FONDÉE LE" />
                                 <Label fx:id="infoDate" style="-fx-text-fill: white; -fx-font-size: 13px;" text="—" />
                             </VBox>
+                            
+                            <!-- Modify Button (Only for Team Creator) -->
+                            <Button fx:id="btnModifyTeam" text="✎ Modifier"
+                                    styleClass="player-join-btn"
+                                    onAction="#handleModifyTeam"
+                                    visible="false" managed="false" />
                         </VBox>
 
                     </HBox>
@@ -141,11 +157,11 @@
                           style="-fx-background-color: rgba(139,13,13,0.1); -fx-border-color: rgba(139,13,13,0.3); -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 16;">
                         
                         <Button onAction="#openGenerateScheduleModal"
-                                style="-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 10 18; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
+                                styleClass="player-join-btn"
                                 text="▶ Générer Planning" />
                         
                         <Button onAction="#clearAllTrainingSessions"
-                                style="-fx-background-color: rgba(139,13,13,0.3); -fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 10 18; -fx-cursor: hand; -fx-border-color: rgba(255,107,107,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
+                                styleClass="player-delete-btn"
                                 text="✖ Effacer Planning" />
                     </HBox>
 
@@ -163,3 +179,5 @@
         </VBox>
     </content>
 </ScrollPane>
+
+</StackPane>

@@ -149,6 +149,9 @@ public class CrudTrainingSession {
             pst.setString(10, session.getId());
             pst.executeUpdate();
             System.out.println("Training session updated successfully");
+            if (session.getStatus() == TrainingSession.Status.COMPLETED) {
+                new CrudTrainingAttendance().finalizeMissingAttendance(session);
+            }
         } catch (SQLException e) {
             System.err.println("Error updating session: " + e.getMessage());
             e.printStackTrace();

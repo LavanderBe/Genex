@@ -17,7 +17,7 @@
            styleClass="overlay-bg" stylesheets="@AddTeamModal.css"
            alignment="CENTER_RIGHT">
 
-    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" StackPane.alignment="CENTER_RIGHT">
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" maxHeight="720" StackPane.alignment="CENTER_RIGHT">
         <padding>
             <Insets top="28" right="28" bottom="28" left="28" />
         </padding>
@@ -109,8 +109,6 @@
                 <Insets top="20" />
             </VBox.margin>
             <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveTeam" 
-                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
-            <Button text="ANNULER" styleClass="btn-secondary" onAction="#closeModal" 
                     HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
         </HBox>
 

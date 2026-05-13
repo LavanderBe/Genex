@@ -103,9 +103,6 @@
         <!-- Footer Actions -->
         <HBox spacing="12" alignment="CENTER_RIGHT"
               style="-fx-background-color: #12122a; -fx-background-radius: 0 0 16 16; -fx-padding: 16 20;">
-            <Button text="✖ Annuler"
-                    style="-fx-background-color: rgba(139,13,13,0.2); -fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 13px; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(139,13,13,0.4); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
-                    onAction="#closeModal" />
             <Button fx:id="btnSave" text="✔ Sauvegarder Planning"
                     style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-border-color: rgba(76,175,80,0.5); -fx-border-width: 2; -fx-shape: 'M 5 0 L 95 0 L 100 5 L 100 30 L 95 35 L 5 35 L 0 30 L 0 5 Z';"
                     onMouseEntered="#handleSaveHover" onMouseExited="#handleSaveExit" />

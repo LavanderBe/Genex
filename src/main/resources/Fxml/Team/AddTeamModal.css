@@ -233,10 +233,14 @@
 .btn-pick {
     -fx-background-color: rgba(124, 111, 255, 0.15);
     -fx-text-fill: #a89fff;
-    -fx-background-radius: 8;
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
     -fx-cursor: hand;
-    -fx-padding: 8 12;
-    -fx-font-size: 14;
+    -fx-padding: 11 14;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
     -fx-border-width: 0;
 }
 
@@ -249,13 +253,15 @@
 .btn-ai {
     -fx-background-color: rgba(0, 200, 150, 0.15);
     -fx-text-fill: #00d9a3;
-    -fx-background-radius: 8;
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
     -fx-cursor: hand;
-    -fx-padding: 10 16;
-    -fx-font-size: 13;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-font-size: 12;
     -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
     -fx-border-color: rgba(0, 200, 150, 0.3);
-    -fx-border-radius: 8;
     -fx-border-width: 1;
 }
 

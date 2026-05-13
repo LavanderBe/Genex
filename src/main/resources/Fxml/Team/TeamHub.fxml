@@ -26,6 +26,8 @@
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="btnAddTeam" onAction="#openAddTeamDrawer"
                     styleClass="player-add-session-btn" text="＋  AJOUTER" />
+            <Button fx:id="btnRanking" onAction="#openRankingView"
+                    styleClass="player-view-btn" text="RANKING" />
             <TextField fx:id="searchField" prefWidth="250"
                        promptText="Rechercher une équipe..." styleClass="search-field" />
         </HBox>

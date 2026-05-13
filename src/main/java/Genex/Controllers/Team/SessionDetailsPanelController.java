@@ -1,13 +1,18 @@
 package Genex.Controllers.Team;
 
 import Genex.entities.TrainingSession;
+import Genex.entities.TrainingAttendance;
+import Genex.services.CrudTrainingAttendance;
 import Genex.services.CrudTrainingSession;
+import Genex.services.DiscordTrainingSessionService;
+import Genex.services.QRCodeService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -32,10 +37,16 @@ public class SessionDetailsPanelController {
     private Runnable onCloseCallback;
     private StackPane rootStackPane;
     private CrudTrainingSession crudTrainingSession;
+    private CrudTrainingAttendance crudTrainingAttendance;
+    private DiscordTrainingSessionService discordTrainingSessionService;
+    private QRCodeService qrCodeService;
 
     @FXML
     public void initialize() {
         crudTrainingSession = new CrudTrainingSession();
+        crudTrainingAttendance = new CrudTrainingAttendance();
+        discordTrainingSessionService = new DiscordTrainingSessionService();
+        qrCodeService = new QRCodeService();
     }
 
     public void setDate(LocalDate date) {
@@ -243,6 +254,8 @@ public class SessionDetailsPanelController {
         calendarButtonRow.setAlignment(Pos.CENTER_LEFT);
         calendarButtonRow.getChildren().add(btnAddToCalendar);
         card.getChildren().add(calendarButtonRow);
+
+        addDiscordPresenceSection(card, session);
         
         // Action buttons (only for creator)
         if (isCreator) {
@@ -296,6 +309,92 @@ public class SessionDetailsPanelController {
         }
         
         return card;
+    }
+
+    private void addDiscordPresenceSection(VBox card, TrainingSession session) {
+        if (!discordTrainingSessionService.isJoinWindowOpen(session)) {
+            return;
+        }
+
+        String joinUrl = discordTrainingSessionService.getJoinUrl(session);
+        if (joinUrl == null || joinUrl.isBlank()) {
+            Label missingConfig = new Label("Discord sera disponible ici quand le lien du bot/serveur sera configure.");
+            missingConfig.setWrapText(true);
+            missingConfig.setStyle("-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 11px; -fx-font-style: italic;");
+            card.getChildren().add(missingConfig);
+            return;
+        }
+
+        HBox discordBox = new HBox(14);
+        discordBox.setAlignment(Pos.CENTER_LEFT);
+        discordBox.setStyle(
+                "-fx-background-color: rgba(88,101,242,0.12); " +
+                "-fx-border-color: rgba(88,101,242,0.35); " +
+                "-fx-border-width: 1; " +
+                "-fx-border-radius: 8; " +
+                "-fx-background-radius: 8; " +
+                "-fx-padding: 12;"
+        );
+
+        ImageView qrView = new ImageView(qrCodeService.createQrImage(joinUrl, 112));
+        qrView.setFitWidth(112);
+        qrView.setFitHeight(112);
+
+        VBox details = new VBox(8);
+        Label title = new Label("Salon vocal Discord ouvert");
+        title.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;");
+
+        Label hint = new Label("Scannez le QR code ou ouvrez Discord, puis confirmez votre presence.");
+        hint.setWrapText(true);
+        hint.setStyle("-fx-text-fill: rgba(255,255,255,0.65); -fx-font-size: 11px;");
+
+        HBox actions = new HBox(8);
+        Button btnOpenDiscord = new Button("Ouvrir Discord");
+        btnOpenDiscord.setStyle("-fx-background-color: #5865F2; -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 7 12; -fx-background-radius: 6; -fx-cursor: hand;");
+        btnOpenDiscord.setOnAction(e -> openUrl(joinUrl));
+
+        Button btnPresent = new Button("Confirmer presence");
+        btnPresent.setStyle("-fx-background-color: rgba(76,175,80,0.25); -fx-text-fill: #69db7c; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 7 12; -fx-background-radius: 6; -fx-border-color: rgba(76,175,80,0.45); -fx-border-radius: 6; -fx-border-width: 1; -fx-cursor: hand;");
+        btnPresent.setOnAction(e -> markCurrentUserPresent(session, btnPresent));
+
+        actions.getChildren().addAll(btnOpenDiscord, btnPresent);
+        details.getChildren().addAll(title, hint, actions);
+        HBox.setHgrow(details, Priority.ALWAYS);
+
+        discordBox.getChildren().addAll(qrView, details);
+        card.getChildren().add(discordBox);
+    }
+
+    private void markCurrentUserPresent(TrainingSession session, Button button) {
+        if (currentUserId == null || currentUserId.isBlank()) return;
+
+        try {
+            crudTrainingAttendance.markAttendance(
+                    session.getId(),
+                    session.getTeamId(),
+                    currentUserId,
+                    TrainingAttendance.Status.PRESENT
+            );
+            button.setText("Presence confirmee");
+            button.setDisable(true);
+        } catch (Exception e) {
+            System.err.println("Error confirming attendance: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void openUrl(String url) {
+        try {
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+                    desktop.browse(new java.net.URI(url));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error opening URL: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void openGoogleCalendarLink(TrainingSession session) {

@@ -1,11 +1,14 @@
 package Genex.Controllers.Team;
 
 import Genex.entities.Team;
+import Genex.entities.TeamRankingEntry;
 import Genex.services.CrudTeam;
+import Genex.services.TeamRankingService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
@@ -119,6 +122,54 @@ public class TeamHubController {
     }
 
     // ── Search with Autocomplete ─────────────────────────────────────
+    @FXML
+    private void openRankingView() {
+        teamCardsContainer.getChildren().clear();
+
+        VBox rankingBoard = new VBox(10);
+        rankingBoard.setPrefWidth(900);
+        rankingBoard.setStyle("-fx-background-color: rgba(20,20,40,0.75); -fx-border-color: rgba(139,13,13,0.35); -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 18;");
+
+        Label title = new Label("Ranking des equipes");
+        title.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+        rankingBoard.getChildren().add(title);
+
+        List<TeamRankingEntry> rankings = new TeamRankingService().getTeamRankings();
+        if (rankings.isEmpty()) {
+            Label empty = new Label("Aucune equipe a classer pour le moment.");
+            empty.setStyle("-fx-text-fill: rgba(255,255,255,0.45); -fx-font-style: italic;");
+            rankingBoard.getChildren().add(empty);
+        } else {
+            for (TeamRankingEntry entry : rankings) {
+                rankingBoard.getChildren().add(createRankingRow(entry));
+            }
+        }
+
+        teamCardsContainer.getChildren().add(rankingBoard);
+    }
+
+    private javafx.scene.layout.HBox createRankingRow(TeamRankingEntry entry) {
+        javafx.scene.layout.HBox row = new javafx.scene.layout.HBox(18);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 8; -fx-padding: 12 14;");
+
+        Label rank = new Label("#" + entry.getRank());
+        rank.setStyle("-fx-text-fill: #ff6b6b; -fx-font-size: 16px; -fx-font-weight: bold;");
+        rank.setMinWidth(50);
+
+        Label name = new Label(entry.getTeamName());
+        name.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;");
+        javafx.scene.layout.HBox.setHgrow(name, javafx.scene.layout.Priority.ALWAYS);
+
+        Label stats = new Label("W " + entry.getWins() + "   L " + entry.getLosses() +
+                "   WR " + String.format("%.0f%%", entry.getWinRate()) +
+                "   Tournois " + entry.getTournaments());
+        stats.setStyle("-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px;");
+
+        row.getChildren().addAll(rank, name, stats);
+        return row;
+    }
+
     private void setupSearchAutocomplete() {
         // Create suggestions dropdown
         searchSuggestions = new javafx.scene.control.ListView<>();
