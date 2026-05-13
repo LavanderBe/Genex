@@ -132,17 +132,21 @@ public class RulesController {
     @FXML
     private void handleBack() {
         terminateNeuralLink();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
+        Parent root = null;
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setMaximized(true);
-            stage.setMaximized(true);
-            stage.show();
-            terminateNeuralLink();
+            root = loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        double width = stage.getScene().getWidth();
+        double height = stage.getScene().getHeight();
+        Scene scene = new Scene(root, width, height);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
     }
 
     @FXML

@@ -374,7 +374,7 @@ public class PlayerController {
         ft.setToValue(0);
         ParallelTransition pt = new ParallelTransition(st, ft);
         pt.setOnFinished(e -> {
-            cp.deleteEntity(p.getId());
+            new CrudUser().deleteEntity(p);
             playersList.getChildren().remove(node);
         });
         pt.play();

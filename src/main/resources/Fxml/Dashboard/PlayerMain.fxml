@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="466.0" prefWidth="1376.0" spacing="28" style="-fx-background-color: transparent;" stylesheets="@Playermain.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Dashboard.PlayerMainController">
+<VBox fx:id="Main" prefHeight="466.0" prefWidth="1376.0" spacing="28" style="-fx-background-color: transparent;" stylesheets="@Playermain.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Dashboard.PlayerMainController">
     <padding><Insets bottom="36" left="40" right="40" top="36" /></padding>
 
     <!-- Title -->
@@ -70,9 +70,9 @@
             <VBox fx:id="playContainer" alignment="CENTER" prefHeight="205.0" prefWidth="266.0" spacing="10" styleClass="play-box-container">
                 <children>
                     <!-- Title for the box (Optional, matches your style) -->
-                    <Label style="-fx-text-fill: #5c7cfa; -fx-font-family: Impact; -fx-font-size: 10px;" text="SYSTEM_READY" />
+                    <Label style="-fx-text-fill: #5c7cfa; -fx-font-family: Impact; -fx-font-size: 10px;" text="SIGNAL FLASH" />
 
-                    <Button fx:id="gamebtn" alignment="CENTER" mnemonicParsing="false" onAction="#HandleGame" prefHeight="26.0" prefWidth="146.0" styleClass="action-blue-button" text="Play The Game" textAlignment="CENTER" />
+                    <Button fx:id="gamebtn" alignment="CENTER" mnemonicParsing="false" onAction="#HandleGame" prefHeight="26.0" prefWidth="146.0" styleClass="action-blue-button" text="JOUER" textAlignment="CENTER" />
                 </children>
                 <HBox.margin>
                     <Insets />

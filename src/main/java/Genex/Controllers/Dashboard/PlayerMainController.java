@@ -5,8 +5,15 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +21,7 @@ import java.util.Map;
 
 public class PlayerMainController {
 
+    @FXML private VBox Main;
     @FXML private Label            exchangeLastUpdate;
     @FXML private ListView<String> exchangeRatesList;
     @FXML private TextField        convertAmount;
@@ -121,6 +129,20 @@ public class PlayerMainController {
 
     @FXML
     void HandleGame(ActionEvent event) {
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/ReactionGame/Rules.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Stage stage = (Stage) Main.getScene().getWindow();
+        double width = stage.getScene().getWidth();
+        double height = stage.getScene().getHeight();
+        Scene scene = new Scene(root, width, height);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
     }
 }
