@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.*?>
+
+
+<!-- Embeddable panel — loads inside Finance hub, no sidebar -->
+
+<StackPane styleClass="sub-root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Budget.BudgetController">
+
+    <VBox>
+
+        <!-- Top bar -->
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <padding><Insets bottom="14" left="28" right="28" top="14" /></padding>
+            <VBox spacing="3">
+                <Label styleClass="page-title" text="Gestion des Budgets" />
+                <Label styleClass="page-subtitle" text="Suivez les budgets par centre et sponsor" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="searchField" prefWidth="220" promptText="🔍  Rechercher…" styleClass="search-field" />
+            <Button onAction="#handleAdd" prefHeight="40" prefWidth="150" styleClass="btn-polygon" text="＋  AJOUTER" />
+        </HBox>
+
+        <!-- Stat cards -->
+        <HBox spacing="14" styleClass="stat-row">
+            <padding><Insets bottom="16" left="28" right="28" top="16" /></padding>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="📋  Total" />
+                <Label fx:id="statTotal" styleClass="stat-number" text="0" />
+                <Label styleClass="stat-label" text="Budgets" />
+            </VBox>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-green" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="✅  Alloué" />
+                <Label fx:id="statAllocated" styleClass="stat-number" text="0 TND" />
+                <Label styleClass="stat-label" text="Total alloué" />
+            </VBox>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-orange" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="💸  Dépensé" />
+                <Label fx:id="statSpent" styleClass="stat-number" text="0 TND" />
+                <Label styleClass="stat-label" text="Total dépensé" />
+            </VBox>
+            <VBox alignment="CENTER_LEFT" spacing="4" styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS">
+                <padding><Insets bottom="14" left="14" right="14" top="14" /></padding>
+                <Label styleClass="stat-icon-label" text="💰  Restant" />
+                <Label fx:id="statRemaining" styleClass="stat-number" text="0 TND" />
+                <Label styleClass="stat-label" text="Total restant" />
+            </VBox>
+        </HBox>
+
+        <!-- Table + chart -->
+        <HBox spacing="14" VBox.vgrow="ALWAYS">
+            <padding><Insets bottom="20" left="28" right="28" /></padding>
+
+            <VBox spacing="10" styleClass="panel" HBox.hgrow="ALWAYS">
+                <Label styleClass="panel-title" text="LISTE DES BUDGETS" />
+                <TableView fx:id="budgetTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSponsor" prefWidth="120" text="Sponsor" />
+                        <TableColumn fx:id="colYear" prefWidth="65" text="Année" />
+                        <TableColumn fx:id="colAllocated" prefWidth="100" text="Alloué" />
+                        <TableColumn fx:id="colSpent" prefWidth="100" text="Dépensé" />
+                        <TableColumn fx:id="colRemaining" prefWidth="100" text="Restant" />
+                        <TableColumn fx:id="colActions" prefWidth="80" text="" />
+                    </columns>
+                    <placeholder>
+                        <Label styleClass="table-placeholder" text="Aucun budget enregistré" />
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </HBox>
+
+    </VBox>
+
+    <!-- ══ CYBER MODAL OVERLAY ══════════════════════════════════════════ -->
+    <StackPane fx:id="drawerOverlay" managed="false" styleClass="overlay-bg" visible="false">
+        <children>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="480.0" prefWidth="750.0" styleClass="compact-shard">
+                <children>
+                    <!-- Background Hardware Plate -->
+                    <SVGPath content="M 0 0 L 710 0 L 750 40 L 750 480 L 40 480 L 0 440 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="1.5" />
+
+                    <!-- Side Red Accent Bar -->
+                    <Region layoutX="0" layoutY="100" prefHeight="280" prefWidth="3" style="-fx-background-color: #8B0D0D;" />
+
+                    <VBox layoutX="40.0" layoutY="35.0" prefHeight="410.0" prefWidth="670.0" spacing="20.0">
+                        <children>
+                            <!-- Header -->
+                            <HBox alignment="CENTER_LEFT">
+                                <children>
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="formTitle" styleClass="hud-title" text="NOUVEAU BUDGET" />
+                                            <Label styleClass="hud-subtitle" text="INITIALISATION_BUDGETAIRE" />
+                                        </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#handleClear" styleClass="btn-close" text="✕" />
+                                </children>
+                            </HBox>
+
+                            <Separator styleClass="drawer-sep" />
+
+                            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <!-- Left Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="SPONSOR (OPTIONNEL)" />
+                                                <ComboBox fx:id="combSponsor" maxWidth="Infinity" promptText="— Fonds internes —" styleClass="hud-combo" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="ANNÉE FISCALE *" />
+                                                <TextField fx:id="fieldYear" promptText="Ex: 2025" styleClass="hud-input" />
+                                                <Label fx:id="errYear" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="MONTANT ALLOUÉ (TND) *" />
+                                                <TextField fx:id="fieldAllocated" promptText="Ex: 50000.00" styleClass="hud-input" />
+                                                <Label fx:id="errAllocated" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Right Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="MONTANT DÉPENSÉ (TND)" />
+                                                <TextField fx:id="fieldSpent" promptText="0.00" styleClass="hud-input" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="JUSTIFICATIF (PDF / PNG / JPEG)" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                                    <children>
+                                                        <TextField fx:id="fieldDoc" editable="false" promptText="Aucun fichier" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                                        <Button onAction="#handlePickDoc" styleClass="btn-pick" text="📁" />
+                                                    </children>
+                                                </HBox>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+
+                            <Region VBox.vgrow="ALWAYS" />
+
+                            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                                <children>
+                                    <Button fx:id="btnSave" onAction="#handleSave" prefHeight="40.0" prefWidth="200.0" styleClass="confirm-btn" text="ENREGISTRER" />
+                                    <Button onAction="#handleClear" prefHeight="40.0" prefWidth="120.0" styleClass="cancel-btn" text="ANNULER" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </children>
+    </StackPane>
+
+</StackPane>

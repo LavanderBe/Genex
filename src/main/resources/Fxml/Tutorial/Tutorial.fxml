@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Tutorial.TutorialController"
+      styleClass="tutorial-root"
+      stylesheets="@Tutorial.css"
+      spacing="0">
+
+    <!-- HEADER -->
+    <VBox styleClass="tutorial-header" spacing="4">
+        <padding><Insets top="30" right="40" bottom="20" left="40"/></padding>
+        <Label text="TERMINAL // TUTORIELS" styleClass="page-main-title"/>
+        <Label text="ANALYSE TACTIQUE ET PROTOCOLES D'ENTRAÎNEMENT" styleClass="page-subtitle"/>
+    </VBox>
+
+    <!-- TAB SWITCHER -->
+    <StackPane styleClass="tab-switcher-wrap">
+        <padding><Insets top="10" right="40" bottom="10" left="40"/></padding>
+        <HBox styleClass="tab-switcher" prefHeight="60" maxWidth="520" alignment="CENTER" spacing="10">
+            <Button fx:id="tabTutorial" text="MODULES_DE_FORMATION" styleClass="tab-active"
+                    onAction="#showTutorialTab" prefWidth="250" prefHeight="48"/>
+            <Button fx:id="tabQuiz" text="QUIZ_TACTIQUES" styleClass="tab-inactive"
+                    onAction="#showQuizTab" prefWidth="250" prefHeight="48"/>
+        </HBox>
+    </StackPane>
+
+    <!-- SCROLLABLE CONTENT -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" styleClass="edge-scrollpane" hbarPolicy="NEVER">
+        <content>
+            <VBox spacing="0" styleClass="content-root">
+
+                <!-- ===== TUTORIAL SECTION ===== -->
+                <VBox fx:id="tutorialSection" spacing="20" styleClass="content-section">
+                    <padding><Insets top="25" right="40" bottom="30" left="40"/></padding>
+
+                    <!-- Section header row -->
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-toolbar">
+                        <!-- Left accent + title -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
+                            <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
+                            <VBox spacing="2">
+                                <Label text="MODULES DE FORMATION" styleClass="section-title"/>
+                                <Label text="PHASE DE DÉPLOIEMENT STRATÉGIQUE" styleClass="section-subtitle"/>
+                            </VBox>
+                        </HBox>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="toolbar-actions">
+                            <!-- Search -->
+                            <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
+                                <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
+                                <TextField fx:id="searchTutorialField" promptText="RECHERCHER DES DONNÉES..."
+                                            styleClass="search-field" onAction="#onSearchTutorial"
+                                            HBox.hgrow="ALWAYS"/>
+                            </HBox>
+
+                            <!-- Add button -->
+                            <Button text="+ NOUVEAU MODULE" styleClass="add-btn-blue" onAction="#openAddTutorial"/>
+                        </HBox>
+                    </HBox>
+
+                    <!-- Cards FlowPane -->
+                    <FlowPane fx:id="tutorialCardsPane" hgap="20" vgap="20" prefWrapLength="1000"/>
+                </VBox>
+
+                <!-- ===== QUIZ SECTION ===== -->
+                <VBox fx:id="quizSection" spacing="20" visible="false" managed="false" styleClass="content-section">
+                    <padding><Insets top="25" right="40" bottom="30" left="40"/></padding>
+
+                    <!-- Section header row -->
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-toolbar">
+                        <HBox alignment="CENTER_LEFT" spacing="12" HBox.hgrow="NEVER">
+                            <Region prefWidth="4" prefHeight="50" styleClass="section-accent"/>
+                            <VBox spacing="2">
+                                <Label text="INVENTAIRE DES QUIZ" styleClass="section-title"/>
+                                <Label text="PROTOCOLE D'ÉVALUATION TACTIQUE" styleClass="section-subtitle"/>
+                            </VBox>
+                        </HBox>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="toolbar-actions">
+                            <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8" prefWidth="230">
+                                <Label text="⌕" style="-fx-text-fill:#8e94af; -fx-font-size:15px;"/>
+                                <TextField fx:id="searchQuizField" promptText="ANALYSER LES QUESTIONS..."
+                                            styleClass="search-field" onAction="#onSearchQuiz"
+                                            HBox.hgrow="ALWAYS"/>
+                            </HBox>
+
+                            <Button text="+ AJOUTER UNE QUESTION" styleClass="add-btn-blue" onAction="#openAddQuiz"/>
+                        </HBox>
+                    </HBox>
+
+                    <!-- Empty state -->
+                    <VBox fx:id="emptyQuizLabel" alignment="CENTER" spacing="15" prefHeight="300"
+                          styleClass="empty-state-box">
+                        <Label text="?" styleClass="empty-icon"/>
+                        <Label text="AUCUN PROTOCOLE DÉTECTÉ" styleClass="empty-text"/>
+                    </VBox>
+
+                    <!-- Quiz FlowPane -->
+                    <FlowPane fx:id="quizCardsPane" hgap="20" vgap="20" prefWrapLength="1100"/>
+                </VBox>
+
+            </VBox>
+        </content>
+    </ScrollPane>
+</VBox>

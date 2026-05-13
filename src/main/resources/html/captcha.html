@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <style>
+        body {
+            background-color: #0b0e14; /* Deep dark background */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+
+        /* The container ensures the area stays large enough during transitions */
+        .captcha-container {
+            background-color: #1a1f2b; /* Dark blue/grey background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            min-width: 302px; /* Standard hCaptcha width */
+            min-height: 76px;  /* Standard hCaptcha height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* This prevents the widget from shrinking if the API scales it */
+        .h-captcha {
+            min-height: 76px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="captcha-container">
+    <div class="h-captcha"
+         data-sitekey="d338495c-944e-4390-9d56-bbf24abc3cfc"
+         data-theme="dark"
+         data-size="normal"
+         id="hcaptcha-widget">
+    </div>
+</div>
+
+<script>
+    let widgetId = null;
+    window.onload = function() {
+        // Function to extract token for your backend/Java bridge
+        window.getCaptchaToken = function() {
+            const response = document.querySelector('[name="h-captcha-response"]');
+            return response ? response.value : "";
+        };
+
+        window.resetCaptcha = function() {
+            if (typeof hcaptcha !== "undefined") {
+                hcaptcha.reset();
+            }
+        };
+    };
+</script>
+</body>
+</html>

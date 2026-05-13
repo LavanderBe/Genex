@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@CenterHub.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Center.CenterHubController">
+
+    <VBox fx:id="contentArea" spacing="20" stylesheets="@CenterHub.css">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
+
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Centres" />
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button fx:id="btnAddCenter" onAction="#openAddCenterModal" styleClass="action-blue-button" stylesheets="@CenterHub.css" text="+ Nouveau Centre" />
+
+            <TextField fx:id="searchField" prefWidth="250" promptText="Rechercher un centre..." styleClass="search-field" />
+            <Button styleClass="icon-btn" text="🔍" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" styleClass="scroll-pane" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="centerCardsContainer" spacing="20" styleClass="centers-container">
+                    <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
+                        <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun centre trouvé" />
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </VBox>
+
+</StackPane>

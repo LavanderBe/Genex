@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="rootStackPane" styleClass="main-content" stylesheets="@TournamentHub.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Tournament.TournamentHubController">
+
+    <VBox fx:id="contentArea" spacing="20" stylesheets="@TournamentHub.css">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
+
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Tournois" />
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button fx:id="btnAddTournament" onAction="#openAddTournamentModal" styleClass="action-blue-button" stylesheets="@TournamentHub.css" text="+ Nouveau Tournoi" />
+
+            <ComboBox fx:id="comboGameFilter" promptText="Tous les jeux" prefWidth="180" styleClass="filter-combo" />
+
+            <TextField fx:id="searchField" prefWidth="250" promptText="Rechercher un tournoi..." styleClass="search-field" />
+            <Button styleClass="icon-btn" text="🔍" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" styleClass="scroll-pane" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox spacing="20">
+                    <!-- Player Record Section (shown for players only) -->
+                    <VBox fx:id="playerRecordSection" styleClass="hub-record-section" spacing="15" visible="false" managed="false">
+                       <children>
+                          <javafx.scene.text.Text styleClass="hub-record-title" text="VOTRE RECORD" />
+                          <HBox spacing="15" styleClass="hub-record-grid">
+                             <children>
+                                <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtTournamentsPlayed" styleClass="hub-record-value" style="-fx-fill: white;" text="0" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="TOURNOIS" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card hub-record-card-wins" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtTotalWins" styleClass="hub-record-value" style="-fx-fill: #34d399;" text="0" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="VICTOIRES" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card hub-record-card-losses" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtTotalLosses" styleClass="hub-record-value" style="-fx-fill: #f87171;" text="0" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="DÉFAITES" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card hub-record-card-ratio" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtWinRatio" styleClass="hub-record-value" style="-fx-fill: #a78bfa;" text="0%" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="RATIO W/L" />
+                                   </children>
+                                </VBox>
+                                <VBox styleClass="hub-record-card hub-record-card-best" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
+                                   <children>
+                                      <javafx.scene.text.Text fx:id="txtBestPlacement" styleClass="hub-record-value" style="-fx-fill: #fcd34d;" text="-" />
+                                      <javafx.scene.text.Text styleClass="hub-record-label" text="MEILLEUR" />
+                                   </children>
+                                </VBox>
+                             </children>
+                          </HBox>
+                       </children>
+                    </VBox>
+
+                    <!-- Tournament Cards -->
+                    <VBox fx:id="tournamentCardsContainer" spacing="20" styleClass="tournaments-container">
+                        <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
+                            <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun tournoi trouvé" />
+                        </VBox>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </VBox>
+
+</StackPane>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Genex.Controllers.Player.TutorialDetailController"
+            stylesheets="@PlayerTutorial.css"
+            styleClass="main-container"
+            prefWidth="900" prefHeight="720">
+
+    <top>
+        <VBox spacing="6" style="-fx-background-color: rgba(0,0,0,0.65); -fx-border-color: transparent transparent #8B0D0D transparent; -fx-border-width: 0 0 2 0;">
+            <padding><Insets top="22" right="32" bottom="20" left="32"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <Label text="[ BRIEFING TACTIQUE ]" style="-fx-font-family: 'Courier New'; -fx-text-fill: #5c7cfa; -fx-font-size: 11px; -fx-letter-spacing: 0.25em;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕ RETOUR" onAction="#handleClose"
+                        style="-fx-background-color: transparent; -fx-text-fill: #8e94af; -fx-font-family: 'Courier New'; -fx-font-weight: bold; -fx-letter-spacing: 0.2em; -fx-border-color: #2a2a2a; -fx-border-width: 1; -fx-padding: 8 16 8 16;"/>
+            </HBox>
+            <Label fx:id="titleLabel" text="MODULE" style="-fx-font-family: 'Arial Black'; -fx-font-style: italic; -fx-font-size: 30px; -fx-text-fill: white;"/>
+            <HBox spacing="14" alignment="CENTER_LEFT">
+                <Label fx:id="categoryLabel" text="CATÉGORIE" style="-fx-text-fill: #5c7cfa; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.2em;"/>
+                <Label text="•" style="-fx-text-fill: #2a2a2a;"/>
+                <Label fx:id="difficultyLabel" text="INTENSITÉ" style="-fx-text-fill: #8e94af; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.2em;"/>
+                <Label text="•" style="-fx-text-fill: #2a2a2a;"/>
+                <Label fx:id="dateLabel" text="DATE" style="-fx-text-fill: #8e94af; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.2em;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="avgRatingLabel" text="" style="-fx-text-fill: #ffcc33; -fx-font-family: 'Courier New'; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll">
+            <VBox spacing="18">
+                <padding><Insets top="22" right="32" bottom="22" left="32"/></padding>
+
+                <!-- Description -->
+                <Label fx:id="descriptionLabel" wrapText="true"
+                       style="-fx-text-fill: #cbd5e1; -fx-font-size: 13px;"/>
+
+                <!-- Progress block -->
+                <VBox spacing="6" style="-fx-background-color: #0b0f14; -fx-border-color: #1f2937; -fx-border-width: 1; -fx-padding: 16;">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="PROGRESSION TACTIQUE" style="-fx-text-fill: #5c7cfa; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.25em;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="progressLabel" text="0%" style="-fx-text-fill: white; -fx-font-family: 'Arial Black'; -fx-font-style: italic; -fx-font-size: 18px;"/>
+                    </HBox>
+                    <ProgressBar fx:id="progressBar" prefWidth="9999" progress="0"/>
+                    <Label fx:id="videosCountLabel" text="0 / 0 VIDÉOS"
+                           style="-fx-text-fill: #8e94af; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.15em;"/>
+                </VBox>
+
+                <!-- Videos list -->
+                <VBox spacing="8">
+                    <Label text="VIDÉOS DU MODULE" style="-fx-text-fill: white; -fx-font-family: 'Courier New'; -fx-font-size: 12px; -fx-letter-spacing: 0.25em; -fx-font-weight: bold;"/>
+                    <VBox fx:id="videosList" spacing="8"/>
+                </VBox>
+
+                <!-- Rating block -->
+                <VBox fx:id="ratingBlock" spacing="10" style="-fx-background-color: #0b0f14; -fx-border-color: #1f2937; -fx-border-width: 1; -fx-padding: 18;">
+                    <Label text="ÉVALUER LE MODULE" style="-fx-text-fill: #5c7cfa; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.25em;"/>
+                    <Label fx:id="ratingHint" text="Terminez toutes les vidéos pour débloquer la notation."
+                           wrapText="true" style="-fx-text-fill: #8e94af; -fx-font-size: 12px;"/>
+                    <HBox fx:id="starsRow" spacing="6"/>
+                    <TextArea fx:id="commentField" promptText="Laissez un commentaire (optionnel)..."
+                              prefRowCount="3" wrapText="true"
+                              style="-fx-control-inner-background: #0b0f14; -fx-text-fill: #cbd5e1; -fx-background-color: #0b0f14; -fx-border-color: #1f2937; -fx-border-width: 1;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Button fx:id="submitRatingBtn" text="VALIDER L'ÉVALUATION" onAction="#handleSubmitRating"
+                                style="-fx-background-color: #8B0D0D; -fx-text-fill: white; -fx-font-family: 'Courier New'; -fx-font-weight: bold; -fx-letter-spacing: 0.25em; -fx-padding: 10 22 10 22;"/>
+                        <Label fx:id="ratingStatusLabel" text="" style="-fx-text-fill: #00C851; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.2em;"/>
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+
+<!-- Embeddable panel — loads inside Finance hub, no sidebar -->
+<StackPane xmlns="http://javafx.com/javafx/23.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Sponsors.Sponsors"
+           styleClass="sub-root">
+
+    <VBox>
+
+        <!-- Top bar -->
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+            <VBox spacing="3">
+                <Label text="Gestion des Sponsors" styleClass="page-title"/>
+                <Label text="Gérez vos partenaires et sponsors" styleClass="page-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" styleClass="search-field"
+                       promptText="🔍  Rechercher…" prefWidth="220"/>
+            <Button text="＋  AJOUTER" styleClass="btn-polygon" onAction="#handleAdd"
+                    prefWidth="150" prefHeight="40"/>
+        </HBox>
+
+        <!-- Stat cards -->
+        <HBox spacing="14" styleClass="stat-row">
+            <padding><Insets top="16" right="28" bottom="16" left="28"/></padding>
+            <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="🏆  Total" styleClass="stat-icon-label"/>
+                <Label fx:id="statTotal" text="0" styleClass="stat-number"/>
+                <Label text="Sponsors" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="🎮  Tournois" styleClass="stat-icon-label"/>
+                <Label fx:id="statTournament" text="0" styleClass="stat-number"/>
+                <Label text="Sponsors tournoi" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="👥  Équipes" styleClass="stat-icon-label"/>
+                <Label fx:id="statTeam" text="0" styleClass="stat-number"/>
+                <Label text="Sponsors équipe" styleClass="stat-label"/>
+            </VBox>
+        </HBox>
+
+        <!-- Table + chart -->
+        <HBox spacing="14" VBox.vgrow="ALWAYS">
+            <padding><Insets right="28" bottom="20" left="28"/></padding>
+
+            <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="LISTE DES SPONSORS" styleClass="panel-title"/>
+                <TableView fx:id="sponsorTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colLogo"     text=""        prefWidth="50"/>
+                        <TableColumn fx:id="colName"     text="Nom"     prefWidth="140"/>
+                        <TableColumn fx:id="colIndustry" text="Secteur" prefWidth="110"/>
+                        <TableColumn fx:id="colType"     text="Type"    prefWidth="130"/>
+                        <TableColumn fx:id="colEmail"    text="Email"   prefWidth="170"/>
+                        <TableColumn fx:id="colActions"  text=""        prefWidth="110"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun sponsor enregistré" styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </HBox>
+
+    </VBox>
+
+    <!-- ══ CYBER MODAL OVERLAY ══════════════════════════════════════════ -->
+    <StackPane fx:id="drawerOverlay" managed="false" styleClass="overlay-bg" visible="false">
+        <children>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="520.0" prefWidth="750.0" styleClass="compact-shard">
+                <children>
+                    <!-- Background Hardware Plate -->
+                    <SVGPath content="M 0 0 L 710 0 L 750 40 L 750 520 L 40 520 L 0 480 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="1.5" />
+
+                    <!-- Side Red Accent Bar -->
+                    <Region layoutX="0" layoutY="100" prefHeight="320" prefWidth="3" style="-fx-background-color: #8B0D0D;" />
+
+                    <VBox layoutX="40.0" layoutY="35.0" prefHeight="450.0" prefWidth="670.0" spacing="20.0">
+                        <children>
+                            <!-- Header -->
+                            <HBox alignment="CENTER_LEFT">
+                                <children>
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="formTitle" styleClass="hud-title" text="NOUVEAU SPONSOR" />
+                                            <Label styleClass="hud-subtitle" text="INITIALISATION_PARTENAIRE" />
+                                        </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#handleClear" styleClass="btn-close" text="✕" />
+                                </children>
+                            </HBox>
+
+                            <Separator styleClass="drawer-sep" />
+
+                            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <!-- Left Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="NOM DU SPONSOR *" />
+                                                <TextField fx:id="fieldName" promptText="Ex: Red Bull" styleClass="hud-input" />
+                                                <Label fx:id="errName" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="SECTEUR D'ACTIVITÉ" />
+                                                <TextField fx:id="fieldIndustry" promptText="Ex: Energy Drink" styleClass="hud-input" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="EMAIL DE CONTACT" />
+                                                <TextField fx:id="fieldEmail" promptText="contact@sponsor.com" styleClass="hud-input" />
+                                                <Label fx:id="errEmail" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Right Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="SITE WEB" />
+                                                <TextField fx:id="fieldWebsite" promptText="https://..." styleClass="hud-input" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="LOGO DU SPONSOR" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                                    <children>
+                                                        <TextField fx:id="fieldLogo" editable="false" promptText="Aucun fichier" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                                        <Button onAction="#handlePickLogo" styleClass="btn-pick" text="📁" />
+                                                    </children>
+                                                </HBox>
+                                            </VBox>
+
+                                            <VBox spacing="8">
+                                                <Label styleClass="field-label" text="TYPE DE SPONSORING" />
+                                                <HBox spacing="20">
+                                                    <children>
+                                                        <CheckBox fx:id="chkTournament" styleClass="type-check" text="Tournoi" />
+                                                        <CheckBox fx:id="chkTeam" styleClass="type-check" text="Équipe" />
+                                                    </children>
+                                                </HBox>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+
+                            <Region VBox.vgrow="ALWAYS" />
+
+                            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                                <children>
+                                    <Button fx:id="btnSave" onAction="#handleSave" prefHeight="40.0" prefWidth="200.0" styleClass="confirm-btn" text="ENREGISTRER" />
+                                    <Button onAction="#handleClear" prefHeight="40.0" prefWidth="120.0" styleClass="cancel-btn" text="ANNULER" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </children>
+    </StackPane>
+
+    <!-- ══ NOTES OVERLAY ════════════════════════════════════════════════ -->
+    <StackPane fx:id="notesOverlay" styleClass="overlay-bg"
+               visible="false" managed="false" alignment="CENTER_RIGHT">
+        <VBox styleClass="drawer" prefWidth="400" maxWidth="400"
+              StackPane.alignment="CENTER_RIGHT">
+            <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+            <HBox alignment="CENTER_LEFT">
+                <Label fx:id="notesTitle" text="Notes" styleClass="drawer-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="✕" styleClass="btn-close" onAction="#handleCloseNotes"/>
+            </HBox>
+            <Separator styleClass="drawer-sep">
+                <VBox.margin><Insets top="12" bottom="14"/></VBox.margin>
+            </Separator>
+            <ListView fx:id="notesList" VBox.vgrow="ALWAYS" styleClass="data-table"
+                      prefHeight="300"/>
+            <Separator styleClass="drawer-sep">
+                <VBox.margin><Insets top="12" bottom="12"/></VBox.margin>
+            </Separator>
+            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
+                <Label text="NOUVELLE NOTE" styleClass="field-label"/>
+                <TextArea fx:id="fieldNote" styleClass="input-field" prefHeight="80"
+                          promptText="Réunion, négociation, suivi..."/>
+            </VBox>
+            <Button text="AJOUTER LA NOTE" styleClass="btn-polygon"
+                    onAction="#handleAddNote" prefHeight="40" prefWidth="200"/>
+        </VBox>
+    </StackPane>
+
+</StackPane>

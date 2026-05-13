@@ -1,0 +1,612 @@
+/* ═══════════════════════════════════════════════════════════
+   PlayerTeams.css — Player-facing team views
+   Dark/gaming aesthetic — polygon buttons matching app style
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Root background ──────────────────────────────────────── */
+.player-main-content {
+    -fx-background-color: #090918;
+}
+
+/* ── Team card (list view) ────────────────────────────────── */
+.player-team-card {
+    -fx-background-color: rgba(20, 20, 40, 0.85);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 18px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.player-team-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.5), 14, 0, 0, 0);
+    -fx-translate-y: -2px;
+}
+
+.player-card-team-name {
+    -fx-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.player-card-info-label {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 11px;
+}
+
+.player-card-info-value {
+    -fx-fill: white;
+    -fx-font-size: 12px;
+}
+
+.player-card-logo-circle {
+    -fx-fill: #09070f;
+    -fx-stroke: #8B0D0D;
+    -fx-stroke-width: 2px;
+}
+
+.player-card-logo-fallback {
+    -fx-fill: #8B0D0D;
+    -fx-font-size: 22px;
+}
+
+/* ── POLYGON BUTTON BASE ──────────────────────────────────── */
+/* All buttons use the same parallelogram shape as the modals  */
+
+/* "Voir" button — transparent with white border */
+.player-view-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-width: 1;
+}
+
+.player-view-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+/* "Rejoindre" button — red polygon */
+.player-join-btn {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 8, 0, 0, 3);
+}
+
+.player-join-btn:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 12, 0, 0, 4);
+}
+
+.player-join-btn:disabled {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+/* "Supprimer" button — dark red polygon */
+.player-delete-btn {
+    -fx-background-color: rgba(220, 50, 50, 0.15);
+    -fx-text-fill: rgba(220, 50, 50, 0.95);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-border-color: rgba(220, 50, 50, 0.4);
+    -fx-border-width: 1;
+}
+
+.player-delete-btn:hover {
+    -fx-background-color: rgba(220, 50, 50, 0.3);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+    -fx-border-color: rgba(220, 50, 50, 0.6);
+}
+
+/* ── Status tag ───────────────────────────────────────────── */
+.player-card-status-tag {
+    -fx-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+/* ── Tab buttons ──────────────────────────────────────────── */
+.player-tab-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1;
+}
+
+.player-tab-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+.player-tab-btn-active {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 8, 0, 0, 3);
+}
+
+.player-tab-btn-active:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -1;
+}
+
+/* ── Quit team button ─────────────────────────────────────── */
+.player-quit-btn {
+    -fx-background-color: rgba(220, 50, 50, 0.12);
+    -fx-text-fill: rgba(220, 50, 50, 0.9);
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-border-color: rgba(220, 50, 50, 0.4);
+    -fx-border-width: 1;
+}
+
+.player-quit-btn:hover {
+    -fx-background-color: rgba(220, 50, 50, 0.25);
+    -fx-text-fill: white;
+    -fx-translate-y: -1;
+}
+
+/* ── Add session button ───────────────────────────────────── */
+.player-add-session-btn {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-padding: 11 0;
+    -fx-min-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 8, 0, 0, 3);
+}
+
+.player-add-session-btn:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 12, 0, 0, 4);
+}
+
+/* ── Nav bar ──────────────────────────────────────────────── */
+.player-nav-bar {
+    -fx-background-color: rgba(20, 20, 40, 0.9);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 12px 20px;
+}
+
+.player-nav-team-name {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* ── Split panel ──────────────────────────────────────────── */
+.player-info-panel {
+    -fx-background-color: rgba(20, 20, 40, 0.7);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 18px;
+    -fx-spacing: 12px;
+}
+
+.player-info-label {
+    -fx-fill: rgba(255, 255, 255, 0.45);
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.player-info-value {
+    -fx-fill: white;
+    -fx-font-size: 13px;
+}
+
+.player-panel-title {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ── Member roster ────────────────────────────────────────── */
+.player-member-count {
+    -fx-text-fill: #ff4444;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* For Text nodes */
+Text.player-member-count {
+    -fx-fill: #ff4444;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.player-member-row {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 8px 12px;
+    -fx-spacing: 10px;
+}
+
+.player-member-nickname {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.player-member-fullname {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 11px;
+}
+
+/* ── Section titles ───────────────────────────────────────── */
+.player-section-title {
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+.player-empty-state {
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* ── Scroll pane ──────────────────────────────────────────── */
+.player-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.player-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.player-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-pref-width: 6px;
+}
+
+.player-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(139, 13, 13, 0.6);
+    -fx-background-radius: 0;
+}
+
+/* ── Logo area ────────────────────────────────────────────── */
+.player-logo-circle {
+    -fx-fill: #09070f;
+    -fx-stroke: #8B0D0D;
+    -fx-stroke-width: 2px;
+}
+
+.player-logo-fallback {
+    -fx-fill: #8B0D0D;
+    -fx-font-size: 28px;
+}
+/* Cyberpunk edgy Team overrides */
+.root,
+.player-main-content,
+.main-content {
+    -fx-background-color: #09070f;
+    -fx-font-family: "Consolas", "Rajdhani", "Arial Black", monospace;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: rgba(31,30,78,0.28);
+    -fx-pref-width: 9px;
+    -fx-pref-height: 9px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #5c7cfa;
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.55), 12, 0.2, 0, 0);
+}
+
+.drawer,
+.chat-panel,
+.chat-modal-panel,
+.team-card,
+.player-team-card,
+.player-info-panel,
+.session-card,
+.info-box {
+    -fx-background-color: linear-gradient(to bottom right, rgba(9,7,15,0.98), rgba(17,8,18,0.96));
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: #8B0D0D rgba(31,30,78,0.8) #5c7cfa rgba(139,13,13,0.75);
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.18), 16, 0.25, 0, 0);
+}
+
+.drawer,
+.team-card,
+.player-team-card,
+.player-info-panel,
+.session-card {
+    -fx-shape: "M 16 0 L 1000 0 L 1000 1000 L 0 1000 L 0 16 Z";
+}
+
+.chat-modal-panel,
+.chat-panel {
+    -fx-shape: "M 0 0 L 1000 0 L 1000 1000 L 20 1000 L 0 980 Z";
+}
+
+.team-card:hover,
+.player-team-card:hover,
+.session-card:hover {
+    -fx-border-color: #5c7cfa #FF5252 #FF5252 #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(255,82,82,0.38), 22, 0.3, 0, 0);
+}
+
+.player-nav-bar,
+.chat-header,
+.chat-modal-header,
+.chat-input-area {
+    -fx-background-color: linear-gradient(to right, rgba(9,7,15,0.98), rgba(139,13,13,0.24));
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 2 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.drawer-title,
+.player-nav-team-name,
+.chat-modal-title,
+.chat-title,
+.player-section-title,
+.team-name,
+.session-title {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-font-weight: 900;
+}
+
+.field-label,
+.field-label-small,
+.team-info-label,
+.player-info-label,
+.player-panel-title,
+.info-box-label,
+.chat-online-count {
+    -fx-text-fill: rgba(221,225,255,0.66);
+    -fx-fill: rgba(221,225,255,0.66);
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+}
+
+.input-field,
+.text-field,
+.text-area,
+.combo-box,
+.choice-box,
+.message-input,
+.date-picker {
+    -fx-background-color: rgba(5,5,18,0.9);
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1.5;
+    -fx-border-color: rgba(92,124,250,0.45);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255,255,255,0.32);
+    -fx-effect: innershadow(gaussian, rgba(92,124,250,0.18), 8, 0.2, 0, 0);
+}
+
+.input-field:focused,
+.text-field:focused,
+.text-area:focused,
+.combo-box:focused,
+.choice-box:focused,
+.message-input:focused,
+.date-picker:focused {
+    -fx-border-color: #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.55), 12, 0.2, 0, 0);
+}
+
+.button,
+.btn-primary,
+.btn-secondary,
+.btn-pick,
+.btn-ai,
+.btn-close,
+.btn-close-polygon,
+.back-btn,
+.player-view-btn,
+.player-join-btn,
+.player-delete-btn,
+.player-quit-btn,
+.player-add-session-btn,
+.player-tab-btn,
+.player-tab-btn-active,
+.card-action-btn,
+.card-action-btn-edit,
+.session-btn-edit,
+.calendar-nav-btn,
+.chat-send-btn {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-family: "Arial Black";
+    -fx-font-weight: 900;
+    -fx-cursor: hand;
+    -fx-shape: "M 12 0 L 190 0 L 204 12 L 204 42 L 192 54 L 0 54 L 0 12 Z";
+}
+
+.btn-primary,
+.player-join-btn,
+.player-tab-btn-active,
+.card-action-btn,
+.card-action-btn-edit,
+.session-btn-edit,
+.chat-send-btn,
+.calendar-nav-btn {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.28);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.55), 14, 0.2, 0, 0);
+}
+
+.btn-primary:hover,
+.player-join-btn:hover,
+.player-tab-btn-active:hover,
+.card-action-btn:hover,
+.card-action-btn-edit:hover,
+.session-btn-edit:hover,
+.chat-send-btn:hover,
+.calendar-nav-btn:hover {
+    -fx-background-color: #7894ff;
+    -fx-effect: dropshadow(gaussian, rgba(92,124,250,0.8), 18, 0.25, 0, 0);
+}
+
+.btn-secondary,
+.player-view-btn,
+.player-tab-btn,
+.back-btn {
+    -fx-background-color: rgba(31,30,78,0.34);
+    -fx-text-fill: rgba(232,235,255,0.82);
+    -fx-border-color: rgba(92,124,250,0.45);
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover,
+.player-view-btn:hover,
+.player-tab-btn:hover,
+.back-btn:hover {
+    -fx-background-color: rgba(92,124,250,0.26);
+    -fx-text-fill: white;
+}
+
+.btn-close,
+.btn-close-polygon,
+.player-delete-btn,
+.player-quit-btn,
+.card-action-btn-delete,
+.session-btn-delete {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.22);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255,82,82,0.5), 14, 0.2, 0, 0);
+}
+
+.btn-close:hover,
+.btn-close-polygon:hover,
+.player-delete-btn:hover,
+.player-quit-btn:hover,
+.card-action-btn-delete:hover,
+.session-btn-delete:hover {
+    -fx-background-color: #ff7373;
+}
+
+.time-btn {
+    -fx-background-color: rgba(92,124,250,0.22);
+    -fx-text-fill: #dbe3ff;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: rgba(92,124,250,0.5);
+    -fx-border-width: 1;
+}
+
+.player-member-count,
+.err-label {
+    -fx-text-fill: #FF5252;
+    -fx-fill: #FF5252;
+}
+
+.player-member-row,
+.message-bubble,
+.message-bubble-own,
+.message-bubble-other,
+.status-badge {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(92,124,250,0.25);
+    -fx-shape: "M 8 0 L 420 0 L 430 10 L 430 80 L 0 80 L 0 8 Z";
+}
+
+.message-bubble-own {
+    -fx-background-color: rgba(92,124,250,0.72);
+}
+
+.message-bubble-other {
+    -fx-background-color: rgba(9,7,15,0.88);
+}
+
+.combo-box-popup .list-view,
+.context-menu,
+.date-picker-popup {
+    -fx-background-color: #09070f;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 1.5;
+}

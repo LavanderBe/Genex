@@ -1,0 +1,278 @@
+/* --- TABLE ROOT --- */
+.cyber-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: rgba(31, 30, 78, 0.3);
+}
+
+/* Header Cells */
+.cyber-table .column-header {
+    -fx-background-color: rgba(31, 30, 78, 0.5);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-size: 45;
+}
+
+.cyber-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 1px;
+}
+
+/* Row Styling */
+.cyber-table .table-row-cell {
+    -fx-background-color: rgba(5, 5, 8, 0.6);
+    -fx-text-fill: white;
+    -fx-border-color: transparent transparent rgba(31, 30, 78, 0.1) transparent;
+    -fx-cell-size: 50;
+}
+
+.cyber-table .table-row-cell:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.05);
+}
+
+.cyber-table .table-row-cell:selected {
+    -fx-background-color: rgba(92, 124, 250, 0.15);
+    -fx-border-color: transparent transparent transparent #5c7cfa;
+    -fx-border-width: 0 0 0 4;
+}
+
+.cyber-table .table-cell {
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Consolas";
+    -fx-padding: 0 15;
+}
+
+/* --- SEARCH & TERMINAL --- */
+.search-terminal {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-padding: 2 10;
+}
+
+.terminal-input {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5c7cfa;
+    -fx-font-family: "Consolas";
+}
+
+/* --- INFO SHARD (Side Panel) --- */
+.info-shard {
+    -fx-background-color: rgba(10, 10, 25, 0.8);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.2), 15, 0, 0, 0);
+    /* Clipped Shape for Shard */
+    -fx-shape: "M 0 0 L 260 0 L 300 40 L 300 750 L 0 750 Z";
+}
+
+.shard-label {
+    -fx-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+}
+
+.shard-value {
+    -fx-text-fill: #5c7cfa;
+    -fx-font-weight: bold;
+    -fx-font-family: "Consolas";
+}
+
+.shard-value-alt {
+    -fx-text-fill: #22c55e; /* Green for karma */
+    -fx-font-family: "Consolas";
+}
+
+/* --- BUTTONS --- */
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z"; /* Cuts the corners off */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -2;
+}
+
+.card-btn-blue {
+    -fx-background-color: transparent;
+    -fx-border-color: #5c7cfa;
+    -fx-text-fill: #5c7cfa;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-transition: 0.2s;
+}
+
+.card-btn-blue:hover {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    /* Neon Blue Pulse */
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.8), 15, 0.5, 0, 0);
+    -fx-translate-y: -2; /* Slight lift effect */
+}
+
+.card-btn-red {
+    -fx-background-color: transparent;
+    -fx-border-color: #8B0D0D;
+    -fx-text-fill: #8B0D0D;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-transition: 0.2s;
+}
+
+.card-btn-red:hover {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    /* Red LED Alert Glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.8), 15, 0.5, 0, 0);
+    -fx-translate-y: -2;
+}
+
+/* Button Active/Pressed State */
+.card-btn-blue:pressed, .card-btn-red:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.cyber-table .placeholder .label {
+    -fx-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-text: "SYSTEM_IDLE // NO_ENTRIES_FOUND";
+}
+
+/* 2. Glass-plate Headers */
+.cyber-table .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #1F1E4E, transparent);
+    -fx-padding: 0 0 5 0;
+}
+
+/* 3. Glowing Selection with Side Indicator */
+.cyber-table .table-row-cell:selected {
+    -fx-background-color: linear-gradient(to right, rgba(92, 124, 250, 0.2), transparent);
+    -fx-border-color: transparent transparent transparent #5c7cfa;
+    -fx-border-width: 0 0 0 5; /* Thick neon bar on the left */
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.4), 10, 0, 0, 0);
+}
+
+/* 4. Row Hover "Scanline" effect */
+.cyber-table .table-row-cell:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    /* Subtle Red glow on the bottom of the row */
+    -fx-border-color: transparent transparent rgba(139, 13, 13, 0.5) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* 5. Hide the extra empty columns corner */
+.cyber-table .show-hide-columns-button {
+    -fx-background-color: transparent;
+}
+.cyber-table .filler {
+    -fx-background-color: transparent;
+}
+
+/* 6. Custom Column Separator (Red Dotted line) */
+.cyber-table .table-cell {
+    -fx-border-color: transparent rgba(31, 30, 78, 0.3) transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* --- DATA BLOCKS (Terminal Style) --- */
+.data-block {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-border-color: rgba(31, 30, 78, 0.5);
+    -fx-border-width: 1;
+    -fx-padding: 8;
+}
+
+.monospaced-data {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-text-fill: #5c7cfa; /* Neon Blue */
+    -fx-opacity: 0.8;
+}
+
+.shard-value-alt {
+    -fx-text-fill: #22c55e; /* Green Success */
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+}
+
+.player-stats-box {
+    -fx-border-color: #5c7cfa transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 5 0 0 0;
+}
+
+/* --- THE FORM SHARD --- */
+.form-shard-bg {
+    -fx-fill: linear-gradient(to bottom right, #1F1E4E, #050508);
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.6), 30, 0, 0, 0);
+}
+
+.form-label {
+    -fx-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+/* --- HUD INPUTS --- */
+.hud-input {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #444466;
+}
+
+.hud-input:focused {
+    -fx-border-color: #8B0D0D;
+}
+
+/* --- HUD COMBO --- */
+.hud-combo {
+    -fx-background-color: rgba(31, 30, 78, 0.4);
+    -fx-border-color: #1F1E4E;
+}
+
+.hud-combo .label { -fx-text-fill: white; -fx-font-family: "Consolas"; }
+
+/* --- ACTION BUTTONS (GENEX STANDARD) --- */
+.card-btn-confirm {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 9px;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+}
+.card-btn-confirm:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.card-btn-cancel {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 9px;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+    -fx-shape: "M 10 0 L 100 0 L 100 100 L 0 100 Z";
+}
+.card-btn-cancel:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}

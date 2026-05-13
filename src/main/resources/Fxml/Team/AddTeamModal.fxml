@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Team.AddTeamModalController"
+           styleClass="overlay-bg" stylesheets="@AddTeamModal.css"
+           alignment="CENTER_RIGHT">
+
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" maxHeight="720" StackPane.alignment="CENTER_RIGHT">
+        <padding>
+            <Insets top="28" right="28" bottom="28" left="28" />
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label fx:id="modalTitle" text="Nouvelle équipe" styleClass="drawer-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnCloseModal" text="✕" styleClass="btn-close-polygon" />
+        </HBox>
+
+        <Separator styleClass="drawer-sep">
+            <VBox.margin>
+                <Insets top="12" bottom="16" />
+            </VBox.margin>
+        </Separator>
+
+        <!-- Scrollable Form -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+            <VBox spacing="14">
+                
+                <!-- Team Name -->
+                <VBox spacing="6">
+                    <Label text="NOM *" styleClass="field-label" />
+                    <TextField fx:id="txtName" styleClass="input-field" promptText="Ex: Team Vitality" />
+                    <Label fx:id="errorName" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Game -->
+                <VBox spacing="6">
+                    <Label text="JEU *" styleClass="field-label" />
+                    <ComboBox fx:id="choiceGame" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                    <Label fx:id="errorGameId" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Contact -->
+                <VBox spacing="6">
+                    <Label text="CONTACT *" styleClass="field-label" />
+                    <TextField fx:id="txtContact" styleClass="input-field" promptText="contact@team.com" />
+                    <Label fx:id="errorContact" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Logo -->
+                <VBox spacing="6">
+                    <Label text="LOGO (PNG / JPEG)" styleClass="field-label" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtLogoFileName" styleClass="input-field" 
+                                   promptText="Aucun fichier sélectionné" editable="false" HBox.hgrow="ALWAYS" />
+                        <Button text="📁 Upload" styleClass="btn-pick" onAction="#handleUploadLogo" />
+                    </HBox>
+                    
+                    <!-- Custom Description for AI -->
+                    <Label text="DESCRIPTION DU LOGO (OPTIONNEL)" styleClass="field-label-small" />
+                    <TextField fx:id="txtLogoDescription" styleClass="input-field" 
+                               promptText="Ex: dragon rouge avec des flammes, style cyberpunk..." />
+                    
+                    <Button fx:id="btnGenerateLogo" text="🎨 Générer avec AI" styleClass="btn-ai" 
+                            onAction="#handleGenerateLogo" maxWidth="Infinity" />
+                </VBox>
+
+                <!-- Jersey -->
+                <VBox spacing="6">
+                    <Label text="MAILLOT (PNG / JPEG)" styleClass="field-label" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtJerseyFileName" styleClass="input-field" 
+                                   promptText="Aucun fichier sélectionné" editable="false" HBox.hgrow="ALWAYS" />
+                        <Button text="📁 Upload" styleClass="btn-pick" onAction="#handleUploadJersey" />
+                    </HBox>
+                    
+                    <Button fx:id="btnGenerateJersey" text="👕 Générer avec AI" styleClass="btn-ai" 
+                            onAction="#handleGenerateJersey" maxWidth="Infinity" />
+                    
+                    <Label text="(Utilise la description du logo)" styleClass="field-label-small" 
+                           style="-fx-text-fill: #888; -fx-font-size: 11px; -fx-font-style: italic;" />
+                </VBox>
+
+                <!-- Status -->
+                <VBox spacing="6">
+                    <Label text="STATUT" styleClass="field-label" />
+                    <ComboBox fx:id="choiceStatus" styleClass="input-field" prefWidth="Infinity" maxWidth="Infinity" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveTeam" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+        </HBox>
+
+    </VBox>
+
+</StackPane>

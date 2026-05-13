@@ -1,0 +1,153 @@
+/* --- ROOT & THEME --- */
+.main-container {
+    /* Melted Blue to Dark effect */
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255, 255, 255, 0.02) 50%, transparent 50%),
+            linear-gradient(to bottom right, #1F1E4E, #0a0a14, #000000);
+    -fx-background-size: 100% 4px, 100% 100%;
+}
+
+/* --- TOP BAR HUD --- */
+.top-bar {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(three-pass-box, #090642, 15, 0, 0, 2);
+}
+
+/* --- ASYMMETRIC PROFILE PLATE --- */
+.profile-hud-plate {
+    -fx-cursor: hand;
+    -fx-transition: 0.2s;
+}
+.profile-hud-plate:hover {
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 10, 0, 0, 0);
+}
+
+/* --- FULL SCREEN SIDEBAR --- */
+.sidebar-container {
+    -fx-background-color: rgba(5, 5, 15, 0.8);
+    -fx-border-color: transparent #8B0D0D transparent transparent;
+    -fx-border-width: 0 2 0 0;
+}
+
+.sidebar {
+    -fx-background-color: transparent;
+}
+
+/* --- NAVIGATION --- */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666c8a;
+    -fx-font-family: "Impact";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-transition: 0.2s;
+}
+
+.nav-button:hover {
+    -fx-text-fill: white;
+    -fx-background-color: rgba(139, 13, 13, 0.1);
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 4;
+}
+
+.nav-button-active {
+    -fx-background-color: linear-gradient(to right, rgba(139, 13, 13, 0.3), transparent);
+    -fx-text-fill: #ff5252;
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 5;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 10, 0, 0, 0);
+}
+
+/* --- GAMER ACTION BUTTONS --- */
+.action-confirm-btn {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    /* Edgy clipped shape */
+    -fx-shape: "M 0 0 L 92 0 L 100 10 L 100 100 L 8 100 L 0 90 Z";
+    -fx-cursor: hand;
+}
+.action-confirm-btn:hover {
+    -fx-translate-y: -2;
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+}
+
+.action-cancel-btn {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    /* Inverted edgy shape */
+    -fx-shape: "M 8 0 L 100 0 L 100 90 L 92 100 L 0 100 L 0 10 Z";
+    -fx-cursor: hand;
+}
+.action-cancel-btn:hover {
+    -fx-translate-y: -2;
+    -fx-background-color: #ff7676;
+    -fx-effect: dropshadow(three-pass-box, #FF5252, 15, 0, 0, 0);
+}
+
+/* --- SCROLLBAR --- */
+.edge-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.edge-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+.edge-scrollpane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+/* Hide scrollbar buttons */
+.edge-scrollpane .scroll-bar .increment-button,
+.edge-scrollpane .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-shape: "";
+}
+/* Logout Button Inside the Box */
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-border-color: transparent;
+}
+
+.logout-btn:hover {
+    -fx-background-color: rgba(255, 77, 77, 0.1);
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 0.5;
+}
+
+.logout-btn:pressed {
+    -fx-background-color: #ff4d4d;
+}
+
+.logout-btn:pressed SVGPath {
+    -fx-fill: white;
+}
+.menu-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B0D0D;
+    -fx-cursor: hand;
+    -fx-padding: 0 10;
+}
+
+.menu-toggle-btn:hover {
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 15, 0, 0, 0);
+}
+
+/* Add a hover effect to the profile plate to make it feel responsive */
+.profile-hud-plate:hover Circle {
+    -fx-stroke: white;
+    -fx-fill: #5C7CFA;
+}
+
+/* Ensure the center expands smoothly */
+.content-area {
+    -fx-transition: 0.3s;
+}

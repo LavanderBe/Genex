@@ -1,0 +1,64 @@
+/* --- GLOBAL --- */
+.root {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+}
+
+.cyber-overlay {
+    -fx-background-color:
+            radial-gradient(center 50% 50%, radius 90%, transparent, rgba(0,0,0,0.9)),
+            linear-gradient(from 0% 0% to 0% 4px, rgba(255, 255, 255, 0.02) 50%, transparent 50%);
+    -fx-background-size: 100% 100%, 100% 4px;
+}
+
+/* --- THE BIG UNIFIED WHITE FRAME --- */
+.big-white-frame {
+    -fx-background-color: white;
+    /* Large Hardware-Clipped Shape */
+    -fx-shape: "M 0 40 L 40 0 L 1460 0 L 1500 40 L 1500 460 L 1460 500 L 40 500 L 0 460 Z";
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    /* Intensive white neon glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.4), 60, 0.1, 0, 0);
+}
+
+/* --- THE LABELS (NO FRAME) --- */
+.clean-data-label {
+    /* No backgrounds or borders as requested */
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
+    /* Contrast: Dark Blue text on white background */
+    -fx-text-fill: #1F1E4E;
+
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-padding: 20;
+    -fx-transition: 0.2s;
+}
+
+/* Edgy Hover: The text itself reacts since there is no frame */
+.clean-data-label:hover {
+    -fx-text-fill: #8B0D0D; /* Turns Red on interaction */
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.3), 10, 0, 0, 0);
+}
+
+/* --- HUD TEXT --- */
+.main-game-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 5px;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 20, 0.6, 0, 0);
+}
+
+.status-subtext {
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 12px;
+}
+
+.footer-hud-text {
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-opacity: 0.8;
+}

@@ -1,0 +1,208 @@
+/* ══════════════════════════════════════════════════════════════
+   GENEX CORE — INITIALIZATION PROTOCOL v2.0 (DARK HUD)
+   ══════════════════════════════════════════════════════════════ */
+
+/* --- 1. GLOBAL ROOT SETTINGS --- */
+.root {
+    -fx-font-family: "JetBrains Mono", "Consolas", monospace;
+}
+
+/* --- 2. THE TACTICAL SHARD (MAIN CONTAINER) --- */
+.form-shard-bg {
+    /* Melted Blue to Absolute Void */
+    -fx-fill: linear-gradient(to bottom right, #0a0a1a, #050508 40%, #020205);
+    -fx-stroke: linear-gradient(to bottom, #8B0D0D, #1F1E4E);
+    -fx-stroke-width: 1.5;
+    /* Heavy internal shadow for "Depth" */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 40, 0, 0, 0);
+}
+
+/* Overlaying a glowing red "Security Aura" */
+#formOverlay {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255, 255, 255, 0.01) 50%, transparent 50%), /* Scanlines */
+            rgba(0, 0, 0, 0.92);
+    -fx-background-size: 100% 3px, 100% 100%;
+}
+
+/* --- 3. TYPOGRAPHY & HEADERS --- */
+.form-title {
+    -fx-font-family: "Impact";
+    -fx-font-size: 28px;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 4px;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 12, 0.5, 0, 0);
+}
+
+.section-header {
+    -fx-text-fill: #5C7CFA; /* Blue for Section Headers */
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-letter-spacing: 2px;
+    -fx-padding: 0 0 5 0;
+    -fx-border-color: transparent transparent rgba(92, 124, 250, 0.3) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* --- 4. HUD INPUTS (ULTRA DARK) --- */
+.hud-input {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 0 0 1 2; /* Left bracket look */
+    -fx-text-fill: #5C7CFA;
+    -fx-prompt-text-fill: #444466;
+    -fx-padding: 10 8;
+    -fx-transition: 0.2s;
+}
+
+.hud-input:focused {
+    -fx-background-color: rgba(139, 13, 13, 0.05);
+    -fx-border-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.2), 10, 0, 0, 0);
+}
+
+/* --- 5. TACTICAL DATEPICKER (RE-ENGINEERED) --- */
+.hud-datepicker {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 0 0 1 2;
+}
+
+.hud-datepicker > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+/* THE LOGO FIX */
+.hud-datepicker .arrow-button {
+    -fx-background-color: rgba(31, 30, 78, 0.4);
+    -fx-background-radius: 0;
+    -fx-padding: 0 12 0 12;
+}
+
+.hud-datepicker .arrow-button .arrow {
+    /* Digital Grid SVG */
+    -fx-shape: "M2,2 V18 H18 V2 H2 M18,5 H2 M5,2 V5 M15,2 V5 M5,8 H7 V10 H5 V8 M9,8 H11 V10 H9 V8 M13,8 H15 V10 H13 V8";
+    -fx-background-color: #8B0D0D;
+    -fx-scale-x: 1.3;
+    -fx-scale-y: 1.3;
+}
+
+/* THE POPUP CALENDAR */
+.date-picker-popup {
+    -fx-background-color: #050508;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, black, 20, 0, 0, 0);
+}
+
+.date-picker-popup .calendar-header {
+    -fx-background-color: linear-gradient(to bottom, #1F1E4E, #050508);
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: #050508;
+    -fx-text-fill: #8e94af;
+    -fx-border-color: rgba(31, 30, 78, 0.2);
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .selected {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+
+
+
+/* --- 6. NEURAL GAME LINKS (CHECKBOXES) --- */
+.game-checkbox {
+    -fx-text-fill: #8e94af;
+    -fx-cursor: hand;
+}
+
+.game-checkbox .box {
+    -fx-background-color: #020205;
+    -fx-border-color: #1F1E4E;
+    -fx-border-radius: 0;
+    -fx-shape: "M 0 0 L 100 0 L 100 100 L 25 100 L 0 75 Z";
+}
+
+.game-checkbox:selected .box {
+    -fx-background-color: #5C7CFA;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 12, 0.5, 0, 0);
+}
+
+/* --- 7. ACTION BUTTONS (HIGH-OCTANE) --- */
+
+.btn-execute {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 18px;
+    -fx-letter-spacing: 2px;
+    /* Double-Slanted Edge */
+    -fx-shape: "M 0 0 L 85 0 L 100 25 L 100 100 L 15 100 L 0 75 Z";
+    -fx-cursor: hand;
+}
+
+.btn-execute:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #1F1E4E;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 25, 0.6, 0, 0);
+    -fx-translate-y: -3;
+}
+
+.btn-abort {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-border-width: 2;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Impact";
+    -fx-font-size: 18px;
+    /* Inverted Double-Slanted Edge */
+    -fx-shape: "M 15 0 L 100 0 L 100 75 L 85 100 L 0 100 L 0 25 Z";
+}
+
+.btn-abort:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, #FF5252, 25, 0.6, 0, 0);
+    -fx-translate-y: -3;
+}
+
+/* --- 8. SCROLLBAR (STEALTH HARDWARE) --- */
+.games-scrollpane {
+    -fx-background-color: rgba(0,0,0,0.3);
+    -fx-border-color: #1F1E4E;
+}
+
+.games-scrollpane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-width: 6;
+}
+
+.games-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+
+/* --- 9. ASSET BUTTONS (GHOST STYLE) --- */
+.asset-btn {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: #444466;
+    -fx-border-style: dashed;
+    -fx-text-fill: #8e94af;
+    -fx-font-size: 10px;
+}
+
+.asset-btn:hover {
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(92, 124, 250, 0.1);
+}

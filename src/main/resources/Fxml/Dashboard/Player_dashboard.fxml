@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainPane" prefHeight="850.0" prefWidth="1300.0" styleClass="main-container" stylesheets="@Player_dashboard.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Dashboard.PlayerDashboard">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="80.0" spacing="20.0" styleClass="top-bar">
+            <children>
+              <Button fx:id="toggleSidebarBtn" onAction="#toggleSidebar" styleClass="menu-toggle-btn" text="☰">
+                  <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+              </Button>
+                <VBox alignment="CENTER_LEFT">
+                    <children>
+                        <Label styleClass="title-text" text="GENEX " textFill="#8B0D0D">
+                            <font><Font name="Impact" size="26.0" /></font>
+                        </Label>
+                        <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="LINK_STATUS: STABLE" textFill="#5c7cfa" />
+                    </children>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <HBox alignment="CENTER" spacing="25.0">
+                    <children>
+                        <!-- PING -->
+                        <HBox alignment="CENTER" spacing="8.0">
+                            <children>
+                                <Label fx:id="pingLabel" text="24MS" textFill="#22c55e">
+                                    <font><Font name="System Bold" size="12.0" /></font>
+                                </Label>
+                                <Circle fx:id="pingDot" fill="#22c55e" radius="3.0" />
+                            </children>
+                        </HBox>
+
+                        <!-- EDGY PROFILE PANEL (Tactical Plate Shape) -->
+                        <StackPane onMouseClicked="#handleProfileClick" styleClass="profile-hud-plate">
+                            <children>
+                                <SVGPath content="M 0 0 L 180 0 L 200 20 L 200 50 L 20 50 L 0 30 Z" fill="#0a0a1a" stroke="#8B0D0D" strokeWidth="1.5" />
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <padding><Insets left="15.0" right="15.0" /></padding>
+                                    <children>
+                                        <StackPane fx:id="avatarContainer" prefHeight="32.0" prefWidth="32.0" styleClass="avatar-mini-slot">
+                                        </StackPane>
+                                        <VBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label fx:id="sessionUser" text="placeholder" textFill="WHITE">
+                                                    <font><Font name="System Bold" size="13.0" /></font>
+                                                </Label>
+                                                <Label fx:id="RoleLabel" style="-fx-font-size: 8px;" text="OPERATOR_LEVEL 12" textFill="#8B0D0D" />
+                                            </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                        </VBox>
+                                    </children>
+                           <StackPane.margin>
+                              <Insets left="5.0" />
+                           </StackPane.margin>
+                                </HBox>
+                            </children>
+                        </StackPane>
+
+                        <!-- LOGOUT BUTTON -->
+                        <Button mnemonicParsing="false" onAction="#handleLogout" styleClass="logout-btn">
+                            <graphic>
+                                <SVGPath content="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.4-1.4l2.6-2.6H9v-2h9.2l-2.6-2.6L16 7l5 5z" fill="#ff5252" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+            <padding><Insets left="30.0" right="30.0" /></padding>
+        </HBox>
+    </top>
+
+    <!-- FULL HEIGHT SIDEBAR -->
+    <left>
+        <VBox fx:id="sidebarContainer" prefHeight="770.0" prefWidth="126.0" styleClass="sidebar-container">
+            <children>
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="770.0" prefWidth="152.0" styleClass="edge-scrollpane" VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox alignment="TOP_CENTER" prefHeight="620.0" prefWidth="148.0" spacing="10.0" styleClass="sidebar">
+                            <children>
+                                <Region prefHeight="20.0" />
+                                <Button fx:id="navMainButton" contentDisplay="TOP" onAction="#showMain" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="MENU PRINCIPAL">
+                                    <graphic><SVGPath content="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="#8B0D0D" /></graphic>
+                                </Button>
+                                <Button fx:id="navTeamsButton" contentDisplay="TOP" onAction="#showTeams" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="EQUIPES">
+                                    <graphic><SVGPath content="M4.35009 13.3929L8 16L11.6499 13.3929C13.7523 11.8912 15 9.46667 15 6.88306V3L8 0L1 3V6.88306C1 9.46667 2.24773 11.8912 4.35009 13.3929Z" fill="#8B0D0D" /></graphic>
+                                </Button>
+                                <Button fx:id="navTournamentsButton" contentDisplay="TOP" onAction="#showTournaments" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TOURNOIS">
+                                    <graphic><SVGPath content="M19.33 3.12c-.39-.39-1.02-.39-1.41 0L12.5 8.54 11.09 7.13c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.41 1.41-5.66 5.66-2.12-2.12c-.39-.39-1.02-.39-1.41 0l-.71.71c-.39.39-.39 1.02 0 1.41l2.12 2.12-1.41 1.41c-.39.39-.39 1.02 0 1.41l.71.71c.39.39 1.02.39 1.41 0l1.41-1.41 2.12 2.12c.39.39 1.02.39 1.41 0l.71-.71c.39-.39.39-1.02 0-1.41l-2.12-2.12 5.66-5.66 1.41 1.41c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.41-1.41 5.42-5.42c.39-.39.39-1.02 0-1.41l-.71-.71zM4.67 3.12c.39-.39 1.02-.39 1.41 0l5.42 5.42-1.41 1.41c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.41-1.41 5.66 5.66 2.12-2.12c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-2.12 2.12 1.41 1.41c.39.39.39 1.02 0 1.41l-.71.71c-.39.39-1.02.39-1.41 0l-1.41-1.41-2.12 2.12c-.39.39-1.02.39-1.41 0l-.71-.71c-.39-.39-.39-1.02 0-1.41l2.12-2.12-5.66-5.66-1.41 1.41c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.41-1.41L3.96 3.83c-.39-.39-.39-1.02 0-1.41l.71-.71z" fill="#8B0D0D" /></graphic>
+                                </Button>
+                                <Button fx:id="navTutorialsButton" contentDisplay="TOP" onAction="#showTutorials" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="TUTORIELS">
+                                    <graphic><SVGPath content="M12 10.4V20M12 10.4C12 8.15979 12 7.03969 11.564 6.18404C11.1805 5.43139 10.5686 4.81947 9.81596 4.43597C8.96031 4 7.84021 4 5.6 4H4.6C4.03995 4 3.75992 4 3.54601 4.10899C3.35785 4.20487 3.20487 4.35785 3.10899 4.54601C3 4.75992 3 5.03995 3 5.6V16.4C3 16.9601 3 17.2401 3.10899 17.454C3.20487 17.6422 3.35785 17.7951 3.54601 17.891C3.75992 18 4.03995 18 4.6 18H7.54668C8.08687 18 8.35696 18 8.61814 18.0466C8.84995 18.0879 9.0761 18.1563 9.29191 18.2506C9.53504 18.3567 9.75977 18.5065 10.2092 18.8062L12 20M12 10.4C12 8.15979 12 7.03969 12.436 6.18404C12.8195 5.43139 13.4314 4.81947 14.184 4.43597C15.0397 4 16.1598 4 18.4 4H19.4C19.9601 4 20.2401 4 20.454 4.10899C20.6422 4.20487 20.7951 4.35785 20.891 4.54601C21 4.75992 21 5.03995 21 5.6V16.4C21 16.9601 21 17.2401 20.891 17.454C20.7951 17.6422 20.6422 17.7951 20.454 17.891C20.2401 18 19.9601 18 19.4 18H16.4533C15.9131 18 15.643 18 15.3819 18.0466C15.15 18.0879 14.9239 18.1563 14.7081 18.2506C14.465 18.3567 14.2402 18.5065 13.7908 18.8062L12 20" fill="#8B0D0D" /></graphic>
+                                </Button>
+                                <Button fx:id="navForumsButton" contentDisplay="TOP" onAction="#showForums" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="FORUMS">
+                                    <graphic><SVGPath content="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="#8B0D0D" /></graphic>
+                                </Button>
+                        <Button fx:id="navBoutiqueButton" contentDisplay="TOP" onAction="#showBoutique" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="BOUTIQUE">
+                           <graphic><SVGPath content="M5.13238 1C4.07859 1 3.10207 1.5529 2.5599 2.45651L0.615776 5.69672C0.17816 6.42608 0.0121122 7.42549 0.508798 8.32014C0.789678 8.82607 1.27459 9.55181 2 10.1205V20C2 21.6569 3.34315 23 5 23H8C9.10457 23 10 22.1046 10 21V15H14V21C14 22.1046 14.8954 23 16 23H19C20.6569 23 22 21.6569 22 20V10.1205C22.7254 9.55181 23.2103 8.82607 23.4912 8.32014C23.9879 7.42548 23.8218 6.42608 23.3842 5.69672L21.4401 2.45651C20.8979 1.5529 19.9214 1 18.8676 1H5.13238Z" fill="#8B0D0D" /></graphic>
+                        </Button>
+                                <Region prefHeight="50.0" prefWidth="132.0" VBox.vgrow="ALWAYS" />
+
+                                <Button fx:id="navProfileButton" contentDisplay="TOP" onAction="#showProfile" prefHeight="80.0" prefWidth="150.0" styleClass="nav-button" text="PROFIL">
+                                    <graphic><SVGPath content="M28.8,30.1c-0.6-3-2.9-5.4-5.9-6.2c-1.6-0.4-2.7-1.7-2.9-3.2c1.1-0.8,1.9-1.9,2.4-3.1c0.9-0.5,1.5-1.5,1.5-2.6v-2v-1V6c0-3.3-2.7-6-6-6c-1.8,0-3.5,0.8-4.6,2.2C10.2,2.9,8,5.7,8,9v3v1v2c0,1.1,0.7,2.1,1.6,2.6c0.5,1.2,1.3,2.3,2.4,3c-0.2,1.6-1.4,2.9-3,3.3c-3,0.8-5.2,3.1-5.8,6.1c-0.1,0.5,0,0.9,0.3,1.3C3.8,31.8,4.2,32,4.7,32h22.7c0.5,0,0.9-0.2,1.2-0.6C28.8,31.1,28.9,30.6,28.8,30.1z M11,16c-0.6,0-1-0.4-1-1v-2v-1c0-0.6,0.4-1,1-1h10c0.6,0,1,0.4,1,1v1v2c0,0.6-0.4,1-1,1c-1.4,0-2.7-0.2-3.8-0.7C16.8,15.1,16.4,15,16,15s-0.8,0.1-1.2,0.3C13.7,15.8,12.4,16,11,16z" fill="#8B0D0D" /></graphic>
+                                </Button>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </left>
+
+    <!-- CONTENT — loaded dynamically via loadModule() -->
+    <center>
+        <AnchorPane id="contentArea" fx:id="contentArea"/>
+    </center>
+</BorderPane>

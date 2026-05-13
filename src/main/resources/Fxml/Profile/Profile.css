@@ -1,0 +1,281 @@
+/* --- ROOT & SCROLL --- */
+.edge-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.edge-scrollpane > .viewport { -fx-background-color: transparent; }
+
+/* --- LEFT IDENTITY CARD --- */
+.identity-card {
+    -fx-background-color: linear-gradient(to bottom, #1F1E4E, #050508);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 0 4; /* Left edge glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 20, 0, 0, 0);
+}
+
+.avatar-large-slot {
+    -fx-background-color: black;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 25 L 25 0 L 100 0 L 100 75 L 75 100 L 0 100 Z";
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 15, 0.4, 0, 0);
+}
+
+.neon-title-small {
+    -fx-font-family: "Impact";
+    -fx-font-size: 24px;
+    -fx-effect: dropshadow(three-pass-box, white, 5, 0, 0, 0);
+}
+
+/* --- RIGHT DATA SHARD --- */
+.data-shard {
+    -fx-background-color: rgba(5, 5, 8, 0.8);
+    -fx-border-color: rgba(31, 30, 78, 0.5);
+    -fx-border-width: 1;
+}
+
+.section-header {
+    -fx-text-fill: #8B0D0D;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+
+/* --- INPUTS --- */
+.hud-input {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Consolas";
+}
+.hud-input:focused {
+    -fx-border-color: #8B0D0D;
+    -fx-background-color: rgba(139, 13, 13, 0.05);
+}
+
+.form-label {
+    -fx-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+}
+
+/* --- BUTTONS --- */
+.btn-execute {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 95 0 L 100 15 L 100 100 L 0 100 Z";
+    -fx-cursor: hand;
+}
+.btn-execute:hover {
+    -fx-translate-y: -3;
+    -fx-background-color: white;
+    -fx-text-fill: #1F1E4E;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0.5, 0, 0);
+}
+
+.btn-promote {
+    -fx-background-color: transparent;
+    -fx-border-color: #ffbb33; /* Gold */
+    -fx-text-fill: #ffbb33;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-border-style: dashed;
+}
+.btn-promote:hover { -fx-background-color: rgba(255, 187, 51, 0.1); -fx-text-fill: white; }
+
+/* Game Tag (Reuse from List) */
+.game-data-tag {
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-padding: 3 8;
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+}
+
+/* --- NEW ASSET BUTTONS (AVATAR) --- */
+.btn-asset {
+    -fx-background-color: transparent;
+    -fx-border-color: #444466;
+    -fx-border-style: dashed;
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-asset:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(139, 13, 13, 0.1);
+}
+
+.btn-asset-blue {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-border-style: dashed;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-asset-blue:hover {
+    -fx-border-color: white;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(92, 124, 250, 0.1);
+}
+
+/* --- EDIT GAMES MINI BUTTON --- */
+.btn-edit-mini {
+    -fx-background-color: rgba(31, 30, 78, 0.3);
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 8px;
+    -fx-padding: 2 8;
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+.btn-edit-mini:hover {
+    -fx-text-fill: white;
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 5, 0, 0, 0);
+}
+
+.date-picker-popup {
+    -fx-background-color: #1F1E4E;
+    -fx-border-color: #ff0000;
+}
+
+.edgy-datepicker {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-control-inner-background: #050508;
+}
+
+.edgy-datepicker > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.status-pending {
+    -fx-text-fill: #ffbb33; /* Gold */
+    -fx-font-family: "Consolas";
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 187, 51, 0.4), 10, 0, 0, 0);
+}
+#gameOverlay {
+    /* Dim background with scanline effect */
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 0% 0.5%, rgba(255, 255, 255, 0.01) 50%, transparent 50%),
+            rgba(0, 0, 0, 0.88);
+    -fx-background-size: 100% 4px, 100% 100%;
+}
+
+/* --- 2. THE MODAL CARD (SHARD) --- */
+.game-selection-shard {
+    -fx-background-color: transparent;
+}
+
+.game-selection-shard SVGPath {
+    -fx-fill: linear-gradient(to bottom right, #1F1E4E, #050508);
+    -fx-stroke: #5C7CFA; /* Neon Blue border for "Recalibration" mode */
+    -fx-stroke-width: 1.5;
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.4), 25, 0.4, 0, 0);
+}
+
+/* --- 3. THE INTERNAL SCROLL AREA --- */
+.games-scrollpane {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background: transparent;
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+}
+
+.games-scrollpane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Custom Stealth Scrollbar */
+.games-scrollpane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-width: 5px;
+}
+
+.games-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: #8B0D0D; /* Signature Red Thumb */
+    -fx-background-radius: 0;
+}
+
+.games-scrollpane .scroll-bar .increment-button,
+.games-scrollpane .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-shape: "";
+}
+
+/* --- 4. GEEK CHECKBOXES (LINK TOGGLES) --- */
+.game-checkbox {
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.game-checkbox:hover {
+    -fx-text-fill: white;
+}
+
+.game-checkbox .box {
+    -fx-background-color: #020205;
+    -fx-border-color: #1F1E4E;
+    -fx-border-radius: 0;
+    /* Clipped Corner Checkbox */
+    -fx-shape: "M 0 0 L 100 0 L 100 100 L 20 100 L 0 80 Z";
+}
+
+.game-checkbox:selected .box {
+    -fx-background-color: #5C7CFA;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 10, 0, 0, 0);
+}
+
+.game-checkbox:selected .mark {
+    -fx-background-color: white;
+}
+
+/* --- 5. ACTION BUTTONS (GENEX TACTICAL) --- */
+
+.btn-abort {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 12px;
+    -fx-shape: "M 8 0 L 100 0 L 100 100 L 0 100 L 0 15 Z";
+    -fx-cursor: hand;
+}
+
+.btn-abort:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.1);
+    -fx-translate-y: -3;
+}
+
+/* --- 6. TEXT STYLING --- */
+.overlay-title {
+    -fx-font-family: "Impact";
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 2px;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 10, 0, 0, 0);
+}
+
+.overlay-subtitle {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 8px;
+    -fx-text-fill: #5C7CFA;
+    -fx-letter-spacing: 3px;
+    -fx-opacity: 0.7;
+}

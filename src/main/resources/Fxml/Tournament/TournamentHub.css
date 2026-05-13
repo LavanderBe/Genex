@@ -1,0 +1,221 @@
+/* ═══════════════════════════════════════════════════
+   Tournament Hub - Matches Player Design
+   ═══════════════════════════════════════════════════ */
+
+/* Main Container */
+.tournament-hub {
+    -fx-background-color: transparent;
+}
+
+/* Page Title */
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(31, 30, 78, 0.5), 10, 0, 0, 0);
+}
+
+/* ──────────────── Search Bar ──────────────── */
+.search-field {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-padding: 8 15;
+    -fx-font-size: 13;
+}
+
+.search-field:focused {
+    -fx-border-color: rgba(139, 13, 13, 0.7);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+}
+
+.icon-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.icon-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ──────────────── Filter ComboBox ──────────────── */
+.filter-combo {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.filter-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 8 15;
+}
+
+.filter-combo:focused {
+    -fx-border-color: rgba(139, 13, 13, 0.7);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+}
+
+.filter-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.filter-combo .arrow {
+    -fx-background-color: white;
+}
+
+/* ComboBox Dropdown */
+.filter-combo .list-view {
+    -fx-background-color: #1F1E4E;
+    -fx-border-color: rgba(139, 13, 13, 0.3);
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+}
+
+.filter-combo .list-cell:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.3);
+}
+
+.filter-combo .list-cell:selected {
+    -fx-background-color: rgba(139, 13, 13, 0.5);
+    -fx-text-fill: white;
+}
+
+/* PRIMARY BLUE BUTTON - CYBER LOOK */
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-translate-y: -2;
+}
+
+/* Active Filter State (for "Mes Tournois" toggle) */
+.action-blue-button.active-filter {
+    -fx-background-color: #8B0D0D;
+    -fx-effect: dropshadow(gaussian, #8B0D0D, 12, 0, 0, 0);
+}
+
+.action-blue-button.active-filter:hover {
+    -fx-background-color: #a51010;
+}
+
+/* ──────────────── ScrollPane Styling ──────────────── */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .track {
+    -fx-background-color: transparent;
+}
+
+/* ──────────────── Cards Container ──────────────── */
+.tournaments-container {
+    -fx-padding: 10 0;
+}
+
+/* ──────────────── Empty State ──────────────── */
+.empty-state {
+    -fx-padding: 80 40;
+    -fx-background-color: transparent;
+}
+
+
+/* ─── Player Record Section ──────────────────────────────────────────── */
+
+.hub-record-section {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(124, 111, 255, 0.35);
+    -fx-border-radius: 15;
+    -fx-border-width: 1.5;
+    -fx-padding: 20 25;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.15), 20, 0, 0, 4);
+}
+
+.hub-record-title {
+    -fx-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}
+
+.hub-record-grid {
+    -fx-padding: 0;
+}
+
+.hub-record-card {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 18 10;
+    -fx-min-width: 100;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+/* Each card gets its own accent border on the left via effect */
+.hub-record-card-wins {
+    -fx-background-color: rgba(16, 185, 129, 0.12);
+    -fx-border-color: rgba(16, 185, 129, 0.5);
+}
+
+.hub-record-card-losses {
+    -fx-background-color: rgba(239, 68, 68, 0.12);
+    -fx-border-color: rgba(239, 68, 68, 0.5);
+}
+
+.hub-record-card-ratio {
+    -fx-background-color: rgba(124, 111, 255, 0.12);
+    -fx-border-color: rgba(124, 111, 255, 0.5);
+}
+
+.hub-record-card-best {
+    -fx-background-color: rgba(251, 191, 36, 0.12);
+    -fx-border-color: rgba(251, 191, 36, 0.5);
+}
+
+.hub-record-value {
+    -fx-fill: white;
+    -fx-font-size: 34;
+    -fx-font-weight: 700;
+}
+
+/* These are applied via inline style on Text nodes in FXML */
+.hub-wins  { -fx-fill: #34d399; }
+.hub-losses { -fx-fill: #f87171; }
+.hub-ratio  { -fx-fill: #a78bfa; }
+.hub-best   { -fx-fill: #fcd34d; }
+
+.hub-record-label {
+    -fx-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+}

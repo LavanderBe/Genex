@@ -1,0 +1,577 @@
+/* ═══════════════════════════════════════════════════════════════
+   GENEX — Boutique  |  Player Dashboard Theme
+   ═══════════════════════════════════════════════════════════════ */
+
+.boutique-root {
+    -fx-background-color: transparent;
+    -fx-font-family: 'Segoe UI', 'Inter', sans-serif;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.boutique-header {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(three-pass-box, #090642, 10, 0, 0, 2);
+}
+
+.boutique-title {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-family: "Impact";
+    -fx-font-size: 20px;
+    -fx-letter-spacing: 2px;
+}
+
+.boutique-subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 11px;
+}
+
+.boutique-accent-line {
+    -fx-background-color: linear-gradient(to right, #8B0D0D, transparent);
+}
+
+/* ── Search & filter ─────────────────────────────────────────── */
+.search-field {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(139, 13, 13, 0.4);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.25);
+    -fx-font-size: 13px;
+    -fx-padding: 8 14;
+}
+
+.search-field:focused {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.25), 8, 0, 0, 0);
+}
+
+.filter-combo {
+    -fx-background-color: rgba(139, 13, 13, 0.12);
+    -fx-background-radius: 0;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1;
+    -fx-border-radius: 0;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.filter-combo .list-cell { -fx-text-fill: white; -fx-background-color: transparent; -fx-padding: 6 10; }
+.filter-combo .combo-box-popup .list-view { -fx-background-color: #0a0a1a; -fx-border-color: #8B0D0D; }
+.filter-combo .combo-box-popup .list-view .list-cell:hover { -fx-background-color: rgba(139,13,13,0.3); }
+.filter-combo .arrow { -fx-background-color: #8B0D0D; }
+.filter-combo .arrow-button { -fx-background-color: transparent; }
+
+/* ── Tabs ────────────────────────────────────────────────────── */
+.boutique-tabs { -fx-background-color: transparent; -fx-tab-min-height: 38px; }
+
+.boutique-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-border-color: rgba(139, 13, 13, 0.2);
+    -fx-border-width: 0 0 1 0;
+}
+
+.boutique-tabs .tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+}
+
+.boutique-tabs .tab:selected {
+    -fx-background-color: rgba(139, 13, 13, 0.2);
+    -fx-text-fill: #ff4d4d;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 2 0;
+}
+
+.boutique-tabs .tab:hover { -fx-text-fill: rgba(255,255,255,0.8); }
+.boutique-tabs .tab .tab-label { -fx-text-fill: inherit; }
+.boutique-tabs .tab-content-area { -fx-background-color: transparent; }
+.tab-content { -fx-background-color: transparent; }
+
+/* ── Card grid scroll ────────────────────────────────────────── */
+.cards-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.card-grid { -fx-background-color: transparent; }
+
+/* ══════════════════════════════════════════════════════════════
+   PRODUCT CARD
+   ══════════════════════════════════════════════════════════════ */
+.product-card {
+    -fx-background-color: #0d0d1f;
+    -fx-border-color: rgba(139, 13, 13, 0.3);
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 4);
+}
+
+.product-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.35), 14, 0, 0, 0);
+    -fx-translate-y: -3;
+}
+
+/* Image container */
+.card-img-container {
+    -fx-background-color: #060614;
+    -fx-border-color: transparent transparent rgba(139,13,13,0.2) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Sold-out overlay badge */
+.sold-out-badge {
+    -fx-background-color: rgba(139, 13, 13, 0.85);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10;
+    -fx-letter-spacing: 1px;
+}
+
+/* Multiple images badge */
+.multi-img-badge {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-font-size: 10px;
+    -fx-padding: 2 6;
+    -fx-translate-x: -4;
+    -fx-translate-y: -4;
+}
+
+/* Card info section */
+.card-info { -fx-background-color: transparent; }
+
+.card-name {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-max-width: 176;
+}
+
+.card-type {
+    -fx-text-fill: rgba(139, 13, 13, 0.9);
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1px;
+}
+
+.card-price {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+}
+
+.card-seller {
+    -fx-text-fill: rgba(255, 255, 255, 0.35);
+    -fx-font-size: 10px;
+}
+
+.card-badge-delivery {
+    -fx-background-color: rgba(34, 197, 94, 0.15);
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 10px;
+    -fx-padding: 2 6;
+    -fx-background-radius: 0;
+}
+
+.card-badge-stock {
+    -fx-background-color: rgba(59, 130, 246, 0.15);
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 10px;
+    -fx-padding: 2 6;
+    -fx-background-radius: 0;
+}
+
+.card-btn-row { -fx-background-color: transparent; }
+
+/* Buy button on card */
+.btn-card-buy {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-padding: 7 0;
+    -fx-shape: "M 0 0 L 85 0 L 95 8 L 95 28 L 10 28 L 0 20 Z";
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.4), 6, 0, 0, 0);
+}
+
+.btn-card-buy:hover    { -fx-background-color: #b01010; -fx-translate-y: -1; }
+.btn-card-buy:disabled { -fx-opacity: 0.3; }
+
+/* Delete button on card */
+.btn-card-delete {
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 11px;
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(139, 13, 13, 0.35);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-padding: 7 0;
+    -fx-cursor: hand;
+}
+
+.btn-card-delete:hover { -fx-background-color: rgba(139,13,13,0.3); }
+
+/* ── Sell form ───────────────────────────────────────────────── */
+.sell-scroll { -fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent; }
+.sell-form   { -fx-background-color: transparent; }
+
+.form-section-title {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-family: "Impact";
+    -fx-font-size: 16px;
+    -fx-letter-spacing: 2px;
+}
+
+/* Image picker button */
+.btn-pick-img {
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-text-fill: #ff6b6b;
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(139, 13, 13, 0.4);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.btn-pick-img:hover { -fx-background-color: rgba(139,13,13,0.3); }
+
+.img-count-label { -fx-text-fill: rgba(255,255,255,0.35); -fx-font-size: 11px; }
+
+.img-preview-row { -fx-background-color: transparent; }
+
+/* Image thumbnail in sell form */
+.img-thumb {
+    -fx-border-color: rgba(139,13,13,0.4);
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.img-thumb-remove {
+    -fx-background-color: rgba(139,13,13,0.8);
+    -fx-text-fill: white;
+    -fx-font-size: 9px;
+    -fx-padding: 1 4;
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-translate-x: 2;
+    -fx-translate-y: -2;
+}
+
+/* ── Polygon add button ──────────────────────────────────────── */
+.btn-polygon {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 12px;
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+    -fx-padding: 10 22;
+}
+
+.btn-polygon:hover  { -fx-background-color: #7d97ff; -fx-translate-y: -2; }
+.btn-polygon:pressed{ -fx-translate-y: 1; }
+
+/* ── Form fields ─────────────────────────────────────────────── */
+.field-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+}
+
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(139, 13, 13, 0.35);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.2);
+    -fx-font-size: 13px;
+    -fx-padding: 9 12;
+}
+
+.input-field:focused {
+    -fx-border-color: #8B0D0D;
+    -fx-background-color: rgba(139, 13, 13, 0.06);
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.2), 6, 0, 0, 0);
+}
+
+.err-label { -fx-text-fill: #ff4d4d; -fx-font-size: 11px; }
+
+.combo-field {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(139, 13, 13, 0.35);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-font-size: 13px;
+}
+
+.combo-field .list-cell { -fx-text-fill: rgba(255,255,255,0.8); -fx-background-color: transparent; -fx-padding: 8 12; }
+.combo-field .combo-box-popup .list-view { -fx-background-color: #0d0d1f; -fx-border-color: #8B0D0D; }
+.combo-field .combo-box-popup .list-view .list-cell:hover { -fx-background-color: rgba(139,13,13,0.25); }
+.combo-field .arrow { -fx-background-color: #8B0D0D; }
+.combo-field .arrow-button { -fx-background-color: transparent; }
+
+.type-check { -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 13px; }
+.type-check .box { -fx-background-color: rgba(255,255,255,0.04); -fx-border-color: rgba(139,13,13,0.4); -fx-border-radius: 0; -fx-background-radius: 0; }
+.type-check:selected .box { -fx-background-color: #8B0D0D; -fx-border-color: #8B0D0D; }
+.type-check:selected .mark { -fx-background-color: white; }
+
+/* ── Cyber Table Styling ────────────────────────────────────── */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(139, 13, 13, 0.3);
+    -fx-border-width: 1;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: rgba(20, 20, 35, 0.9);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 45;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 13px;
+    -fx-letter-spacing: 1px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-border-color: transparent transparent rgba(255, 255, 255, 0.05) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 50;
+}
+
+.data-table .table-row-cell:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-border-color: transparent transparent #ff4d4d transparent;
+}
+
+.data-table .table-cell {
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 10;
+}
+
+.data-table .placeholder .label {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+}
+
+/* ── Drawer ──────────────────────────────────────────────────── */
+.overlay-bg { -fx-background-color: rgba(0, 0, 0, 0.65); }
+
+.drawer {
+    -fx-background-color: #0d0d1f;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 0 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 40, 0.2, -8, 0);
+    -fx-min-height: 600;
+}
+
+.drawer-title { -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: 700; }
+.drawer-sep   { -fx-background-color: rgba(139,13,13,0.3); }
+
+.btn-close {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-text-fill: rgba(255,255,255,0.45);
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+    -fx-font-size: 13px;
+    -fx-padding: 4 10;
+    -fx-cursor: hand;
+}
+
+.btn-close:hover { -fx-background-color: rgba(139,13,13,0.25); -fx-text-fill: #ff4d4d; }
+
+.drawer-imgs { -fx-background-color: transparent; }
+
+.drawer-img-thumb {
+    -fx-border-color: rgba(139,13,13,0.3);
+    -fx-border-width: 1;
+}
+
+.buy-item-name   { -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 700; }
+.buy-item-price  { -fx-text-fill: #ff4d4d; -fx-font-size: 14px; -fx-font-weight: 600; }
+.buy-item-seller { -fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 12px; }
+.buy-total       { -fx-text-fill: #22c55e; -fx-font-size: 15px; -fx-font-weight: 700; }
+
+/* ── Primary / Secondary buttons ─────────────────────────────── */
+.btn-primary {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.5), 10, 0, 0, 3);
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+}
+
+.btn-primary:hover  { -fx-background-color: #b01010; -fx-translate-y: -1; }
+.btn-primary:pressed{ -fx-translate-y: 1; }
+
+.btn-secondary {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 13px;
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
+}
+
+.btn-secondary:hover { -fx-background-color: rgba(255,255,255,0.1); -fx-text-fill: white; }
+
+/* ── Payment WebView ─────────────────────────────────────────── */
+.payment-overlay { -fx-background-color: rgba(0,0,0,0.8); }
+
+.payment-container {
+    -fx-background-color: #0a0a1a;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.5), 30, 0.2, 0, 0);
+}
+
+.payment-header {
+    -fx-background-color: rgba(139,13,13,0.15);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 1 0;
+}
+
+.payment-header-title {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-family: "Impact";
+    -fx-font-size: 14px;
+    -fx-letter-spacing: 2px;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+.scroll-bar .thumb { -fx-background-color: #8B0D0D; -fx-background-radius: 0; }
+.scroll-bar .track { -fx-background-color: rgba(31,30,78,0.3); }
+.scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-background-color: transparent; -fx-padding: 0; }
+
+/* ── In-app image gallery ────────────────────────────────────── */
+.gallery-container {
+    -fx-background-color: #0d0d1f;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 40, 0.2, 0, 0);
+}
+
+.gallery-header {
+    -fx-background-color: rgba(139,13,13,0.15);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gallery-img {
+    -fx-border-color: rgba(139,13,13,0.4);
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.gallery-img:hover {
+    -fx-border-color: #ff4d4d;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.5), 10, 0, 0, 0);
+}
+
+/* ── Product viewer overlay ──────────────────────────────────── */
+.product-viewer {
+    -fx-background-color: #0d0d1f;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(139,13,13,0.6), 40, 0.2, 0, 0);
+    -fx-min-width: 700;
+    -fx-min-height: 500;
+}
+
+.viewer-img-pane {
+    -fx-background-color: #060614;
+    -fx-border-color: rgba(139,13,13,0.3);
+    -fx-border-width: 0 1 0 0;
+    -fx-min-width: 400;
+    -fx-pref-width: 560;
+}
+
+.viewer-img-bg {
+    -fx-background-color: #060614;
+    -fx-min-height: 400;
+}
+
+.viewer-arrow {
+    -fx-background-color: rgba(139,13,13,0.5);
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-pref-width: 44;
+    -fx-pref-height: 80;
+    -fx-opacity: 0.7;
+}
+
+.viewer-arrow:hover {
+    -fx-background-color: rgba(139,13,13,0.9);
+    -fx-opacity: 1;
+}
+
+.viewer-arrow-left  { -fx-translate-x: 0; }
+.viewer-arrow-right { -fx-translate-x: 0; }
+
+.viewer-counter {
+    -fx-background-color: rgba(0,0,0,0.6);
+    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-font-size: 11px;
+    -fx-padding: 3 10;
+}
+
+.viewer-details {
+    -fx-background-color: #0d0d1f;
+    -fx-min-width: 320;
+    -fx-pref-width: 360;
+}
+
+/* ── Sell form centering ─────────────────────────────────────── */
+.sell-form {
+    -fx-background-color: transparent;
+    -fx-max-width: 860px;
+    -fx-alignment: top-center;
+}

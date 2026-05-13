@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
+
+<StackPane fx:id="rootPane" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: rgba(0,0,0,0.92);" stylesheets="@Avatar.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Avatar.AvatarController">
+    <children>
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="800.0">
+            <children>
+                <!-- MAIN HARDWARE SHARD -->
+                <SVGPath content="M 0 0 L 760 0 L 800 40 L 800 500 L 40 500 L 0 460 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="2.0" styleClass="avatar-shard-bg" />
+
+                <HBox layoutX="40.0" layoutY="35.0" prefHeight="430.0" prefWidth="720.0" spacing="40.0">
+                    <children>
+
+                        <!-- LEFT: HOLOGRAPHIC SCANNER -->
+                        <VBox alignment="TOP_CENTER" prefWidth="320.0" spacing="20.0">
+                            <children>
+                                <Label style="-fx-font-family: 'Consolas'; -fx-font-size: 10px; -fx-font-weight: bold;" text="IDENTITY_VISUALIZATION" textFill="#8B0D0D" />
+
+                                <StackPane fx:id="previewContainer" prefHeight="280.0" prefWidth="280.0" styleClass="scanner-box">
+                                    <children>
+                                        <!-- The Avatar Image from API -->
+                                        <ImageView fx:id="avatarImage" fitHeight="240.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true" />
+
+                                        <!-- HUD Decorative Crosshair -->
+                                        <SVGPath content="M 140 10 L 140 30 M 140 250 L 140 270 M 10 140 L 30 140 M 250 140 L 270 140" opacity="0.5" stroke="#5C7CFA" strokeWidth="1" />
+                                        <Circle fill="transparent" radius="120.0" stroke="#1F1E4E" strokeDashArray="10, 10" strokeWidth="0.5" />
+
+                                        <!-- Loading Overlay (Hidden by default) -->
+                                        <VBox fx:id="loadingOverlay" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false">
+                                            <children>
+                                                <ProgressIndicator prefHeight="40.0" prefWidth="40.0" styleClass="cyber-spinner" />
+                                                <Label style="-fx-font-family: 'Consolas'; -fx-font-size: 10px;" text="SYNCING..." textFill="#5C7CFA" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </StackPane>
+
+                                <Button onAction="#handleRandomize" prefWidth="200" styleClass="btn-secondary" text="RANDOMIZE_SEED" />
+                            </children>
+                        </VBox>
+
+                        <!-- RIGHT: LOGIC MODULES -->
+                        <VBox prefWidth="360.0" spacing="20.0">
+                            <children>
+                                <VBox spacing="2.0">
+                                    <children>
+                                        <Label style="-fx-font-family: 'Impact'; -fx-font-size: 26px;" text="NEURAL_CONSTRUCTOR" textFill="WHITE" />
+                                        <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="DICEBEAR_SYNTHESIS_PROTOCOL_v7.0" textFill="#5c7cfa" />
+                                    </children>
+                                </VBox>
+
+                                <Separator opacity="0.1" />
+
+                                <!-- INPUTS -->
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <VBox spacing="5">
+                                            <children>
+                                                <Label styleClass="param-label" text="NEURAL_SEED (UNIQUE_STRING)" />
+                                                <TextField fx:id="seedField" onKeyReleased="#handleSeedChange" promptText="ENTER_NAME_OR_HASH..." styleClass="hud-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="5">
+                                            <children>
+                                                <Label styleClass="param-label" text="MORPHOLOGY_MODULE (STYLE)" />
+                                                <ComboBox fx:id="styleCombo" onAction="#handleStyleChange" prefWidth="360.0" styleClass="hud-combo" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="5">
+                                            <children>
+                                                <Label styleClass="param-label" text="ATMOSPHERE_GLOW" />
+                                                <ColorPicker fx:id="glowPicker" onAction="#handleGlowChange" prefWidth="360.0" styleClass="hud-color-picker" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <Region VBox.vgrow="ALWAYS" />
+
+                                <!-- ACTION BUTTONS -->
+                                <HBox spacing="15.0">
+                                    <children>
+                                        <Button onAction="#handleSave" prefHeight="45.0" prefWidth="220.0" styleClass="btn-execute" text="GENERATION" />
+                                        <Button onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" styleClass="btn-abort" text="ABANDONNER" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

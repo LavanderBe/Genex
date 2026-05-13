@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Tutorial.AddTutorialController"
+      styleClass="dialog-root"
+      stylesheets="@Tutorial.css"
+      spacing="0"
+      prefWidth="640">
+
+    <!-- Dialog Header -->
+    <HBox styleClass="dialog-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+        <Label fx:id="dialogTitle" text="NOUVEAU MODULE D'ENTRAÎNEMENT" styleClass="dialog-title" HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="close-btn" onAction="#handleAbort"/>
+    </HBox>
+
+    <VBox spacing="18" styleClass="dialog-body">
+        <padding><Insets top="24" right="28" bottom="10" left="28"/></padding>
+
+        <!-- Tactical Title -->
+        <VBox spacing="6">
+            <Label text="TITRE TACTIQUE" styleClass="field-label"/>
+            <TextField fx:id="titleField" promptText="SAISIR LA DÉSIGNATION..." styleClass="dialog-field"/>
+        </VBox>
+
+        <!-- Briefing Data -->
+        <VBox spacing="6">
+            <Label text="DONNÉES DE BRIEFING" styleClass="field-label"/>
+            <TextArea fx:id="descriptionField" promptText="SAISIR LE RÉSUMÉ..." styleClass="dialog-textarea"
+                      prefHeight="100" wrapText="true"/>
+        </VBox>
+
+        <!-- Sector + Intensity row -->
+        <HBox spacing="16">
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="SECTEUR" styleClass="field-label"/>
+                <ComboBox fx:id="categoryCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="INTENSITÉ" styleClass="field-label"/>
+                <ComboBox fx:id="difficultyCombo" styleClass="dialog-combo" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+
+        <!-- Liste dynamique des videos du module -->
+        <VBox spacing="8">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="VIDÉOS DU MODULE" styleClass="field-label" HBox.hgrow="ALWAYS"/>
+                <Button text="+ AJOUTER UNE VIDÉO" styleClass="save-btn" onAction="#handleAddVideo"/>
+            </HBox>
+            <Label fx:id="videosHintLabel" text="Au moins une vidéo est requise. Glissez-déposez l'ordre via les flèches." styleClass="card-desc" wrapText="true"/>
+            <ScrollPane fitToWidth="true" prefHeight="240" styleClass="dialog-scroll">
+                <VBox fx:id="videosContainer" spacing="10">
+                    <padding><Insets top="4" right="4" bottom="4" left="4"/></padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="12" styleClass="dialog-footer" alignment="CENTER_LEFT">
+        <padding><Insets top="16" right="28" bottom="24" left="28"/></padding>
+        <Button text="DÉPLOYER LE MODULE" styleClass="save-btn" onAction="#handleSave" prefWidth="200"/>
+        <Button text="ANNULER" styleClass="abort-btn" onAction="#handleAbort" prefWidth="100"/>
+    </HBox>
+</VBox>

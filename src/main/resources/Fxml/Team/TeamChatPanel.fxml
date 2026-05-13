@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Genex.Controllers.Team.TeamChatPanelController"
+      spacing="0"
+      styleClass="chat-panel"
+      stylesheets="@TeamChat.css"
+      HBox.hgrow="ALWAYS">
+
+    <!-- Chat Header -->
+    <HBox styleClass="chat-header" alignment="CENTER_LEFT" spacing="8">
+        <padding>
+            <Insets top="12" right="16" bottom="12" left="16" />
+        </padding>
+        <Label text="💬 CHAT D'ÉQUIPE" styleClass="chat-title" />
+        <Label fx:id="onlineCountLabel" text="0 membres en ligne" styleClass="chat-online-count" />
+    </HBox>
+
+    <!-- Messages Area -->
+    <ScrollPane fx:id="messagesScrollPane" fitToWidth="true" 
+                hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                styleClass="messages-scroll-pane"
+                VBox.vgrow="ALWAYS">
+        <content>
+            <VBox fx:id="messagesContainer" spacing="8" styleClass="messages-container">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16" />
+                </padding>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <!-- Input Area -->
+    <VBox styleClass="chat-input-area" spacing="12">
+        <padding>
+            <Insets top="12" right="16" bottom="16" left="16" />
+        </padding>
+        
+        <TextArea fx:id="messageInput" 
+                  promptText="Tapez un message..."
+                  wrapText="true"
+                  prefRowCount="2"
+                  styleClass="message-input" />
+        
+        <Button fx:id="sendButton" text="ENVOYER" 
+                styleClass="player-join-btn"
+                onAction="#handleSendMessage"
+                prefWidth="140" />
+    </VBox>
+
+</VBox>

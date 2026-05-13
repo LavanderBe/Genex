@@ -6,6 +6,9 @@ import Genex.utils.Myconnection;
 
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrudUser implements ICrud<User> {
     public CrudUser() {
@@ -13,8 +16,8 @@ public class CrudUser implements ICrud<User> {
 
     @Override
     public void addEntity(User user) {
-        String requete="INSERT INTO users (username,email,password_hash,role,created_at)" +
-                "VALUES (?,?,?,?,?);";
+        String requete="INSERT INTO users (username,email,password_hash,role,created_at,salt)" +
+                "VALUES (?,?,?,?,?,?);";
         try {
             PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1,user.getUsername());
@@ -22,8 +25,9 @@ public class CrudUser implements ICrud<User> {
             pst.setString(3,user.getPassword_hash());
             pst.setString(4,user.getRole());
             pst.setString(5,user.getCreated_at().toString());
+            pst.setString(6,user.getSalt());
             pst.executeUpdate();
-            System.out.println("User Updated successfully");
+            System.out.println("User added successfully");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -33,14 +37,15 @@ public class CrudUser implements ICrud<User> {
     @Override
     public void updateEntity(User user,String id) {
         String requete="UPDATE users " +
-                "SET username=?,email=?,password_hash=? " +
+                "SET username=?,email=?,password_hash=?,salt=? " +
                 "WHERE id=? ";
         try {
             PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1,user.getUsername());
             pst.setString(2,user.getEmail());
             pst.setString(3,user.getPassword_hash());
-            pst.setString(4,id);
+            pst.setString(4,user.getSalt());
+            pst.setString(5,id);
             pst.executeUpdate();
             System.out.println("User added successfully");
         } catch (SQLException e) {
@@ -50,13 +55,277 @@ public class CrudUser implements ICrud<User> {
 
     }
 
-    @Override
-    public void deleteEntity(User user) {
-
+    public void updateUser_without_password(User u,String id){
+        String requete="UPDATE users " +
+                "SET username=?,email=?" +
+                "WHERE id=? ";
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,u.getUsername());
+            pst.setString(2,u.getEmail());
+            pst.setString(3,id);
+            pst.executeUpdate();
+            System.out.println("User updated successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
+    public void deleteEntity(User user) {
+        String requete="DELETE FROM users " +
+                "WHERE (username=?) AND (email=?);";
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,user.getUsername());
+            pst.setString(2,user.getEmail());
+            pst.executeUpdate();
+            System.out.println("User deleted succesfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //printing every info we have on user except the id
+    @Override
     public void getEntity(User user) {
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE username=?;";
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,user.getUsername());
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+            User u=new User(rs.getString("username"),
+                    rs.getString("email"),
+                    rs.getString("password_hash"),
+                    rs.getString("role"));
+            System.out.println(u);
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<User> SelectEntities(){
+        String requete="SELECT * " +
+                "FROM users";
+        List<User> l=new ArrayList<>();
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            ResultSet rs=pst.executeQuery();
+            while (rs.next()){
+                User u=new User(rs.getString("username"), rs.getString("email"), rs.getString("role"), rs.getTimestamp("created_at").toLocalDateTime());
+                l.add(u);
+            }
+            return l;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User getUser_byUsername(User user) {
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE username=?;";
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,user.getUsername());
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                User u=new User(rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password_hash"),
+                        rs.getString("role"));
+                u.setId(rs.getString("id"));
+                return u;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public String getUser_Id(String username) {
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE username=?;";
+        try {
+            PreparedStatement pst=Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,username);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                return rs.getString("id");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    //checks if email exists
+    public boolean check_email(String email){
+        String requete="SELECT email " +
+                "FROM users " +
+                "WHERE email=?";
+        try {
+            PreparedStatement pst =Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,email);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                return true;
+            }
+            else return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean check_Username(String username){
+        String requete="SELECT email " +
+                "FROM users " +
+                "WHERE username=?";
+        try {
+            PreparedStatement pst =Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,username);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                return true;
+            }
+            else return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //returns all the user attributes given the email
+    public User getUser_withmail(String email){
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE email=?";
+        try {
+            PreparedStatement pst =Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,email);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                User u=new User((rs.getString("username")),
+                        rs.getString("email"),
+                        rs.getString("salt"),
+                        rs.getString("password_hash"),
+                        rs.getString("role"));
+                u.setId(rs.getString("id"));
+                return u;
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Retourne uniquement les utilisateurs "normaux" (pas les admins), pour notifications de masse.
+    public List<User> getNormalUsers() {
+        List<User> users = new ArrayList<>();
+        String requete = "SELECT id, username, email, role, created_at FROM users WHERE LOWER(role) <> 'admin' AND email IS NOT NULL AND email <> ''";
+        try {
+            Statement st = Myconnection.getInstance().getCnx().createStatement();
+            ResultSet rs = st.executeQuery(requete);
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getString("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                if (createdAt != null) {
+                    user.setCreated_at(createdAt.toLocalDateTime());
+                }
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
+    }
+
+    public User getUser_withId(String id){
+        String requete="SELECT * " +
+                "FROM users " +
+                "WHERE id=?";
+        try {
+            PreparedStatement pst =Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,id);
+            ResultSet rs=pst.executeQuery();
+            if (rs.next()){
+                User u=new User((rs.getString("username")),
+                        rs.getString("email"),
+                        rs.getString("salt"),
+                        rs.getString("password_hash"),
+                        rs.getString("role"));
+                u.setId(rs.getString("id"));
+                return u;
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String requete = "SELECT id, username, email, role, created_at FROM users";
+        try {
+            Statement st = Myconnection.getInstance().getCnx().createStatement();
+            ResultSet rs = st.executeQuery(requete);
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getString("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                if (createdAt != null) {
+                    user.setCreated_at(createdAt.toLocalDateTime());
+                }
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
+    }
+
+    public boolean promoteToCoach(User p){
+        String requete="UPDATE users " +
+                "SET role='coach' " +
+                "WHERE id=? ";
+        System.out.println(p.getId());
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,p.getId());
+            pst.executeUpdate();
+            System.out.println("User promoted successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean demoteToPlayer(User p){
+        String requete="UPDATE users " +
+                "SET role='player' " +
+                "WHERE id=? ";
+        System.out.println(p.getId());
+        try {
+            PreparedStatement pst= Myconnection.getInstance().getCnx().prepareStatement(requete);
+            pst.setString(1,p.getId());
+            pst.executeUpdate();
+            System.out.println("User demoted successfully");
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

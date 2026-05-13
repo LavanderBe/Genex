@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<StackPane fx:id="formOverlay" style="-fx-background-color: rgba(0,0,0,0.85);" stylesheets="@AddPlayer.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Player.AddPlayerController">
+    <children>
+        <AnchorPane fx:id="card" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="850.0">
+            <children>
+                <!-- TACTICAL SHARD BACKGROUND -->
+                <SVGPath content="M 0 0 L 800 0 L 850 50 L 850 650 L 50 650 L 0 600 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="2.0" styleClass="form-shard-bg" />
+
+                <VBox layoutX="40.0" layoutY="30.0" prefWidth="770.0" spacing="25.0">
+                    <children>
+                        <!-- HEADER -->
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <children>
+                                <Region prefHeight="30.0" prefWidth="5.0" style="-fx-background-color: #8B0D0D;" />
+                                <VBox>
+                                    <children>
+                                        <Label fx:id="formTitle" styleClass="form-title" text="PLAYER // PROTOCOLE_D'INITIALIZATION" textFill="WHITE" />
+                                        <Label style="-fx-font-size: 9px; -fx-letter-spacing: 2px;" text="LINKING_NEW_IDENTITY_TO_GENEX_CORE" textFill="#5c7cfa" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="40.0">
+                            <children>
+                                <!-- LEFT COLUMN: PERSONAL DATA -->
+                                <VBox prefWidth="350.0" spacing="15.0">
+                                    <children>
+                                        <Label styleClass="section-header" text="[ ENTITY_IDENTIFICATION ]" />
+                                        <HBox spacing="10">
+                                            <TextField fx:id="prenomField" promptText="PRÉNOM" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                            <TextField fx:id="nomField" promptText="NOM" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                        </HBox>
+                                        <TextField fx:id="pseudoField" promptText="PSEUDONYME (NICKNAME)" styleClass="hud-input" />
+                                        <TextField fx:id="cinField" promptText="CIN " styleClass="hud-input" />
+                                        <DatePicker fx:id="dobPicker" prefWidth="350.0" promptText="DATE DE NAISSANCE" styleClass="hud-datepicker" />
+                                        <HBox spacing="10">
+                                            <TextField fx:id="natField" promptText="NATIONALITÉ" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                            <TextField fx:id="cityField" promptText="VILLE" styleClass="hud-input" HBox.hgrow="ALWAYS" />
+                                        </HBox>
+                              <Label fx:id="Identification_Error" alignment="CENTER" prefHeight="17.0" prefWidth="350.0" textFill="#c60000" />
+
+                                        <Region prefHeight="20" />
+                                        <Label styleClass="section-header" text="[ VISUAL_ASSETS ]" />
+                                        <HBox spacing="15">
+                                            <Button fx:id="btnUploadPic" onAction="#handleUploadPic" prefWidth="160" styleClass="asset-btn" text="UPLOAD" />
+                                            <Button fx:id="btnCreateAvatar" onAction="#handleCreateAvatar" prefWidth="160" styleClass="asset-btn" text="CRÉEE UN AVATAR" />
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <!-- RIGHT COLUMN: SYSTEM & GAMES -->
+                                <VBox prefWidth="350.0" spacing="15.0">
+                                    <children>
+                                        <Label styleClass="section-header" text="[ SYSTEM_ACCESS ]" />
+                                        <TextField fx:id="accountNameField" promptText="NOM DU COMPTE" styleClass="hud-input" />
+                                        <TextField fx:id="emailField" promptText="EMAIL" styleClass="hud-input" />
+                                        <PasswordField fx:id="passwordField" promptText="ACCESS_KEY" styleClass="hud-input" />
+                              <Label fx:id="SystemError" alignment="CENTER" prefHeight="17.0" prefWidth="410.0" textFill="#c60000" />
+
+                                        <Region prefHeight="10" />
+                                        <Label styleClass="section-header" text="[ NEURAL_GAME_LINKS ]" />
+                                        <!-- DYNAMIC GAMES LIST -->
+                                        <ScrollPane fitToWidth="true" prefHeight="150.0" styleClass="games-scrollpane">
+                                            <content>
+                                                <VBox fx:id="gamesToggleContainer" spacing="8.0" style="-fx-padding: 10;">
+                                                    <!-- Game Toggles will be injected here -->
+                                                </VBox>
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- FOOTER ACTIONS -->
+                        <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                            <children>
+                                <Button onAction="#handleCancel" prefHeight="45.0" prefWidth="150.0" styleClass="btn-abort" text="ABANDONNER" />
+                                <Button fx:id="btnExecute" onAction="#handleSave" prefHeight="45.0" prefWidth="250.0" styleClass="btn-execute" text="INITIALISER" />
+                            </children>
+                            <padding><Insets top="20" /></padding>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

@@ -1,0 +1,832 @@
+/* ═══════════════════════════════════════════════════
+   Tournament Detail Page - Polygon Theme
+   ═══════════════════════════════════════════════════ */
+
+.tournament-detail-container {
+    -fx-background-color: linear-gradient(to bottom right, #0d0c2e, #1F1E4E);
+}
+
+/* ─── Header Section ─────────────────────────────────────────────────── */
+
+.detail-header {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Back Button - Polygon Shape */
+.btn-back {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-shape: "M 0 0 L 110 0 L 120 10 L 120 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
+}
+
+.btn-back:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.2), 10, 0, 0, 4);
+}
+
+/* Join/Leave Button - Polygon Shape */
+.btn-join {
+    -fx-background-color: linear-gradient(to right, #10b981, #059669);
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 160 0 L 175 12 L 175 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.4), 12, 0, 0, 4);
+}
+
+.btn-join:hover {
+    -fx-background-color: linear-gradient(to right, #34d399, #10b981);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.6), 16, 0, 0, 6);
+}
+
+.btn-join.joined {
+    -fx-background-color: linear-gradient(to right, #ef4444, #dc2626);
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.4), 12, 0, 0, 4);
+}
+
+.btn-join.joined:hover {
+    -fx-background-color: linear-gradient(to right, #f87171, #ef4444);
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.6), 16, 0, 0, 6);
+}
+
+/* Start Button - Polygon Shape */
+.btn-start {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 140 0 L 155 12 L 155 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 12, 0, 0, 4);
+}
+
+.btn-start:hover {
+    -fx-background-color: linear-gradient(to right, #60a5fa, #3b82f6);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.6), 16, 0, 0, 6);
+}
+
+/* Reset Button - Polygon Shape */
+.btn-reset {
+    -fx-background-color: linear-gradient(to right, #f97316, #ea580c);
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 100 0 L 110 10 L 110 36 L 10 36 L 0 26 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(249, 115, 22, 0.4), 12, 0, 0, 4);
+}
+
+.btn-reset:hover {
+    -fx-background-color: linear-gradient(to right, #fb923c, #f97316);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(249, 115, 22, 0.6), 16, 0, 0, 6);
+}
+
+/* Sync Button - Polygon Shape */
+.btn-sync {
+    -fx-background-color: linear-gradient(to right, #7c6fff, #6b5dd3);
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 280 0 L 295 12 L 295 44 L 15 44 L 0 32 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.4), 12, 0, 0, 4);
+}
+
+.btn-sync:hover {
+    -fx-background-color: linear-gradient(to right, #9d8fff, #7c6fff);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.6), 16, 0, 0, 6);
+}
+
+.sync-button-container {
+    -fx-padding: 20 0 0 0;
+}
+
+/* ─── Content Section ────────────────────────────────────────────────── */
+
+.detail-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.detail-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.detail-scroll .thumb {
+    -fx-background-color: rgba(124, 111, 255, 0.35);
+    -fx-background-radius: 4;
+}
+
+.detail-scroll .track {
+    -fx-background-color: transparent;
+}
+
+/* ─── Info Card ──────────────────────────────────────────────────────── */
+
+.info-card {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 5);
+}
+
+.tournament-icon-large {
+    -fx-font-size: 60;
+}
+
+.tournament-title {
+    -fx-fill: white;
+    -fx-font-size: 32;
+    -fx-font-weight: 700;
+}
+
+.game-subtitle {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
+/* Status Badge Large */
+.status-badge-large {
+    -fx-background-color: rgba(16, 185, 129, 0.2);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(16, 185, 129, 0.4);
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 12 24;
+}
+
+.status-text-large {
+    -fx-fill: #10b981;
+    -fx-font-size: 13;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+/* State-specific colors */
+.status-badge-large.state-registration-open {
+    -fx-background-color: rgba(16, 185, 129, 0.2);
+    -fx-border-color: rgba(16, 185, 129, 0.4);
+}
+
+.status-badge-large.state-registration-open .status-text-large {
+    -fx-fill: #10b981;
+}
+
+.status-badge-large.state-registration-closed {
+    -fx-background-color: rgba(249, 115, 22, 0.2);
+    -fx-border-color: rgba(249, 115, 22, 0.4);
+}
+
+.status-badge-large.state-registration-closed .status-text-large {
+    -fx-fill: #f97316;
+}
+
+.status-badge-large.state-in-progress {
+    -fx-background-color: rgba(59, 130, 246, 0.2);
+    -fx-border-color: rgba(59, 130, 246, 0.4);
+}
+
+.status-badge-large.state-in-progress .status-text-large {
+    -fx-fill: #3b82f6;
+}
+
+.status-badge-large.state-completed {
+    -fx-background-color: rgba(168, 85, 247, 0.2);
+    -fx-border-color: rgba(168, 85, 247, 0.4);
+}
+
+.status-badge-large.state-completed .status-text-large {
+    -fx-fill: #a855f7;
+}
+
+.status-badge-large.state-cancelled {
+    -fx-background-color: rgba(239, 68, 68, 0.2);
+    -fx-border-color: rgba(239, 68, 68, 0.4);
+}
+
+.status-badge-large.state-cancelled .status-text-large {
+    -fx-fill: #ef4444;
+}
+
+/* Info Grid */
+.info-grid {
+    -fx-padding: 20 0 0 0;
+}
+
+.info-item {
+    -fx-min-width: 200;
+}
+
+.info-icon {
+    -fx-font-size: 20;
+}
+
+.info-label {
+    -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1;
+}
+
+.info-value {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 600;
+}
+
+/* ─── Participants Section ───────────────────────────────────────────── */
+
+.participants-section {
+    -fx-padding: 0;
+}
+
+.section-title {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-size: 24;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+.participant-count-badge {
+    -fx-background-color: rgba(124, 111, 255, 0.2);
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 20;
+}
+
+.participant-count-text {
+    -fx-fill: #7c6fff;
+    -fx-font-size: 16;
+    -fx-font-weight: 700;
+}
+
+/* Participants List */
+.participants-list {
+    -fx-padding: 0;
+}
+
+/* Participant Card - Polygon Theme */
+.participant-card {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 18 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+}
+
+.participant-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(124, 111, 255, 0.3);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.2), 15, 0, 0, 4);
+}
+
+.participant-icon {
+    -fx-font-size: 24;
+}
+
+.participant-name {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: 600;
+}
+
+.participant-seed {
+    -fx-fill: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 13;
+    -fx-font-weight: 500;
+}
+
+/* Empty State */
+.empty-participants {
+    -fx-padding: 60 0;
+}
+
+.empty-icon {
+    -fx-font-size: 64;
+    -fx-opacity: 0.3;
+}
+
+.empty-text {
+    -fx-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 16;
+    -fx-font-weight: 500;
+}
+
+
+/* ─── Challonge Link ─────────────────────────────────────────────────── */
+
+.challonge-link {
+    -fx-text-fill: #7c6fff;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+
+.challonge-link:hover {
+    -fx-text-fill: #9d8fff;
+}
+
+.challonge-link:visited {
+    -fx-text-fill: #7c6fff;
+}
+
+/* ─── Bracket Section ────────────────────────────────────────────────── */
+
+.bracket-section {
+    -fx-padding: 0;
+}
+
+.bracket-container {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 5);
+    -fx-padding: 10;
+}
+
+.bracket-container .web-view {
+    -fx-background-color: transparent;
+}
+
+
+/* ─── Matches Section ─────────────────────────────────────────────────── */
+
+.matches-section {
+    -fx-padding: 0;
+}
+
+.btn-refresh {
+    -fx-background-color: rgba(124, 111, 255, 0.2);
+    -fx-text-fill: #7c6fff;
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.btn-refresh:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.3);
+    -fx-translate-y: -1;
+}
+
+.matches-list {
+    -fx-padding: 0;
+}
+
+.round-section {
+    -fx-padding: 0;
+}
+
+.round-title {
+    -fx-fill: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+/* Match Card */
+.match-card {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 20 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+}
+
+.match-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(124, 111, 255, 0.3);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.2), 15, 0, 0, 4);
+}
+
+.match-label {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5;
+}
+
+.player-icon {
+    -fx-font-size: 24;
+}
+
+.player-name {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+}
+
+.player-score {
+    -fx-fill: #7c6fff;
+    -fx-text-fill: #7c6fff;
+    -fx-font-size: 16;
+    -fx-font-weight: 700;
+}
+
+.vs-text {
+    -fx-fill: rgba(255, 255, 255, 0.4);
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+}
+
+/* Match Status Badge */
+.match-status-badge {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 6 16;
+}
+
+.match-status-badge.status-pending {
+    -fx-background-color: rgba(249, 115, 22, 0.2);
+    -fx-border-color: rgba(249, 115, 22, 0.4);
+}
+
+.match-status-badge.status-in_progress {
+    -fx-background-color: rgba(59, 130, 246, 0.2);
+    -fx-border-color: rgba(59, 130, 246, 0.4);
+}
+
+.match-status-badge.status-completed {
+    -fx-background-color: rgba(16, 185, 129, 0.2);
+    -fx-border-color: rgba(16, 185, 129, 0.4);
+}
+
+.match-status-text {
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5;
+}
+
+.match-status-badge.status-pending .match-status-text {
+    -fx-fill: #f97316;
+}
+
+.match-status-badge.status-in_progress .match-status-text {
+    -fx-fill: #3b82f6;
+}
+
+.match-status-badge.status-completed .match-status-text {
+    -fx-fill: #10b981;
+}
+
+/* Report Button */
+.btn-report {
+    -fx-background-color: linear-gradient(to right, #7c6fff, #6b5dd3);
+    -fx-text-fill: white;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 140 0 L 150 8 L 150 28 L 10 28 L 0 20 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.3), 8, 0, 0, 2);
+}
+
+.btn-report:hover {
+    -fx-background-color: linear-gradient(to right, #9d8fff, #7c6fff);
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.5), 12, 0, 0, 4);
+}
+
+/* Empty Matches State */
+.empty-matches {
+    -fx-padding: 60 0;
+}
+
+
+/* ─── Player Status Card ─────────────────────────────────────────────── */
+
+.player-status-section { -fx-padding: 0; }
+
+.status-card {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+.status-card.status-active {
+    -fx-background-color: rgba(16, 185, 129, 0.15);
+    -fx-border-color: rgba(16, 185, 129, 0.5);
+}
+
+.status-card.status-winner {
+    -fx-background-color: rgba(255, 215, 0, 0.15);
+    -fx-border-color: rgba(255, 215, 0, 0.6);
+}
+
+.status-card.status-eliminated {
+    -fx-background-color: rgba(239, 68, 68, 0.15);
+    -fx-border-color: rgba(239, 68, 68, 0.5);
+}
+
+.status-card.status-withdrew {
+    -fx-background-color: rgba(156, 163, 175, 0.15);
+    -fx-border-color: rgba(156, 163, 175, 0.5);
+}
+
+.status-icon-large { -fx-font-size: 36; }
+
+.status-title-text {
+    -fx-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+.status-detail-text {
+    -fx-fill: rgba(255,255,255,0.6);
+    -fx-font-size: 13;
+}
+
+/* Eliminated/Withdrew button state */
+.btn-join.eliminated {
+    -fx-background-color: rgba(156, 163, 175, 0.3);
+    -fx-effect: none;
+    -fx-opacity: 0.7;
+}
+
+/* ─── Player Record Section ──────────────────────────────────────────── */
+
+.record-section { -fx-padding: 0; }
+
+.record-grid { -fx-padding: 0; }
+
+.record-card {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 20 25;
+    -fx-min-width: 100;
+}
+
+.record-value {
+    -fx-fill: white;
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+}
+
+.record-value.wins { -fx-fill: #10b981; }
+.record-value.losses { -fx-fill: #ef4444; }
+.record-value.ratio { -fx-fill: #7c6fff; }
+.record-value.best { -fx-fill: #fbbf24; }
+
+.record-label {
+    -fx-fill: rgba(255,255,255,0.5);
+    -fx-font-size: 11;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5;
+}
+
+/* ─── Rankings Section ───────────────────────────────────────────────── */
+
+.rankings-section { -fx-padding: 0; }
+
+.rankings-list { -fx-padding: 0; }
+
+.ranking-row {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 18 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 2);
+}
+
+.ranking-row:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-translate-y: -1;
+}
+
+.ranking-row.ranking-top-1 {
+    -fx-background-color: rgba(255, 215, 0, 0.15);
+    -fx-border-color: rgba(255, 215, 0, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.25), 16, 0, 0, 4);
+}
+
+.ranking-row.ranking-top-2 {
+    -fx-background-color: rgba(192, 192, 192, 0.12);
+    -fx-border-color: rgba(192, 192, 192, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(192, 192, 192, 0.2), 12, 0, 0, 3);
+}
+
+.ranking-row.ranking-top-3 {
+    -fx-background-color: rgba(205, 127, 50, 0.12);
+    -fx-border-color: rgba(205, 127, 50, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(205, 127, 50, 0.2), 12, 0, 0, 3);
+}
+
+.ranking-placement {
+    -fx-font-size: 28;
+    -fx-min-width: 48;
+}
+
+.ranking-name {
+    -fx-fill: white;
+    -fx-font-size: 17;
+    -fx-font-weight: 700;
+}
+
+.ranking-wl {
+    -fx-fill: rgba(255, 255, 255, 0.75);
+    -fx-font-size: 14;
+    -fx-font-weight: 600;
+}
+
+.ranking-badge {
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1.5;
+    -fx-padding: 6 16;
+}
+
+.ranking-badge.badge-winner {
+    -fx-background-color: rgba(255, 215, 0, 0.35);
+    -fx-border-color: #ffd700;
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.4), 10, 0, 0, 2);
+}
+
+.ranking-badge.badge-eliminated {
+    -fx-background-color: rgba(239, 68, 68, 0.3);
+    -fx-border-color: #ef4444;
+}
+
+.ranking-badge.badge-withdrew {
+    -fx-background-color: rgba(156, 163, 175, 0.25);
+    -fx-border-color: rgba(156, 163, 175, 0.6);
+}
+
+.ranking-badge-text {
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+    -fx-fill: white;
+}
+
+
+/* ─── Bracket Type Titles ─────────────────────────────────────────────── */
+
+.bracket-type-title {
+    -fx-fill: #10b981;
+    -fx-font-size: 16;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+    -fx-padding: 10 0 5 0;
+}
+
+.bracket-type-title-losers {
+    -fx-fill: #f97316;
+    -fx-font-size: 16;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1;
+    -fx-padding: 20 0 5 0;
+}
+
+/* ─── Active Round Badge ─────────────────────────────────────────────── */
+
+.round-section-active {
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-background-color: rgba(124, 111, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+}
+
+.active-round-badge {
+    -fx-background-color: rgba(124, 111, 255, 0.25);
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(124, 111, 255, 0.5);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 4 10;
+}
+
+.active-round-text {
+    -fx-fill: #7c6fff;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+}
+
+.done-round-badge {
+    -fx-background-color: rgba(16, 185, 129, 0.15);
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(16, 185, 129, 0.3);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 4 10;
+}
+
+.done-round-text {
+    -fx-fill: #10b981;
+    -fx-font-size: 11;
+    -fx-font-weight: 700;
+}
+
+
+/* ─── Sub-bracket labels inside round ───────────────────────────────── */
+
+.sub-bracket-label {
+    -fx-fill: #10b981;
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+    -fx-padding: 4 0 2 0;
+}
+
+.sub-bracket-label-losers {
+    -fx-fill: #f97316;
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+    -fx-padding: 8 0 2 0;
+}
+
+/* ─── Inline Score Entry ─────────────────────────────────────────────── */
+
+.score-spinner {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(124, 111, 255, 0.4);
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.score-spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7c6fff;
+    -fx-font-size: 15;
+    -fx-font-weight: 700;
+    -fx-alignment: CENTER;
+}
+
+.score-spinner .increment-arrow-button,
+.score-spinner .decrement-arrow-button {
+    -fx-background-color: rgba(124, 111, 255, 0.2);
+    -fx-border-color: transparent;
+}
+
+.score-spinner .increment-arrow-button:hover,
+.score-spinner .decrement-arrow-button:hover {
+    -fx-background-color: rgba(124, 111, 255, 0.4);
+}
+
+.score-spinner .increment-arrow,
+.score-spinner .decrement-arrow {
+    -fx-background-color: white;
+}
+
+.btn-confirm-inline {
+    -fx-background-color: linear-gradient(to right, #10b981, #059669);
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: 700;
+    -fx-padding: 8 18;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.35), 8, 0, 0, 2);
+}
+
+.btn-confirm-inline:hover {
+    -fx-background-color: linear-gradient(to right, #34d399, #10b981);
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.55), 12, 0, 0, 4);
+}

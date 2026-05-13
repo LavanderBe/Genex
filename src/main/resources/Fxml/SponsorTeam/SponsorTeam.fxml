@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.2"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.SponsorTeam.SponsorTeamController"
+           styleClass="sub-root">
+
+    <VBox>
+
+        <!-- Top bar -->
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+            <VBox spacing="3">
+                <Label text="Sponsors Équipes" styleClass="page-title"/>
+                <Label text="Contrats de sponsoring liés aux équipes" styleClass="page-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" styleClass="search-field"
+                       promptText="🔍  Rechercher…" prefWidth="220"/>
+            <Button text="＋  AJOUTER" styleClass="btn-polygon" onAction="#handleAdd"
+                    prefWidth="150" prefHeight="40"/>
+        </HBox>
+
+        <!-- Stat cards -->
+        <HBox spacing="14" styleClass="stat-row">
+            <padding><Insets top="16" right="28" bottom="16" left="28"/></padding>
+            <VBox styleClass="stat-card stat-purple" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="🤝  Contrats" styleClass="stat-icon-label"/>
+                <Label fx:id="statTotal" text="0" styleClass="stat-number"/>
+                <Label text="Total contrats équipes" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="4">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="💰  Budget total" styleClass="stat-icon-label"/>
+                <Label fx:id="statBudget" text="0 TND" styleClass="stat-number"/>
+                <Label text="Montant engagé" styleClass="stat-label"/>
+            </VBox>
+        </HBox>
+
+        <!-- Table -->
+        <HBox spacing="14" VBox.vgrow="ALWAYS">
+            <padding><Insets right="28" bottom="20" left="28"/></padding>
+            <VBox styleClass="panel" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="CONTRATS SPONSORS — ÉQUIPES" styleClass="panel-title"/>
+                <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colSponsor"    text="Sponsor"    prefWidth="140"/>
+                        <TableColumn fx:id="colTeam"       text="Équipe"     prefWidth="130"/>
+                        <TableColumn fx:id="colMethod"     text="Méthode"    prefWidth="150"/>
+                        <TableColumn fx:id="colBudget"     text="Budget"     prefWidth="110"/>
+                        <TableColumn fx:id="colStart"      text="Début"      prefWidth="100"/>
+                        <TableColumn fx:id="colEnd"        text="Fin"        prefWidth="100"/>
+                        <TableColumn fx:id="colActions"    text=""           prefWidth="80"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun contrat enregistré" styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </HBox>
+
+    </VBox>
+
+    <!-- ══ CYBER MODAL OVERLAY ══════════════════════════════════════════ -->
+    <StackPane fx:id="drawerOverlay" managed="false" styleClass="overlay-bg" visible="false">
+        <children>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="580.0" prefWidth="750.0" styleClass="compact-shard">
+                <children>
+                    <!-- Background Hardware Plate -->
+                    <SVGPath content="M 0 0 L 710 0 L 750 40 L 750 580 L 40 580 L 0 540 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="1.5" />
+
+                    <!-- Side Red Accent Bar -->
+                    <Region layoutX="0" layoutY="100" prefHeight="380" prefWidth="3" style="-fx-background-color: #8B0D0D;" />
+
+                    <VBox layoutX="40.0" layoutY="35.0" prefHeight="510.0" prefWidth="670.0" spacing="20.0">
+                        <children>
+                            <!-- Header -->
+                            <HBox alignment="CENTER_LEFT">
+                                <children>
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="formTitle" styleClass="hud-title" text="NOUVEAU CONTRAT ÉQUIPE" />
+                                            <Label styleClass="hud-subtitle" text="INITIALISATION_CONTRAT_TEAM" />
+                                        </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#handleClear" styleClass="btn-close" text="✕" />
+                                </children>
+                            </HBox>
+
+                            <Separator styleClass="drawer-sep" />
+
+                            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <!-- Left Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="SPONSOR *" />
+                                                <ComboBox fx:id="combSponsor" maxWidth="Infinity" styleClass="hud-combo" />
+                                                <Label fx:id="errSponsor" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="ÉQUIPE *" />
+                                                <ComboBox fx:id="combTeam" maxWidth="Infinity" styleClass="hud-combo" />
+                                                <Label fx:id="errTeam" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="MÉTHODE DE SPONSORING" />
+                                                <ComboBox fx:id="combMethod" maxWidth="Infinity" styleClass="hud-combo" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="BUDGET (TND) *" />
+                                                <TextField fx:id="fieldBudget" promptText="0.00" styleClass="hud-input" />
+                                                <Label fx:id="errBudget" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Right Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="DÉBUT DU CONTRAT" />
+                                                <DatePicker fx:id="dateStart" maxWidth="Infinity" styleClass="hud-input" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="FIN DU CONTRAT" />
+                                                <DatePicker fx:id="dateEnd" maxWidth="Infinity" styleClass="hud-input" />
+                                                <Label fx:id="errDate" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="NOTES" />
+                                                <TextField fx:id="fieldNotes" promptText="Remarques…" styleClass="hud-input" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+
+                            <Region VBox.vgrow="ALWAYS" />
+
+                            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                                <children>
+                                    <Button fx:id="btnSave" onAction="#handleSave" prefHeight="40.0" prefWidth="200.0" styleClass="confirm-btn" text="ENREGISTRER" />
+                                    <Button onAction="#handleClear" prefHeight="40.0" prefWidth="120.0" styleClass="cancel-btn" text="ANNULER" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </children>
+    </StackPane>
+
+</StackPane>

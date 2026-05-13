@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Genex.Controllers.Center.AddCenterModalController"
+           styleClass="overlay-bg" stylesheets="@AddCenterModal.css"
+           alignment="CENTER_RIGHT">
+
+    <VBox styleClass="drawer" prefWidth="420" maxWidth="420" StackPane.alignment="CENTER_RIGHT">
+        <padding>
+            <Insets top="28" right="28" bottom="28" left="28" />
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="modalTitle" text="Nouveau centre" styleClass="drawer-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="✕" styleClass="btn-close" onAction="#closeModal" />
+        </HBox>
+
+        <Separator styleClass="drawer-sep">
+            <VBox.margin>
+                <Insets top="12" bottom="16" />
+            </VBox.margin>
+        </Separator>
+
+        <!-- Scrollable Form -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+            <VBox spacing="14">
+                
+                <!-- Center Name -->
+                <VBox spacing="6">
+                    <Label text="NOM DU CENTRE *" styleClass="field-label" />
+                    <TextField fx:id="txtName" styleClass="input-field" promptText="Gaming Arena Paris" />
+                    <Label fx:id="errorName" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Address -->
+                <VBox spacing="6">
+                    <Label text="ADRESSE *" styleClass="field-label" />
+                    <TextField fx:id="txtAddress" styleClass="input-field" promptText="123 Rue de la République" />
+                    <Label fx:id="errorAddress" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- City -->
+                <VBox spacing="6">
+                    <Label text="VILLE *" styleClass="field-label" />
+                    <TextField fx:id="txtCity" styleClass="input-field" promptText="Paris" />
+                    <Label fx:id="errorCity" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Email -->
+                <VBox spacing="6">
+                    <Label text="EMAIL DE CONTACT" styleClass="field-label" />
+                    <TextField fx:id="txtEmail" styleClass="input-field" promptText="contact@gamingarena.com" />
+                    <Label fx:id="errorEmail" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+                <!-- Map URL -->
+                <VBox spacing="6">
+                    <Label text="URL DE LA CARTE" styleClass="field-label" />
+                    <TextField fx:id="txtMapUrl" styleClass="input-field" promptText="https://maps.google.com/..." />
+                    <Label fx:id="errorMapUrl" styleClass="err-label" visible="false" managed="false" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+            <Button text="ENREGISTRER" styleClass="btn-primary" onAction="#saveCenter" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+            <Button text="ANNULER" styleClass="btn-secondary" onAction="#closeModal" 
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44" />
+        </HBox>
+
+    </VBox>
+
+</StackPane>

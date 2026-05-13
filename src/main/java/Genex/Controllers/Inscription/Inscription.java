@@ -1,6 +1,13 @@
 package Genex.Controllers.Inscription;
 
+import Genex.entities.Player;
+import Genex.entities.User;
+import Genex.services.CrudPlayer;
+import Genex.services.CrudUser;
+import Genex.services.UserControl;
+import Genex.utils.EmailSystem;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,201 +15,254 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class Inscription {
 
-    @FXML
-    private ImageView bgImage;
+    // --- FXML UI COMPONENTS ---
+    @FXML private StackPane rootPane;
+    @FXML private AnchorPane mainCard;
+    @FXML private Label errorLabel;
+    @FXML private MediaView mediaView;
 
-    @FXML
-    private Pane bgPane;
 
-    @FXML
-    private Button closeBtn;
+    // Containers for the 3 Stages
+    @FXML private VBox step1Box, step2Box, step3Box;
 
-    @FXML
-    private Label confirmPasswordError;
+    // Stage 1 Fields
+    @FXML private TextField usernameField, emailField;
+    @FXML private PasswordField passwordField, confirmPasswordField;
+    @FXML private ProgressBar strengthBar;
+    @FXML private Label strengthLabel;
+    private final EmailSystem emailsys=new EmailSystem();
 
-    @FXML
-    private PasswordField confirmPasswordField;
+    // Stage 2 Fields
+    @FXML private TextField otpField;
 
-    @FXML
-    private TextField confirmVisibleField;
+    // Stage 3 Fields
+    @FXML private TextField nomField, prenomField, pseudoField, cinField, natField, cityField;
+    @FXML private DatePicker dobPicker;
+    @FXML private Button signUpBtn;
 
-    @FXML
-    private Label emailError;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private Label nomError;
-
-    @FXML
-    private TextField nomField;
-
-    @FXML
-    private Label passwordError;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private ProgressBar passwordStrengthBar;
-
-    @FXML
-    private Label passwordStrengthLabel;
-
-    @FXML
-    private TextField passwordVisibleField;
-
-    @FXML
-    private Label prenomError;
-
-    @FXML
-    private TextField prenomField;
-
-    @FXML
-    private StackPane rootPane;
-
-    @FXML
-    private Button submitBtn;
-
-    @FXML
-    private Label telephoneError;
-
-    @FXML
-    private TextField telephoneField;
-
-    @FXML
-    private Button toggleConfirmBtn;
-
-    @FXML
-    private Button togglePasswordBtn;
-
-    @FXML
-    private Label usernameError;
-
-    @FXML
-    private TextField usernameField;
-
-    private boolean passwordVisible = false;
-    private boolean confirmVisible = false;
-
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-    );
-
-    private static final Pattern PHONE_PATTERN = Pattern.compile(
-            "^(\\+33|0)[1-9](\\d{2}){4}$"
-    );
-
+    // --- DATA VARIABLES ---
+    private String generatedCode;
+    private final CrudUser crudUser = new CrudUser();
+    private final CrudPlayer crudPlayer=new CrudPlayer();
+    private String  username;
+    private String email;
+    private String pwd;
     @FXML
     public void initialize() {
-        setupFieldListeners();
-        loadBackgroundImage();
-        updatePasswordStrength();
-    }
-
-    private void loadBackgroundImage() {
-        try {
-            Image img = new Image(getClass().getResourceAsStream("/Images/esports-arena.jpg"));
-            if (!img.isError()) {
-                bgImage.setImage(img);
-                // Bind image dimensions to parent container for responsive resizing
-                bgImage.fitWidthProperty().bind(bgPane.widthProperty());
-                bgImage.fitHeightProperty().bind(bgPane.heightProperty());
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {updateStrengthIndicator(newValue);});
+        setupAgeRestriction();
+        cinField.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("([0-9]*)?") && newText.length() <= 8)
+            {
+                return change;
             }
+            return null;
+        }));
+        try {
+            var resource = getClass().getResource("/Videos/test.mp4");
+            if (resource == null) {
+                System.err.println("CRITICAL: Video file not found at /Genex/Videos/test.mp4");
+                rootPane.setStyle("-fx-background-color: #050508;");
+                return;
+            }
+
+            String path = resource.toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+            mediaView.setMediaPlayer(mediaPlayer);
+            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
+            mediaPlayer.setMute(true);
+            mediaPlayer.play();
+
+            mediaView.fitWidthProperty().bind(rootPane.widthProperty());
+            mediaView.fitHeightProperty().bind(rootPane.heightProperty());
+
         } catch (Exception e) {
-            bgImage.setVisible(false);
+            System.err.println("Error initializing media: " + e.getMessage());
         }
     }
 
-    private void setupFieldListeners() {
-        prenomField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(prenomError);
-        });
-        nomField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(nomError);
-        });
-        usernameField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(usernameError);
-        });
-        emailField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(emailError);
-        });
-        telephoneField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(telephoneError);
-        });
-        passwordField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(passwordError);
-            updatePasswordStrength();
-        });
-        passwordVisibleField.textProperty().addListener((obs, old, val) -> {
-            passwordField.setText(val);
-            updatePasswordStrength();
-        });
-        confirmPasswordField.textProperty().addListener((obs, old, val) -> {
-            if (!val.isEmpty()) hideError(confirmPasswordError);
-        });
-        confirmVisibleField.textProperty().addListener((obs, old, val) -> {
-            confirmPasswordField.setText(val);
-        });
-    }
 
+    @FXML
+    private void handleNextToOTP(ActionEvent event) {
+        username=usernameField.getText().trim();
+        email = emailField.getText().trim();
+        pwd = passwordField.getText();
 
-    private void updatePasswordStrength() {
-        String password = passwordField.getText();
-        double strength = calculatePasswordStrength(password);
-        passwordStrengthBar.setProgress(strength);
-
-        if (strength < 0.3) {
-            passwordStrengthLabel.setText("Faible");
-            passwordStrengthBar.setStyle("-fx-accent: #ff4444;");
-        } else if (strength < 0.7) {
-            passwordStrengthLabel.setText("Moyen");
-            passwordStrengthBar.setStyle("-fx-accent: #ffaa00;");
-        } else {
-            passwordStrengthLabel.setText("Fort");
-            passwordStrengthBar.setStyle("-fx-accent: #44ff44;");
+        // 1. Validation
+        if (username.isEmpty()|| !UserControl.isValidUsername(username))
+        {
+            showError(errorLabel,"NOM D'UTILISATEUR INVALIDE");
+            shakeNode(mainCard);
+            return;
         }
-    }
 
-    private double calculatePasswordStrength(String password) {
-        if (password == null || password.isEmpty()) return 0.0;
+        if (email.isEmpty() || !UserControl.isValidEmail(email)) {
+            showError(errorLabel,"E-MAIL INVALIDE");
+            shakeNode(mainCard);
+            return;
+        }
+        if (pwd.isEmpty())
+        {
+            showError(errorLabel,"CHANMPS VIDES");
+            shakeNode(mainCard);
+            return;
+        }
+        if (!pwd.equals(confirmPasswordField.getText())) {
+            showError(errorLabel,"ACCESS KEYS NE MATCHENT PAS");
+            shakeNode(mainCard);
+            return;
+        }
+        if (crudUser.check_email(email))
+        {
+            showError(errorLabel,"EMAIL ALREADY EXISTS");
+            shakeNode(mainCard);
+            return;
+        }
+        if (crudUser.check_Username(username))
+        {
+            showError(errorLabel,"USERNAME ALREADY EXISTS");
+            shakeNode(mainCard);
+            return;
+        }
 
-        double strength = 0.0;
-        if (password.length() >= 8) strength += 0.2;
-        if (password.matches(".*[a-z].*")) strength += 0.2;
-        if (password.matches(".*[A-Z].*")) strength += 0.2;
-        if (password.matches(".*\\d.*")) strength += 0.2;
-        if (password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) strength += 0.2;
+        generatedCode = String.valueOf((int)(Math.random() * 900000) + 100000);
+        System.out.println(generatedCode);
 
-        return Math.min(strength, 1.0);
+        Thread.ofVirtual().start(() -> {
+            emailsys.sendVerificationEmail(email,username,generatedCode);
+        });
+        goToStep(step1Box, step2Box);
     }
 
     @FXML
-    void goToLogin() {
+    private void handleVerifyCode(ActionEvent event) {
+        if (otpField.getText().equals(generatedCode)) {
+            goToStep(step2Box, step3Box);
+        } else {
+            showError(errorLabel,"VERIFICATION CODE MISMATCH");
+            shakeNode(mainCard);
+        }
+    }
+
+    @FXML
+    private void handleFinalRegistration(ActionEvent event) {
+        String nom = nomField.getText();
+        String prenom = prenomField.getText();
+        String pseudo = pseudoField.getText();
+        String cin = cinField.getText();
+        LocalDate dob = dobPicker.getValue();
+        String nat=natField.getText();
+        String ville=cityField.getText();
+
+
+        if (nom.isEmpty() || prenom.isEmpty() || cin.isEmpty() || dob == null||nat.isEmpty()||ville.isEmpty()) {
+            showError(errorLabel,"ALL IDENTITY FIELDS ARE REQUIRED");
+            shakeNode(mainCard);
+            return;
+        }
+        if (cin.length()<8||crudPlayer.check_cin_exists(cin)){
+            showError(errorLabel,"CIN INVALIDE");
+            shakeNode(mainCard);
+            return;
+        }
+        if (crudPlayer.check_nickname_exists(pseudo)){
+            showError(errorLabel,"PSEUDO INVALIDE");
+            shakeNode(mainCard);
+            return;
+        }
+        Player p=new Player(username,email,pwd,"player",prenom,nom,pseudo,cin,dob,nat,ville);
+        crudPlayer.addPlayer_admin(p);
+        if (true) {
+            signUpBtn.setText("REDIRECTION......");
+            signUpBtn.setDisable(true);
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(e -> {
+                handleBackToLogin(null);
+            });
+            pause.play();
+
+        } else {
+            showError(errorLabel,"SYSTEM ERROR: DATABASE REJECTED ENTITY");
+        }
+    }
+
+    private void goToStep(VBox out, VBox in) {
+        out.setVisible(false);
+        out.setManaged(false);
+        in.setVisible(true);
+        in.setManaged(true);
+        errorLabel.setVisible(false);
+    }
+
+    private void updateStrengthIndicator(String password) {
+        if (password.isEmpty()) {
+            strengthBar.setProgress(0);
+            strengthBar.setStyle("-fx-accent: #1F1E4E;");
+            strengthLabel.setText("VIDE");
+            return;
+        }
+
+        double score = calculateStrength(password);
+        strengthBar.setProgress(score);
+
+        if (score <= 0.33) {
+            strengthBar.setStyle("-fx-accent: #ff4444;"); // Red
+            strengthLabel.setText("FAIBLE");
+            strengthLabel.setTextFill(Color.web("#ff4444"));
+        } else if (score <= 0.66) {
+            strengthBar.setStyle("-fx-accent: #ffbb33;"); // Orange
+            strengthLabel.setText("NORMAL");
+            strengthLabel.setTextFill(Color.web("#ffbb33"));
+        } else {
+            strengthBar.setStyle("-fx-accent: #00C851;"); // Green
+            strengthLabel.setText("FORT");
+            strengthLabel.setTextFill(Color.web("#00C851"));
+        }
+    }
+
+    private double calculateStrength(String password) {
+        double score = 0;
+        if (password.length() >= 8) score += 0.33;
+        if (password.matches(".*[0-9].*")) score += 0.16;
+        if (password.matches(".*[a-z].*")) score += 0.16;
+        if (password.matches(".*[A-Z].*")) score += 0.16;
+        if (password.matches(".*[@#$%^&+=!].*")) score += 0.19;
+        return Math.min(score, 1.0);
+    }
+
+    @FXML void handleBackToLogin(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login/Login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) rootPane.getScene().getWindow();
             Scene currentScene = stage.getScene();
-            double width = currentScene.getWidth();
-            double height = currentScene.getHeight();
-            Scene scene = new Scene(root, width, height);
+            Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
 
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -210,132 +270,22 @@ public class Inscription {
         }
     }
 
-    @FXML
-    void handleClose() {
-        Stage stage = (Stage) rootPane.getScene().getWindow();
-        stage.close();
-    }
+    void goToLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login/Login.fxml"));
+            Parent root = loader.load();
 
-    @FXML
-    void handleInscription() {
-        boolean valid = true;
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            Scene currentScene = stage.getScene();
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
 
-        String prenom = prenomField.getText().trim();
-        String nom = nomField.getText().trim();
-        String username = usernameField.getText().trim();
-        String email = emailField.getText().trim();
-        String telephone = telephoneField.getText().trim();
-        String password = passwordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
-
-        if (prenom.isEmpty()) {
-            showError(prenomError, "Le prénom est requis");
-            valid = false;
-        }
-
-        if (nom.isEmpty()) {
-            showError(nomError, "Le nom est requis");
-            valid = false;
-        }
-
-        if (username.isEmpty()) {
-            showError(usernameError, "Le nom d'utilisateur est requis");
-            valid = false;
-        } else if (username.length() < 3) {
-            showError(usernameError, "Minimum 3 caractères");
-            valid = false;
-        }
-
-        if (email.isEmpty()) {
-            showError(emailError, "L'email est requis");
-            valid = false;
-        } else if (!EMAIL_PATTERN.matcher(email).matches()) {
-            showError(emailError, "Format d'email invalide");
-            valid = false;
-        }
-
-        if (telephone.isEmpty()) {
-            showError(telephoneError, "Le téléphone est requis");
-            valid = false;
-        } else if (!PHONE_PATTERN.matcher(telephone).matches()) {
-            showError(telephoneError, "Format de téléphone invalide");
-            valid = false;
-        }
-
-        if (password.isEmpty()) {
-            showError(passwordError, "Le mot de passe est requis");
-            valid = false;
-        } else if (password.length() < 6) {
-            showError(passwordError, "Minimum 6 caractères");
-            valid = false;
-        }
-
-        if (confirmPassword.isEmpty()) {
-            showError(confirmPasswordError, "La confirmation est requise");
-            valid = false;
-        } else if (!password.equals(confirmPassword)) {
-            showError(confirmPasswordError, "Les mots de passe ne correspondent pas");
-            valid = false;
-        }
-
-        if (!valid) {
-            shakeNode(rootPane.lookup(".glass-card"));
-            return;
-        }
-
-        System.out.println("Inscription attempt: " + email);
-
-        submitBtn.setText("Inscription...");
-        submitBtn.setDisable(true);
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(e -> {
-            System.out.println("Inscription successful!");
-            submitBtn.setText("Créer un compte");
-            submitBtn.setDisable(false);
-            // Optionally, go to login after successful inscription
-            goToLogin();
-        });
-        pause.play();
-    }
-
-    @FXML
-    void toggleConfirmVisibility() {
-        confirmVisible = !confirmVisible;
-        if (confirmVisible) {
-            confirmVisibleField.setText(confirmPasswordField.getText());
-            confirmVisibleField.setVisible(true);
-            confirmVisibleField.setManaged(true);
-            confirmPasswordField.setVisible(false);
-            confirmPasswordField.setManaged(false);
-            toggleConfirmBtn.setText("🙈");
-        } else {
-            confirmPasswordField.setText(confirmVisibleField.getText());
-            confirmPasswordField.setVisible(true);
-            confirmPasswordField.setManaged(true);
-            confirmVisibleField.setVisible(false);
-            confirmVisibleField.setManaged(false);
-            toggleConfirmBtn.setText("👁");
-        }
-    }
-
-    @FXML
-    void togglePasswordVisibility() {
-        passwordVisible = !passwordVisible;
-        if (passwordVisible) {
-            passwordVisibleField.setText(passwordField.getText());
-            passwordVisibleField.setVisible(true);
-            passwordVisibleField.setManaged(true);
-            passwordField.setVisible(false);
-            passwordField.setManaged(false);
-            togglePasswordBtn.setText("🙈");
-        } else {
-            passwordField.setText(passwordVisibleField.getText());
-            passwordField.setVisible(true);
-            passwordField.setManaged(true);
-            passwordVisibleField.setVisible(false);
-            passwordVisibleField.setManaged(false);
-            togglePasswordBtn.setText("👁");
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir la page de connexion");
         }
     }
 
@@ -366,5 +316,18 @@ public class Inscription {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private void setupAgeRestriction() {
+        LocalDate maxAllowedDate = LocalDate.now().minusYears(13);
+        dobPicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (date.isAfter(maxAllowedDate)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #1a0505; -fx-text-fill: #444444;");
+                }
+            }
+        });
     }
 }
