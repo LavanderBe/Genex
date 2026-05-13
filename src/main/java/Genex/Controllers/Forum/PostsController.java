@@ -7,6 +7,7 @@ import Genex.services.CrudForum;
 import Genex.services.CrudPosts;
 import Genex.services.CrudUser;
 import Genex.services.NewsService;
+import Genex.services.TelegramNotificationService;
 import Genex.utils.SessionManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -41,6 +42,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -64,9 +66,11 @@ public class PostsController {
     @FXML
     private ComboBox<String> moderationFilterField;
     @FXML
-    private ComboBox<String> forumNameField;
+    private ComboBox<String> sortFilterField;
     @FXML
-    private ComboBox<String> authorNameField;
+    private ComboBox<String> densityFilterField;
+    @FXML
+    private ComboBox<String> forumNameField;
     @FXML
     private TextField titleField;
     @FXML
@@ -93,6 +97,18 @@ public class PostsController {
     private HBox newsFeedContainer;
     @FXML
     private FlowPane postCardsContainer;
+    @FXML
+    private Label postsTotalCountLabel;
+    @FXML
+    private Label postsShownCountLabel;
+    @FXML
+    private Label postsResolvedCountLabel;
+    @FXML
+    private VBox postsEmptyStateBox;
+    @FXML
+    private Label postsEmptyStateLabel;
+    @FXML
+    private Button postsEmptyCreateButton;
     @FXML
     private Button newPostButton;
     @FXML
@@ -122,11 +138,14 @@ public class PostsController {
     private final CrudForum crudForum = new CrudForum();
     private final CrudUser crudUser = new CrudUser();
     private final NewsService newsService = new NewsService();
+    private final TelegramNotificationService telegramNotificationService = new TelegramNotificationService();
     private final List<Posts> posts = new ArrayList<>();
     private final List<Forum> forums = new ArrayList<>();
     private final List<User> users = new ArrayList<>();
     private final Map<String, ModerationState> moderationByPostId = new HashMap<>();
     private final Map<String, ReactionCounter> reactionsByPostId = new HashMap<>();
+    // Tracks which user reacted to which post and which reaction they chose
+    private final Map<String, Map<String, ReactionType>> userReactionsByPostId = new HashMap<>();
     private final Map<String, String> forumNameById = new HashMap<>();
     private final Map<String, String> forumIdByName = new LinkedHashMap<>();
     private final Map<String, String> authorNameById = new HashMap<>();
@@ -186,6 +205,14 @@ public class PostsController {
                 case LIKE -> likes++;
                 case HEART -> hearts++;
                 case LAUGH -> laughs++;
+            }
+        }
+
+        private void decrement(ReactionType type) {
+            switch (type) {
+                case LIKE -> likes = Math.max(0, likes - 1);
+                case HEART -> hearts = Math.max(0, hearts - 1);
+                case LAUGH -> laughs = Math.max(0, laughs - 1);
             }
         }
 
@@ -309,12 +336,14 @@ public class PostsController {
             post.setCreatedAt(LocalDateTime.now());
             post.setUpdatedAt(LocalDateTime.now());
             crudPosts.addEntity(post);
+            String telegramStatus = notifyPlayerPostCreationOnTelegram(post);
 
             recordUserPostTimestamp(authorId);
 
             if (!isBlank(post.getId())) {
                 moderationByPostId.put(post.getId(), isSpam ? ModerationState.SPAM : ModerationState.VISIBLE);
                 reactionsByPostId.putIfAbsent(post.getId(), new ReactionCounter());
+                userReactionsByPostId.putIfAbsent(post.getId(), new HashMap<>());
             }
 
             StringBuilder message = new StringBuilder("Post créé avec succès.");
@@ -324,6 +353,7 @@ public class PostsController {
             if (hadFilteredSpeech) {
                 message.append(" " + badwordCount + " gros mot(s) détecté(s) et filtré(s).");
             }
+            message.append(telegramStatus);
             showAlert(Alert.AlertType.INFORMATION, "Succès", message.toString());
             clearFormFields();
             loadPosts();
@@ -367,6 +397,7 @@ public class PostsController {
 
             moderationByPostId.put(selectedPostId, isSpam ? ModerationState.SPAM : ModerationState.VISIBLE);
             reactionsByPostId.putIfAbsent(selectedPostId, new ReactionCounter());
+            userReactionsByPostId.putIfAbsent(selectedPostId, new HashMap<>());
 
             StringBuilder message = new StringBuilder("Post modifié avec succès.");
             if (isSpam) {
@@ -398,6 +429,7 @@ public class PostsController {
             crudPosts.deleteEntity(post);
             moderationByPostId.remove(selectedPostId);
             reactionsByPostId.remove(selectedPostId);
+            userReactionsByPostId.remove(selectedPostId);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Post supprimé avec succès.");
             clearFormFields();
             loadPosts();
@@ -451,14 +483,17 @@ public class PostsController {
         typeFilterField.getItems().setAll("TOUS", "DISCUSSION", "QUESTION", "GUIDE", "ANNONCE");
         statusFilterField.getItems().setAll("TOUS", "ACTIF", "RÉSOLU", "ARCHIVÉ");
         moderationFilterField.getItems().setAll("TOUS", "VISIBLE", "MASQUÉ", "SIGNALÉ", "SPAM");
+        sortFilterField.getItems().setAll("PLUS RÉCENT", "A-Z", "PLUS ACTIF");
+        densityFilterField.getItems().setAll("CONFORT", "COMPACT");
 
         postTypeField.setValue("DISCUSSION");
         postStatusField.setValue("ACTIF");
         typeFilterField.setValue("TOUS");
         statusFilterField.setValue("TOUS");
         moderationFilterField.setValue("TOUS");
+        sortFilterField.setValue("PLUS RÉCENT");
+        densityFilterField.setValue("CONFORT");
 
-        authorNameField.setEditable(true);
     }
 
     private void loadHeaderInfo() {
@@ -584,6 +619,8 @@ public class PostsController {
         typeFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
         statusFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
         moderationFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
+        sortFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
+        densityFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshPostCards());
     }
 
     private void loadPosts() {
@@ -595,11 +632,16 @@ public class PostsController {
 
     private void refreshPostCards() {
         postCardsContainer.getChildren().clear();
-        List<Posts> filtered = posts.stream().filter(this::matchesFilters).toList();
+        List<Posts> filtered = posts.stream()
+                .filter(this::matchesFilters)
+                .sorted(postComparator())
+                .toList();
         for (Posts post : filtered) {
             postCardsContainer.getChildren().add(createPostCard(post));
         }
         updateFeatured(filtered);
+        updateSidebarStats(filtered);
+        updateEmptyState(filtered);
     }
 
     private boolean matchesFilters(Posts post) {
@@ -617,6 +659,12 @@ public class PostsController {
                 return false;
             }
         }
+        String statusFilter = valueOrDefault(statusFilterField.getValue(), "TOUS");
+        if (!"TOUS".equals(statusFilter)) {
+            if (!statusFilter.equalsIgnoreCase(safe(post.getPostStatus()))) {
+                return false;
+            }
+        }
         String moderationFilter = valueOrDefault(moderationFilterField.getValue(), "TOUS");
         if (!"TOUS".equals(moderationFilter) && !moderationLabel(post).equals(moderationFilter)) {
             return false;
@@ -625,50 +673,52 @@ public class PostsController {
     }
 
     private VBox createPostCard(Posts post) {
-        VBox card = new VBox(8);
+        ImageView imageView = buildPostImageView(post);
+        boolean hasImage = imageView != null;
+        boolean compactMode = "COMPACT".equals(valueOrDefault(densityFilterField.getValue(), "CONFORT"));
+        double cardWidth = hasImage ? (compactMode ? 390 : 450) : (compactMode ? 300 : 345);
+
+        VBox card = new VBox(compactMode ? 6 : 8);
         card.getStyleClass().add("forum-card");
-        card.setPrefWidth(420);
-        card.setPadding(new Insets(18));
+        if (compactMode) {
+            card.getStyleClass().add("forum-card-compact");
+        }
+        if (!isBlank(selectedPostId) && selectedPostId.equals(post.getId())) {
+            card.getStyleClass().add("forum-card-selected");
+        }
+        card.setPrefWidth(cardWidth);
+        card.setMaxWidth(cardWidth);
+        card.setPadding(new Insets(compactMode ? 14 : 18));
         card.setOnMouseClicked(e -> selectPost(post));
 
         Label title = new Label(post.getTitle());
         title.getStyleClass().add("forum-card-title");
+        title.getStyleClass().add("forum-card-title-main");
         title.setWrapText(true);
 
         // Afficher l'image si elle existe
-        if (post.getMediaUrl() != null && !post.getMediaUrl().isBlank() && "image".equals(post.getMediaType())) {
-            try {
-                ImageView imageView = new ImageView();
-                imageView.setImage(new Image("file:" + post.getMediaUrl()));
-                imageView.setPreserveRatio(true);
-                imageView.setFitWidth(380);
-                imageView.setFitHeight(220);
-                card.getChildren().add(imageView);
-            } catch (Exception e) {
-                System.out.println("Erreur chargement image: " + e.getMessage());
-            }
+        if (hasImage) {
+            imageView.setFitWidth(cardWidth - 40);
+            card.getChildren().add(imageView);
         }
 
         Label body = new Label(post.getBody() == null || post.getBody().isBlank() ? "Aucun contenu." : post.getBody());
         body.getStyleClass().add("forum-card-desc");
         body.setWrapText(true);
-        body.setMaxWidth(390);
+        body.setMaxWidth(cardWidth - 34);
 
         Label meta = new Label("Forum " + forumDisplayName(post) + " • Auteur " + authorDisplayName(post) + " • ID " + safe(post.getId()));
-        meta.getStyleClass().add("forum-card-meta");
+        meta.getStyleClass().addAll("forum-card-meta", "forum-card-meta-muted");
 
         Label moderation = new Label("Modération: " + moderationLabel(post));
         moderation.getStyleClass().add("forum-card-meta");
 
         Label reactions = new Label(reactionSummary(post));
         reactions.getStyleClass().add("forum-card-meta");
-
-        Button editBtn = new Button("Modifier");
-        editBtn.getStyleClass().addAll("action-button", "secondary-button");
-        editBtn.setOnAction(e -> {
-            e.consume();
-            selectPost(post);
-        });
+        
+        HBox badges = new HBox(8,
+                createBadge(safe(post.getPostStatus()).isBlank() ? "ACTIF" : safe(post.getPostStatus()), "status-badge"),
+                createBadge(moderationLabel(post), "moderation-badge"));
 
         Button deleteBtn = new Button("Supprimer");
         deleteBtn.getStyleClass().addAll("action-button", "danger-button");
@@ -691,7 +741,7 @@ public class PostsController {
 
         HBox actions = new HBox(8);
         if (canManagePost(post)) {
-            actions.getChildren().addAll(editBtn, spacer, deleteBtn);
+            actions.getChildren().addAll(spacer, deleteBtn);
         } else {
             Label readOnlyBadge = new Label("Lecture seule");
             readOnlyBadge.getStyleClass().add("forum-card-meta");
@@ -703,14 +753,57 @@ public class PostsController {
         FlowPane repostActions = new FlowPane(14, 10, repostXBtn, repostFacebookBtn, repostLinkedInBtn);
         repostActions.getStyleClass().addAll("post-actions-row", "social-actions-row");
 
-        card.getChildren().addAll(title, body, meta, moderation, reactions, reactionActions, repostActions, actions);
+        card.getChildren().addAll(title, badges, body, meta, moderation, reactions, reactionActions, repostActions, actions);
         return card;
+    }
+
+    @FXML
+    private void handleSelectFirstUnread(ActionEvent event) {
+        Posts unread = posts.stream()
+                .filter(this::matchesFilters)
+                .sorted(postComparator())
+                .filter(post -> post.getViews() <= 0)
+                .findFirst()
+                .orElse(null);
+        if (unread == null) {
+            unread = posts.stream().filter(this::matchesFilters).sorted(postComparator()).findFirst().orElse(null);
+        }
+        if (unread != null) {
+            selectPost(unread);
+        }
+    }
+
+    @FXML
+    private void handleResetPostFilters(ActionEvent event) {
+        searchField.clear();
+        typeFilterField.setValue("TOUS");
+        statusFilterField.setValue("TOUS");
+        moderationFilterField.setValue("TOUS");
+        sortFilterField.setValue("PLUS RÉCENT");
+        densityFilterField.setValue("CONFORT");
+    }
+
+    private ImageView buildPostImageView(Posts post) {
+        if (isBlank(post.getMediaUrl()) || !"image".equalsIgnoreCase(safe(post.getMediaType()))) {
+            return null;
+        }
+        try {
+            Image image = new Image("file:" + post.getMediaUrl(), false);
+            if (image.isError()) {
+                return null;
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setPreserveRatio(true);
+            imageView.setFitHeight(220);
+            return imageView;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void selectPost(Posts post) {
         selectedPostId = post.getId();
         forumNameField.setValue(forumNameForId(post.getForumId()));
-        authorNameField.setValue(authorNameForId(post.getAuthorId()));
         titleField.setText(safe(post.getTitle()));
         bodyArea.setText(safe(post.getBody()));
         tagField.setText(safe(post.getTag()));
@@ -721,6 +814,7 @@ public class PostsController {
         } else {
             imagePathField.clear();
         }
+        refreshPostCards();
     }
 
     private void updateFeatured(List<Posts> filtered) {
@@ -740,6 +834,58 @@ public class PostsController {
         featuredDescLabel.setText(safe(featured.getBody()).isBlank() ? "Aucun contenu." : safe(featured.getBody()));
     }
 
+    private void updateSidebarStats(List<Posts> filtered) {
+        postsTotalCountLabel.setText("Posts: " + posts.size());
+        postsShownCountLabel.setText("Affichés: " + filtered.size());
+        long resolvedCount = filtered.stream()
+                .filter(post -> "RÉSOLU".equalsIgnoreCase(safe(post.getPostStatus())))
+                .count();
+        postsResolvedCountLabel.setText("Résolus: " + resolvedCount);
+    }
+
+    private void updateEmptyState(List<Posts> filtered) {
+        boolean visible = filtered.isEmpty();
+        postsEmptyStateBox.setVisible(visible);
+        postsEmptyStateBox.setManaged(visible);
+        if (!visible) {
+            return;
+        }
+        if (posts.isEmpty()) {
+            postsEmptyStateLabel.setText("Aucun post disponible. Créez une publication pour lancer la discussion.");
+            return;
+        }
+        postsEmptyStateLabel.setText("Aucun résultat avec ces filtres. Réinitialisez pour revoir les publications.");
+    }
+
+    private Comparator<Posts> postComparator() {
+        String sortMode = valueOrDefault(sortFilterField.getValue(), "PLUS RÉCENT");
+        return switch (sortMode) {
+            case "A-Z" -> Comparator.comparing(post -> normalize(post.getTitle()));
+            case "PLUS ACTIF" -> Comparator
+                    .comparingInt((Posts post) -> reactionScore(post) + Math.max(post.getViews(), 0))
+                    .reversed()
+                    .thenComparing((Posts post) -> post.getUpdatedAt(), Comparator.nullsLast(Comparator.reverseOrder()));
+            default -> Comparator.comparing((Posts post) -> post.getUpdatedAt(), Comparator.nullsLast(Comparator.reverseOrder()));
+        };
+    }
+
+    private int reactionScore(Posts post) {
+        if (isBlank(post.getId())) {
+            return 0;
+        }
+        ReactionCounter counter = reactionsByPostId.get(post.getId());
+        if (counter == null) {
+            return 0;
+        }
+        return counter.likes + counter.hearts + counter.laughs;
+    }
+
+    private Label createBadge(String text, String variantClass) {
+        Label badge = new Label(safe(text).isBlank() ? "-" : text);
+        badge.getStyleClass().addAll("card-badge", variantClass);
+        return badge;
+    }
+
     private void synchronizePostMetadata() {
         Set<String> existingIds = new HashSet<>();
         for (Posts post : posts) {
@@ -755,6 +901,7 @@ public class PostsController {
         }
         reactionsByPostId.keySet().removeIf(id -> !existingIds.contains(id));
         moderationByPostId.keySet().removeIf(id -> !existingIds.contains(id));
+        userReactionsByPostId.keySet().removeIf(id -> !existingIds.contains(id));
     }
 
     private String reactionSummary(Posts post) {
@@ -780,7 +927,30 @@ public class PostsController {
             if (isBlank(post.getId())) {
                 return;
             }
-            reactionsByPostId.computeIfAbsent(post.getId(), key -> new ReactionCounter()).increment(reactionType);
+            User currentUser = SessionManager.getInstance().getCurrentUser();
+            if (currentUser == null || isBlank(currentUser.getId())) {
+                showAlert(Alert.AlertType.WARNING, "Connexion requise", "Connecte-toi pour réagir à un post.");
+                return;
+            }
+            String userId = currentUser.getId();
+            Map<String, ReactionType> reactionsForPost = userReactionsByPostId.computeIfAbsent(post.getId(), k -> new HashMap<>());
+            ReactionType existing = reactionsForPost.get(userId);
+            ReactionCounter counter = reactionsByPostId.computeIfAbsent(post.getId(), key -> new ReactionCounter());
+
+            if (existing == null) {
+                // first reaction
+                reactionsForPost.put(userId, reactionType);
+                counter.increment(reactionType);
+            } else if (existing == reactionType) {
+                // toggle off (remove reaction)
+                reactionsForPost.remove(userId);
+                counter.decrement(reactionType);
+            } else {
+                // switch reaction (replace existing with new)
+                reactionsForPost.put(userId, reactionType);
+                counter.decrement(existing);
+                counter.increment(reactionType);
+            }
             refreshPostCards();
         });
         return button;
@@ -803,19 +973,36 @@ public class PostsController {
         String encodedUrl = URLEncoder.encode(postRef, StandardCharsets.UTF_8);
         String encodedText = URLEncoder.encode(shareText, StandardCharsets.UTF_8);
 
-        String shareUrl;
-        switch (network) {
-            case "FACEBOOK" -> shareUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl + "&quote=" + encodedText;
-            case "LINKEDIN" -> shareUrl = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl;
-            default -> shareUrl = "https://x.com/intent/tweet?text=" + encodedText + "&url=" + encodedUrl;
-        }
+        String shareUrl = socialShareUrl(network, encodedUrl, encodedText);
+        String officialUrl = socialOfficialUrl(network);
 
         try {
             openExternalUrl(shareUrl);
-            showAlert(Alert.AlertType.INFORMATION, "Repost", "Ouverture du partage " + network + "...");
+            showAlert(Alert.AlertType.INFORMATION, "Repost", "Ouverture de " + network + "...");
         } catch (IOException | URISyntaxException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le lien de partage.\n" + shareUrl);
+            try {
+                openExternalUrl(officialUrl);
+                showAlert(Alert.AlertType.INFORMATION, "Repost", "Ouverture du site officiel " + network + "...");
+            } catch (IOException | URISyntaxException fallbackError) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir " + network + ".\n" + officialUrl);
+            }
         }
+    }
+
+    private String socialShareUrl(String network, String encodedUrl, String encodedText) {
+        return switch (network) {
+            case "FACEBOOK" -> "https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl + "&quote=" + encodedText;
+            case "LINKEDIN" -> "https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl;
+            default -> "https://x.com/intent/tweet?text=" + encodedText + "&url=" + encodedUrl;
+        };
+    }
+
+    private String socialOfficialUrl(String network) {
+        return switch (network) {
+            case "FACEBOOK" -> "https://www.facebook.com/";
+            case "LINKEDIN" -> "https://www.linkedin.com/";
+            default -> "https://x.com/";
+        };
     }
 
     private void openExternalUrl(String url) throws IOException, URISyntaxException {
@@ -902,12 +1089,8 @@ public class PostsController {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le forum sélectionné est introuvable.");
             return false;
         }
-        if (isBlank(authorNameField.getValue())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Le nom auteur est obligatoire.");
-            return false;
-        }
         if (isBlank(resolveAuthorForCreate())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'auteur sélectionné est introuvable.");
+            showAlert(Alert.AlertType.WARNING, "Validation", "Aucun auteur connecté trouvé.");
             return false;
         }
         if (isBlank(titleField.getText())) {
@@ -936,15 +1119,6 @@ public class PostsController {
         } else {
             forumNameField.setValue(null);
         }
-        if (adminMode) {
-            if (!authorNameField.getItems().isEmpty()) {
-                authorNameField.setValue(authorNameField.getItems().get(0));
-            } else {
-                authorNameField.setValue(null);
-            }
-        } else {
-            authorNameField.setValue(resolveAuthorNameForCurrentUser());
-        }
         titleField.clear();
         bodyArea.clear();
         tagField.clear();
@@ -952,6 +1126,9 @@ public class PostsController {
         imagePathField.clear();
         postTypeField.setValue("DISCUSSION");
         postStatusField.setValue("ACTIF");
+        if (postCardsContainer != null) {
+            refreshPostCards();
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {
@@ -960,6 +1137,28 @@ public class PostsController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private String notifyPlayerPostCreationOnTelegram(Posts post) {
+        if (!isCurrentUserPlayer()) {
+            return "";
+        }
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        String forumName = forumNameForId(post.getForumId());
+        try {
+            telegramNotificationService.sendPlayerPostCreatedNotification(post, currentUser, forumName);
+            return "\nNotification Telegram envoyée.";
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "\nPost créé, mais la notification Telegram a été interrompue.";
+        } catch (IOException | IllegalStateException e) {
+            return "\nPost créé, mais notification Telegram non envoyée: " + e.getMessage();
+        }
+    }
+
+    private boolean isCurrentUserPlayer() {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        return currentUser != null && "PLAYER".equalsIgnoreCase(currentUser.getRole());
     }
 
     private boolean isBlank(String value) {
@@ -992,8 +1191,6 @@ public class PostsController {
         hideNode(hidePostButton);
         hideNode(restorePostButton);
         forumNameField.setDisable(false);
-        authorNameField.setDisable(true);
-        authorNameField.setValue(resolveAuthorNameForCurrentUser());
     }
 
     private boolean requireAdminAction(String actionLabel) {
@@ -1036,27 +1233,17 @@ public class PostsController {
     }
 
     private String resolveAuthorForCreate() {
-        String selectedAuthorName = authorNameField.getValue();
-        if (isBlank(selectedAuthorName)) {
-            return "";
-        }
-
-        if (adminMode) {
-            String authorId = authorIdByName.get(selectedAuthorName);
-            if (!isBlank(authorId)) {
-                return authorId;
-            }
-            if (selectedAuthorName.length() > 2) {
-                return selectedAuthorName;
-            }
-            return "";
-        }
-
         if (!isBlank(currentUserId)) {
             return currentUserId;
         }
         if (!isBlank(currentUserName)) {
-            return safe(authorIdByName.get(currentUserName));
+            String authorId = safe(authorIdByName.get(currentUserName));
+            if (!isBlank(authorId)) {
+                return authorId;
+            }
+            if (currentUserName.length() > 2) {
+                return currentUserName;
+            }
         }
         return "";
     }
@@ -1091,7 +1278,6 @@ public class PostsController {
             authorNameById.put(user.getId(), user.getUsername());
             authorIdByName.putIfAbsent(user.getUsername(), user.getId());
         }
-        authorNameField.getItems().setAll(authorIdByName.keySet());
     }
 
     private String resolveForumIdForCreate() {

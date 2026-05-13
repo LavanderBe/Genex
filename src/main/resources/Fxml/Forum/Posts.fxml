@@ -40,6 +40,7 @@
                     <Label text="▶" styleClass="campaign-icon"/>
                     <Label text="TERMINAL // ESPACE COMMUNAUTÉ" styleClass="subtitle-label"/>
                 </HBox>
+                <Label text="Forum / Publications" styleClass="breadcrumb-label"/>
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <VBox spacing="8" HBox.hgrow="ALWAYS">
                         <Label text="MODULE PUBLICATIONS" styleClass="title-label"/>
@@ -59,13 +60,16 @@
                 <ComboBox fx:id="typeFilterField" styleClass="modal-combo" prefWidth="145" promptText="Type"/>
                 <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="145" promptText="Statut"/>
                 <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="160" promptText="Modération"/>
+                <ComboBox fx:id="sortFilterField" styleClass="modal-combo" prefWidth="150" promptText="Tri"/>
+                <ComboBox fx:id="densityFilterField" styleClass="modal-combo" prefWidth="150" promptText="Densité"/>
             </HBox>
 
-            <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
-                <VBox spacing="20" styleClass="cards-container">
-                    <padding>
-                        <Insets top="4" right="8" bottom="8" left="8"/>
-                    </padding>
+            <HBox spacing="18" VBox.vgrow="ALWAYS" styleClass="desktop-content-shell">
+                <ScrollPane fitToWidth="true" styleClass="custom-scroll" HBox.hgrow="ALWAYS">
+                    <VBox spacing="20" styleClass="cards-container">
+                        <padding>
+                            <Insets top="4" right="8" bottom="8" left="8"/>
+                        </padding>
 
                     <VBox spacing="10">
                         <Label text="📰 FEED NEWS GAMING" styleClass="field-label"/>
@@ -87,16 +91,10 @@
                         </padding>
                         <Label text="✍ GESTION DES POSTS" styleClass="modal-title"/>
 
-                        <HBox spacing="20">
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="NOM DU FORUM" styleClass="field-label"/>
-                                <ComboBox fx:id="forumNameField" promptText="Sélectionner un forum" styleClass="modal-combo"/>
-                            </VBox>
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="NOM AUTEUR" styleClass="field-label"/>
-                                <ComboBox fx:id="authorNameField" promptText="Sélectionner un auteur" styleClass="modal-combo"/>
-                            </VBox>
-                        </HBox>
+                        <VBox spacing="10">
+                            <Label text="NOM DU FORUM" styleClass="field-label"/>
+                            <ComboBox fx:id="forumNameField" promptText="Sélectionner un forum" styleClass="modal-combo"/>
+                        </VBox>
 
                         <VBox spacing="10">
                             <Label text="TITRE" styleClass="field-label"/>
@@ -171,12 +169,31 @@
                     </VBox>
 
                     <!-- Posts List -->
-                    <VBox spacing="16" prefWidth="1320">
-                        <Label text="📝 TOUS LES POSTS" styleClass="field-label"/>
-                        <FlowPane fx:id="postCardsContainer" prefWrapLength="1280" hgap="18" vgap="18" styleClass="cards-flow"/>
+                        <VBox spacing="16" prefWidth="1320">
+                            <Label text="📝 TOUS LES POSTS" styleClass="field-label"/>
+                            <FlowPane fx:id="postCardsContainer" prefWrapLength="1280" hgap="18" vgap="18" styleClass="cards-flow"/>
+                            <VBox fx:id="postsEmptyStateBox" spacing="10" styleClass="empty-state-box" visible="false" managed="false">
+                                <Label fx:id="postsEmptyStateLabel" text="Aucun post trouvé." styleClass="empty-state-title"/>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+
+                <VBox spacing="12" styleClass="desktop-sidebar">
+                    <Label text="PILOTAGE DES POSTS" styleClass="field-label"/>
+                    <VBox spacing="10" styleClass="sidebar-card">
+                        <Label text="📊 Vue rapide" styleClass="sidebar-title"/>
+                        <Label fx:id="postsTotalCountLabel" text="Posts: 0" styleClass="sidebar-meta"/>
+                        <Label fx:id="postsShownCountLabel" text="Affichés: 0" styleClass="sidebar-meta"/>
+                        <Label fx:id="postsResolvedCountLabel" text="Résolus: 0" styleClass="sidebar-meta"/>
+                    </VBox>
+                    <VBox spacing="10" styleClass="sidebar-card">
+                        <Label text="⚡ Navigation rapide" styleClass="sidebar-title"/>
+                        <Button text="Retour forum" styleClass="action-button, secondary-button" onAction="#openForum"/>
+                        <Button text="Premier non lu" styleClass="action-button, secondary-button" onAction="#handleSelectFirstUnread"/>
                     </VBox>
                 </VBox>
-            </ScrollPane>
+            </HBox>
         </VBox>
     </VBox>
 </AnchorPane>

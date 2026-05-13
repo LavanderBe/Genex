@@ -41,6 +41,7 @@
                     <Label text="▶" styleClass="campaign-icon"/>
                     <Label text="TERMINAL // ESPACE COMMUNAUTÉ" styleClass="subtitle-label"/>
                 </HBox>
+                <Label text="Forum / Discussions" styleClass="breadcrumb-label"/>
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <VBox spacing="8" HBox.hgrow="ALWAYS">
                         <Label text="MODULE FORUM" styleClass="title-label"/>
@@ -68,13 +69,16 @@
                 <ComboBox fx:id="categoryFilterField" styleClass="modal-combo" prefWidth="150" promptText="Catégorie"/>
                 <ComboBox fx:id="statusFilterField" styleClass="modal-combo" prefWidth="140" promptText="Statut"/>
                 <ComboBox fx:id="moderationFilterField" styleClass="modal-combo" prefWidth="150" promptText="Modération"/>
+                <ComboBox fx:id="sortFilterField" styleClass="modal-combo" prefWidth="150" promptText="Tri"/>
+                <ComboBox fx:id="densityFilterField" styleClass="modal-combo" prefWidth="150" promptText="Densité"/>
             </HBox>
 
-            <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
-                <VBox spacing="20" styleClass="cards-container">
-                    <padding>
-                        <Insets top="4" right="8" bottom="8" left="8"/>
-                    </padding>
+            <HBox spacing="18" VBox.vgrow="ALWAYS" styleClass="desktop-content-shell">
+                <ScrollPane fitToWidth="true" styleClass="custom-scroll" HBox.hgrow="ALWAYS">
+                    <VBox spacing="20" styleClass="cards-container">
+                        <padding>
+                            <Insets top="4" right="8" bottom="8" left="8"/>
+                        </padding>
 
                     <VBox spacing="10">
                         <Label text="📰 FEED NEWS GAMING" styleClass="field-label"/>
@@ -100,10 +104,6 @@
                             <VBox spacing="10" HBox.hgrow="ALWAYS">
                                 <Label text="TITRE" styleClass="field-label"/>
                                 <TextField fx:id="titleField" promptText="Titre du forum" styleClass="modal-input"/>
-                            </VBox>
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <Label text="CRÉÉ PAR" styleClass="field-label"/>
-                                <TextField fx:id="createdByField" promptText="Nom du créateur" styleClass="modal-input"/>
                             </VBox>
                         </HBox>
 
@@ -163,12 +163,35 @@
                     </VBox>
 
                     <!-- Forum Cards List -->
-                    <VBox spacing="16" prefWidth="1000">
-                        <Label text="📋 TOUS LES FORUMS" styleClass="field-label"/>
-                        <FlowPane fx:id="forumCardsContainer" prefWrapLength="980" hgap="16" vgap="16" styleClass="cards-flow"/>
+                        <VBox spacing="16" prefWidth="1000">
+                            <Label text="📋 TOUS LES FORUMS" styleClass="field-label"/>
+                            <FlowPane fx:id="forumCardsContainer" prefWrapLength="980" hgap="16" vgap="16" styleClass="cards-flow"/>
+                            <VBox fx:id="forumEmptyStateBox" spacing="10" styleClass="empty-state-box" visible="false" managed="false">
+                                <Label fx:id="forumEmptyStateLabel" text="Aucun forum trouvé." styleClass="empty-state-title"/>
+                                <HBox spacing="10" alignment="CENTER">
+                                    <Button text="Réinitialiser filtres" styleClass="action-button, secondary-button" onAction="#handleResetForumFilters"/>
+                                    <Button fx:id="forumEmptyCreateButton" text="Créer un sujet" styleClass="action-button, primary-button" onAction="#handleClearForm"/>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+
+                <VBox spacing="12" styleClass="desktop-sidebar">
+                    <Label text="PILOTAGE DES SUJETS" styleClass="field-label"/>
+                    <VBox spacing="10" styleClass="sidebar-card">
+                        <Label text="📊 Vue rapide" styleClass="sidebar-title"/>
+                        <Label fx:id="forumTotalCountLabel" text="Forums: 0" styleClass="sidebar-meta"/>
+                        <Label fx:id="forumShownCountLabel" text="Affichés: 0" styleClass="sidebar-meta"/>
+                        <Label fx:id="forumAuthorsCountLabel" text="Auteurs uniques: 0" styleClass="sidebar-meta"/>
+                    </VBox>
+                    <VBox fx:id="forumActionsSidebarCard" spacing="10" styleClass="sidebar-card">
+                        <Label text="⚡ Actions" styleClass="sidebar-title"/>
+                        <Button text="Nouveau forum" styleClass="action-button, secondary-button" onAction="#handleClearForm"/>
+                        <Button text="Sélectionner le premier" styleClass="action-button, secondary-button" onAction="#handleSelectFirstForum"/>
                     </VBox>
                 </VBox>
-            </ScrollPane>
+            </HBox>
         </VBox>
     </VBox>
 </AnchorPane>

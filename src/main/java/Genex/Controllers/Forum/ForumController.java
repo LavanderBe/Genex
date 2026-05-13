@@ -5,6 +5,7 @@ import Genex.entities.User;
 import Genex.services.CrudForum;
 import Genex.services.GroqService;
 import Genex.services.NewsService;
+import Genex.services.TelegramNotificationService;
 import Genex.services.TemperatureService;
 import Genex.utils.SessionManager;
 import javafx.application.Platform;
@@ -34,8 +35,12 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletableFuture;
 
 public class ForumController {
@@ -51,9 +56,11 @@ public class ForumController {
     @FXML
     private ComboBox<String> moderationFilterField;
     @FXML
-    private TextField titleField;
+    private ComboBox<String> sortFilterField;
     @FXML
-    private TextField createdByField;
+    private ComboBox<String> densityFilterField;
+    @FXML
+    private TextField titleField;
     @FXML
     private ComboBox<String> categoryField;
     @FXML
@@ -81,6 +88,20 @@ public class ForumController {
     @FXML
     private FlowPane forumCardsContainer;
     @FXML
+    private Label forumTotalCountLabel;
+    @FXML
+    private Label forumShownCountLabel;
+    @FXML
+    private Label forumAuthorsCountLabel;
+    @FXML
+    private VBox forumEmptyStateBox;
+    @FXML
+    private Label forumEmptyStateLabel;
+    @FXML
+    private Button forumEmptyCreateButton;
+    @FXML
+    private VBox forumActionsSidebarCard;
+    @FXML
     private Button newForumButton;
     @FXML
     private Button addForumButton;
@@ -107,7 +128,9 @@ public class ForumController {
     private final TemperatureService temperatureService = new TemperatureService();
     private final NewsService newsService = new NewsService();
     private final GroqService groqService = new GroqService();
+    private final TelegramNotificationService telegramNotificationService = new TelegramNotificationService();
     private final List<Forum> forums = new ArrayList<>();
+    private final Map<String, String> forumStatusById = new HashMap<>();
     private boolean adminMode;
     private String selectedForumId;
     
@@ -155,15 +178,25 @@ public class ForumController {
         if (!validateForumForm()) {
             return;
         }
+        String creatorLogin = currentUserLogin();
+        if (isBlank(creatorLogin)) {
+            showAlert(Alert.AlertType.WARNING, "Session requise", "Le créateur est automatiquement défini depuis le login. Veuillez vous reconnecter.");
+            return;
+        }
+        if (creatorLogin.length() > MAX_CREATED_BY_LENGTH) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le login utilisateur ne doit pas dépasser " + MAX_CREATED_BY_LENGTH + " caractères.");
+            return;
+        }
         try {
             Forum forum = new Forum(
                     titleField.getText().trim(),
                     descriptionArea.getText() == null ? "" : descriptionArea.getText().trim(),
-                    createdByField.getText().trim()
+                    creatorLogin
             );
             forum.setCreatedAt(LocalDateTime.now());
             crudForum.addEntity(forum);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum créé avec succès.");
+            String telegramStatus = notifyForumCreationOnTelegram(forum);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum créé avec succès." + telegramStatus);
             clearFormFields();
             loadForums();
         } catch (Exception e) {
@@ -197,11 +230,14 @@ public class ForumController {
         })
         .exceptionally(e -> {
             Platform.runLater(() -> {
-                System.err.println("[GROQ] Erreur: " + e.getMessage());
-                e.printStackTrace();
+                Throwable cause = e instanceof CompletionException && e.getCause() != null ? e.getCause() : e;
+                String errorMessage = cause.getMessage() == null || cause.getMessage().isBlank()
+                        ? "Erreur inconnue"
+                        : cause.getMessage();
+                System.err.println("[GROQ] Erreur: " + errorMessage);
                 generateDescButton.setDisable(false);
                 generateDescButton.setText("✨ GÉNÉRER");
-                showAlert(Alert.AlertType.ERROR, "Erreur Groq", "Erreur: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Erreur Groq", errorMessage);
             });
             return null;
         });
@@ -220,10 +256,11 @@ public class ForumController {
             return;
         }
         try {
+            Forum selectedForum = findForumById(selectedForumId);
             Forum forum = new Forum();
             forum.setTitle(titleField.getText().trim());
             forum.setDescription(descriptionArea.getText() == null ? "" : descriptionArea.getText().trim());
-            forum.setCreatedBy(createdByField.getText().trim());
+            forum.setCreatedBy(resolveCreatorForUpdate(selectedForum));
             crudForum.updateEntity(forum, selectedForumId);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum modifié avec succès.");
             clearFormFields();
@@ -243,10 +280,12 @@ public class ForumController {
             return;
         }
         try {
+            Forum selectedForum = findForumById(selectedForumId);
             Forum forum = new Forum();
             forum.setId(selectedForumId);
             crudForum.deleteEntity(forum);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum supprimé avec succès.");
+            String telegramStatus = notifyForumDeletionOnTelegram(selectedForum);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Forum supprimé avec succès." + telegramStatus);
             clearFormFields();
             loadForums();
         } catch (Exception e) {
@@ -268,6 +307,10 @@ public class ForumController {
             return;
         }
         topicStatusField.setValue("RÉSOLU");
+        if (!isBlank(selectedForumId)) {
+            forumStatusById.put(selectedForumId, "RÉSOLU");
+            refreshForumCards();
+        }
         showAlert(Alert.AlertType.INFORMATION, "Info", "Statut local réglé sur RÉSOLU.");
     }
 
@@ -301,12 +344,16 @@ public class ForumController {
         categoryFilterField.getItems().setAll("TOUS", "GÉNÉRAL", "SUPPORT", "STRATÉGIE", "ACTUALITÉS");
         statusFilterField.getItems().setAll("TOUS", "OUVERT", "RÉSOLU", "ARCHIVÉ");
         moderationFilterField.getItems().setAll("TOUS", "VISIBLE", "MASQUÉ", "SIGNALÉ");
+        sortFilterField.getItems().setAll("PLUS RÉCENT", "A-Z", "PLUS ACTIF");
+        densityFilterField.getItems().setAll("CONFORT", "COMPACT");
 
         categoryField.setValue("GÉNÉRAL");
         topicStatusField.setValue("OUVERT");
         categoryFilterField.setValue("TOUS");
         statusFilterField.setValue("TOUS");
         moderationFilterField.setValue("TOUS");
+        sortFilterField.setValue("PLUS RÉCENT");
+        densityFilterField.setValue("CONFORT");
     }
 
     private void loadHeaderInfo() {
@@ -460,22 +507,35 @@ public class ForumController {
         categoryFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshForumCards());
         statusFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshForumCards());
         moderationFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshForumCards());
+        sortFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshForumCards());
+        densityFilterField.valueProperty().addListener((obs, oldV, newV) -> refreshForumCards());
     }
 
     private void loadForums() {
         forums.clear();
         forums.addAll(crudForum.getAllForums());
+        for (Forum forum : forums) {
+            if (!isBlank(forum.getId())) {
+                forumStatusById.putIfAbsent(forum.getId(), "OUVERT");
+            }
+        }
+        forumStatusById.keySet().removeIf(id -> forums.stream().noneMatch(forum -> id.equals(forum.getId())));
         refreshForumCards();
     }
 
     private void refreshForumCards() {
         forumCardsContainer.getChildren().clear();
-        List<Forum> filtered = forums.stream().filter(this::matchesFilters).toList();
+        List<Forum> filtered = forums.stream()
+                .filter(this::matchesFilters)
+                .sorted(forumComparator())
+                .toList();
 
         for (Forum forum : filtered) {
             forumCardsContainer.getChildren().add(createForumCard(forum));
         }
         updateFeatured(filtered);
+        updateSidebarStats(filtered);
+        updateEmptyState(filtered);
     }
 
     private boolean matchesFilters(Forum forum) {
@@ -493,27 +553,43 @@ public class ForumController {
                 return false;
             }
         }
+        String status = valueOrDefault(statusFilterField.getValue(), "TOUS");
+        if (!"TOUS".equals(status) && !status.equals(statusLabel(forum))) {
+            return false;
+        }
         return true;
     }
 
     private VBox createForumCard(Forum forum) {
-        VBox card = new VBox(8);
+        boolean compactMode = "COMPACT".equals(valueOrDefault(densityFilterField.getValue(), "CONFORT"));
+        VBox card = new VBox(compactMode ? 6 : 8);
         card.getStyleClass().add("forum-card");
-        card.setPrefWidth(305);
-        card.setPadding(new Insets(16));
+        if (compactMode) {
+            card.getStyleClass().add("forum-card-compact");
+        }
+        if (!isBlank(selectedForumId) && selectedForumId.equals(forum.getId())) {
+            card.getStyleClass().add("forum-card-selected");
+        }
+        card.setPrefWidth(compactMode ? 285 : 320);
+        card.setPadding(new Insets(compactMode ? 13 : 16));
         card.setOnMouseClicked(e -> selectForum(forum));
 
         Label title = new Label(forum.getTitle());
         title.getStyleClass().add("forum-card-title");
+        title.getStyleClass().add("forum-card-title-main");
         title.setWrapText(true);
 
         Label desc = new Label(forum.getDescription() == null || forum.getDescription().isBlank() ? "Aucune description." : forum.getDescription());
         desc.getStyleClass().add("forum-card-desc");
         desc.setWrapText(true);
-        desc.setMaxWidth(280);
+        desc.setMaxWidth(compactMode ? 250 : 295);
 
         Label meta = new Label("Par " + safe(forum.getCreatedBy()) + " • ID " + safe(forum.getId()));
-        meta.getStyleClass().add("forum-card-meta");
+        meta.getStyleClass().addAll("forum-card-meta", "forum-card-meta-muted");
+        
+        HBox badges = new HBox(8,
+                createBadge(statusLabel(forum), "status-badge"),
+                createBadge("ACTIF", "moderation-badge"));
 
         Button editBtn = new Button("Modifier");
         editBtn.getStyleClass().addAll("action-button", "secondary-button");
@@ -543,15 +619,33 @@ public class ForumController {
         }
         actions.setAlignment(Pos.CENTER_LEFT);
 
-        card.getChildren().addAll(title, desc, meta, actions);
+        card.getChildren().addAll(title, badges, desc, meta, actions);
         return card;
+    }
+
+    @FXML
+    private void handleSelectFirstForum(ActionEvent event) {
+        List<Forum> filtered = forums.stream().filter(this::matchesFilters).sorted(forumComparator()).toList();
+        if (!filtered.isEmpty()) {
+            selectForum(filtered.get(0));
+        }
+    }
+
+    @FXML
+    private void handleResetForumFilters(ActionEvent event) {
+        searchField.clear();
+        categoryFilterField.setValue("TOUS");
+        statusFilterField.setValue("TOUS");
+        moderationFilterField.setValue("TOUS");
+        sortFilterField.setValue("PLUS RÉCENT");
+        densityFilterField.setValue("CONFORT");
     }
 
     private void selectForum(Forum forum) {
         selectedForumId = forum.getId();
         titleField.setText(safe(forum.getTitle()));
         descriptionArea.setText(safe(forum.getDescription()));
-        createdByField.setText(safe(forum.getCreatedBy()));
+        refreshForumCards();
     }
 
     private void updateFeatured(List<Forum> filtered) {
@@ -571,6 +665,64 @@ public class ForumController {
         featuredDescLabel.setText(safe(featured.getDescription()).isBlank() ? "Aucune description." : safe(featured.getDescription()));
     }
 
+    private void updateSidebarStats(List<Forum> filtered) {
+        forumTotalCountLabel.setText("Forums: " + forums.size());
+        forumShownCountLabel.setText("Affichés: " + filtered.size());
+        long uniqueAuthors = filtered.stream()
+                .map(Forum::getCreatedBy)
+                .map(this::safe)
+                .filter(name -> !name.isBlank())
+                .distinct()
+                .count();
+        forumAuthorsCountLabel.setText("Auteurs uniques: " + uniqueAuthors);
+    }
+
+    private void updateEmptyState(List<Forum> filtered) {
+        boolean visible = filtered.isEmpty();
+        forumEmptyStateBox.setVisible(visible);
+        forumEmptyStateBox.setManaged(visible);
+        if (!visible) {
+            return;
+        }
+        if (forums.isEmpty()) {
+            forumEmptyStateLabel.setText("Aucun forum disponible. Créez un sujet pour démarrer.");
+            return;
+        }
+        forumEmptyStateLabel.setText("Aucun résultat avec ces filtres. Réinitialisez pour retrouver les discussions.");
+    }
+
+    private Comparator<Forum> forumComparator() {
+        String sortMode = valueOrDefault(sortFilterField.getValue(), "PLUS RÉCENT");
+        return switch (sortMode) {
+            case "A-Z" -> Comparator.comparing(forum -> normalize(forum.getTitle()));
+            case "PLUS ACTIF" -> Comparator
+                    .comparingInt((Forum forum) -> statusPriority(statusLabel(forum)))
+                    .thenComparing((Forum forum) -> forum.getCreatedAt(), Comparator.nullsLast(Comparator.reverseOrder()));
+            default -> Comparator.comparing((Forum forum) -> forum.getCreatedAt(), Comparator.nullsLast(Comparator.reverseOrder()));
+        };
+    }
+
+    private int statusPriority(String status) {
+        return switch (safe(status).toUpperCase(Locale.ROOT)) {
+            case "OUVERT" -> 3;
+            case "RÉSOLU" -> 2;
+            default -> 1;
+        };
+    }
+
+    private String statusLabel(Forum forum) {
+        if (forum == null || isBlank(forum.getId())) {
+            return "OUVERT";
+        }
+        return forumStatusById.getOrDefault(forum.getId(), "OUVERT");
+    }
+
+    private Label createBadge(String text, String variantClass) {
+        Label badge = new Label(safe(text).isBlank() ? "-" : text);
+        badge.getStyleClass().addAll("card-badge", variantClass);
+        return badge;
+    }
+
     private boolean validateForumForm() {
         if (isBlank(titleField.getText())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le titre est obligatoire.");
@@ -578,14 +730,6 @@ public class ForumController {
         }
         if (titleField.getText().length() > MAX_TITLE_LENGTH) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le titre ne doit pas dépasser " + MAX_TITLE_LENGTH + " caractères.");
-            return false;
-        }
-        if (isBlank(createdByField.getText())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ « Créé par » est obligatoire.");
-            return false;
-        }
-        if (createdByField.getText().length() > MAX_CREATED_BY_LENGTH) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Le champ « Créé par » ne doit pas dépasser " + MAX_CREATED_BY_LENGTH + " caractères.");
             return false;
         }
         if (!isBlank(descriptionArea.getText()) && descriptionArea.getText().length() > MAX_DESCRIPTION_LENGTH) {
@@ -598,11 +742,13 @@ public class ForumController {
     private void clearFormFields() {
         selectedForumId = null;
         titleField.clear();
-        createdByField.clear();
         descriptionArea.clear();
         categoryField.setValue("GÉNÉRAL");
         topicStatusField.setValue("OUVERT");
         pinnedField.setSelected(false);
+        if (forumCardsContainer != null) {
+            refreshForumCards();
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {
@@ -611,6 +757,41 @@ public class ForumController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private String notifyForumCreationOnTelegram(Forum forum) {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        try {
+            telegramNotificationService.sendForumCreatedNotification(forum, currentUser);
+            return "\nNotification Telegram envoyée.";
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "\nForum créé, mais la notification Telegram a été interrompue.";
+        } catch (IOException | IllegalStateException e) {
+            return "\nForum créé, mais notification Telegram non envoyée: " + e.getMessage();
+        }
+    }
+
+    private String notifyForumDeletionOnTelegram(Forum forum) {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        try {
+            telegramNotificationService.sendForumDeletedNotification(forum == null ? new Forum() : forum, currentUser);
+            return "\nNotification Telegram envoyée.";
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "\nForum supprimé, mais la notification Telegram a été interrompue.";
+        } catch (IOException | IllegalStateException e) {
+            return "\nForum supprimé, mais notification Telegram non envoyée: " + e.getMessage();
+        }
+    }
+
+    private Forum findForumById(String forumId) {
+        for (Forum forum : forums) {
+            if (forumId.equals(forum.getId())) {
+                return forum;
+            }
+        }
+        return null;
     }
 
     private boolean isBlank(String value) {
@@ -627,6 +808,21 @@ public class ForumController {
 
     private String safe(String value) {
         return value == null ? "" : value;
+    }
+
+    private String currentUserLogin() {
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return "";
+        }
+        return safe(currentUser.getUsername()).trim();
+    }
+
+    private String resolveCreatorForUpdate(Forum selectedForum) {
+        if (selectedForum != null && !isBlank(selectedForum.getCreatedBy())) {
+            return selectedForum.getCreatedBy().trim();
+        }
+        return currentUserLogin();
     }
 
     private void resolveCurrentRole() {
@@ -648,8 +844,9 @@ public class ForumController {
         hideNode(reportForumButton);
         hideNode(hideForumButton);
         hideNode(restoreForumButton);
+        hideNode(forumActionsSidebarCard);
+        hideNode(forumEmptyCreateButton);
         titleField.setEditable(false);
-        createdByField.setEditable(false);
         descriptionArea.setEditable(false);
         categoryField.setDisable(true);
         topicStatusField.setDisable(true);
