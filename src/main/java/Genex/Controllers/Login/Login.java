@@ -30,6 +30,9 @@ import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
@@ -293,17 +296,26 @@ public class Login {
         System.out.println(email+" "+name);
         CrudUser cu = new CrudUser();
         User u;
-        // 1. Check if this Google user already exists in your WAMP DB
+        Player p;
         if (cu.check_email(email)) {
             u=cu.getUser_withmail(email);
+            p=new CrudPlayer().getPlayerInfo(u.getId());
         } else {
-            u = new User(name,email,"nothing","player");
-            u.setPassword_hash("OAUTH_USER_SECURE");
-            u.setSalt("NO_SALT_GOOGLE");
-            cu.addEntity(u);
-            u=cu.getUser_withmail(email);
+            p=new Player();
+            p.setUsername(name);
+            p.setEmail(email);
+            p.setRole("player");
+            p.setNickname(name);
+            p.setCin("000000000");
+            p.setPassword_hash("google auth");
+            p.setSalt("google auth");
+            p.setBirthday(LocalDate.now());
+            p.setNom(name);
+            p.setPrenom(name);
+            p.setCreated_at(LocalDateTime.now());
+            new CrudPlayer().addPlayer_admin(p);
         }
-        SessionManager.getInstance().setCurrentUser(u);
+        SessionManager.getInstance().setCurrentUser(p);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard/Player_dashboard.fxml"));
         Parent root = null;
         try {

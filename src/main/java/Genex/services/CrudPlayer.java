@@ -237,8 +237,9 @@ public class CrudPlayer {
         String requete = "SELECT p.*, u.username, u.email, u.role " +
                 "FROM players p " +
                 "JOIN users u ON p.user_id = u.id " +
-                "WHERE id=? ";
-        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete)) {
+                "WHERE user_id=? ";
+        try  {
+            PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -261,8 +262,7 @@ public class CrudPlayer {
                 player.setCity(rs.getString("city"));
                 player.setAvatar_url(rs.getString("avatar_url"));
                 player.setGames_played(new CrudPlayer_Game().get_GamesPlayed(player));
-                System.out.println(player);
-                System.out.println(player.getUsername());
+                System.out.println("ya mouniiir AAAAAAAAAAAAA");
                 return player;
             }
         } catch (SQLException e) {
