@@ -25,8 +25,6 @@
 
             <Button fx:id="btnAddTournament" onAction="#openAddTournamentModal" styleClass="action-blue-button" stylesheets="@TournamentHub.css" text="+ Nouveau Tournoi" />
 
-            <ComboBox fx:id="comboGameFilter" promptText="Tous les jeux" prefWidth="180" styleClass="filter-combo" />
-
             <StackPane fx:id="searchFieldContainer">
                 <TextField fx:id="searchField" prefWidth="250" promptText="Rechercher un tournoi..." styleClass="search-field" />
             </StackPane>

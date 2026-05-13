@@ -72,49 +72,73 @@
     -fx-background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* ──────────────── Filter ComboBox ──────────────── */
+/* ──────────────── Filter ComboBox - POLYGON STYLE (FULL RED) ──────────────── */
 .filter-combo {
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-shape: "M 0 0 L 170 0 L 180 10 L 180 40 L 10 40 L 0 30 Z";
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.5), 12, 0, 0, 3);
+}
+
+.filter-combo:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.6), 16, 0, 0, 6);
+}
+
+.filter-combo:pressed {
+    -fx-background-color: #7a0a0a;
+    -fx-translate-y: 0;
+}
+
+.filter-combo:focused {
+    -fx-background-color: #8B0D0D;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.6), 16, 0, 0, 4);
 }
 
 .filter-combo .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-padding: 8 15;
-}
-
-.filter-combo:focused {
-    -fx-border-color: rgba(139, 13, 13, 0.7);
-    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
 }
 
 .filter-combo .arrow-button {
     -fx-background-color: transparent;
+    -fx-padding: 0 15 0 0;
 }
 
 .filter-combo .arrow {
     -fx-background-color: white;
+    -fx-shape: "M 0 0 L 5 5 L 10 0 Z";
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
 }
 
-/* ComboBox Dropdown */
+/* ComboBox Dropdown - Dark with red accents */
 .filter-combo .list-view {
-    -fx-background-color: #1F1E4E;
-    -fx-border-color: rgba(139, 13, 13, 0.3);
-    -fx-border-width: 1;
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: rgba(139, 13, 13, 0.6);
+    -fx-border-width: 1.5;
     -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.4), 15, 0, 0, 5);
 }
 
 .filter-combo .list-cell:hover {
-    -fx-background-color: rgba(139, 13, 13, 0.3);
+    -fx-background-color: rgba(139, 13, 13, 0.4);
 }
 
 .filter-combo .list-cell:selected {
-    -fx-background-color: rgba(139, 13, 13, 0.5);
+    -fx-background-color: rgba(139, 13, 13, 0.6);
     -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 /* PRIMARY BLUE BUTTON - CYBER LOOK */
@@ -130,6 +154,29 @@
 .action-blue-button:hover {
     -fx-background-color: #7d97ff;
     -fx-translate-y: -2;
+}
+
+/* PRIMARY RED BUTTON - CYBER LOOK (GAME FILTER) */
+.action-red-button {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-shape: "M 0 0 L 190 0 L 200 10 L 200 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.5), 12, 0, 0, 3);
+}
+
+.action-red-button:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.6), 16, 0, 0, 6);
+}
+
+.action-red-button:pressed {
+    -fx-background-color: #7a0a0a;
+    -fx-translate-y: 0;
 }
 
 /* Active Filter State (for "Mes Tournois" toggle) */

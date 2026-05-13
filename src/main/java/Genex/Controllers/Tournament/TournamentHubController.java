@@ -65,8 +65,9 @@ public class TournamentHubController {
     
     private Popup suggestionsPopup;
 
-    @FXML
-    private ComboBox<Game> comboGameFilter;
+    // Removed - replaced with btnGameFilter button
+    // @FXML
+    // private ComboBox<Game> comboGameFilter;
 
     @FXML
     private Button btnAddTournament;
@@ -121,14 +122,8 @@ public class TournamentHubController {
         // Setup role-based UI
         setupRoleBasedUI();
 
-        // Load games for filter
-        loadGamesFilter();
-
         // Setup search listener
         setupSearchListener();
-
-        // Setup game filter listener
-        setupGameFilterListener();
 
         // Load tournaments from database
         loadTournamentsFromDatabase();
@@ -142,6 +137,9 @@ public class TournamentHubController {
         try {
             LocalHttpServer.start();
 
+            // Disable right-click context menu in WebView
+            centerMapWebView.setContextMenuEnabled(false);
+
             WebEngine engine = centerMapWebView.getEngine();
             engine.setOnError(event -> System.err.println("[Tournament Map JS Error] " + event.getMessage()));
             engine.setOnAlert(event -> System.out.println("[Tournament Map JS Alert] " + event.getData()));
@@ -152,9 +150,26 @@ public class TournamentHubController {
                     JSObject window = (JSObject) engine.executeScript("window");
                     window.setMember("javaBridge", mapBridge);
                     pushCentersToMap();
+                    // Trigger an extra invalidateSize after a short delay to fix any remaining layout issues
+                    Platform.runLater(() -> {
+                        try {
+                            engine.executeScript("if (typeof scheduleResizeFix === 'function') { scheduleResizeFix(); }");
+                        } catch (Exception ignored) {}
+                    });
                 } else if (newState == Worker.State.FAILED) {
                     mapLoaded = false;
                     System.err.println("[Tournament Map] Failed to load local map page.");
+                }
+            });
+
+            // Listen for when the WebView gets its actual layout dimensions
+            centerMapWebView.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> {
+                if (mapLoaded && newBounds.getWidth() > 0 && newBounds.getHeight() > 0) {
+                    Platform.runLater(() -> {
+                        try {
+                            engine.executeScript("if (typeof fixMapSize === 'function') { fixMapSize(); }");
+                        } catch (Exception ignored) {}
+                    });
                 }
             });
 
@@ -171,8 +186,6 @@ public class TournamentHubController {
         if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
             btnAddTournament.setVisible(false);
             btnAddTournament.setManaged(false);
-            comboGameFilter.setVisible(false);
-            comboGameFilter.setManaged(false);
             // Show player record
             loadPlayerRecord(currentUser.getId());
         } else {
@@ -319,39 +332,6 @@ public class TournamentHubController {
         filterTournaments();
     }
 
-    private void loadGamesFilter() {
-        try {
-            List<Game> games = crudGame.getgames();
-            
-            // Add "All Games" option
-            Game allGamesOption = new Game();
-            allGamesOption.setId("ALL");
-            allGamesOption.setNom("Tous les jeux");
-            
-            comboGameFilter.getItems().add(allGamesOption);
-            comboGameFilter.getItems().addAll(games);
-            
-            // Set default selection to "All Games"
-            comboGameFilter.setValue(allGamesOption);
-
-            // Set custom string converter to display game name
-            comboGameFilter.setConverter(new StringConverter<Game>() {
-                @Override
-                public String toString(Game game) {
-                    return game != null ? game.getNom() : "";
-                }
-
-                @Override
-                public Game fromString(String string) {
-                    return null;
-                }
-            });
-        } catch (Exception e) {
-            System.err.println("Error loading games for filter: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     private void setupSearchListener() {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterTournaments();
@@ -370,17 +350,10 @@ public class TournamentHubController {
         });
     }
 
-    private void setupGameFilterListener() {
-        comboGameFilter.valueProperty().addListener((observable, oldValue, newValue) -> {
-            filterTournaments();
-        });
-    }
-
     private void filterTournaments() {
         tournamentCardsContainer.getChildren().clear();
 
         String searchText = searchField.getText();
-        Game selectedGame = comboGameFilter.getValue();
 
         List<Tounament> filtered = allTournaments.stream()
                 .filter(t -> {
@@ -389,10 +362,7 @@ public class TournamentHubController {
                             t.getTournamentName().toLowerCase().startsWith(searchText.toLowerCase()) ||
                             t.getFormat().toLowerCase().startsWith(searchText.toLowerCase());
 
-                    // Filter by game
-                    boolean matchesGame = selectedGame == null || 
-                            "ALL".equals(selectedGame.getId()) ||
-                            (t.getGame_id() != null && t.getGame_id().equals(selectedGame.getId()));
+                    // No game filter anymore - show all games
 
                     // Filter by player's joined tournaments (if player and filter active)
                     boolean matchesMyTournaments = true;
@@ -405,7 +375,7 @@ public class TournamentHubController {
                         }
                     }
 
-                    return matchesSearch && matchesGame && matchesMyTournaments;
+                    return matchesSearch && matchesMyTournaments;
                 })
                 .toList();
 
@@ -509,12 +479,19 @@ public class TournamentHubController {
             return;
         }
 
+        // No game filter - show all centers with tournaments
         List<CenterMapPin> pins = new ArrayList<>();
         if (allCenters != null) {
             for (Center center : allCenters) {
-                Optional<double[]> coordinates = extractCoordinates(center.getMapUrl());
-                coordinates.ifPresent(values -> pins.add(new CenterMapPin(center, values[0], values[1],
-                        getTournamentsForCenter(center.getCenterId()).size())));
+                // Get tournaments for this center
+                List<Tounament> centerTournaments = getTournamentsForCenter(center.getCenterId());
+                
+                // Only add pin if center has tournaments
+                if (!centerTournaments.isEmpty()) {
+                    Optional<double[]> coordinates = extractCoordinates(center.getMapUrl());
+                    int tournamentCount = centerTournaments.size();
+                    coordinates.ifPresent(values -> pins.add(new CenterMapPin(center, values[0], values[1], tournamentCount)));
+                }
             }
         }
 
@@ -877,11 +854,11 @@ public class TournamentHubController {
             );
             
             suggestion.setOnMouseClicked(event -> {
-                searchField.setText(tournament.getTournamentName());
                 if (suggestionsPopup != null) {
                     suggestionsPopup.hide();
                 }
-                filterTournaments();
+                // Open tournament detail directly
+                openTournamentDetail(tournament);
             });
             
             popupContent.getChildren().add(suggestion);
