@@ -6,6 +6,7 @@ public class MarketplaceOrder {
 
     public enum PaymentMethod {
         STRIPE("Paiement Stripe (en ligne)"),
+        BLOCKCHAIN("Paiement Blockchain (Crypto)"),
         CASH_ON_DELIVERY("Paiement à la livraison");
 
         private final String label;

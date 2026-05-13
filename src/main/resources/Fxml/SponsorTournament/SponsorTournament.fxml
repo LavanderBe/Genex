@@ -3,6 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.2"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -66,74 +68,101 @@
 
     </VBox>
 
-    <!-- ══ DRAWER ═══════════════════════════════════════════════════════ -->
-    <StackPane fx:id="drawerOverlay" styleClass="overlay-bg"
-               visible="false" managed="false" alignment="CENTER_RIGHT">
-        <VBox styleClass="drawer" prefWidth="400" maxWidth="400"
-              StackPane.alignment="CENTER_RIGHT">
-            <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+    <!-- ══ CYBER MODAL OVERLAY ══════════════════════════════════════════ -->
+    <StackPane fx:id="drawerOverlay" managed="false" styleClass="overlay-bg" visible="false">
+        <children>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="580.0" prefWidth="750.0" styleClass="compact-shard">
+                <children>
+                    <!-- Background Hardware Plate -->
+                    <SVGPath content="M 0 0 L 710 0 L 750 40 L 750 580 L 40 580 L 0 540 Z" fill="#050508" stroke="#8B0D0D" strokeWidth="1.5" />
 
-            <HBox alignment="CENTER_LEFT">
-                <Label fx:id="formTitle" text="Nouveau contrat tournoi" styleClass="drawer-title"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="✕" styleClass="btn-close" onAction="#handleClear"/>
-            </HBox>
-            <Separator styleClass="drawer-sep">
-                <VBox.margin><Insets top="12" bottom="16"/></VBox.margin>
-            </Separator>
+                    <!-- Side Red Accent Bar -->
+                    <Region layoutX="0" layoutY="100" prefHeight="380" prefWidth="3" style="-fx-background-color: #8B0D0D;" />
 
-            <!-- Sponsor -->
-            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="SPONSOR *" styleClass="field-label"/>
-                <ComboBox fx:id="combSponsor" styleClass="combo-field" maxWidth="Infinity"/>
-                <Label fx:id="errSponsor" styleClass="err-label" visible="false" managed="false"/>
-            </VBox>
+                    <VBox layoutX="40.0" layoutY="35.0" prefHeight="510.0" prefWidth="670.0" spacing="20.0">
+                        <children>
+                            <!-- Header -->
+                            <HBox alignment="CENTER_LEFT">
+                                <children>
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="formTitle" styleClass="hud-title" text="NOUVEAU CONTRAT TOURNOI" />
+                                            <Label styleClass="hud-subtitle" text="INITIALISATION_CONTRAT_TOURNAMENT" />
+                                        </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#handleClear" styleClass="btn-close" text="✕" />
+                                </children>
+                            </HBox>
 
-            <!-- Tournament -->
-            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="TOURNOI *" styleClass="field-label"/>
-                <ComboBox fx:id="combTournament" styleClass="combo-field" maxWidth="Infinity"/>
-                <Label fx:id="errTournament" styleClass="err-label" visible="false" managed="false"/>
-            </VBox>
+                            <Separator styleClass="drawer-sep" />
 
-            <!-- Method -->
-            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="MÉTHODE DE SPONSORING" styleClass="field-label"/>
-                <ComboBox fx:id="combMethod" styleClass="combo-field" maxWidth="Infinity"/>
-            </VBox>
+                            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                                <children>
+                                    <!-- Left Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="SPONSOR *" />
+                                                <ComboBox fx:id="combSponsor" maxWidth="Infinity" styleClass="hud-combo" />
+                                                <Label fx:id="errSponsor" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
 
-            <!-- Budget -->
-            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="BUDGET (TND)" styleClass="field-label"/>
-                <TextField fx:id="fieldBudget" styleClass="input-field" promptText="0.00"/>
-                <Label fx:id="errBudget" styleClass="err-label" visible="false" managed="false"/>
-            </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="TOURNOI *" />
+                                                <ComboBox fx:id="combTournament" maxWidth="Infinity" styleClass="hud-combo" />
+                                                <Label fx:id="errTournament" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
 
-            <!-- Contract duration -->
-            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="DÉBUT DU CONTRAT" styleClass="field-label"/>
-                <DatePicker fx:id="dateStart" styleClass="input-field" maxWidth="Infinity"/>
-            </VBox>
-            <VBox spacing="6"><VBox.margin><Insets bottom="10"/></VBox.margin>
-                <Label text="FIN DU CONTRAT" styleClass="field-label"/>
-                <DatePicker fx:id="dateEnd" styleClass="input-field" maxWidth="Infinity"/>
-            </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="MÉTHODE DE SPONSORING" />
+                                                <ComboBox fx:id="combMethod" maxWidth="Infinity" styleClass="hud-combo" />
+                                            </VBox>
 
-            <!-- Notes -->
-            <VBox spacing="6"><VBox.margin><Insets bottom="14"/></VBox.margin>
-                <Label text="NOTES" styleClass="field-label"/>
-                <TextField fx:id="fieldNotes" styleClass="input-field" promptText="Remarques…"/>
-            </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="BUDGET (TND) *" />
+                                                <TextField fx:id="fieldBudget" promptText="0.00" styleClass="hud-input" />
+                                                <Label fx:id="errBudget" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
 
-            <Region VBox.vgrow="ALWAYS"/>
+                                    <!-- Right Column -->
+                                    <VBox prefWidth="320.0" spacing="15.0">
+                                        <children>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="DÉBUT DU CONTRAT" />
+                                                <DatePicker fx:id="dateStart" maxWidth="Infinity" styleClass="hud-input" />
+                                            </VBox>
 
-            <HBox spacing="10">
-                <Button fx:id="btnSave" text="ENREGISTRER" styleClass="btn-primary"
-                        onAction="#handleSave" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
-                <Button text="ANNULER" styleClass="btn-secondary"
-                        onAction="#handleClear" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="44"/>
-            </HBox>
-        </VBox>
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="FIN DU CONTRAT" />
+                                                <DatePicker fx:id="dateEnd" maxWidth="Infinity" styleClass="hud-input" />
+                                                <Label fx:id="errDate" managed="false" styleClass="err-label" visible="false" />
+                                            </VBox>
+
+                                            <VBox spacing="5">
+                                                <Label styleClass="field-label" text="NOTES" />
+                                                <TextField fx:id="fieldNotes" promptText="Remarques…" styleClass="hud-input" />
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+
+                            <Region VBox.vgrow="ALWAYS" />
+
+                            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                                <children>
+                                    <Button fx:id="btnSave" onAction="#handleSave" prefHeight="40.0" prefWidth="200.0" styleClass="confirm-btn" text="ENREGISTRER" />
+                                    <Button onAction="#handleClear" prefHeight="40.0" prefWidth="120.0" styleClass="cancel-btn" text="ANNULER" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </children>
     </StackPane>
 
 </StackPane>

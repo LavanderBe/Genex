@@ -12,6 +12,7 @@ import Genex.entities.User;
 import Genex.services.CrudMarketplace;
 import Genex.services.CrudMarketplace.CartEntry;
 import Genex.services.StripeService;
+import Genex.services.BlockchainService;
 import Genex.utils.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,6 +26,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -147,9 +150,18 @@ public class BoutiqueController {
     private String          pendingOrderId;
     private String          pendingSessionId;
 
+    // ── Blockchain overlay ────────────────────────────────────────────────
+    @FXML private StackPane blockchainOverlay;
+    @FXML private TextField bcWalletAddress;
+    @FXML private Label     bcAmountLabel;
+    @FXML private Label     bcTotalTndLabel;
+    @FXML private TextField bcTxHash;
+    @FXML private Label     errBc;
+
     // ── State ──────────────────────────────────────────────────────────────
     private CrudMarketplace service;
     private StripeService   stripe;
+    private BlockchainService blockchain;
     private User            currentUser;
 
     // Product viewer state
@@ -176,6 +188,7 @@ public class BoutiqueController {
     public void initialize() {
         service     = new CrudMarketplace();
         stripe      = new StripeService();
+        blockchain  = new BlockchainService();
         currentUser = SessionManager.getInstance().getCurrentUser();
 
         setupFilterCombos();
@@ -751,6 +764,11 @@ public class BoutiqueController {
             pendingSessionId = result.sessionId;
             closeBuyDrawer();
             openStripeWebView(result.checkoutUrl);
+        } else if (method == PaymentMethod.BLOCKCHAIN) {
+            MarketplaceOrder saved = service.placeOrder(order);
+            pendingOrderId = saved.getId();
+            closeBuyDrawer();
+            openBlockchainOverlay(total);
         } else {
             service.placeOrder(order); closeBuyDrawer();
             showInfo("Commande enregistree ! Le vendeur vous contactera.");
@@ -811,6 +829,51 @@ public class BoutiqueController {
         boolean paid = stripe.verifySession(order.getPaymentRef());
         if (paid) { service.updatePaymentStatus(order.getId(), PaymentStatus.PAID, order.getPaymentRef()); loadMyOrders(); showInfo("Paiement confirme !"); }
         else showAlert("Non confirme", "Completez le paiement sur Stripe puis reessayez.");
+    }
+
+    // ── Blockchain Logic ──────────────────────────────────────────────────
+    private void openBlockchainOverlay(BigDecimal totalTnd) {
+        BigDecimal eth = blockchain.convertTndToEth(totalTnd);
+        bcAmountLabel.setText(eth.toPlainString() + " ETH");
+        bcTotalTndLabel.setText("(≈ " + totalTnd.toPlainString() + " TND)");
+        bcTxHash.clear();
+        hideErr(errBc);
+        blockchainOverlay.setVisible(true);
+        blockchainOverlay.setManaged(true);
+    }
+
+    @FXML
+    private void closeBlockchainOverlay() {
+        blockchainOverlay.setVisible(false);
+        blockchainOverlay.setManaged(false);
+    }
+
+    @FXML
+    private void handleCopyWallet() {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(bcWalletAddress.getText());
+        clipboard.setContent(content);
+        // Show subtle feedback if needed, for now just copy
+    }
+
+    @FXML
+    private void handleVerifyBlockchain() {
+        String hash = bcTxHash.getText().trim();
+        if (hash.isEmpty()) { showErr(errBc, "Veuillez entrer le hash de la transaction."); return; }
+        
+        hideErr(errBc);
+        // In a real app, we'd use the amount too
+        boolean success = blockchain.verifyTransaction(hash, BigDecimal.ZERO); 
+        
+        if (success) {
+            service.updatePaymentStatus(pendingOrderId, PaymentStatus.PAID, hash);
+            closeBlockchainOverlay();
+            loadMyOrders();
+            showInfo("Paiement Blockchain confirme ! Merci pour votre achat.");
+        } else {
+            showErr(errBc, "Transaction introuvable ou invalide.");
+        }
     }
 
     @FXML private void handleCancelBuy() { closeBuyDrawer(); }

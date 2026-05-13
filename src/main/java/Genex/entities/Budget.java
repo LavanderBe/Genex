@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class Budget {
     private String id;
-    private String centerId;
     private Sponsor sponsor;  // Relation directe avec Sponsor
     private int fiscalYear;
     private BigDecimal allocatedAmount;
@@ -15,9 +14,8 @@ public class Budget {
         this.spentAmount = BigDecimal.ZERO;
     }
 
-    public Budget(String id, String centerId, Sponsor sponsor, int fiscalYear, BigDecimal allocatedAmount) {
+    public Budget(String id, Sponsor sponsor, int fiscalYear, BigDecimal allocatedAmount) {
         this.id = id;
-        this.centerId = centerId;
         this.sponsor = sponsor;
         this.fiscalYear = fiscalYear;
         this.allocatedAmount = allocatedAmount;
@@ -31,14 +29,6 @@ public class Budget {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCenterId() {
-        return centerId;
-    }
-
-    public void setCenterId(String centerId) {
-        this.centerId = centerId;
     }
 
     public Sponsor getSponsor() {
@@ -81,6 +71,8 @@ public class Budget {
     }
 
     public BigDecimal getRemainingAmount() {
-        return allocatedAmount.subtract(spentAmount);
+        BigDecimal a = (allocatedAmount != null) ? allocatedAmount : BigDecimal.ZERO;
+        BigDecimal s = (spentAmount != null) ? spentAmount : BigDecimal.ZERO;
+        return a.subtract(s);
     }
 }

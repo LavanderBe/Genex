@@ -7,6 +7,7 @@ import Genex.entities.Tounament;
 import Genex.services.CrudSponsor;
 import Genex.services.CrudSponsorTournament;
 import Genex.services.CrudTournament;
+import Genex.services.ContractPdfService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class SponsorTournamentController {
 
@@ -54,11 +56,13 @@ public class SponsorTournamentController {
     @FXML private Label                   errSponsor;
     @FXML private Label                   errTournament;
     @FXML private Label                   errBudget;
+    @FXML private Label                   errDate;
 
     // ── State ──────────────────────────────────────────────────────────────
     private CrudSponsorTournament service;
     private CrudSponsor           sponsorService;
     private CrudTournament        tournamentService;
+    private ContractPdfService    pdfService;
     private final ObservableList<SponsorTournament> data = FXCollections.observableArrayList();
     private SponsorTournament editingTarget = null;
 
@@ -68,6 +72,7 @@ public class SponsorTournamentController {
             service           = new CrudSponsorTournament();
             sponsorService    = new CrudSponsor();
             tournamentService = new CrudTournament();
+            pdfService        = new ContractPdfService();
         } catch (Exception e) {
             showAlert("Erreur DB", rootCause(e));
             return;
@@ -207,7 +212,7 @@ public class SponsorTournamentController {
         dateEnd.setValue(null);
         fieldNotes.clear();
         btnSave.setText("Enregistrer");
-        hideErr(errSponsor); hideErr(errTournament); hideErr(errBudget);
+        hideErr(errSponsor); hideErr(errTournament); hideErr(errBudget); hideErr(errDate);
     }
 
     private SponsorTournament buildFromForm() {
@@ -225,23 +230,43 @@ public class SponsorTournamentController {
 
     private boolean validateForm() {
         boolean ok = true;
-        hideErr(errSponsor); hideErr(errTournament); hideErr(errBudget);
+        hideErr(errSponsor); hideErr(errTournament); hideErr(errBudget); hideErr(errDate);
         if (combSponsor.getValue()    == null) { showErr(errSponsor,    "Sponsor obligatoire.");   ok = false; }
         if (combTournament.getValue() == null) { showErr(errTournament, "Tournoi obligatoire.");   ok = false; }
-        try { new BigDecimal(fieldBudget.getText().trim()); }
-        catch (NumberFormatException e) { showErr(errBudget, "Montant invalide."); ok = false; }
+        
+        try { 
+            String b = fieldBudget.getText().trim();
+            if (!b.isEmpty()) new BigDecimal(b);
+        } catch (NumberFormatException e) { showErr(errBudget, "Montant invalide."); ok = false; }
+
+        LocalDate start = dateStart.getValue();
+        LocalDate end = dateEnd.getValue();
+        if (start != null && end != null && end.isBefore(start)) {
+            showErr(errDate, "La fin doit être après le début.");
+            ok = false;
+        }
+
         return ok;
     }
 
     // ── Action column ──────────────────────────────────────────────────────
     private void addActionColumn() {
         Callback<TableColumn<SponsorTournament, Void>, TableCell<SponsorTournament, Void>> factory = col -> new TableCell<>() {
+            private final Button exportBtn = new Button("📄");
             private final Button editBtn   = new Button("✏");
             private final Button deleteBtn = new Button("🗑");
-            private final HBox   box       = new HBox(4, editBtn, deleteBtn);
+            private final HBox   box       = new HBox(6, exportBtn, editBtn, deleteBtn);
             {
+                exportBtn.getStyleClass().add("action-btn-edit"); // Reusing blue style
                 editBtn.getStyleClass().add("action-btn-edit");
                 deleteBtn.getStyleClass().add("action-btn-delete");
+
+                exportBtn.setOnAction(e -> {
+                    SponsorTournament st = getTableView().getItems().get(getIndex());
+                    try { pdfService.exportTournamentContract(st); }
+                    catch (Exception ex) { showAlert("Erreur Export", rootCause(ex)); }
+                });
+
                 editBtn.setOnAction(e -> populateForm(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> {
                     SponsorTournament st = getTableView().getItems().get(getIndex());

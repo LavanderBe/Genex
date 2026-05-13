@@ -7,6 +7,7 @@ import Genex.entities.Team;
 import Genex.services.CrudSponsor;
 import Genex.services.CrudSponsorTeam;
 import Genex.services.CrudTeam;
+import Genex.services.ContractPdfService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,11 +56,13 @@ public class SponsorTeamController {
     @FXML private Label                  errSponsor;
     @FXML private Label                  errTeam;
     @FXML private Label                  errBudget;
+    @FXML private Label                  errDate;
 
     // ── State ──────────────────────────────────────────────────────────────
     private CrudSponsorTeam service;
     private CrudSponsor     sponsorService;
     private CrudTeam        teamService;
+    private ContractPdfService pdfService;
     private final ObservableList<SponsorTeam> data = FXCollections.observableArrayList();
     private SponsorTeam editingTarget = null;
 
@@ -69,6 +72,7 @@ public class SponsorTeamController {
             service        = new CrudSponsorTeam();
             sponsorService = new CrudSponsor();
             teamService    = new CrudTeam();
+            pdfService     = new ContractPdfService();
         } catch (Exception e) {
             showAlert("Erreur DB", rootCause(e));
             return;
@@ -189,7 +193,7 @@ public class SponsorTeamController {
                 .filter(s -> s.getId().equals(st.getSponsorId()))
                 .findFirst().ifPresent(combSponsor::setValue);
         combTeam.getItems().stream()
-                .filter(t -> t.getId() == Integer.toString(st.getTeamId()))
+                .filter(t -> t.getId().equals(st.getTeamId()))
                 .findFirst().ifPresent(combTeam::setValue);
         combMethod.setValue(st.getMethod());
         fieldBudget.setText(st.getBudgetAmount() != null ? st.getBudgetAmount().toPlainString() : "");
@@ -211,7 +215,7 @@ public class SponsorTeamController {
         dateEnd.setValue(null);
         fieldNotes.clear();
         btnSave.setText("Enregistrer");
-        hideErr(errSponsor); hideErr(errTeam); hideErr(errBudget);
+        hideErr(errSponsor); hideErr(errTeam); hideErr(errBudget); hideErr(errDate);
     }
 
     private SponsorTeam buildFromForm() {
@@ -229,23 +233,43 @@ public class SponsorTeamController {
 
     private boolean validateForm() {
         boolean ok = true;
-        hideErr(errSponsor); hideErr(errTeam); hideErr(errBudget);
+        hideErr(errSponsor); hideErr(errTeam); hideErr(errBudget); hideErr(errDate);
         if (combSponsor.getValue() == null) { showErr(errSponsor, "Sponsor obligatoire."); ok = false; }
         if (combTeam.getValue() == null)    { showErr(errTeam,    "Équipe obligatoire.");  ok = false; }
-        try { new BigDecimal(fieldBudget.getText().trim()); }
-        catch (NumberFormatException e) { showErr(errBudget, "Montant invalide."); ok = false; }
+        
+        try { 
+            String b = fieldBudget.getText().trim();
+            if (!b.isEmpty()) new BigDecimal(b); 
+        } catch (NumberFormatException e) { showErr(errBudget, "Montant invalide."); ok = false; }
+
+        LocalDate start = dateStart.getValue();
+        LocalDate end = dateEnd.getValue();
+        if (start != null && end != null && end.isBefore(start)) {
+            showErr(errDate, "La fin doit être après le début.");
+            ok = false;
+        }
+
         return ok;
     }
 
     // ── Action column ──────────────────────────────────────────────────────
     private void addActionColumn() {
         Callback<TableColumn<SponsorTeam, Void>, TableCell<SponsorTeam, Void>> factory = col -> new TableCell<>() {
+            private final Button exportBtn = new Button("📄");
             private final Button editBtn   = new Button("✏");
             private final Button deleteBtn = new Button("🗑");
-            private final HBox   box       = new HBox(4, editBtn, deleteBtn);
+            private final HBox   box       = new HBox(6, exportBtn, editBtn, deleteBtn);
             {
+                exportBtn.getStyleClass().add("action-btn-edit"); // Reusing edit style for blue look
                 editBtn.getStyleClass().add("action-btn-edit");
                 deleteBtn.getStyleClass().add("action-btn-delete");
+
+                exportBtn.setOnAction(e -> {
+                    SponsorTeam st = getTableView().getItems().get(getIndex());
+                    try { pdfService.exportTeamContract(st); }
+                    catch (Exception ex) { showAlert("Erreur Export", rootCause(ex)); }
+                });
+
                 editBtn.setOnAction(e -> populateForm(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> {
                     SponsorTeam st = getTableView().getItems().get(getIndex());

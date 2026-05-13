@@ -336,17 +336,61 @@
 .type-check:selected .box { -fx-background-color: #8B0D0D; -fx-border-color: #8B0D0D; }
 .type-check:selected .mark { -fx-background-color: white; }
 
-/* ── Orders table ────────────────────────────────────────────── */
-.data-table { -fx-background-color: transparent; -fx-border-color: transparent; -fx-table-cell-border-color: transparent; }
-.data-table .column-header-background { -fx-background-color: rgba(139,13,13,0.08); }
-.data-table .column-header { -fx-background-color: transparent; -fx-border-color: transparent; }
-.data-table .column-header .label { -fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 10 8; }
-.data-table .filler { -fx-background-color: rgba(139,13,13,0.08); -fx-border-color: transparent; }
-.data-table .table-row-cell { -fx-background-color: transparent; -fx-border-color: transparent transparent rgba(139,13,13,0.1) transparent; -fx-border-width: 0 0 1 0; }
-.data-table .table-row-cell:hover    { -fx-background-color: rgba(139,13,13,0.1); }
-.data-table .table-row-cell:selected { -fx-background-color: rgba(139,13,13,0.22); }
-.data-table .table-cell { -fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 13px; -fx-padding: 9 8; -fx-border-color: transparent; }
-.table-placeholder { -fx-text-fill: rgba(255,255,255,0.2); -fx-font-size: 13px; }
+/* ── Cyber Table Styling ────────────────────────────────────── */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(139, 13, 13, 0.3);
+    -fx-border-width: 1;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: rgba(20, 20, 35, 0.9);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 45;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 13px;
+    -fx-letter-spacing: 1px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-border-color: transparent transparent rgba(255, 255, 255, 0.05) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 50;
+}
+
+.data-table .table-row-cell:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-border-color: transparent transparent #ff4d4d transparent;
+}
+
+.data-table .table-cell {
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 10;
+}
+
+.data-table .placeholder .label {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+}
 
 /* ── Drawer ──────────────────────────────────────────────────── */
 .overlay-bg { -fx-background-color: rgba(0, 0, 0, 0.65); }

@@ -29,7 +29,7 @@ public class SponsorTeam {
     private String       id;
     private String       sponsorId;
     private Sponsor      sponsor;       // populated on read
-    private int          teamId;
+    private String       teamId;
     private Team         team;          // populated on read
     private SponsorMethod method;
     private BigDecimal   budgetAmount;  // monetary value (0 if non-cash)
@@ -53,13 +53,13 @@ public class SponsorTeam {
         this.sponsorId = sponsor != null ? sponsor.getId() : null;
     }
 
-    public int  getTeamId()                      { return teamId; }
-    public void setTeamId(int teamId)            { this.teamId = teamId; }
+    public String getTeamId()                    { return teamId; }
+    public void setTeamId(String teamId)         { this.teamId = teamId; }
 
     public Team getTeam()                        { return team; }
     public void setTeam(Team team)               {
         this.team   = team;
-        //this.teamId = team != null ? team.getId() : 0;
+        this.teamId = team != null ? team.getId() : null;
     }
 
     public SponsorMethod getMethod()                     { return method; }

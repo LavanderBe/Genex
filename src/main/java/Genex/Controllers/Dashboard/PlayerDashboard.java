@@ -1,5 +1,6 @@
 package Genex.Controllers.Dashboard;
 
+import Genex.services.ExchangeService;
 import Genex.entities.User;
 import Genex.utils.PingService;
 import Genex.utils.SessionManager;
@@ -17,7 +18,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -53,6 +58,9 @@ public class PlayerDashboard {
     public void initialize() {
         sessionUser.setText(SessionManager.getInstance().getCurrentUser().getUsername().toUpperCase());
         startPingAnimation();
+        startPingService();
+        // Show main hub by default
+        javafx.application.Platform.runLater(this::showMain);
         startPingService();
         checkTrainingNotifications();
         // hook cleanup to window close
@@ -181,7 +189,7 @@ public class PlayerDashboard {
 
     @FXML private void showMain() {
         setActiveNav(navMainButton);
-        contentArea.getChildren().clear();
+        loadModule("/Fxml/Dashboard/PlayerMain.fxml");
     }
 
     @FXML private void showTeams() {
@@ -283,7 +291,6 @@ public class PlayerDashboard {
         try {
             Parent module = FXMLLoader.load(getClass().getResource(absolutePath));
             contentArea.getChildren().setAll(module);
-            // Anchor to fill the content area
             javafx.scene.layout.AnchorPane.setTopAnchor(module, 0.0);
             javafx.scene.layout.AnchorPane.setBottomAnchor(module, 0.0);
             javafx.scene.layout.AnchorPane.setLeftAnchor(module, 0.0);

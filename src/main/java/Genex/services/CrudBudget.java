@@ -15,16 +15,15 @@ public class CrudBudget implements ICrud<Budget> {
 
     @Override
     public void addEntity(Budget b) {
-        String sql = "INSERT INTO budget (id, center_id, sponsor_id, fiscal_year, allocated_amount, spent_amount) " +
-                     "VALUES (UUID(), ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO budget (id, sponsor_id, fiscal_year, allocated_amount, spent_amount) " +
+                     "VALUES (UUID(), ?, ?, ?, ?)";
         try (PreparedStatement pst = cnx.prepareStatement(sql)) {
-            pst.setString(1, b.getCenterId());
-            pst.setString(2, b.getSponsorId());
-            pst.setInt(3, b.getFiscalYear());
-            pst.setBigDecimal(4, b.getAllocatedAmount());
-            pst.setBigDecimal(5, b.getSpentAmount());
+            pst.setString(1, b.getSponsorId());
+            pst.setInt(2, b.getFiscalYear());
+            pst.setBigDecimal(3, b.getAllocatedAmount());
+            pst.setBigDecimal(4, b.getSpentAmount());
             pst.executeUpdate();
-            System.out.println("Budget added for center: " + b.getCenterId());
+            System.out.println("Budget added for sponsor: " + b.getSponsorId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -32,14 +31,13 @@ public class CrudBudget implements ICrud<Budget> {
 
     @Override
     public void updateEntity(Budget b, String id) {
-        String sql = "UPDATE budget SET center_id=?, sponsor_id=?, fiscal_year=?, allocated_amount=?, spent_amount=? WHERE id=?";
+        String sql = "UPDATE budget SET sponsor_id=?, fiscal_year=?, allocated_amount=?, spent_amount=? WHERE id=?";
         try (PreparedStatement pst = cnx.prepareStatement(sql)) {
-            pst.setString(1, b.getCenterId());
-            pst.setString(2, b.getSponsorId());
-            pst.setInt(3, b.getFiscalYear());
-            pst.setBigDecimal(4, b.getAllocatedAmount());
-            pst.setBigDecimal(5, b.getSpentAmount());
-            pst.setString(6, id);
+            pst.setString(1, b.getSponsorId());
+            pst.setInt(2, b.getFiscalYear());
+            pst.setBigDecimal(3, b.getAllocatedAmount());
+            pst.setBigDecimal(4, b.getSpentAmount());
+            pst.setString(5, id);
             pst.executeUpdate();
             System.out.println("Budget updated: " + id);
         } catch (SQLException e) {
@@ -91,7 +89,6 @@ public class CrudBudget implements ICrud<Budget> {
 
     private void mapRow(ResultSet rs, Budget b) throws SQLException {
         b.setId(rs.getString("id"));
-        b.setCenterId(rs.getString("center_id"));
         b.setFiscalYear(rs.getInt("fiscal_year"));
         b.setAllocatedAmount(rs.getBigDecimal("allocated_amount"));
         b.setSpentAmount(rs.getBigDecimal("spent_amount"));

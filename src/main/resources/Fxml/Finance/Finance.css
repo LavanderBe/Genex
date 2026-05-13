@@ -128,13 +128,20 @@
 
 .page-title {
     -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: 700;
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.4), 10, 0, 0, 0);
 }
 
 .page-subtitle {
-    -fx-text-fill: rgba(255, 255, 255, 0.35);
-    -fx-font-size: 11px;
+    -fx-text-fill: #5c7cfa;
+    -fx-font-size: 13px;
+    -fx-font-family: "Consolas";
+    -fx-letter-spacing: 3px;
+    -fx-font-weight: bold;
+    -fx-text-transform: uppercase;
 }
 
 /* ── Search field ────────────────────────────────────────────── */
@@ -211,12 +218,108 @@
     -fx-border-color: rgba(249, 115, 22, 0.25);
 }
 
-.stat-icon-label { -fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 11px; }
-.stat-number     { -fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: 700; }
-.stat-label      { -fx-text-fill: rgba(255,255,255,0.35); -fx-font-size: 11px; }
+.stat-icon-label { -fx-text-fill: rgba(255,255,255,0.55); -fx-font-size: 14px; -fx-font-family: "Consolas"; }
+.stat-number     { -fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: 900; -fx-font-family: "Impact"; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 15, 0, 0, 0); }
+.stat-label      { -fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 12px; -fx-letter-spacing: 1.5px; -fx-font-weight: bold; }
 
-/* ── Panels ──────────────────────────────────────────────────── */
-.panel {
+/* ── Cyber Overview Enhancements ─────────────────────────────── */
+.overview-glass-panel {
+    -fx-background-color: rgba(10, 10, 26, 0.6);
+    -fx-border-color: rgba(139, 13, 13, 0.4);
+    -fx-border-width: 1;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.2), 15, 0, 0, 0);
+}
+
+.stat-card-cyber {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-border-color: transparent transparent transparent #8B0D0D;
+    -fx-border-width: 0 0 0 3;
+    -fx-padding: 12 16;
+}
+
+.stat-card-cyber:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.08);
+    -fx-border-color: transparent transparent transparent #ff4d4d;
+}
+
+.cyber-header {
+    -fx-font-family: "Impact";
+    -fx-font-size: 22px;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 3px;
+}
+
+/* ── Cyber Table Styling ────────────────────────────────────── */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(139, 13, 13, 0.3);
+    -fx-border-width: 1;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: rgba(20, 20, 35, 0.9);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 45;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 13px;
+    -fx-letter-spacing: 1px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-border-color: transparent transparent rgba(255, 255, 255, 0.05) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 50;
+}
+
+.data-table .table-row-cell:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.15);
+    -fx-border-color: transparent transparent #ff4d4d transparent;
+}
+
+.data-table .table-cell {
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 10;
+}
+
+.data-table .placeholder .label {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+}
+
+/* Scrollbar Cyberization */
+.data-table .scroll-bar:vertical,
+.data-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.data-table .scroll-bar .thumb {
+    -fx-background-color: rgba(139, 13, 13, 0.5);
+    -fx-background-radius: 0;
+}
+
+.data-table .scroll-bar .thumb:hover {
+    -fx-background-color: #ff4d4d;
+}
     -fx-background-color: rgba(0, 0, 0, 0.35);
     -fx-background-radius: 0;
     -fx-border-color: rgba(139, 13, 13, 0.25);
@@ -551,5 +654,125 @@
 
 .overview-chart .bar-chart-bar {
     -fx-background-radius: 0;
-    -fx-background-insets: 0 2 0 2;
+    -fx-background-insets: 0 4 0 4;
+}
+
+/* Series 0 (Alloué) - Neon Cyan/Blue */
+.overview-chart .default-color0.chart-bar {
+    -fx-background-color: linear-gradient(to bottom, #00f2ff, #0066ff);
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 255, 0.3), 10, 0, 0, 0);
+}
+
+/* Series 1 (Dépensé) - Neon Red/Magenta */
+.overview-chart .default-color1.chart-bar {
+    -fx-background-color: linear-gradient(to bottom, #ff0055, #8B0D0D);
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 85, 0.3), 10, 0, 0, 0);
+}
+
+/* Fix legend symbols to match bars */
+.overview-chart .chart-legend-item-symbol.default-color0 { -fx-background-color: #00f2ff; }
+.overview-chart .chart-legend-item-symbol.default-color1 { -fx-background-color: #ff0055; }
+
+/* ── Cyber Progress Bars (Breakdown + Elite) ─────────────────── */
+.cyber-progress {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 0;
+    -fx-pref-height: 8;
+}
+
+.cyber-progress .bar {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+/* Blue breakdown bar */
+.progress-cyan .bar { -fx-background-color: #00f2ff; -fx-effect: dropshadow(gaussian, #00f2ff, 8, 0, 0, 0); }
+/* Green/Lime breakdown bar */
+.progress-lime .bar { -fx-background-color: #39ff14; -fx-effect: dropshadow(gaussian, #39ff14, 8, 0, 0, 0); }
+/* Magenta breakdown bar */
+.progress-magenta .bar { -fx-background-color: #ff00ff; -fx-effect: dropshadow(gaussian, #ff00ff, 8, 0, 0, 0); }
+/* Red (Elite) bar */
+.progress-red .bar { -fx-background-color: #ff4d4d; -fx-effect: dropshadow(gaussian, #ff4d4d, 8, 0, 0, 0); }
+/* ── Cyber Modal Shard (Synced with Games module) ─────────────── */
+.compact-shard {
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 2, 2, 0.8), 20, 0, 0, 0);
+}
+
+.hud-input {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-padding: 8 5;
+}
+
+.hud-input:focused {
+    -fx-border-color: #8B0D0D;
+    -fx-background-color: rgba(139, 13, 13, 0.05);
+}
+
+.hud-combo {
+    -fx-background-color: rgba(31, 30, 78, 0.2);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 2 5;
+}
+
+.hud-combo .label {
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+}
+
+.hud-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.hud-combo .arrow {
+    -fx-background-color: #8B0D0D;
+}
+
+.confirm-btn {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.confirm-btn:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+    -fx-translate-y: -2;
+}
+
+.cancel-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 5 0 L 100 0 L 100 100 L 0 100 L 0 10 Z";
+    -fx-cursor: hand;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.1);
+    -fx-effect: dropshadow(three-pass-box, rgba(248, 124, 124, 0.1), 15, 0, 0, 0);
+    -fx-translate-y: -2;
+}
+
+.hud-title {
+    -fx-font-family: "Impact";
+    -fx-font-size: 18px;
+    -fx-letter-spacing: 1px;
+    -fx-text-fill: white;
+}
+
+.hud-subtitle {
+    -fx-font-size: 9px;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #5c7cfa;
 }
