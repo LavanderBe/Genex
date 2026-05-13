@@ -81,7 +81,7 @@ public class CrudGame {
 
     public List<Game> getgames(){
         String requete="SELECT * " +
-                "FROM GAMES;";
+                "FROM games;";
         Statement pst= null;
         try {
             pst = Myconnection.getInstance().getCnx().createStatement();
