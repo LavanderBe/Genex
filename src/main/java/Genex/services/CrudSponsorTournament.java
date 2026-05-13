@@ -17,7 +17,7 @@ public class CrudSponsorTournament {
 
     // ── CREATE ─────────────────────────────────────────────────────────────
     public void addEntity(SponsorTournament st) {
-        String sql = "INSERT INTO sponsor_tournament (id, sponsor_id, tournament_id, method, budget_amount, start_date, end_date, notes) " +
+        String sql = "INSERT INTO sponsor_tournament (id, sponsor_id, tournament_id, methode, budget_amount, start_date, end_date, notes) " +
                      "VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pst = getCnx().prepareStatement(sql)) {
             pst.setString(1, st.getSponsorId());
@@ -35,7 +35,7 @@ public class CrudSponsorTournament {
 
     // ── UPDATE ─────────────────────────────────────────────────────────────
     public void updateEntity(SponsorTournament st, String id) {
-        String sql = "UPDATE sponsor_tournament SET sponsor_id=?, tournament_id=?, method=?, budget_amount=?, " +
+        String sql = "UPDATE sponsor_tournament SET sponsor_id=?, tournament_id=?, methode=?, budget_amount=?, " +
                      "start_date=?, end_date=?, notes=? WHERE id=?";
         try (PreparedStatement pst = getCnx().prepareStatement(sql)) {
             pst.setString(1, st.getSponsorId());
@@ -106,7 +106,7 @@ public class CrudSponsorTournament {
         st.setTournament(t);
 
         // Method
-        String methodStr = rs.getString("method");
+        String methodStr = rs.getString("methode");
         if (methodStr != null) {
             try { st.setMethod(SponsorTournament.SponsorMethod.valueOf(methodStr)); }
             catch (IllegalArgumentException ignored) {}

@@ -189,7 +189,7 @@ public class SponsorTeamController {
                 .filter(s -> s.getId().equals(st.getSponsorId()))
                 .findFirst().ifPresent(combSponsor::setValue);
         combTeam.getItems().stream()
-                .filter(t -> t.getId() == Integer.toString(st.getTeamId()))
+                .filter(t -> t.getId().equals(st.getTeamId()))
                 .findFirst().ifPresent(combTeam::setValue);
         combMethod.setValue(st.getMethod());
         fieldBudget.setText(st.getBudgetAmount() != null ? st.getBudgetAmount().toPlainString() : "");

@@ -72,7 +72,6 @@
                 <Label styleClass="panel-title" text="LISTE DES BUDGETS" />
                 <TableView fx:id="budgetTable" styleClass="data-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCenter" prefWidth="150" text="Centre" />
                         <TableColumn fx:id="colSponsor" prefWidth="120" text="Sponsor" />
                         <TableColumn fx:id="colYear" prefWidth="65" text="Année" />
                         <TableColumn fx:id="colAllocated" prefWidth="100" text="Alloué" />

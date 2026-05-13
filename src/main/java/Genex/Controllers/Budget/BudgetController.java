@@ -23,7 +23,6 @@ public class BudgetController {
 
     // ── Table ──────────────────────────────────────────────────────────────
     @FXML private TableView<Budget>               budgetTable;
-    @FXML private TableColumn<Budget, String>     colCenter;
     @FXML private TableColumn<Budget, String>     colSponsor;
     @FXML private TableColumn<Budget, Integer>    colYear;
     @FXML private TableColumn<Budget, BigDecimal> colAllocated;
@@ -72,7 +71,6 @@ public class BudgetController {
             return;
         }
 
-        colCenter.setCellValueFactory(new PropertyValueFactory<>("centerId"));
         colYear.setCellValueFactory(new PropertyValueFactory<>("fiscalYear"));
         colAllocated.setCellValueFactory(new PropertyValueFactory<>("allocatedAmount"));
         colSpent.setCellValueFactory(new PropertyValueFactory<>("spentAmount"));
@@ -118,7 +116,6 @@ public class BudgetController {
         if (q == null || q.isBlank()) { budgetTable.setItems(data); return; }
         String lq = q.toLowerCase();
         budgetTable.setItems(data.filtered(b ->
-                (b.getCenterId() != null && b.getCenterId().toLowerCase().contains(lq)) ||
                 String.valueOf(b.getFiscalYear()).contains(lq) ||
                 (b.getSponsor() != null && b.getSponsor().getName().toLowerCase().contains(lq))
         ));
@@ -221,9 +218,6 @@ public class BudgetController {
 
     private Budget buildFromForm() {
         Budget b = new Budget();
-        if (editingTarget != null) {
-            b.setCenterId(editingTarget.getCenterId());
-        }
         b.setFiscalYear(Integer.parseInt(fieldYear.getText().trim()));
         b.setAllocatedAmount(new BigDecimal(fieldAllocated.getText().trim()));
         String spent = fieldSpent.getText().trim();
