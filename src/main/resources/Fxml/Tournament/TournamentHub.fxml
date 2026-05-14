@@ -20,7 +20,10 @@
         </padding>
 
         <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Tournois" />
+            <VBox>
+                <Label styleClass="module-title" text="NEURAL_LINK // TOURNAMENT_DATABASE" textFill="WHITE" />
+                <Label styleClass="module-subtitle" text="MANAGE_COMPETITIVE_EVENTS" textFill="#5c7cfa" />
+            </VBox>
             <Region HBox.hgrow="ALWAYS" />
 
             <Button fx:id="btnAddTournament" onAction="#openAddTournamentModal" styleClass="action-blue-button" stylesheets="@TournamentHub.css" text="+ Nouveau Tournoi" />
@@ -51,31 +54,31 @@
                              <children>
                                 <VBox styleClass="hub-record-card" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtTournamentsPlayed" styleClass="hub-record-value" style="-fx-fill: white;" text="0" />
+                                      <javafx.scene.text.Text fx:id="txtTournamentsPlayed" styleClass="hub-record-value hub-neutral-value" text="0" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="TOURNOIS" />
                                    </children>
                                 </VBox>
                                 <VBox styleClass="hub-record-card hub-record-card-wins" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtTotalWins" styleClass="hub-record-value" style="-fx-fill: #34d399;" text="0" />
+                                      <javafx.scene.text.Text fx:id="txtTotalWins" styleClass="hub-record-value hub-blue-value" text="0" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="VICTOIRES" />
                                    </children>
                                 </VBox>
                                 <VBox styleClass="hub-record-card hub-record-card-losses" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtTotalLosses" styleClass="hub-record-value" style="-fx-fill: #f87171;" text="0" />
+                                      <javafx.scene.text.Text fx:id="txtTotalLosses" styleClass="hub-record-value hub-red-value" text="0" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="DÉFAITES" />
                                    </children>
                                 </VBox>
                                 <VBox styleClass="hub-record-card hub-record-card-ratio" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtWinRatio" styleClass="hub-record-value" style="-fx-fill: #a78bfa;" text="0%" />
+                                      <javafx.scene.text.Text fx:id="txtWinRatio" styleClass="hub-record-value hub-blue-value" text="0%" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="RATIO W/L" />
                                    </children>
                                 </VBox>
                                 <VBox styleClass="hub-record-card hub-record-card-best" spacing="8" alignment="CENTER" HBox.hgrow="ALWAYS">
                                    <children>
-                                      <javafx.scene.text.Text fx:id="txtBestPlacement" styleClass="hub-record-value" style="-fx-fill: #fcd34d;" text="-" />
+                                      <javafx.scene.text.Text fx:id="txtBestPlacement" styleClass="hub-record-value hub-red-value" text="-" />
                                       <javafx.scene.text.Text styleClass="hub-record-label" text="MEILLEUR" />
                                    </children>
                                 </VBox>
@@ -93,7 +96,7 @@
                     <!-- Tournament Cards -->
                     <VBox fx:id="tournamentCardsContainer" managed="false" spacing="20" styleClass="tournaments-container" visible="false">
                         <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
-                            <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun tournoi trouvé" />
+                            <Label styleClass="center-empty-label" text="Aucun tournoi trouvé" />
                         </VBox>
                     </VBox>
                 </VBox>

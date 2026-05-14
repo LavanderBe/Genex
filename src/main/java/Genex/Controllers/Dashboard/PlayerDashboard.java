@@ -16,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -55,6 +54,8 @@ public class PlayerDashboard {
         startPingAnimation();
         startPingService();
         checkTrainingNotifications();
+        setActiveNav(navMainButton);
+        showMainContent();
         // hook cleanup to window close
         pingLabel.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -181,7 +182,21 @@ public class PlayerDashboard {
 
     @FXML private void showMain() {
         setActiveNav(navMainButton);
+        showMainContent();
+    }
+
+    private void showMainContent() {
         contentArea.getChildren().clear();
+        try {
+            Node ticker = FXMLLoader.load(getClass().getResource("/Fxml/Dashboard/TournamentNewsTicker.fxml"));
+            AnchorPane.setLeftAnchor(ticker, 24.0);
+            AnchorPane.setRightAnchor(ticker, 24.0);
+            AnchorPane.setBottomAnchor(ticker, 24.0);
+            contentArea.getChildren().add(ticker);
+        } catch (IOException e) {
+            System.err.println("Unable to load tournament news ticker on player main menu: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML private void showTeams() {

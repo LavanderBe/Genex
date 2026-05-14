@@ -1,6 +1,5 @@
 package Genex.Controllers.Dashboard;
 
-import Genex.Controllers.Team.TeamHubController;
 import Genex.utils.PingService;
 import Genex.utils.SessionManager;
 import javafx.animation.FadeTransition;
@@ -48,6 +47,7 @@ public class Dashboard {
         startPingAnimation();
         startPingService();
         checkTrainingNotifications();
+        restoreDefaultContent();
         // hook cleanup to window close
         pingLabel.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {

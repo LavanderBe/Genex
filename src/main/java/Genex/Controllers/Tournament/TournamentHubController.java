@@ -19,7 +19,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -604,16 +606,96 @@ public class TournamentHubController {
 
         Button viewButton = new Button("VOIR");
         viewButton.getStyleClass().add("center-view-button");
-        viewButton.setMinWidth(112);
-        viewButton.setPrefWidth(112);
+        viewButton.setMinWidth(72);
+        viewButton.setPrefWidth(72);
         viewButton.setPrefHeight(42);
         viewButton.setOnAction(event -> {
             rootStackPane.getChildren().remove(drawerOverlay);
             openTournamentDetail(tournament);
         });
 
-        row.getChildren().addAll(details, viewButton);
+        HBox actions = new HBox(6);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+        actions.getChildren().add(viewButton);
+
+        if (isAdminUser()) {
+            Button editButton = new Button("MODIFIER");
+            editButton.getStyleClass().add("center-edit-button");
+            editButton.setMinWidth(90);
+            editButton.setPrefWidth(90);
+            editButton.setPrefHeight(42);
+            editButton.setOnAction(event -> openEditTournamentDrawer(tournament, drawerOverlay));
+
+            Button deleteButton = new Button("SUPP");
+            deleteButton.getStyleClass().add("center-delete-button");
+            deleteButton.setMinWidth(64);
+            deleteButton.setPrefWidth(64);
+            deleteButton.setPrefHeight(42);
+            deleteButton.setOnAction(event -> confirmDeleteTournament(tournament, drawerOverlay));
+
+            actions.getChildren().addAll(editButton, deleteButton);
+        }
+
+        row.getChildren().addAll(details, actions);
         return row;
+    }
+
+    private boolean isAdminUser() {
+        Genex.entities.User currentUser = Genex.utils.SessionManager.getInstance().getCurrentUser();
+        return currentUser == null || !"player".equalsIgnoreCase(currentUser.getRole());
+    }
+
+    private void openEditTournamentDrawer(Tounament tournament, StackPane centerDrawerOverlay) {
+        if (tournament == null) {
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/AddTournamentModal.fxml"));
+            StackPane editDrawerOverlay = loader.load();
+            rootStackPane.getChildren().add(editDrawerOverlay);
+
+            AddTournamentModalController controller = loader.getController();
+            controller.setTournament(tournament);
+            controller.setOnSaveCallback(updatedTournament -> {
+                crudTournament.updateEntity(updatedTournament, tournament.getTournamentId());
+                rootStackPane.getChildren().remove(editDrawerOverlay);
+                rootStackPane.getChildren().remove(centerDrawerOverlay);
+                loadTournamentsFromDatabase();
+            });
+            controller.setOnCloseCallback(() -> rootStackPane.getChildren().remove(editDrawerOverlay));
+        } catch (Exception e) {
+            System.err.println("Error opening edit drawer from center tournament row");
+            e.printStackTrace();
+        }
+    }
+
+    private void confirmDeleteTournament(Tounament tournament, StackPane centerDrawerOverlay) {
+        if (tournament == null) {
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmer la suppression");
+        alert.setHeaderText("Supprimer le tournoi \"" + tournament.getTournamentName() + "\" ?");
+        alert.setContentText("Cette action est irreversible.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                crudTournament.deleteEntity(tournament);
+                rootStackPane.getChildren().remove(centerDrawerOverlay);
+                loadTournamentsFromDatabase();
+            } catch (Exception e) {
+                System.err.println("Error deleting tournament from center tournament row");
+                e.printStackTrace();
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("Erreur");
+                error.setHeaderText(null);
+                error.setContentText("Impossible de supprimer le tournoi.");
+                error.showAndWait();
+            }
+        }
     }
 
     private void openTournamentDetail(Tounament tournament) {

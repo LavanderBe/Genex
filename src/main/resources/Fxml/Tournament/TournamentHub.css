@@ -431,6 +431,18 @@
     -fx-font-weight: 700;
 }
 
+.hub-neutral-value {
+    -fx-fill: white;
+}
+
+.hub-blue-value {
+    -fx-fill: #5c7cfa;
+}
+
+.hub-red-value {
+    -fx-fill: #FF5252;
+}
+
 /* These are applied via inline style on Text nodes in FXML */
 .hub-wins  { -fx-fill: #34d399; }
 .hub-losses { -fx-fill: #f87171; }
@@ -493,4 +505,325 @@
     -fx-fill: white;
     -fx-font-size: 14;
     -fx-font-weight: 900;
+}
+
+/* Cyberpunk angular redesign. Map WebView styles are intentionally left untouched. */
+.main-content,
+.tournament-hub {
+    -fx-background-color: linear-gradient(to bottom right, #09091b, #1F1E4E, #160508);
+}
+
+.page-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 30;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.95), 18, 0.2, 0, 0);
+}
+
+.search-field,
+.suggestions-box,
+.suggestion-item,
+.hub-record-section,
+.hub-record-card,
+.history-row,
+.history-placement-badge,
+.center-info-block,
+.center-tournament-row {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.search-field {
+    -fx-background-color: rgba(31, 30, 78, 0.72);
+    -fx-border-color: #5c7cfa #FF5252 #FF5252 #5c7cfa;
+    -fx-border-width: 1.5;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.48);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.36), 14, 0, 0, 0);
+}
+
+.search-field:focused {
+    -fx-background-color: rgba(13, 12, 46, 0.96);
+    -fx-border-color: #FF5252 #5c7cfa #5c7cfa #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.45), 18, 0, 0, 0);
+}
+
+.suggestions-box {
+    -fx-background-color: linear-gradient(to bottom, rgba(31, 30, 78, 0.98), rgba(139, 13, 13, 0.92));
+    -fx-border-color: #5c7cfa #FF5252 #FF5252 #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.45), 22, 0, 0, 6);
+}
+
+.suggestion-item {
+    -fx-font-weight: 700;
+}
+
+.suggestion-item:hover {
+    -fx-background-color: rgba(92, 124, 250, 0.28);
+}
+
+.icon-btn,
+.action-blue-button,
+.action-red-button,
+.center-view-button,
+.center-close-button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 0.8;
+    -fx-shape: "M 0 0 L 150 0 L 166 14 L 166 44 L 16 44 L 0 30 Z";
+}
+
+.icon-btn {
+    -fx-background-color: rgba(92, 124, 250, 0.20);
+    -fx-border-color: rgba(92, 124, 250, 0.65);
+    -fx-border-width: 1.4;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.38), 12, 0, 0, 2);
+}
+
+.icon-btn:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.28);
+    -fx-border-color: #FF5252;
+}
+
+.action-blue-button {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #1F1E4E);
+    -fx-border-color: rgba(255, 255, 255, 0.22);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.72), 18, 0, 0, 3);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: linear-gradient(to right, #7f97ff, #5c7cfa);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.95), 22, 0, 0, 5);
+}
+
+.action-blue-button.active-filter,
+.action-red-button {
+    -fx-background-color: linear-gradient(to right, #8B0D0D, #FF5252);
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.65), 18, 0, 0, 3);
+}
+
+.hub-record-section {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.90), rgba(139, 13, 13, 0.42));
+    -fx-border-color: #5c7cfa #FF5252 #8B0D0D #5c7cfa;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.34), 22, 0, 0, 5);
+}
+
+.hub-record-title,
+.history-section-title,
+.section-title {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.54), 10, 0, 0, 0);
+}
+
+.hub-record-card {
+    -fx-background-color: rgba(31, 30, 78, 0.72);
+    -fx-border-color: rgba(92, 124, 250, 0.58);
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 116 0 L 130 14 L 130 84 L 14 84 L 0 70 Z";
+}
+
+.hub-record-card-wins,
+.hub-record-card-ratio {
+    -fx-border-color: rgba(92, 124, 250, 0.85);
+}
+
+.hub-record-card-losses,
+.hub-record-card-best {
+    -fx-border-color: rgba(255, 82, 82, 0.85);
+}
+
+.history-row {
+    -fx-background-color: rgba(31, 30, 78, 0.66);
+    -fx-border-color: rgba(255, 82, 82, 0.45);
+    -fx-shape: "M 0 0 L 760 0 L 784 18 L 784 92 L 18 92 L 0 74 Z";
+}
+
+.history-row:hover {
+    -fx-border-color: #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.4), 14, 0, 0, 2);
+}
+
+.history-placement-badge {
+    -fx-background-color: rgba(92, 124, 250, 0.35);
+    -fx-border-color: #5c7cfa;
+    -fx-shape: "M 0 0 L 58 0 L 70 10 L 70 38 L 10 38 L 0 28 Z";
+}
+
+/* Games-inspired HUD refinement */
+.module-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.45), 10, 0, 0, 0);
+}
+
+.module-subtitle {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #5c7cfa;
+}
+
+.main-content,
+.tournament-hub {
+    -fx-background-color: transparent;
+}
+
+.search-field {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-font-family: "Consolas";
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-effect: none;
+}
+
+.search-field:focused {
+    -fx-background-color: rgba(139, 13, 13, 0.06);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-effect: none;
+}
+
+.suggestions-box {
+    -fx-background-color: linear-gradient(to bottom, #1F1E4E, #050508);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.50), 10, 0, 0, 0);
+}
+
+.suggestion-item {
+    -fx-font-family: "Consolas";
+    -fx-text-fill: #8e94af;
+}
+
+.suggestion-item:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.40);
+    -fx-text-fill: white;
+    -fx-border-color: transparent transparent transparent white;
+    -fx-border-width: 0 0 0 3;
+}
+
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+    -fx-translate-y: -2;
+}
+
+.icon-btn,
+.center-view-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+    -fx-effect: none;
+}
+
+.icon-btn:hover,
+.center-view-button:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.center-edit-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+    -fx-effect: none;
+}
+
+.center-edit-button:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.center-delete-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-shape: "M 10 0 L 100 0 L 100 100 L 0 100 Z";
+    -fx-effect: none;
+}
+
+.center-delete-button:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}
+
+.hub-record-section,
+.center-info-block,
+.center-tournament-row,
+.history-row {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-width: 1;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.hub-record-section:hover,
+.center-tournament-row:hover,
+.history-row:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.40), 15, 0, 0, 0);
+}
+
+.hub-record-card {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.hub-record-card-wins,
+.hub-record-card-ratio {
+    -fx-border-color: rgba(92, 124, 250, 0.55);
+}
+
+.hub-record-card-losses,
+.hub-record-card-best {
+    -fx-border-color: rgba(255, 82, 82, 0.55);
+}
+
+.section-title,
+.history-section-title,
+.hub-record-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 1.5px;
+    -fx-effect: none;
+}
+
+.map-section {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-effect: none;
 }

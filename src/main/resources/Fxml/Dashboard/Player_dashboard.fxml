@@ -128,21 +128,7 @@
     <!-- CONTENT -->
     <center>
         <AnchorPane fx:id="contentArea" id="contentArea">
-            <children>
-                <VBox layoutX="50.0" layoutY="50.0" spacing="25.0">
-                    <children>
-                        <Label text="TERMINAL // PLAYER_HUB" textFill="WHITE">
-                            <font><Font name="Impact" size="36.0" /></font>
-                        </Label>
-                        <HBox spacing="20.0">
-                            <children>
-                                <Button prefHeight="50.0" prefWidth="200.0" styleClass="action-confirm-btn" text="placeholder" />
-                                <Button prefHeight="50.0" prefWidth="150.0" styleClass="action-cancel-btn" text="placeholder" />
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-            </children>
+            <!-- Content loaded dynamically here -->
         </AnchorPane>
     </center>
 </BorderPane>

@@ -254,9 +254,13 @@ public class TournamentDetailController {
     }
 
     private void setupRoleBasedUI() {
-        if (currentUser == null || tournament == null) return;
+        if (tournament == null) return;
 
-        String role = currentUser.getRole();
+        if (currentUser == null) {
+            currentUser = SessionManager.getInstance().getCurrentUser();
+        }
+
+        String role = currentUser != null ? currentUser.getRole() : "admin";
 
         if ("player".equalsIgnoreCase(role)) {
             btnJoinLeave.setVisible(true);
@@ -269,10 +273,11 @@ public class TournamentDetailController {
             btnStart.setManaged(false);
             btnReset.setVisible(false);
             btnReset.setManaged(false);
+            hideMatches();
 
             checkPlayerJoinStatus();
 
-            if (tournament.isSynced()) {
+            if (isTournamentSynced()) {
                 showBracket();
             } else {
                 hideBracket();
@@ -281,7 +286,7 @@ public class TournamentDetailController {
             // Show player status if tournament started
             String playerId = getPlayerIdFromUserId(currentUser.getId());
             if (playerId != null) {
-                if (tournament.isStarted()) {
+                if (isTournamentStarted()) {
                     loadPlayerStatus(playerId);
                 } else {
                     playerStatusSection.setVisible(false);
@@ -301,11 +306,13 @@ public class TournamentDetailController {
             // Admin view: Hide join button, show participants section
             btnJoinLeave.setVisible(false);
             btnJoinLeave.setManaged(false);
+            playerStatusSection.setVisible(false);
+            playerStatusSection.setManaged(false);
             participantsSection.setVisible(true);
             participantsSection.setManaged(true);
 
             // Show/hide sync and start buttons based on tournament state
-            if (!tournament.isSynced()) {
+            if (!isTournamentSynced()) {
                 // Not synced yet: show sync button, hide start button and bracket
                 btnSync.setVisible(true);
                 btnSync.setManaged(true);
@@ -315,7 +322,7 @@ public class TournamentDetailController {
                 btnReset.setManaged(false);
                 hideBracket();
                 hideMatches();
-            } else if (!tournament.isStarted()) {
+            } else if (!isTournamentStarted()) {
                 // Synced but not started: hide sync button, show start button and bracket
                 btnSync.setVisible(false);
                 btnSync.setManaged(false);
@@ -350,13 +357,46 @@ public class TournamentDetailController {
         }
         
         // Setup Challonge link
-        if (tournament.isSynced() && tournament.getChallongeUrl() != null) {
+        if (isTournamentSynced() && tournament.getChallongeUrl() != null) {
             linkChallonge.setVisible(true);
             linkChallonge.setManaged(true);
         } else {
             linkChallonge.setVisible(false);
             linkChallonge.setManaged(false);
         }
+    }
+
+    private boolean isTournamentSynced() {
+        if (tournament == null) {
+            return false;
+        }
+
+        return tournament.isSynced()
+                || hasText(tournament.getChallongeId())
+                || hasText(tournament.getChallongeUrl())
+                || hasText(tournament.getChallongeUrlSlug());
+    }
+
+    private boolean isTournamentStarted() {
+        if (tournament == null) {
+            return false;
+        }
+
+        String state = tournament.getState();
+        return tournament.isStarted()
+                || Tounament.TournamentState.IN_PROGRESS.name().equals(state)
+                || Tounament.TournamentState.COMPLETED.name().equals(state);
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+    private boolean isAdminActionAllowed() {
+        if (currentUser == null) {
+            currentUser = SessionManager.getInstance().getCurrentUser();
+        }
+        return currentUser == null || "admin".equalsIgnoreCase(currentUser.getRole());
     }
 
     private void checkPlayerJoinStatus() {
@@ -460,7 +500,7 @@ public class TournamentDetailController {
             btnJoinLeave.getStyleClass().removeAll("joined", "eliminated");
         } else {
             // ACTIVE - still competing
-            btnJoinLeave.setText(tournament.isStarted() ? "SE RETIRER" : "QUITTER");
+            btnJoinLeave.setText(isTournamentStarted() ? "SE RETIRER" : "QUITTER");
             btnJoinLeave.setDisable(false);
             btnJoinLeave.getStyleClass().removeAll("eliminated");
             if (!btnJoinLeave.getStyleClass().contains("joined")) {
@@ -482,7 +522,7 @@ public class TournamentDetailController {
 
             if (isPlayerJoined) {
                 // Check if tournament has started
-                if (tournament.isStarted()) {
+                if (isTournamentStarted()) {
                     // Tournament in progress → WITHDRAW flow
                     handleWithdraw(playerId);
                 } else {
@@ -813,6 +853,9 @@ public class TournamentDetailController {
         } catch (Exception e) {
             System.err.println("Error loading participants: " + e.getMessage());
             e.printStackTrace();
+            participantsList.getChildren().clear();
+            emptyParticipants.setVisible(true);
+            emptyParticipants.setManaged(true);
         }
     }
 
@@ -905,16 +948,16 @@ public class TournamentDetailController {
     
     @FXML
     private void handleSync() {
-        if (tournament == null || currentUser == null) return;
+        if (tournament == null) return;
         
         // Check if admin
-        if (!"admin".equalsIgnoreCase(currentUser.getRole())) {
+        if (!isAdminActionAllowed()) {
             showAlert("Erreur", "Seuls les administrateurs peuvent synchroniser les tournois.", Alert.AlertType.ERROR);
             return;
         }
         
         // Check if already synced
-        if (tournament.isSynced()) {
+        if (isTournamentSynced()) {
             showAlert("Information", "Ce tournoi est déjà synchronisé avec Challonge.", Alert.AlertType.INFORMATION);
             return;
         }
@@ -968,22 +1011,22 @@ public class TournamentDetailController {
     
     @FXML
     private void handleStart() {
-        if (tournament == null || currentUser == null) return;
+        if (tournament == null) return;
         
         // Check if admin
-        if (!"admin".equalsIgnoreCase(currentUser.getRole())) {
+        if (!isAdminActionAllowed()) {
             showAlert("Erreur", "Seuls les administrateurs peuvent démarrer les tournois.", Alert.AlertType.ERROR);
             return;
         }
         
         // Check if synced
-        if (!tournament.isSynced()) {
+        if (!isTournamentSynced()) {
             showAlert("Erreur", "Le tournoi doit être synchronisé avant de pouvoir être démarré.", Alert.AlertType.ERROR);
             return;
         }
         
         // Check if already started
-        if (tournament.isStarted()) {
+        if (isTournamentStarted()) {
             showAlert("Information", "Ce tournoi est déjà démarré.", Alert.AlertType.INFORMATION);
             return;
         }
@@ -1029,10 +1072,10 @@ public class TournamentDetailController {
     
     @FXML
     private void handleReset() {
-        if (tournament == null || currentUser == null) return;
+        if (tournament == null) return;
         
         // Check if admin
-        if (!"admin".equalsIgnoreCase(currentUser.getRole())) {
+        if (!isAdminActionAllowed()) {
             showAlert("Erreur", "Seuls les administrateurs peuvent réinitialiser les tournois.", Alert.AlertType.ERROR);
             return;
         }
@@ -1084,7 +1127,7 @@ public class TournamentDetailController {
                     loadParticipants();
                     
                     // Refresh player status card if player view
-                    if ("player".equalsIgnoreCase(currentUser.getRole())) {
+                    if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
                         String playerId = getPlayerIdFromUserId(currentUser.getId());
                         if (playerId != null) {
                             loadPlayerStatus(playerId);
@@ -1117,18 +1160,20 @@ public class TournamentDetailController {
     }
     
     private void showBracket() {
-        if (tournament == null || !tournament.isSynced()) return;
+        if (tournament == null || !isTournamentSynced()) return;
         
         bracketSection.setVisible(true);
         bracketSection.setManaged(true);
         
         // Extract tournament URL slug from full URL
+        String slug = tournament.getChallongeUrlSlug();
         String tournamentUrl = tournament.getChallongeUrl();
-        if (tournamentUrl != null && tournamentUrl.contains("challonge.com/")) {
-            String slug = tournamentUrl.substring(tournamentUrl.lastIndexOf("/") + 1);
+        if (!hasText(slug) && tournamentUrl != null && tournamentUrl.contains("challonge.com/")) {
+            slug = tournamentUrl.substring(tournamentUrl.lastIndexOf("/") + 1);
+        }
+
+        if (hasText(slug)) {
             String embedUrl = challongeService.getEmbedUrl(slug);
-            
-            // Load bracket in WebView
             bracketWebView.getEngine().load(embedUrl);
         }
     }
@@ -1517,7 +1562,7 @@ public class TournamentDetailController {
             showBracket();
             updateStateBadge();
 
-            if ("player".equalsIgnoreCase(currentUser.getRole())) {
+            if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
                 String playerId = getPlayerIdFromUserId(currentUser.getId());
                 if (playerId != null) {
                     loadPlayerStatus(playerId);

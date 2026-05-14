@@ -172,3 +172,100 @@
 .logout-btn:pressed SVGPath {
     -fx-fill: white;
 }
+
+/* TOURNAMENT NEWS TICKER STYLES (Scrolling News) */
+.news-ticker {
+    -fx-background-color: linear-gradient(to right, #8B0D0D, #1F1E4E, #8B0D0D);
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 1 0 1 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.6), 10, 0, 0, 2);
+    -fx-overflow: hidden;
+}
+
+.news-ticker Label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 3, 0, 0, 0);
+}
+
+/* OLD BANNER STYLES (Keep for reference or remove if not needed) */
+.tournament-banner {
+    -fx-background-color: linear-gradient(to right, rgba(139, 13, 13, 0.25), rgba(31, 30, 78, 0.25));
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.5), 15, 0, 0, 3);
+}
+
+.banner-close-btn {
+    -fx-background-color: rgba(255, 77, 77, 0.2);
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+}
+
+.banner-close-btn:hover {
+    -fx-background-color: #ff4d4d;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #ff4d4d, 10, 0, 0, 0);
+}
+
+.banner-action-btn {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.5), 8, 0, 0, 0);
+}
+
+.banner-action-btn:hover {
+    -fx-background-color: #ff3333;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, #ff4d4d, 12, 0, 0, 0);
+}
+
+.banner-action-btn:disabled {
+    -fx-background-color: #22c55e;
+    -fx-border-color: #22c55e;
+    -fx-opacity: 0.8;
+}
+
+.transparent-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.transparent-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-scrollpane .scroll-bar:vertical {
+    -fx-background-color: rgba(139, 13, 13, 0.2);
+    -fx-width: 6px;
+}
+
+.transparent-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 3;
+}
+
+.transparent-scrollpane .scroll-bar .increment-button,
+.transparent-scrollpane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-shape: "";
+    -fx-padding: 0;
+}

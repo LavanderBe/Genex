@@ -25,6 +25,13 @@
          <!-- Back Button -->
          <Button fx:id="btnBack" onAction="#handleBack" styleClass="btn-back" text="← Retour" />
          
+         <VBox>
+            <children>
+               <Text styleClass="module-title" text="TOURNAMENT // DETAIL_NODE" />
+               <Text styleClass="module-subtitle" text="LIVE_BRACKET_CONTROL" />
+            </children>
+         </VBox>
+
          <Region HBox.hgrow="ALWAYS" />
          
          <!-- Reset Button (Admin only, for testing) -->
