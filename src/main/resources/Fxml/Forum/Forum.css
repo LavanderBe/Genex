@@ -674,3 +674,260 @@
     -fx-font-size: 14;
     -fx-font-weight: 700;
 }
+
+/* ===== CYBERPUNK EDGY OVERRIDE (angular + neon) ===== */
+
+.main-container {
+    -fx-background-color:
+        linear-gradient(to bottom right, #1F1E4E 0%, #141332 55%, #0f1023 100%),
+        linear-gradient(to bottom left, rgba(139, 13, 13, 0.25), transparent 45%),
+        linear-gradient(to top right, rgba(92, 124, 250, 0.12), transparent 35%);
+}
+
+.top-nav,
+.modal-container,
+.featured-card,
+.sidebar-card,
+.weather-widget,
+.search-container,
+.forum-card,
+.news-feed-scroll,
+.empty-state-box {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.top-nav {
+    -fx-background-color: rgba(31, 30, 78, 0.88);
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.35), 16, 0.3, 0, 0);
+}
+
+.modal-container,
+.featured-card,
+.sidebar-card,
+.forum-card,
+.news-feed-scroll,
+.empty-state-box {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(31, 30, 78, 0.96), rgba(16, 16, 44, 0.96)),
+        linear-gradient(to right, rgba(139, 13, 13, 0.28), transparent 30%);
+    -fx-background-insets: 0, 2;
+    -fx-border-color: #5c7cfa #8B0D0D #8B0D0D #5c7cfa;
+    -fx-border-width: 1 2 2 1;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.25), 14, 0.25, 0, 0);
+}
+
+.featured-card {
+    -fx-border-color: #FF5252 #5c7cfa #5c7cfa #FF5252;
+}
+
+.title-label,
+.modal-title,
+.featured-title,
+.sidebar-title,
+.forum-card-title,
+.forum-card-title-main {
+    -fx-text-fill: #eef1ff;
+}
+
+.subtitle-label,
+.breadcrumb-label,
+.header-desc,
+.field-label,
+.featured-meta,
+.featured-desc,
+.sidebar-meta,
+.forum-card-desc,
+.forum-card-meta,
+.forum-card-meta-muted,
+.table-placeholder {
+    -fx-text-fill: rgba(224, 230, 255, 0.8);
+}
+
+.nav-link,
+.primary-button,
+.submit-button,
+.action-button,
+.secondary-button,
+.warning-button,
+.danger-button,
+.neutral-button,
+.reaction-emoji-button,
+.social-logo-button,
+.weather-refresh-button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.nav-link {
+    -fx-background-color: rgba(31, 30, 78, 0.78);
+    -fx-text-fill: rgba(221, 228, 255, 0.82);
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 1;
+}
+
+.nav-link:hover,
+.active-link {
+    -fx-background-color: linear-gradient(to right, rgba(92, 124, 250, 0.32), rgba(31, 30, 78, 0.9));
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.32), 12, 0.2, 0, 0);
+}
+
+.primary-button,
+.submit-button {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #3e5ce0);
+    -fx-border-color: #5c7cfa #8ea4ff #8ea4ff #5c7cfa;
+    -fx-border-width: 1 2 2 1;
+    -fx-text-fill: #f8f9ff;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.5), 16, 0.3, 0, 0);
+}
+
+.primary-button:hover,
+.submit-button:hover {
+    -fx-background-color: linear-gradient(to right, #6a88ff, #4c6ef5);
+    -fx-border-color: #d3ddff #ffffff #ffffff #d3ddff;
+}
+
+.action-button {
+    -fx-background-color: linear-gradient(to right, rgba(31, 30, 78, 0.92), rgba(25, 24, 64, 0.92));
+    -fx-border-color: #5c7cfa #8B0D0D #8B0D0D #5c7cfa;
+    -fx-border-width: 1 2 2 1;
+    -fx-text-fill: #e9eeff;
+}
+
+.action-button:hover {
+    -fx-background-color: linear-gradient(to right, rgba(92, 124, 250, 0.26), rgba(139, 13, 13, 0.24));
+    -fx-border-color: #FF5252 #5c7cfa #5c7cfa #FF5252;
+    -fx-text-fill: #ffffff;
+}
+
+.danger-button,
+.warning-button {
+    -fx-background-color: linear-gradient(to right, rgba(139, 13, 13, 0.9), rgba(98, 8, 8, 0.92));
+    -fx-border-color: #FF5252 #ff9b9b #ff9b9b #FF5252;
+    -fx-text-fill: #ffe7e7;
+}
+
+.danger-button:hover,
+.warning-button:hover {
+    -fx-background-color: linear-gradient(to right, #FF5252, #d83e3e);
+    -fx-text-fill: #ffffff;
+}
+
+.neutral-button,
+.secondary-button,
+.weather-refresh-button {
+    -fx-background-color: rgba(31, 30, 78, 0.85);
+    -fx-border-color: #5c7cfa;
+    -fx-text-fill: #dce5ff;
+}
+
+.search-container {
+    -fx-background-color: rgba(22, 22, 57, 0.92);
+    -fx-border-color: #5c7cfa #8B0D0D #8B0D0D #5c7cfa;
+    -fx-border-width: 1 2 2 1;
+}
+
+.search-icon {
+    -fx-text-fill: #8ea4ff;
+}
+
+.modal-input,
+.modal-combo {
+    -fx-background-color: rgba(17, 17, 46, 0.95);
+    -fx-text-fill: #edf2ff;
+    -fx-prompt-text-fill: rgba(186, 197, 255, 0.58);
+    -fx-border-color: rgba(92, 124, 250, 0.55);
+    -fx-border-width: 1;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.modal-input:focused,
+.modal-combo:focused {
+    -fx-border-color: #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.35), 10, 0.2, 0, 0);
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: #1F1E4E;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: rgba(255, 82, 82, 0.32);
+}
+
+.check-box .box {
+    -fx-background-color: rgba(24, 23, 61, 0.95);
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 1;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.check-box:selected .box {
+    -fx-background-color: rgba(92, 124, 250, 0.35);
+    -fx-border-color: #FF5252;
+}
+
+.mood-badge,
+.trend-chip,
+.card-badge {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}
+
+.trend-chip {
+    -fx-background-color: rgba(92, 124, 250, 0.28);
+    -fx-border-color: #5c7cfa;
+    -fx-text-fill: #dce4ff;
+}
+
+.mood-active,
+.mood-help,
+.mood-strategy,
+.mood-update,
+.status-badge,
+.moderation-badge {
+    -fx-background-color: rgba(139, 13, 13, 0.32);
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #ffd2d2;
+}
+
+.custom-scroll .scroll-bar .thumb {
+    -fx-background-color: rgba(92, 124, 250, 0.55);
+    -fx-background-radius: 0;
+}
+
+/* News area: more breathing room + stronger structure */
+.news-feed-scroll {
+    -fx-padding: 10;
+    -fx-background-insets: 0, 3;
+    -fx-border-width: 1 2 2 1;
+}
+
+.news-feed-row {
+    -fx-padding: 10 12 10 12;
+    -fx-spacing: 22;
+}
+
+.news-card {
+    -fx-min-width: 280;
+    -fx-max-width: 280;
+    -fx-min-height: 162;
+    -fx-max-height: 162;
+    -fx-padding: 12;
+    -fx-background-insets: 0, 2;
+    -fx-border-color: #5c7cfa #8B0D0D #8B0D0D #5c7cfa;
+    -fx-border-width: 1 2 2 1;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.2), 10, 0.2, 0, 0);
+}
