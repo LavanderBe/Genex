@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -160,6 +161,7 @@ public class QuizController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            applyWindowIcon(stage);
             stage.setTitle("NOUVELLE ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
             loadQuizCards(null); // Refresh after close
@@ -182,6 +184,7 @@ public class QuizController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            applyWindowIcon(stage);
             stage.setTitle("MODIFIER L'ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
             loadQuizCards(null); // Refresh after close
@@ -202,5 +205,13 @@ public class QuizController implements Initializable {
                 loadQuizCards(null);
             }
         });
+    }
+
+    private void applyWindowIcon(Stage stage) {
+        URL logoUrl = getClass().getResource("/Images/logo.png");
+        if (logoUrl == null) {
+            return;
+        }
+        stage.getIcons().setAll(new Image(logoUrl.toExternalForm()));
     }
 }

@@ -104,34 +104,37 @@
 }
 
 .launch-protocol {
-    -fx-background-color: transparent;
-    -fx-border-color: #2b2f3a;
-    -fx-border-width: 1;
-    -fx-padding: 10 14 10 14;
+    -fx-background-color: rgba(31, 30, 78, 0.25);
+    -fx-border-color: #5C7CFA;
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 95 0 L 100 12 L 100 100 L 5 100 L 0 88 Z";
+    -fx-padding: 10 16 10 16;
     -fx-alignment: center;
     -fx-min-height: 36px;
 }
 
 .launch-text {
-    -fx-text-fill: #6b7280;
+    -fx-text-fill: #5C7CFA;
     -fx-font-size: 12px;
     -fx-font-weight: 800;
-    -fx-letter-spacing: 0.1em;
+    -fx-letter-spacing: 0.2em;
+    -fx-font-family: "Impact";
 }
 
 .launch-icon {
     -fx-fill: transparent;
-    -fx-stroke: #6b7280;
+    -fx-stroke: #5C7CFA;
     -fx-stroke-width: 1.6;
 }
 
 .launch-triangle {
-    -fx-fill: #6b7280;
+    -fx-fill: #5C7CFA;
 }
 
 .launch-protocol:hover {
-    -fx-background-color: #007bff;
-    -fx-border-color: #007bff;
+    -fx-background-color: #5C7CFA;
+    -fx-border-color: #5C7CFA;
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.45), 16, 0, 0, 0);
 }
 
 .launch-protocol:hover .launch-text {
@@ -182,4 +185,251 @@
 .module-progress {
     -fx-accent: #60a5fa;
     -fx-pref-height: 6px;
+}
+
+/* Tutorial detail popup — aligned with admin/player style */
+.detail-popup-top {
+    -fx-background-color: rgba(0, 0, 0, 0.72);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.detail-popup-tag {
+    -fx-font-family: "Courier New";
+    -fx-text-fill: #5C7CFA;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.25em;
+}
+
+.detail-popup-title {
+    -fx-font-family: "Impact";
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 0.1em;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.55), 12, 0, 0, 0);
+}
+
+.detail-popup-meta {
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.2em;
+}
+
+.detail-popup-meta-blue {
+    -fx-text-fill: #5C7CFA;
+}
+
+.detail-separator {
+    -fx-text-fill: #2a2a2a;
+}
+
+.detail-popup-rating {
+    -fx-text-fill: #ffcc33;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.detail-description {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 13px;
+}
+
+.detail-block {
+    -fx-background-color: #0b0f14;
+    -fx-border-color: #1f2937;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+}
+
+.detail-block-title {
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.25em;
+}
+
+.detail-progress-value {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 18px;
+}
+
+.detail-meta-muted {
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.15em;
+}
+
+.detail-list-title {
+    -fx-text-fill: white;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.25em;
+}
+
+.detail-empty-text {
+    -fx-text-fill: #8e94af;
+    -fx-font-style: italic;
+    -fx-padding: 14;
+}
+
+.detail-video-row {
+    -fx-background-color: linear-gradient(to right, rgba(31, 30, 78, 0.5), rgba(5, 5, 8, 0.92));
+    -fx-border-color: transparent transparent transparent #1F1E4E;
+    -fx-border-width: 0 0 0 4;
+}
+
+.detail-video-row-pending {
+    -fx-border-color: transparent transparent transparent #1F1E4E;
+}
+
+.detail-video-row-complete {
+    -fx-border-color: transparent transparent transparent #00C851;
+}
+
+.detail-video-index {
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.detail-video-title {
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 14px;
+}
+
+.detail-video-url {
+    -fx-text-fill: #5e6480;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 10px;
+}
+
+.detail-video-status {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.25em;
+}
+
+.detail-video-status-pending {
+    -fx-text-fill: #8e94af;
+}
+
+.detail-video-status-complete {
+    -fx-text-fill: #00C851;
+}
+
+.tutorial-inline-btn {
+    -fx-min-height: 32px;
+    -fx-font-family: "Impact";
+    -fx-font-size: 12px;
+    -fx-letter-spacing: 0.15em;
+    -fx-padding: 0 12 0 12;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.tutorial-inline-btn-blue {
+    -fx-text-fill: #5C7CFA;
+    -fx-border-color: #5C7CFA;
+    -fx-shape: "M 15 0 L 100 0 L 85 100 L 0 100 Z";
+}
+
+.tutorial-inline-btn-blue:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #5C7CFA;
+}
+
+.tutorial-inline-btn-amber {
+    -fx-text-fill: #ffbb33;
+    -fx-border-color: #ffbb33;
+    -fx-shape: "M 0 0 L 100 0 L 85 100 L 0 100 Z";
+}
+
+.tutorial-inline-btn-amber:hover {
+    -fx-text-fill: #050508;
+    -fx-background-color: #ffbb33;
+}
+
+.tutorial-inline-btn-red {
+    -fx-text-fill: #FF5252;
+    -fx-border-color: #FF5252;
+    -fx-shape: "M 15 0 L 100 0 L 100 100 L 0 100 Z";
+}
+
+.tutorial-inline-btn-red:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #FF5252;
+}
+
+.tutorial-btn-execute {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 14px;
+    -fx-letter-spacing: 0.2em;
+    -fx-shape: "M 0 0 L 85 0 L 100 25 L 100 100 L 15 100 L 0 75 Z";
+    -fx-padding: 10 22 10 22;
+}
+
+.tutorial-btn-execute:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #1F1E4E;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 18, 0.45, 0, 0);
+}
+
+.tutorial-btn-abort {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Impact";
+    -fx-font-size: 12px;
+    -fx-letter-spacing: 0.2em;
+    -fx-border-color: #FF5252;
+    -fx-border-width: 1.5;
+    -fx-shape: "M 15 0 L 100 0 L 100 75 L 85 100 L 0 100 L 0 25 Z";
+    -fx-padding: 8 16 8 16;
+}
+
+.tutorial-btn-abort:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, #FF5252, 14, 0.4, 0, 0);
+}
+
+.detail-comment-area {
+    -fx-control-inner-background: #0b0f14;
+    -fx-text-fill: #cbd5e1;
+    -fx-background-color: #0b0f14;
+    -fx-border-color: #1f2937;
+    -fx-border-width: 1;
+}
+
+.detail-hint-muted {
+    -fx-text-fill: #8e94af;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+.detail-hint-active {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 12px;
+}
+
+.detail-status-success {
+    -fx-text-fill: #00C851;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.2em;
+}
+
+.detail-status-error {
+    -fx-text-fill: #ff4444;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11px;
 }

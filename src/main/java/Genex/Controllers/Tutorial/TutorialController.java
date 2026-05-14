@@ -272,6 +272,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            applyWindowIcon(stage);
             stage.setTitle("NOUVEAU MODULE D'ENTRAÎNEMENT");
             stage.showAndWait();
         } catch (IOException e) {
@@ -290,6 +291,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            applyWindowIcon(stage);
             stage.setTitle("MODIFIER LE MODULE D'ENTRAÎNEMENT");
             stage.showAndWait();
         } catch (IOException e) {
@@ -324,6 +326,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            applyWindowIcon(stage);
             stage.setTitle("NOUVELLE ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
         } catch (IOException e) {
@@ -342,6 +345,7 @@ public class TutorialController implements Initializable {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            applyWindowIcon(stage);
             stage.setTitle("MODIFIER L'ENTRÉE DE PROTOCOLE");
             stage.showAndWait();
         } catch (IOException e) {
@@ -389,5 +393,13 @@ public class TutorialController implements Initializable {
             case "EXPERT", "HARD" -> "EXPERT";
             default -> difficulty.toUpperCase();
         };
+    }
+
+    private void applyWindowIcon(Stage stage) {
+        URL logoUrl = getClass().getResource("/Images/logo.png");
+        if (logoUrl == null) {
+            return;
+        }
+        stage.getIcons().setAll(new Image(logoUrl.toExternalForm()));
     }
 }

@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class EmailSystem {
-    private static final String API_KEY = "";
-    ///private static final String API_KEY = System.getenv("SENDGRID_API_KEY");
+    private static final String API_KEY = "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";
     private static String TEMPLATE_ID = "d-dce24ed71c034fe2972457aaaf380772"; // Paste your Template ID here
     private static final String NEW_TUTORIAL_TEMPLATE_ID = "d-3dce12e96e42417fb944c6f28f93f6db"; // Template SendGrid pour la notif nouveau tutoriel
     private static final String FROM_EMAIL = "genexesportstn@gmail.com"; // Your verified sender
