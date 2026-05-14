@@ -163,3 +163,191 @@
     -fx-translate-y: -2;
     -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.6), 16, 0, 0, 6);
 }
+
+/* Cyberpunk angular redesign */
+.modal-container {
+    -fx-background-color: linear-gradient(to bottom right, #09091b, #1F1E4E, #250709);
+    -fx-background-radius: 0;
+    -fx-border-color: #5c7cfa #FF5252 #8B0D0D #5c7cfa;
+    -fx-border-radius: 0;
+    -fx-border-width: 2;
+    -fx-shape: "M 0 0 L 420 0 L 450 30 L 450 400 L 30 400 L 0 370 Z";
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.52), 30, 0, 0, 8);
+}
+
+.modal-title {
+    -fx-fill: white;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.4;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.55), 12, 0, 0, 0);
+}
+
+.match-info-text {
+    -fx-fill: rgba(255, 255, 255, 0.76);
+}
+
+.player-section,
+.winner-section,
+.score-combo {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.player-section,
+.winner-section {
+    -fx-background-color: rgba(31, 30, 78, 0.72);
+    -fx-border-color: rgba(255, 82, 82, 0.48);
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 370 0 L 388 16 L 388 92 L 16 92 L 0 76 Z";
+}
+
+.player-name-large,
+.score-label {
+    -fx-fill: white;
+}
+
+.score-combo {
+    -fx-background-color: rgba(31, 30, 78, 0.84);
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 1.5;
+}
+
+.score-combo .list-cell {
+    -fx-background-color: #1F1E4E;
+}
+
+.score-combo .list-cell:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.32);
+}
+
+.score-combo .arrow {
+    -fx-background-color: #5c7cfa;
+}
+
+.vs-divider,
+.winner-label {
+    -fx-fill: #FF5252;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.42), 10, 0, 0, 0);
+}
+
+.winner-radio .radio {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-color: rgba(31, 30, 78, 0.92);
+    -fx-border-color: #5c7cfa;
+    -fx-shape: "M 0 0 L 15 0 L 22 7 L 22 22 L 7 22 L 0 15 Z";
+}
+
+.winner-radio:selected .radio {
+    -fx-background-color: #FF5252;
+    -fx-border-color: #FF5252;
+}
+
+.btn-cancel,
+.btn-submit {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 0.8;
+}
+
+.btn-cancel {
+    -fx-background-color: rgba(139, 13, 13, 0.34);
+    -fx-border-color: #FF5252;
+}
+
+.btn-submit {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #1F1E4E);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.58), 16, 0, 0, 4);
+}
+
+.btn-cancel:hover,
+.btn-submit:hover {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #FF5252);
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.62), 20, 0, 0, 6);
+}
+
+/* Games-inspired report modal HUD refinement */
+.modal-container {
+    -fx-background-color: #050508;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-shape: "";
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 20, 0, 0, 0);
+}
+
+.modal-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 1.5px;
+    -fx-font-size: 22px;
+    -fx-effect: none;
+}
+
+.match-info-text,
+.score-label,
+.winner-label,
+.winner-radio,
+.score-combo,
+.score-combo .list-cell {
+    -fx-font-family: "Consolas";
+}
+
+.player-section,
+.winner-section {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-shape: "";
+}
+
+.player-section:hover,
+.winner-section:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.35), 10, 0, 0, 0);
+}
+
+.score-combo {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.score-combo:focused {
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+}
+
+.vs-divider,
+.winner-label {
+    -fx-fill: #5c7cfa;
+    -fx-effect: none;
+}
+
+.btn-submit {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.btn-cancel {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 5 0 L 100 0 L 100 100 L 0 100 L 0 10 Z";
+    -fx-effect: none;
+}
+
+.btn-submit:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+}
+
+.btn-cancel:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.10);
+    -fx-effect: dropshadow(three-pass-box, rgba(248, 124, 124, 0.22), 15, 0, 0, 0);
+}

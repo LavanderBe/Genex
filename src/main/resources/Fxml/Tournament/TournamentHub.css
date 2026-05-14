@@ -33,6 +33,33 @@
     -fx-background-color: rgba(255, 255, 255, 0.12);
 }
 
+/* ──────────────── Search Suggestions Popup ──────────────── */
+.suggestions-box {
+    -fx-background-color: linear-gradient(to bottom, rgba(31, 30, 78, 0.98), rgba(15, 15, 35, 0.98));
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139, 13, 13, 0.6);
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0, 0, 4);
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-view-order: -1000;
+}
+
+.suggestion-item {
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.suggestion-item:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.3);
+}
+
 .icon-btn {
     -fx-background-color: rgba(255, 255, 255, 0.07);
     -fx-background-radius: 10;
@@ -45,49 +72,73 @@
     -fx-background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* ──────────────── Filter ComboBox ──────────────── */
+/* ──────────────── Filter ComboBox - POLYGON STYLE (FULL RED) ──────────────── */
 .filter-combo {
-    -fx-background-color: rgba(255, 255, 255, 0.07);
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-shape: "M 0 0 L 170 0 L 180 10 L 180 40 L 10 40 L 0 30 Z";
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.5), 12, 0, 0, 3);
+}
+
+.filter-combo:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.6), 16, 0, 0, 6);
+}
+
+.filter-combo:pressed {
+    -fx-background-color: #7a0a0a;
+    -fx-translate-y: 0;
+}
+
+.filter-combo:focused {
+    -fx-background-color: #8B0D0D;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.6), 16, 0, 0, 4);
 }
 
 .filter-combo .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-padding: 8 15;
-}
-
-.filter-combo:focused {
-    -fx-border-color: rgba(139, 13, 13, 0.7);
-    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
 }
 
 .filter-combo .arrow-button {
     -fx-background-color: transparent;
+    -fx-padding: 0 15 0 0;
 }
 
 .filter-combo .arrow {
     -fx-background-color: white;
+    -fx-shape: "M 0 0 L 5 5 L 10 0 Z";
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
 }
 
-/* ComboBox Dropdown */
+/* ComboBox Dropdown - Dark with red accents */
 .filter-combo .list-view {
-    -fx-background-color: #1F1E4E;
-    -fx-border-color: rgba(139, 13, 13, 0.3);
-    -fx-border-width: 1;
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: rgba(139, 13, 13, 0.6);
+    -fx-border-width: 1.5;
     -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.4), 15, 0, 0, 5);
 }
 
 .filter-combo .list-cell:hover {
-    -fx-background-color: rgba(139, 13, 13, 0.3);
+    -fx-background-color: rgba(139, 13, 13, 0.4);
 }
 
 .filter-combo .list-cell:selected {
-    -fx-background-color: rgba(139, 13, 13, 0.5);
+    -fx-background-color: rgba(139, 13, 13, 0.6);
     -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 /* PRIMARY BLUE BUTTON - CYBER LOOK */
@@ -103,6 +154,29 @@
 .action-blue-button:hover {
     -fx-background-color: #7d97ff;
     -fx-translate-y: -2;
+}
+
+/* PRIMARY RED BUTTON - CYBER LOOK (GAME FILTER) */
+.action-red-button {
+    -fx-background-color: #8B0D0D;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-shape: "M 0 0 L 190 0 L 200 10 L 200 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.5), 12, 0, 0, 3);
+}
+
+.action-red-button:hover {
+    -fx-background-color: #a01010;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.6), 16, 0, 0, 6);
+}
+
+.action-red-button:pressed {
+    -fx-background-color: #7a0a0a;
+    -fx-translate-y: 0;
 }
 
 /* Active Filter State (for "Mes Tournois" toggle) */
@@ -134,9 +208,159 @@
     -fx-background-color: transparent;
 }
 
+.edge-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.edge-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.edge-scrollpane .scroll-bar:vertical,
+.edge-scrollpane .scroll-bar:horizontal {
+    -fx-background-color: rgba(31, 30, 78, 0.3);
+    -fx-background-radius: 0;
+    -fx-pref-width: 9;
+    -fx-pref-height: 9;
+}
+
+.edge-scrollpane .scroll-bar:vertical .thumb,
+.edge-scrollpane .scroll-bar:horizontal .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+
+.edge-scrollpane .scroll-bar:vertical .thumb:hover,
+.edge-scrollpane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #ff3333;
+}
+
+.edge-scrollpane .scroll-bar .increment-button,
+.edge-scrollpane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-shape: "";
+}
+
+.edge-scrollpane .scroll-bar .increment-arrow,
+.edge-scrollpane .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
 /* ──────────────── Cards Container ──────────────── */
 .tournaments-container {
     -fx-padding: 10 0;
+}
+
+/* Map */
+.map-section {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.7), rgba(5, 5, 15, 0.88));
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139, 13, 13, 0.55);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.16), 16, 0, 0, 2);
+}
+
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+
+.map-status-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.58);
+    -fx-font-size: 12;
+}
+
+.center-map-view {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.center-drawer-subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-size: 12;
+}
+
+.center-info-block {
+    -fx-background-color: rgba(255, 255, 255, 0.055);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 14;
+}
+
+.center-info-line {
+    -fx-text-fill: rgba(255, 255, 255, 0.78);
+    -fx-font-size: 13;
+}
+
+.center-tournament-row {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.11);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 16 18;
+    -fx-min-height: 92;
+}
+
+.center-tournament-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+}
+
+.center-tournament-meta {
+    -fx-text-fill: rgba(255, 255, 255, 0.62);
+    -fx-font-size: 12;
+}
+
+.center-view-button {
+    -fx-background-color: linear-gradient(to right, #4f63d8, #6b55ff);
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: 700;
+    -fx-shape: "M 0 0 L 96 0 L 112 12 L 112 42 L 12 42 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92, 79, 255, 0.45), 12, 0, 0, 3);
+}
+
+.center-view-button:hover {
+    -fx-background-color: linear-gradient(to right, #5f75f0, #806cff);
+    -fx-translate-y: -2;
+}
+
+.center-close-button {
+    -fx-background-color: rgba(139, 13, 13, 0.26);
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 14;
+    -fx-font-weight: 800;
+    -fx-shape: "M 0 0 L 36 0 L 48 10 L 48 38 L 10 38 L 0 28 Z";
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 80, 80, 0.35);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.35), 10, 0, 0, 2);
+}
+
+.center-close-button:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.42);
+    -fx-text-fill: white;
+}
+
+.center-empty-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.58);
+    -fx-font-size: 13;
+    -fx-padding: 18 0;
 }
 
 /* ──────────────── Empty State ──────────────── */
@@ -149,13 +373,13 @@
 /* ─── Player Record Section ──────────────────────────────────────────── */
 
 .hub-record-section {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 15;
-    -fx-border-color: rgba(124, 111, 255, 0.35);
-    -fx-border-radius: 15;
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.68), rgba(5, 5, 15, 0.88));
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139, 13, 13, 0.55);
+    -fx-border-radius: 8;
     -fx-border-width: 1.5;
     -fx-padding: 20 25;
-    -fx-effect: dropshadow(gaussian, rgba(124, 111, 255, 0.15), 20, 0, 0, 4);
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.18), 16, 0, 0, 2);
 }
 
 .hub-record-title {
@@ -171,9 +395,9 @@
 
 .hub-record-card {
     -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 12;
+    -fx-background-radius: 6;
     -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 12;
+    -fx-border-radius: 6;
     -fx-border-width: 1;
     -fx-padding: 18 10;
     -fx-min-width: 100;
@@ -207,6 +431,18 @@
     -fx-font-weight: 700;
 }
 
+.hub-neutral-value {
+    -fx-fill: white;
+}
+
+.hub-blue-value {
+    -fx-fill: #5c7cfa;
+}
+
+.hub-red-value {
+    -fx-fill: #FF5252;
+}
+
 /* These are applied via inline style on Text nodes in FXML */
 .hub-wins  { -fx-fill: #34d399; }
 .hub-losses { -fx-fill: #f87171; }
@@ -218,4 +454,376 @@
     -fx-font-size: 11;
     -fx-font-weight: 700;
     -fx-letter-spacing: 1;
+}
+
+.participation-history-list {
+    -fx-padding: 12 0 0 0;
+}
+
+.history-section-title {
+    -fx-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: 800;
+}
+
+.history-row {
+    -fx-background-color: rgba(255, 255, 255, 0.055);
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(139, 13, 13, 0.35);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 14 16;
+}
+
+.history-row:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.16);
+    -fx-border-color: rgba(255, 82, 82, 0.62);
+}
+
+.history-name {
+    -fx-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: 800;
+}
+
+.history-meta {
+    -fx-fill: rgba(255, 255, 255, 0.68);
+    -fx-font-size: 12;
+}
+
+.history-placement-badge {
+    -fx-background-color: rgba(92, 124, 250, 0.26);
+    -fx-border-color: rgba(92, 124, 250, 0.75);
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-min-width: 64;
+    -fx-min-height: 38;
+}
+
+.history-placement-text {
+    -fx-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: 900;
+}
+
+/* Cyberpunk angular redesign. Map WebView styles are intentionally left untouched. */
+.main-content,
+.tournament-hub {
+    -fx-background-color: linear-gradient(to bottom right, #09091b, #1F1E4E, #160508);
+}
+
+.page-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 30;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.95), 18, 0.2, 0, 0);
+}
+
+.search-field,
+.suggestions-box,
+.suggestion-item,
+.hub-record-section,
+.hub-record-card,
+.history-row,
+.history-placement-badge,
+.center-info-block,
+.center-tournament-row {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.search-field {
+    -fx-background-color: rgba(31, 30, 78, 0.72);
+    -fx-border-color: #5c7cfa #FF5252 #FF5252 #5c7cfa;
+    -fx-border-width: 1.5;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.48);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.36), 14, 0, 0, 0);
+}
+
+.search-field:focused {
+    -fx-background-color: rgba(13, 12, 46, 0.96);
+    -fx-border-color: #FF5252 #5c7cfa #5c7cfa #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.45), 18, 0, 0, 0);
+}
+
+.suggestions-box {
+    -fx-background-color: linear-gradient(to bottom, rgba(31, 30, 78, 0.98), rgba(139, 13, 13, 0.92));
+    -fx-border-color: #5c7cfa #FF5252 #FF5252 #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.45), 22, 0, 0, 6);
+}
+
+.suggestion-item {
+    -fx-font-weight: 700;
+}
+
+.suggestion-item:hover {
+    -fx-background-color: rgba(92, 124, 250, 0.28);
+}
+
+.icon-btn,
+.action-blue-button,
+.action-red-button,
+.center-view-button,
+.center-close-button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 0.8;
+    -fx-shape: "M 0 0 L 150 0 L 166 14 L 166 44 L 16 44 L 0 30 Z";
+}
+
+.icon-btn {
+    -fx-background-color: rgba(92, 124, 250, 0.20);
+    -fx-border-color: rgba(92, 124, 250, 0.65);
+    -fx-border-width: 1.4;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.38), 12, 0, 0, 2);
+}
+
+.icon-btn:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.28);
+    -fx-border-color: #FF5252;
+}
+
+.action-blue-button {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #1F1E4E);
+    -fx-border-color: rgba(255, 255, 255, 0.22);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.72), 18, 0, 0, 3);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: linear-gradient(to right, #7f97ff, #5c7cfa);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.95), 22, 0, 0, 5);
+}
+
+.action-blue-button.active-filter,
+.action-red-button {
+    -fx-background-color: linear-gradient(to right, #8B0D0D, #FF5252);
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.65), 18, 0, 0, 3);
+}
+
+.hub-record-section {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.90), rgba(139, 13, 13, 0.42));
+    -fx-border-color: #5c7cfa #FF5252 #8B0D0D #5c7cfa;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.34), 22, 0, 0, 5);
+}
+
+.hub-record-title,
+.history-section-title,
+.section-title {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.54), 10, 0, 0, 0);
+}
+
+.hub-record-card {
+    -fx-background-color: rgba(31, 30, 78, 0.72);
+    -fx-border-color: rgba(92, 124, 250, 0.58);
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 116 0 L 130 14 L 130 84 L 14 84 L 0 70 Z";
+}
+
+.hub-record-card-wins,
+.hub-record-card-ratio {
+    -fx-border-color: rgba(92, 124, 250, 0.85);
+}
+
+.hub-record-card-losses,
+.hub-record-card-best {
+    -fx-border-color: rgba(255, 82, 82, 0.85);
+}
+
+.history-row {
+    -fx-background-color: rgba(31, 30, 78, 0.66);
+    -fx-border-color: rgba(255, 82, 82, 0.45);
+    -fx-shape: "M 0 0 L 760 0 L 784 18 L 784 92 L 18 92 L 0 74 Z";
+}
+
+.history-row:hover {
+    -fx-border-color: #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.4), 14, 0, 0, 2);
+}
+
+.history-placement-badge {
+    -fx-background-color: rgba(92, 124, 250, 0.35);
+    -fx-border-color: #5c7cfa;
+    -fx-shape: "M 0 0 L 58 0 L 70 10 L 70 38 L 10 38 L 0 28 Z";
+}
+
+/* Games-inspired HUD refinement */
+.module-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.45), 10, 0, 0, 0);
+}
+
+.module-subtitle {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #5c7cfa;
+}
+
+.main-content,
+.tournament-hub {
+    -fx-background-color: transparent;
+}
+
+.search-field {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-font-family: "Consolas";
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-effect: none;
+}
+
+.search-field:focused {
+    -fx-background-color: rgba(139, 13, 13, 0.06);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-effect: none;
+}
+
+.suggestions-box {
+    -fx-background-color: linear-gradient(to bottom, #1F1E4E, #050508);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.50), 10, 0, 0, 0);
+}
+
+.suggestion-item {
+    -fx-font-family: "Consolas";
+    -fx-text-fill: #8e94af;
+}
+
+.suggestion-item:hover {
+    -fx-background-color: rgba(139, 13, 13, 0.40);
+    -fx-text-fill: white;
+    -fx-border-color: transparent transparent transparent white;
+    -fx-border-width: 0 0 0 3;
+}
+
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+    -fx-translate-y: -2;
+}
+
+.icon-btn,
+.center-view-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+    -fx-effect: none;
+}
+
+.icon-btn:hover,
+.center-view-button:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.center-edit-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+    -fx-effect: none;
+}
+
+.center-edit-button:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.center-delete-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+    -fx-shape: "M 10 0 L 100 0 L 100 100 L 0 100 Z";
+    -fx-effect: none;
+}
+
+.center-delete-button:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}
+
+.hub-record-section,
+.center-info-block,
+.center-tournament-row,
+.history-row {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-width: 1;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.hub-record-section:hover,
+.center-tournament-row:hover,
+.history-row:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.40), 15, 0, 0, 0);
+}
+
+.hub-record-card {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.hub-record-card-wins,
+.hub-record-card-ratio {
+    -fx-border-color: rgba(92, 124, 250, 0.55);
+}
+
+.hub-record-card-losses,
+.hub-record-card-best {
+    -fx-border-color: rgba(255, 82, 82, 0.55);
+}
+
+.section-title,
+.history-section-title,
+.hub-record-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 1.5px;
+    -fx-effect: none;
+}
+
+.map-section {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-effect: none;
 }

@@ -830,3 +830,310 @@
     -fx-translate-y: -1;
     -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.55), 12, 0, 0, 4);
 }
+
+/* Cyberpunk angular redesign */
+.tournament-detail-container {
+    -fx-background-color: linear-gradient(to bottom right, #080817, #1F1E4E, #1b0608);
+}
+
+.detail-header {
+    -fx-background-color: linear-gradient(to right, rgba(31, 30, 78, 0.94), rgba(139, 13, 13, 0.28));
+    -fx-border-color: rgba(92, 124, 250, 0.45) transparent #FF5252 transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.info-card,
+.participant-card,
+.match-card,
+.status-card,
+.record-card,
+.ranking-row,
+.bracket-container,
+.participant-count-badge,
+.match-status-badge,
+.ranking-badge,
+.round-section-active,
+.active-round-badge,
+.done-round-badge,
+.score-spinner,
+.btn-refresh,
+.btn-confirm-inline,
+.status-badge-large {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.info-card,
+.bracket-container {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.86), rgba(139, 13, 13, 0.30));
+    -fx-border-color: #5c7cfa #FF5252 #8B0D0D #5c7cfa;
+    -fx-border-width: 2;
+    -fx-shape: "M 0 0 L 1100 0 L 1130 28 L 1130 260 L 28 260 L 0 232 Z";
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.28), 22, 0, 0, 5);
+}
+
+.tournament-title {
+    -fx-fill: white;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.62), 14, 0, 0, 0);
+}
+
+.game-subtitle,
+.challonge-link,
+.player-score,
+.participant-count-text,
+.active-round-text {
+    -fx-fill: #5c7cfa;
+    -fx-text-fill: #5c7cfa;
+}
+
+.section-title {
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 1.4;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.60), 12, 0, 0, 0);
+}
+
+.info-label,
+.match-label,
+.record-label {
+    -fx-fill: rgba(255, 255, 255, 0.62);
+    -fx-text-fill: rgba(255, 255, 255, 0.62);
+    -fx-font-weight: 900;
+}
+
+.status-badge-large,
+.participant-count-badge,
+.match-status-badge,
+.ranking-badge,
+.active-round-badge,
+.done-round-badge {
+    -fx-background-color: rgba(31, 30, 78, 0.84);
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 160 0 L 176 13 L 176 44 L 16 44 L 0 31 Z";
+}
+
+.status-text-large,
+.match-status-text {
+    -fx-fill: #5c7cfa;
+}
+
+.btn-back,
+.btn-join,
+.btn-start,
+.btn-reset,
+.btn-sync,
+.btn-refresh,
+.btn-report,
+.btn-confirm-inline {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-weight: 900;
+    -fx-letter-spacing: 0.8;
+    -fx-border-width: 1.3;
+}
+
+.btn-back,
+.btn-refresh {
+    -fx-background-color: rgba(31, 30, 78, 0.78);
+    -fx-border-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.35), 12, 0, 0, 2);
+}
+
+.btn-start,
+.btn-sync,
+.btn-report,
+.btn-confirm-inline {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #1F1E4E);
+    -fx-border-color: rgba(255, 255, 255, 0.18);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.58), 16, 0, 0, 4);
+}
+
+.btn-join {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #1F1E4E);
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.58), 16, 0, 0, 4);
+}
+
+.btn-join.joined,
+.btn-reset {
+    -fx-background-color: linear-gradient(to right, #8B0D0D, #FF5252);
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.58), 16, 0, 0, 4);
+}
+
+.btn-back:hover,
+.btn-refresh:hover,
+.btn-start:hover,
+.btn-sync:hover,
+.btn-report:hover,
+.btn-confirm-inline:hover,
+.btn-join:hover {
+    -fx-background-color: linear-gradient(to right, #5c7cfa, #FF5252);
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.62), 20, 0, 0, 6);
+}
+
+.participant-card,
+.match-card,
+.record-card,
+.ranking-row,
+.status-card,
+.round-section-active {
+    -fx-background-color: rgba(31, 30, 78, 0.72);
+    -fx-border-color: rgba(255, 82, 82, 0.45);
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 980 0 L 1004 18 L 1004 88 L 18 88 L 0 70 Z";
+    -fx-effect: dropshadow(gaussian, rgba(139, 13, 13, 0.22), 14, 0, 0, 3);
+}
+
+.participant-card:hover,
+.match-card:hover,
+.ranking-row:hover {
+    -fx-border-color: #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.38), 18, 0, 0, 5);
+}
+
+/* Games-inspired detail HUD refinement */
+.module-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 22px;
+    -fx-fill: white;
+    -fx-text-fill: white;
+}
+
+.module-subtitle {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-letter-spacing: 2px;
+    -fx-fill: #5c7cfa;
+    -fx-text-fill: #5c7cfa;
+}
+
+.tournament-detail-container {
+    -fx-background-color: transparent;
+}
+
+.detail-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.info-card,
+.bracket-container,
+.participant-card,
+.match-card,
+.record-card,
+.ranking-row,
+.status-card,
+.round-section-active {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-width: 1;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.info-card:hover,
+.participant-card:hover,
+.match-card:hover,
+.ranking-row:hover,
+.status-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.40), 15, 0, 0, 0);
+}
+
+.tournament-title,
+.section-title,
+.round-title,
+.ranking-name {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 1px;
+    -fx-effect: none;
+}
+
+.game-subtitle,
+.info-label,
+.info-value,
+.match-label,
+.player-name,
+.player-score,
+.participant-name,
+.participant-seed,
+.status-text-large,
+.match-status-text,
+.challonge-link {
+    -fx-font-family: "Consolas";
+}
+
+.status-badge-large,
+.participant-count-badge,
+.match-status-badge,
+.ranking-badge,
+.active-round-badge,
+.done-round-badge {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-shape: "";
+}
+
+.btn-back,
+.btn-refresh,
+.btn-start,
+.btn-sync,
+.btn-report,
+.btn-confirm-inline,
+.btn-join {
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-background-color: #5c7cfa;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.btn-back {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-effect: none;
+}
+
+.btn-reset,
+.btn-join.joined {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 10 0 L 100 0 L 100 30 L 90 40 L 0 40 L 0 10 Z";
+    -fx-effect: none;
+}
+
+.btn-back:hover,
+.btn-refresh:hover,
+.btn-start:hover,
+.btn-sync:hover,
+.btn-report:hover,
+.btn-confirm-inline:hover,
+.btn-join:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+}
+
+.btn-reset:hover,
+.btn-join.joined:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.10);
+    -fx-effect: dropshadow(three-pass-box, rgba(248, 124, 124, 0.22), 15, 0, 0, 0);
+}
+
+.detail-scroll .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}

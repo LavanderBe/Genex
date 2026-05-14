@@ -3,8 +3,10 @@ package Genex.Controllers.Tournament;
 import Genex.entities.*;
 import Genex.services.*;
 import Genex.utils.SessionManager;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -14,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.util.Duration;
 
 import java.awt.Desktop;
 import java.net.URI;
@@ -116,6 +119,7 @@ public class TournamentDetailController {
     private CrudCenter crudCenter = new CrudCenter();
     private CrudTournamentParticipant crudParticipant = new CrudTournamentParticipant();
     private CrudPlayer crudPlayer = new CrudPlayer();
+    private CrudTeam crudTeam = new CrudTeam();
     private CrudTournament crudTournament = new CrudTournament();
     private CrudTournamentMatch crudMatch = new CrudTournamentMatch();
     private ChallongeService challongeService = new ChallongeService();
@@ -250,9 +254,13 @@ public class TournamentDetailController {
     }
 
     private void setupRoleBasedUI() {
-        if (currentUser == null || tournament == null) return;
+        if (tournament == null) return;
 
-        String role = currentUser.getRole();
+        if (currentUser == null) {
+            currentUser = SessionManager.getInstance().getCurrentUser();
+        }
+
+        String role = currentUser != null ? currentUser.getRole() : "admin";
 
         if ("player".equalsIgnoreCase(role)) {
             btnJoinLeave.setVisible(true);
@@ -265,10 +273,11 @@ public class TournamentDetailController {
             btnStart.setManaged(false);
             btnReset.setVisible(false);
             btnReset.setManaged(false);
+            hideMatches();
 
             checkPlayerJoinStatus();
 
-            if (tournament.isSynced()) {
+            if (isTournamentSynced()) {
                 showBracket();
             } else {
                 hideBracket();
@@ -277,7 +286,7 @@ public class TournamentDetailController {
             // Show player status if tournament started
             String playerId = getPlayerIdFromUserId(currentUser.getId());
             if (playerId != null) {
-                if (tournament.isStarted()) {
+                if (isTournamentStarted()) {
                     loadPlayerStatus(playerId);
                 } else {
                     playerStatusSection.setVisible(false);
@@ -297,11 +306,13 @@ public class TournamentDetailController {
             // Admin view: Hide join button, show participants section
             btnJoinLeave.setVisible(false);
             btnJoinLeave.setManaged(false);
+            playerStatusSection.setVisible(false);
+            playerStatusSection.setManaged(false);
             participantsSection.setVisible(true);
             participantsSection.setManaged(true);
 
             // Show/hide sync and start buttons based on tournament state
-            if (!tournament.isSynced()) {
+            if (!isTournamentSynced()) {
                 // Not synced yet: show sync button, hide start button and bracket
                 btnSync.setVisible(true);
                 btnSync.setManaged(true);
@@ -311,7 +322,7 @@ public class TournamentDetailController {
                 btnReset.setManaged(false);
                 hideBracket();
                 hideMatches();
-            } else if (!tournament.isStarted()) {
+            } else if (!isTournamentStarted()) {
                 // Synced but not started: hide sync button, show start button and bracket
                 btnSync.setVisible(false);
                 btnSync.setManaged(false);
@@ -346,13 +357,46 @@ public class TournamentDetailController {
         }
         
         // Setup Challonge link
-        if (tournament.isSynced() && tournament.getChallongeUrl() != null) {
+        if (isTournamentSynced() && tournament.getChallongeUrl() != null) {
             linkChallonge.setVisible(true);
             linkChallonge.setManaged(true);
         } else {
             linkChallonge.setVisible(false);
             linkChallonge.setManaged(false);
         }
+    }
+
+    private boolean isTournamentSynced() {
+        if (tournament == null) {
+            return false;
+        }
+
+        return tournament.isSynced()
+                || hasText(tournament.getChallongeId())
+                || hasText(tournament.getChallongeUrl())
+                || hasText(tournament.getChallongeUrlSlug());
+    }
+
+    private boolean isTournamentStarted() {
+        if (tournament == null) {
+            return false;
+        }
+
+        String state = tournament.getState();
+        return tournament.isStarted()
+                || Tounament.TournamentState.IN_PROGRESS.name().equals(state)
+                || Tounament.TournamentState.COMPLETED.name().equals(state);
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+    private boolean isAdminActionAllowed() {
+        if (currentUser == null) {
+            currentUser = SessionManager.getInstance().getCurrentUser();
+        }
+        return currentUser == null || "admin".equalsIgnoreCase(currentUser.getRole());
     }
 
     private void checkPlayerJoinStatus() {
@@ -366,9 +410,24 @@ public class TournamentDetailController {
                 return;
             }
 
-            // Check participation record - must be ACTIVE to count as joined
-            TournamentParticipants participation = crudParticipant.getPlayerParticipation(
-                    tournament.getTournamentId(), playerId);
+            // Check participation based on tournament type
+            TournamentParticipants participation = null;
+            
+            if ("TEAM".equalsIgnoreCase(tournament.getParticipant_type())) {
+                // For team tournaments, check if player's team is participating
+                CrudTeamMember crudTeamMember = new CrudTeamMember();
+                Team playerTeam = crudTeamMember.getTeamByPlayer(playerId);
+                
+                if (playerTeam != null) {
+                    // Check if the team is participating
+                    participation = crudParticipant.getPlayerParticipation(
+                            tournament.getTournamentId(), playerTeam.getId());
+                }
+            } else {
+                // For solo tournaments, check player participation
+                participation = crudParticipant.getPlayerParticipation(
+                        tournament.getTournamentId(), playerId);
+            }
 
             if (participation != null && participation.isActive()) {
                 isPlayerJoined = true;
@@ -388,8 +447,23 @@ public class TournamentDetailController {
         String playerId = getPlayerIdFromUserId(currentUser.getId());
         if (playerId == null) return;
 
-        TournamentParticipants participation = crudParticipant.getPlayerParticipation(
-                tournament.getTournamentId(), playerId);
+        TournamentParticipants participation = null;
+        
+        // Check participation based on tournament type
+        if ("TEAM".equalsIgnoreCase(tournament.getParticipant_type())) {
+            // For team tournaments, check if player's team is participating
+            CrudTeamMember crudTeamMember = new CrudTeamMember();
+            Team playerTeam = crudTeamMember.getTeamByPlayer(playerId);
+            
+            if (playerTeam != null) {
+                participation = crudParticipant.getPlayerParticipation(
+                        tournament.getTournamentId(), playerTeam.getId());
+            }
+        } else {
+            // For solo tournaments, check player participation
+            participation = crudParticipant.getPlayerParticipation(
+                    tournament.getTournamentId(), playerId);
+        }
 
         if (participation == null) {
             // Never joined - only allow joining if registration is open
@@ -426,7 +500,7 @@ public class TournamentDetailController {
             btnJoinLeave.getStyleClass().removeAll("joined", "eliminated");
         } else {
             // ACTIVE - still competing
-            btnJoinLeave.setText(tournament.isStarted() ? "SE RETIRER" : "QUITTER");
+            btnJoinLeave.setText(isTournamentStarted() ? "SE RETIRER" : "QUITTER");
             btnJoinLeave.setDisable(false);
             btnJoinLeave.getStyleClass().removeAll("eliminated");
             if (!btnJoinLeave.getStyleClass().contains("joined")) {
@@ -448,16 +522,38 @@ public class TournamentDetailController {
 
             if (isPlayerJoined) {
                 // Check if tournament has started
-                if (tournament.isStarted()) {
+                if (isTournamentStarted()) {
                     // Tournament in progress → WITHDRAW flow
                     handleWithdraw(playerId);
                 } else {
                     // Tournament not started → normal leave
-                    crudParticipant.removePlayerFromTournament(tournament.getTournamentId(), playerId);
+                    // Determine participant ID based on tournament type
+                    String participantId = playerId;
+                    String successMessage = "Vous avez quitté le tournoi.";
+                    
+                    if ("TEAM".equalsIgnoreCase(tournament.getParticipant_type())) {
+                        // For team tournaments, get team ID
+                        CrudTeamMember crudTeamMember = new CrudTeamMember();
+                        Team playerTeam = crudTeamMember.getTeamByPlayer(playerId);
+                        
+                        if (playerTeam != null) {
+                            // Check if player is team owner
+                            if (!playerId.equals(playerTeam.getCreatedBy())) {
+                                showAlert("Propriétaire requis", 
+                                    "Seul le propriétaire de l'équipe peut retirer l'équipe du tournoi.", 
+                                    Alert.AlertType.WARNING);
+                                return;
+                            }
+                            participantId = playerTeam.getId();
+                            successMessage = "L'équipe \"" + playerTeam.getName() + "\" a quitté le tournoi.";
+                        }
+                    }
+                    
+                    crudParticipant.removePlayerFromTournament(tournament.getTournamentId(), participantId);
                     isPlayerJoined = false;
                     // Auto-reopen registration if space available
                     checkAndUpdateTournamentState();
-                    showAlert("Succès", "Vous avez quitté le tournoi.", Alert.AlertType.INFORMATION);
+                    showAlert("Succès", successMessage, Alert.AlertType.INFORMATION);
                     updateJoinButton();
                 }
             } else {
@@ -471,16 +567,14 @@ public class TournamentDetailController {
                     return;
                 }
 
-                // Join tournament
-                int currentCount = crudParticipant.getParticipantCount(tournament.getTournamentId());
-                TournamentParticipants participant = TournamentParticipants.solo(
-                        tournament.getTournamentId(), playerId, currentCount + 1);
-                crudParticipant.addEntity(participant);
-                isPlayerJoined = true;
-                // Auto-close if now full
-                checkAndUpdateTournamentState();
-                showAlert("Succès", "Vous avez rejoint le tournoi!", Alert.AlertType.INFORMATION);
-                updateJoinButton();
+                // Check tournament type and handle accordingly
+                if ("TEAM".equalsIgnoreCase(tournament.getParticipant_type())) {
+                    // TEAM TOURNAMENT - Check team ownership
+                    handleTeamTournamentJoin(playerId);
+                } else {
+                    // SOLO TOURNAMENT - Join as individual player
+                    handleSoloTournamentJoin(playerId);
+                }
             }
 
         } catch (Exception e) {
@@ -490,31 +584,138 @@ public class TournamentDetailController {
         }
     }
 
+    private void handleSoloTournamentJoin(String playerId) {
+        try {
+            int currentCount = crudParticipant.getParticipantCount(tournament.getTournamentId());
+            TournamentParticipants participant = TournamentParticipants.solo(
+                    tournament.getTournamentId(), playerId, currentCount + 1);
+            crudParticipant.addEntity(participant);
+            isPlayerJoined = true;
+            // Auto-close if now full
+            checkAndUpdateTournamentState();
+            showAlert("Succès", "Vous avez rejoint le tournoi!", Alert.AlertType.INFORMATION);
+            updateJoinButton();
+        } catch (Exception e) {
+            System.err.println("Error joining solo tournament: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private void handleTeamTournamentJoin(String playerId) {
+        try {
+            // Check if player has a team
+            CrudTeamMember crudTeamMember = new CrudTeamMember();
+            Team playerTeam = crudTeamMember.getTeamByPlayer(playerId);
+
+            if (playerTeam == null) {
+                // Case 3: Player has no team
+                showAlert("Équipe requise", 
+                    "Vous devez rejoindre ou créer une équipe avant de participer à un tournoi par équipe.", 
+                    Alert.AlertType.WARNING);
+                return;
+            }
+
+            // Check if player is the team owner
+            if (!playerId.equals(playerTeam.getCreatedBy())) {
+                // Case 2: Player has team but is not the owner
+                showAlert("Propriétaire requis", 
+                    "Vous ne pouvez pas participer car vous n'êtes pas le propriétaire de l'équipe \"" + playerTeam.getName() + "\".\n\n" +
+                    "Seul le créateur de l'équipe peut inscrire l'équipe au tournoi.", 
+                    Alert.AlertType.WARNING);
+                return;
+            }
+
+            // Case 1: Player is the team owner - allow joining with team
+            int currentCount = crudParticipant.getParticipantCount(tournament.getTournamentId());
+            TournamentParticipants participant = new TournamentParticipants();
+            participant.setTournamentId(tournament.getTournamentId());
+            participant.setParticipantId(playerTeam.getId()); // Use TEAM ID, not player ID
+            participant.setTournamentType("TEAM");
+            participant.setSeed(currentCount + 1);
+            participant.setStatus(TournamentParticipants.Status.ACTIVE);
+
+            crudParticipant.addEntity(participant);
+            isPlayerJoined = true;
+            
+            // Auto-close if now full
+            checkAndUpdateTournamentState();
+            
+            showAlert("Succès", 
+                "L'équipe \"" + playerTeam.getName() + "\" a rejoint le tournoi!\n\n" +
+                "Tous les membres de l'équipe sont maintenant inscrits.", 
+                Alert.AlertType.INFORMATION);
+            updateJoinButton();
+
+        } catch (Exception e) {
+            System.err.println("Error joining team tournament: " + e.getMessage());
+            throw e;
+        }
+    }
+
     private void handleWithdraw(String playerId) {
+        // Determine if this is a team or solo tournament
+        boolean isTeamTournament = "TEAM".equalsIgnoreCase(tournament.getParticipant_type());
+        String participantId = playerId;
+        String participantName = "Vous";
+        
+        if (isTeamTournament) {
+            // Get player's team
+            CrudTeamMember crudTeamMember = new CrudTeamMember();
+            Team playerTeam = crudTeamMember.getTeamByPlayer(playerId);
+            
+            if (playerTeam == null) {
+                showAlert("Erreur", "Équipe introuvable.", Alert.AlertType.ERROR);
+                return;
+            }
+            
+            // Check if player is team owner
+            if (!playerId.equals(playerTeam.getCreatedBy())) {
+                showAlert("Propriétaire requis", 
+                    "Seul le propriétaire de l'équipe peut retirer l'équipe du tournoi.", 
+                    Alert.AlertType.WARNING);
+                return;
+            }
+            
+            participantId = playerTeam.getId();
+            participantName = "L'équipe \"" + playerTeam.getName() + "\"";
+        }
+        
         javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
                 javafx.scene.control.Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmer le retrait");
         confirm.setHeaderText("Quitter le tournoi en cours");
-        confirm.setContentText(
-                "⚠️ Le tournoi est en cours!\n\n" +
-                "Si vous quittez maintenant:\n" +
-                "• Vous serez marqué comme RETIRÉ\n" +
-                "• Votre adversaire actuel gagne par forfait (3-0)\n" +
-                "• Vous ne pourrez pas rejoindre ce tournoi\n\n" +
-                "Voulez-vous vraiment vous retirer?");
+        
+        String withdrawMessage = isTeamTournament 
+            ? "⚠️ Le tournoi est en cours!\n\n" +
+              "Si vous retirez l'équipe maintenant:\n" +
+              "• Toute l'équipe sera marquée comme RETIRÉE\n" +
+              "• L'adversaire actuel gagne par forfait (3-0)\n" +
+              "• L'équipe ne pourra pas rejoindre ce tournoi\n\n" +
+              "Voulez-vous vraiment retirer l'équipe?"
+            : "⚠️ Le tournoi est en cours!\n\n" +
+              "Si vous quittez maintenant:\n" +
+              "• Vous serez marqué comme RETIRÉ\n" +
+              "• Votre adversaire actuel gagne par forfait (3-0)\n" +
+              "• Vous ne pourrez pas rejoindre ce tournoi\n\n" +
+              "Voulez-vous vraiment vous retirer?";
+        
+        confirm.setContentText(withdrawMessage);
 
+        final String finalParticipantId = participantId;
+        final String finalParticipantName = participantName;
+        
         confirm.showAndWait().ifPresent(response -> {
             if (response == javafx.scene.control.ButtonType.OK) {
                 try {
-                    // Get the player's Challonge participant ID
+                    // Get the participant's Challonge participant ID
                     TournamentParticipants participation = crudParticipant.getPlayerParticipation(
-                            tournament.getTournamentId(), playerId);
-                    String challongePlayerId = participation != null 
+                            tournament.getTournamentId(), finalParticipantId);
+                    String challongeParticipantId = participation != null 
                             ? participation.getChallongeParticipantId() : null;
 
-                    System.out.println("Withdrawing player: " + playerId + " (Challonge ID: " + challongePlayerId + ")");
+                    System.out.println("Withdrawing participant: " + finalParticipantId + " (Challonge ID: " + challongeParticipantId + ")");
 
-                    // Find ALL pending matches involving this player
+                    // Find ALL pending matches involving this participant
                     List<TournamentMatch> allMatches = crudMatch.getAllByTournament(tournament.getTournamentId());
                     int withdrawRound = 0;
                     int forfeitsReported = 0;
@@ -522,19 +723,19 @@ public class TournamentDetailController {
                     for (TournamentMatch match : allMatches) {
                         if (match.getStatus() != TournamentMatch.MatchStatus.PENDING) continue;
 
-                        // Check by local player ID
-                        boolean isPlayer1 = playerId.equals(match.getPlayer1Id());
-                        boolean isPlayer2 = playerId.equals(match.getPlayer2Id());
+                        // Check by local participant ID
+                        boolean isPlayer1 = finalParticipantId.equals(match.getPlayer1Id());
+                        boolean isPlayer2 = finalParticipantId.equals(match.getPlayer2Id());
 
                         // Also check by Challonge participant ID (for TBD matches)
-                        if (!isPlayer1 && !isPlayer2 && challongePlayerId != null) {
-                            isPlayer1 = challongePlayerId.equals(match.getChallongePlayer1Id());
-                            isPlayer2 = challongePlayerId.equals(match.getChallongePlayer2Id());
+                        if (!isPlayer1 && !isPlayer2 && challongeParticipantId != null) {
+                            isPlayer1 = challongeParticipantId.equals(match.getChallongePlayer1Id());
+                            isPlayer2 = challongeParticipantId.equals(match.getChallongePlayer2Id());
                         }
 
                         if (!isPlayer1 && !isPlayer2) continue;
 
-                        System.out.println("Found pending match for withdrawn player: Round " + match.getRound() + " Match " + match.getMatchNumber());
+                        System.out.println("Found pending match for withdrawn participant: Round " + match.getRound() + " Match " + match.getMatchNumber());
 
                         // Determine opponent IDs
                         String opponentLocalId = isPlayer1 ? match.getPlayer2Id() : match.getPlayer1Id();
@@ -542,7 +743,7 @@ public class TournamentDetailController {
                                 ? match.getChallongePlayer2Id()
                                 : match.getChallongePlayer1Id();
 
-                        // Forfeit scores: withdrawn player gets 0, opponent gets 3
+                        // Forfeit scores: withdrawn participant gets 0, opponent gets 3
                         int p1Score = isPlayer1 ? 0 : 3;
                         int p2Score = isPlayer1 ? 3 : 0;
 
@@ -572,8 +773,8 @@ public class TournamentDetailController {
 
                     System.out.println("Total forfeits reported: " + forfeitsReported);
 
-                    // Mark player as WITHDREW in participants table
-                    crudParticipant.withdrawPlayer(tournament.getTournamentId(), playerId, withdrawRound);
+                    // Mark participant as WITHDREW in participants table
+                    crudParticipant.withdrawPlayer(tournament.getTournamentId(), finalParticipantId, withdrawRound);
 
                     isPlayerJoined = false;
 
@@ -587,7 +788,7 @@ public class TournamentDetailController {
                     showBracket();
 
                     showAlert("Retrait confirmé",
-                            "Vous avez été retiré du tournoi.\n" +
+                            finalParticipantName + " a été retiré du tournoi.\n" +
                             forfeitsReported + " match(s) résolu(s) par forfait (3-0).",
                             Alert.AlertType.INFORMATION);
 
@@ -652,6 +853,9 @@ public class TournamentDetailController {
         } catch (Exception e) {
             System.err.println("Error loading participants: " + e.getMessage());
             e.printStackTrace();
+            participantsList.getChildren().clear();
+            emptyParticipants.setVisible(true);
+            emptyParticipants.setManaged(true);
         }
     }
 
@@ -661,30 +865,44 @@ public class TournamentDetailController {
         card.setSpacing(15);
         card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        // Icon
-        Text icon = new Text("👤");
+        // Determine if this is a team or solo tournament
+        boolean isTeamTournament = "TEAM".equalsIgnoreCase(participant.getTournamentType()) 
+                                    || "TEAM".equalsIgnoreCase(tournament.getParticipant_type());
+
+        // Icon - different for team vs solo
+        Text icon = new Text(isTeamTournament ? "👥" : "👤");
         icon.getStyleClass().add("participant-icon");
 
-        // Get player name
-        String playerName = "Joueur inconnu";
+        // Get participant name (team or player)
+        String participantName = "Joueur inconnu";
         try {
-            List<Player> players = crudPlayer.getEntities();
-            Player player = players.stream()
-                    .filter(p -> p.getId() != null && p.getId().equals(participant.getParticipantId()))
-                    .findFirst()
-                    .orElse(null);
-            
-            if (player != null) {
-                playerName = player.getNickname() != null && !player.getNickname().isEmpty() 
-                        ? player.getNickname() 
-                        : player.getUsername();
+            if (isTeamTournament) {
+                // Get team name
+                Team team = crudTeam.getEntity(participant.getParticipantId());
+                if (team != null) {
+                    participantName = team.getName();
+                }
+            } else {
+                // Get player name
+                List<Player> players = crudPlayer.getEntities();
+                Player player = players.stream()
+                        .filter(p -> p.getId() != null && p.getId().equals(participant.getParticipantId()))
+                        .findFirst()
+                        .orElse(null);
+                
+                if (player != null) {
+                    participantName = player.getNickname() != null && !player.getNickname().isEmpty() 
+                            ? player.getNickname() 
+                            : player.getUsername();
+                }
             }
         } catch (Exception e) {
-            System.err.println("Error getting player name: " + e.getMessage());
+            System.err.println("Error getting participant name: " + e.getMessage());
+            e.printStackTrace();
         }
 
         // Name
-        Text name = new Text(playerName);
+        Text name = new Text(participantName);
         name.getStyleClass().add("participant-name");
 
         // Seed
@@ -710,11 +928,17 @@ public class TournamentDetailController {
 
             // Navigate back to tournament hub
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Tournament/TournamentHub.fxml"));
-            Parent tournamentHub = loader.load();
+            Node tournamentHub = loader.load();
 
-            // Replace content in rootStackPane
+            // Replace content in rootStackPane with fade transition
             rootStackPane.getChildren().clear();
             rootStackPane.getChildren().add(tournamentHub);
+            
+            // Apply fade transition
+            FadeTransition ft = new FadeTransition(Duration.millis(300), tournamentHub);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
 
         } catch (Exception e) {
             System.err.println("Error navigating back to tournament hub");
@@ -724,16 +948,16 @@ public class TournamentDetailController {
     
     @FXML
     private void handleSync() {
-        if (tournament == null || currentUser == null) return;
+        if (tournament == null) return;
         
         // Check if admin
-        if (!"admin".equalsIgnoreCase(currentUser.getRole())) {
+        if (!isAdminActionAllowed()) {
             showAlert("Erreur", "Seuls les administrateurs peuvent synchroniser les tournois.", Alert.AlertType.ERROR);
             return;
         }
         
         // Check if already synced
-        if (tournament.isSynced()) {
+        if (isTournamentSynced()) {
             showAlert("Information", "Ce tournoi est déjà synchronisé avec Challonge.", Alert.AlertType.INFORMATION);
             return;
         }
@@ -787,22 +1011,22 @@ public class TournamentDetailController {
     
     @FXML
     private void handleStart() {
-        if (tournament == null || currentUser == null) return;
+        if (tournament == null) return;
         
         // Check if admin
-        if (!"admin".equalsIgnoreCase(currentUser.getRole())) {
+        if (!isAdminActionAllowed()) {
             showAlert("Erreur", "Seuls les administrateurs peuvent démarrer les tournois.", Alert.AlertType.ERROR);
             return;
         }
         
         // Check if synced
-        if (!tournament.isSynced()) {
+        if (!isTournamentSynced()) {
             showAlert("Erreur", "Le tournoi doit être synchronisé avant de pouvoir être démarré.", Alert.AlertType.ERROR);
             return;
         }
         
         // Check if already started
-        if (tournament.isStarted()) {
+        if (isTournamentStarted()) {
             showAlert("Information", "Ce tournoi est déjà démarré.", Alert.AlertType.INFORMATION);
             return;
         }
@@ -848,10 +1072,10 @@ public class TournamentDetailController {
     
     @FXML
     private void handleReset() {
-        if (tournament == null || currentUser == null) return;
+        if (tournament == null) return;
         
         // Check if admin
-        if (!"admin".equalsIgnoreCase(currentUser.getRole())) {
+        if (!isAdminActionAllowed()) {
             showAlert("Erreur", "Seuls les administrateurs peuvent réinitialiser les tournois.", Alert.AlertType.ERROR);
             return;
         }
@@ -903,7 +1127,7 @@ public class TournamentDetailController {
                     loadParticipants();
                     
                     // Refresh player status card if player view
-                    if ("player".equalsIgnoreCase(currentUser.getRole())) {
+                    if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
                         String playerId = getPlayerIdFromUserId(currentUser.getId());
                         if (playerId != null) {
                             loadPlayerStatus(playerId);
@@ -936,18 +1160,20 @@ public class TournamentDetailController {
     }
     
     private void showBracket() {
-        if (tournament == null || !tournament.isSynced()) return;
+        if (tournament == null || !isTournamentSynced()) return;
         
         bracketSection.setVisible(true);
         bracketSection.setManaged(true);
         
         // Extract tournament URL slug from full URL
+        String slug = tournament.getChallongeUrlSlug();
         String tournamentUrl = tournament.getChallongeUrl();
-        if (tournamentUrl != null && tournamentUrl.contains("challonge.com/")) {
-            String slug = tournamentUrl.substring(tournamentUrl.lastIndexOf("/") + 1);
+        if (!hasText(slug) && tournamentUrl != null && tournamentUrl.contains("challonge.com/")) {
+            slug = tournamentUrl.substring(tournamentUrl.lastIndexOf("/") + 1);
+        }
+
+        if (hasText(slug)) {
             String embedUrl = challongeService.getEmbedUrl(slug);
-            
-            // Load bracket in WebView
             bracketWebView.getEngine().load(embedUrl);
         }
     }
@@ -1336,7 +1562,7 @@ public class TournamentDetailController {
             showBracket();
             updateStateBadge();
 
-            if ("player".equalsIgnoreCase(currentUser.getRole())) {
+            if (currentUser != null && "player".equalsIgnoreCase(currentUser.getRole())) {
                 String playerId = getPlayerIdFromUserId(currentUser.getId());
                 if (playerId != null) {
                     loadPlayerStatus(playerId);

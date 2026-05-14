@@ -25,7 +25,10 @@
 
         <!-- Header -->
         <HBox alignment="CENTER_LEFT">
-            <Label fx:id="modalTitle" text="Nouveau tournoi" styleClass="drawer-title" />
+            <VBox>
+                <Label fx:id="modalTitle" text="GENEX // TOURNAMENT_SYSTEM" styleClass="drawer-title" />
+                <Label text="CREATE_OR_UPDATE_EVENT_RECORD" styleClass="drawer-subtitle" />
+            </VBox>
             <Region HBox.hgrow="ALWAYS" />
             <Button text="✕" styleClass="btn-close" onAction="#closeModal" />
         </HBox>

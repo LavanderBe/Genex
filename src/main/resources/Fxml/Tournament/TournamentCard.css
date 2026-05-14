@@ -242,3 +242,182 @@
 .tournament-card:hover .tournament-name {
     -fx-fill: #ff6b6b;
 }
+
+/* Cyberpunk angular redesign */
+.tournament-card {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 0.94), rgba(139, 13, 13, 0.34));
+    -fx-background-radius: 0;
+    -fx-border-color: #5c7cfa #FF5252 #8B0D0D #5c7cfa;
+    -fx-border-radius: 0;
+    -fx-border-width: 2;
+    -fx-shape: "M 0 0 L 620 0 L 650 28 L 650 180 L 28 180 L 0 152 Z";
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.30), 18, 0, 0, 4);
+}
+
+.tournament-card:hover {
+    -fx-background-color: linear-gradient(to bottom right, rgba(31, 30, 78, 1), rgba(255, 82, 82, 0.25));
+    -fx-border-color: #FF5252 #5c7cfa #5c7cfa #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.52), 24, 0, 0, 7);
+}
+
+.tournament-icon-container {
+    -fx-background-color: rgba(139, 13, 13, 0.48);
+    -fx-background-radius: 0;
+    -fx-border-color: #FF5252;
+    -fx-border-radius: 0;
+    -fx-shape: "M 14 0 L 56 0 L 70 14 L 70 56 L 56 70 L 14 70 L 0 56 L 0 14 Z";
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.55), 15, 0, 0, 0);
+}
+
+.tournament-name {
+    -fx-fill: white;
+    -fx-font-size: 21;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.48), 10, 0, 0, 0);
+}
+
+.game-name {
+    -fx-fill: #FF5252;
+    -fx-font-style: normal;
+    -fx-font-weight: 800;
+}
+
+.status-badge,
+.status-badge.upcoming,
+.status-badge.finished {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-color: rgba(31, 30, 78, 0.82);
+    -fx-border-color: #5c7cfa;
+    -fx-border-width: 1.5;
+    -fx-shape: "M 0 0 L 116 0 L 128 10 L 128 34 L 12 34 L 0 24 Z";
+}
+
+.status-text,
+.status-badge.upcoming .status-text {
+    -fx-fill: #5c7cfa;
+}
+
+.detail-label {
+    -fx-fill: rgba(255, 255, 255, 0.58);
+    -fx-font-weight: 900;
+}
+
+.detail-value {
+    -fx-fill: white;
+}
+
+.action-btn {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1.3;
+    -fx-shape: "M 0 0 L 92 0 L 104 10 L 104 34 L 12 34 L 0 24 Z";
+    -fx-font-weight: 900;
+}
+
+.view-btn,
+.icon-btn {
+    -fx-background-color: rgba(92, 124, 250, 0.28);
+    -fx-border-color: #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.44), 12, 0, 0, 2);
+}
+
+.view-btn:hover,
+.icon-btn:hover {
+    -fx-background-color: #5c7cfa;
+    -fx-effect: dropshadow(gaussian, rgba(92, 124, 250, 0.72), 16, 0, 0, 4);
+}
+
+.delete-icon-btn {
+    -fx-background-color: rgba(255, 82, 82, 0.25);
+    -fx-border-color: #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.45), 12, 0, 0, 2);
+}
+
+.delete-icon-btn:hover {
+    -fx-background-color: #FF5252;
+    -fx-effect: dropshadow(gaussian, rgba(255, 82, 82, 0.72), 16, 0, 0, 4);
+}
+
+/* Games-inspired tactical card refinement */
+.tournament-card {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-width: 1;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.tournament-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.40), 15, 0, 0, 0);
+    -fx-translate-y: -5;
+}
+
+.tournament-icon-container {
+    -fx-background-color: black;
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-shape: "";
+    -fx-effect: none;
+}
+
+.tournament-name {
+    -fx-font-family: "Impact";
+    -fx-font-size: 20px;
+    -fx-letter-spacing: 1px;
+    -fx-effect: none;
+}
+
+.game-name,
+.detail-label,
+.status-text {
+    -fx-font-family: "Consolas";
+}
+
+.game-name {
+    -fx-fill: #5c7cfa;
+    -fx-text-fill: #5c7cfa;
+}
+
+.status-badge {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-shape: "";
+}
+
+.action-btn {
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 9px;
+    -fx-padding: 5 15;
+    -fx-effect: none;
+}
+
+.view-btn,
+.icon-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+}
+
+.view-btn:hover,
+.icon-btn:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.delete-icon-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-shape: "M 10 0 L 100 0 L 100 100 L 0 100 Z";
+}
+
+.delete-icon-btn:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}

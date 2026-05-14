@@ -159,3 +159,150 @@
 .center-card:hover .center-name {
     -fx-text-fill: #ff4d4d;
 }
+
+/* Games-inspired tactical center card */
+.center-card {
+    -fx-background-color: linear-gradient(to bottom right, #0a0a1a, #050508);
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(31, 30, 78, 0.50);
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-effect: none;
+}
+
+.center-card:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.40), 15, 0, 0, 0);
+    -fx-translate-y: -5;
+}
+
+.center-icon-container {
+    -fx-background-color: black;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-radius: 0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.center-name {
+    -fx-font-family: "Impact";
+    -fx-font-size: 20px;
+    -fx-letter-spacing: 1px;
+    -fx-text-fill: white;
+}
+
+.center-city {
+    -fx-font-family: "Consolas";
+    -fx-text-fill: #5c7cfa;
+}
+
+.detail-label,
+.detail-value {
+    -fx-font-family: "Consolas";
+}
+
+.detail-label {
+    -fx-fill: #8e94af;
+    -fx-text-fill: #8e94af;
+}
+
+.detail-value {
+    -fx-text-fill: rgba(255, 255, 255, 0.92);
+    -fx-fill: rgba(255, 255, 255, 0.92);
+}
+
+.action-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 9px;
+    -fx-padding: 5 15;
+    -fx-effect: none;
+}
+
+.map-btn,
+.icon-btn {
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+}
+
+.map-btn:hover,
+.icon-btn:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-effect: none;
+}
+
+.delete-icon-btn {
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF5252;
+    -fx-shape: "M 10 0 L 100 0 L 100 100 L 0 100 Z";
+}
+
+.delete-icon-btn:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+    -fx-effect: none;
+}
+
+/* Final action button pass - keeps center cards aligned with the dark HUD design */
+.center-card .card-actions-section {
+    -fx-min-width: 128;
+    -fx-pref-width: 128;
+}
+
+.center-card .action-btn {
+    -fx-min-width: 108;
+    -fx-pref-width: 108;
+    -fx-max-width: 108;
+    -fx-min-height: 34;
+    -fx-pref-height: 34;
+    -fx-max-height: 34;
+    -fx-background-color: rgba(31, 30, 78, 0.24);
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1px;
+    -fx-padding: 0 12;
+    -fx-effect: none;
+    -fx-shape: "M 0 0 L 95 0 L 108 11 L 108 34 L 13 34 L 0 23 Z";
+}
+
+.center-card .map-btn,
+.center-card .edit-btn {
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #AFC0FF;
+}
+
+.center-card .map-btn:hover,
+.center-card .edit-btn:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-border-color: #9DAEFF;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(92, 124, 250, 0.55), 12, 0, 0, 0);
+    -fx-translate-y: -1;
+}
+
+.center-card .delete-icon-btn {
+    -fx-border-color: #FF5252;
+    -fx-text-fill: #FF8A8A;
+}
+
+.center-card .delete-icon-btn:hover {
+    -fx-background-color: #FF5252;
+    -fx-border-color: #FF9B9B;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 82, 82, 0.50), 12, 0, 0, 0);
+    -fx-translate-y: -1;
+}
+
+.center-card .action-btn:pressed {
+    -fx-translate-y: 0;
+    -fx-opacity: 0.85;
+}

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            background: #111827;
+            font-family: Arial, sans-serif;
+        }
+
+        .leaflet-container {
+            background: #111827;
+        }
+
+        /* ── JavaFX WebView tile rendering fixes ── */
+        /* Disable 3D transforms that WebView renders incorrectly */
+        .leaflet-tile-pane {
+            transform: none !important;
+        }
+        .leaflet-tile-container {
+            transform: none !important;
+        }
+        .leaflet-tile {
+            transition: none !important;
+            will-change: auto !important;
+        }
+        .leaflet-fade-anim .leaflet-tile {
+            transition: none !important;
+        }
+        .leaflet-fade-anim .leaflet-popup {
+            transition: none !important;
+        }
+        .leaflet-zoom-anim .leaflet-zoom-animated {
+            transition: none !important;
+        }
+        .leaflet-zoom-anim .leaflet-tile {
+            transition: none !important;
+        }
+        /* Force all leaflet panes to avoid 3D transforms */
+        .leaflet-map-pane,
+        .leaflet-tile-pane,
+        .leaflet-overlay-pane,
+        .leaflet-shadow-pane,
+        .leaflet-marker-pane,
+        .leaflet-tooltip-pane,
+        .leaflet-popup-pane {
+            transform: none !important;
+        }
+        .leaflet-proxy {
+            transform: none !important;
+        }
+
+        .center-pin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            background: #ef4444;
+            border: 3px solid #fff;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .35);
+        }
+
+        .center-pin span {
+            display: block;
+            transform: rotate(45deg);
+            color: white;
+            font-size: 11px;
+            line-height: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .empty {
+            color: rgba(255, 255, 255, .76);
+            display: grid;
+            place-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script>
+    // ── Critical fix: Disable 3D transforms BEFORE creating the map ──
+    // JavaFX WebView cannot properly composite translate3d() CSS transforms,
+    // causing tiles to render as disconnected fragments.
+    // This forces Leaflet to fall back to top/left positioning.
+    L.Browser.any3d = false;
+    L.Browser.mobile = false;
+
+    let map = null;
+    let markersLayer = null;
+    let resizeTimer = null;
+
+    function ensureMap(lat, lng, zoom) {
+        if (map) {
+            map.setView([lat, lng], zoom);
+            scheduleResizeFix();
+            return;
+        }
+
+        map = L.map('map', {
+            zoomControl: true,
+            doubleClickZoom: true,
+            scrollWheelZoom: true,
+            fadeAnimation: false,
+            zoomAnimation: false,
+            markerZoomAnimation: false
+        }).setView([lat, lng], zoom);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            updateWhenIdle: true,
+            updateWhenZooming: false
+        }).addTo(map);
+
+        markersLayer = L.layerGroup().addTo(map);
+        bindResizeFixes();
+        scheduleResizeFix();
+    }
+
+    function fixMapSize() {
+        if (!map) return;
+        map.invalidateSize({ animate: false, pan: false });
+    }
+
+    function scheduleResizeFix() {
+        clearTimeout(resizeTimer);
+        var delays = [0, 50, 150, 300, 600, 1000, 1500, 2500];
+        delays.forEach(function(delay) {
+            setTimeout(fixMapSize, delay);
+        });
+        resizeTimer = setTimeout(fixMapSize, 3000);
+    }
+
+    function bindResizeFixes() {
+        window.addEventListener('resize', scheduleResizeFix);
+
+        if (window.ResizeObserver) {
+            var observer = new ResizeObserver(function() {
+                scheduleResizeFix();
+            });
+            observer.observe(document.getElementById('map'));
+        }
+
+        // Also watch for visibility changes (tab switching, etc.)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                scheduleResizeFix();
+            }
+        });
+    }
+
+    function setCenters(centers) {
+        var mapContainer = document.getElementById('map');
+        if (!centers || !centers.length) {
+            mapContainer.innerHTML = '<div class="empty">Ajoutez des coordonnees dans l URL de carte des centres pour afficher les pins.</div>';
+            map = null;
+            markersLayer = null;
+            return;
+        }
+
+        if (!mapContainer.querySelector('.leaflet-pane')) {
+            mapContainer.innerHTML = '';
+        }
+
+        var avgLat = centers.reduce(function(sum, center) { return sum + center.lat; }, 0) / centers.length;
+        var avgLng = centers.reduce(function(sum, center) { return sum + center.lng; }, 0) / centers.length;
+        ensureMap(avgLat, avgLng, centers.length === 1 ? 13 : 7);
+
+        markersLayer.clearLayers();
+        var bounds = [];
+
+        centers.forEach(function(center) {
+            var icon = L.divIcon({
+                className: '',
+                html: '<div class="center-pin"><span>' + center.count + '</span></div>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            });
+
+            var marker = L.marker([center.lat, center.lng], {
+                icon: icon,
+                title: center.name
+            }).addTo(markersLayer);
+
+            marker.on('click', function() {
+                if (window.javaBridge) {
+                    window.javaBridge.openCenterFromMap(center.id);
+                }
+            });
+
+            bounds.push([center.lat, center.lng]);
+        });
+
+        if (bounds.length > 1) {
+            map.fitBounds(bounds, { padding: [35, 35], animate: false });
+        }
+
+        scheduleResizeFix();
+    }
+
+    window.addEventListener('load', function() {
+        scheduleResizeFix();
+    });
+</script>
+</body>
+</html>

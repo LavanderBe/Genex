@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import java.lang.String?>
 
 <HBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Genex.Controllers.Center.CenterCardController"
@@ -76,9 +77,24 @@
    <!-- Right Section: Actions -->
    <VBox styleClass="card-actions-section" spacing="10" alignment="CENTER">
       <children>
-         <Button fx:id="btnViewMap" onAction="#handleViewMap" styleClass="action-btn, map-btn" text="🗺 Carte" prefWidth="100" />
-         <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="action-btn, icon-btn" text="✎" prefWidth="100" />
-         <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="action-btn, icon-btn, delete-icon-btn" text="🗑" prefWidth="100" />
+         <Button fx:id="btnViewMap" onAction="#handleViewMap" text="CARTE" prefWidth="108" prefHeight="34">
+            <styleClass>
+               <String fx:value="action-btn" />
+               <String fx:value="map-btn" />
+            </styleClass>
+         </Button>
+         <Button fx:id="btnEdit" onAction="#handleEdit" text="EDIT" prefWidth="108" prefHeight="34">
+            <styleClass>
+               <String fx:value="action-btn" />
+               <String fx:value="edit-btn" />
+            </styleClass>
+         </Button>
+         <Button fx:id="btnDelete" onAction="#handleDelete" text="DELETE" prefWidth="108" prefHeight="34">
+            <styleClass>
+               <String fx:value="action-btn" />
+               <String fx:value="delete-icon-btn" />
+            </styleClass>
+         </Button>
       </children>
    </VBox>
 
