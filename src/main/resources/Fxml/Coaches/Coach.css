@@ -1,0 +1,95 @@
+.roster-pane {
+    -fx-background-color: rgba(31, 30, 78, 0.1);
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 0 0 0 4; /* Blue accent bar */
+}
+
+.request-pane {
+    -fx-background-color: rgba(139, 13, 13, 0.04);
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 0 4 0 0; /* Red accent bar */
+}
+
+/* --- THE DOCKED BUTTONS (RECALIBRATION MODS) --- */
+.btn-dock-left, .btn-dock-right {
+    -fx-min-height: 36px;
+    -fx-max-height: 36px;
+    -fx-font-family: "Impact";
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+    -fx-transition: 0.2s;
+    -fx-padding: 0 15;
+}
+
+/* Approve Button (Blue) */
+.btn-dock-left {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+    -fx-shape: "M 0 0 L 100 0 L 85 100 L 0 100 Z";
+}
+.btn-dock-left:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #5C7CFA;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0.5, 0, 0);
+}
+
+/* Reject Button (Red) */
+.btn-dock-right {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF5252;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #FF5252;
+    /* Slants left to fit into the left button */
+    -fx-shape: "M 15 0 L 100 0 L 100 100 L 0 100 Z";
+    -fx-translate-x: -15; /* THE DOCKING TRICK */
+}
+.btn-dock-right:hover {
+    -fx-background-color: #FF5252;
+    -fx-text-fill: white;
+}
+
+/* --- THE BLADES (ROWS) --- */
+.coach-blade {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 20;
+}
+.coach-blade:hover {
+    -fx-background-color: rgba(92, 124, 250, 0.08);
+    -fx-border-color: transparent transparent #5C7CFA transparent;
+}
+
+.request-blade {
+    -fx-background-color: #0a0a14;
+    -fx-border-color: #1F1E4E;
+    -fx-border-width: 1;
+    -fx-padding: 15;
+}
+.request-blade:hover {
+    -fx-border-color: #8B0D0D;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.4), 15, 0, 0, 0);
+}
+
+/* --- TYPOGRAPHY --- */
+.neon-title {
+    -fx-font-family: "Impact";
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 15, 0.4, 0, 0);
+}
+
+.pane-header {
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 2px;
+}
+
+/* --- SCROLLBARS --- */
+.cyber-scrollpane, .cyber-scrollpane-red {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+.cyber-scrollpane .scroll-bar:vertical .thumb { -fx-background-color: #1F1E4E; -fx-background-radius: 0; }
+.cyber-scrollpane-red .scroll-bar:vertical .thumb { -fx-background-color: #8B0D0D; -fx-background-radius: 0; }

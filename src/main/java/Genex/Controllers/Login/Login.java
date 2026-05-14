@@ -128,7 +128,6 @@ public class Login {
             return;
         }
 
-        boolean captchaValid = HcaptchaVerifier.verify(token, null);
         Errorcaptcha.setVisible(false);
         System.out.println("Captcha passed");
         if (nb_errors>0) {
