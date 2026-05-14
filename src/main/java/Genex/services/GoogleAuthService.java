@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class GoogleAuthService {
     private static final String CLIENT_ID = "346065385831-n3qlhob2ik3cfv8jf35qgesqg2qjmrrg.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
+    private static final String CLIENT_SECRET = "";
 
     public Userinfo getUserInfo() throws Exception {
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), CLIENT_ID, CLIENT_SECRET, Arrays.asList("email", "profile")).setAccessType("offline").build();
