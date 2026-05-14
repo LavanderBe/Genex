@@ -22,6 +22,7 @@ import java.util.Map;
 public class PlayerQuizController {
 
     private static final String SEARCH_HINT = "ANALYSER LES ÉVALUATIONS...";
+    private static final int QUIZ_XP_REWARD = 50;
 
     @FXML private VBox quizContainer;
     @FXML private TextField scanField;
@@ -138,8 +139,8 @@ public class PlayerQuizController {
                 resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
                 resultLabel.getStyleClass().add(previousAttempt.isCorrect() ? "result-correct" : "result-wrong");
                 resultLabel.setText(previousAttempt.isCorrect()
-                        ? "DÉJÀ RÉSOLU : LA BONNE RÉPONSE EST ENREGISTRÉE"
-                        : "DÉJÀ SOUMIS : ROUGE = VOTRE CHOIX, VERT = CORRECT");
+                        ? "DÉJÀ RÉSOLU : AUCUN XP SUPPLÉMENTAIRE"
+                        : "DÉJÀ SOUMIS : AUCUN XP SUPPLÉMENTAIRE // ROUGE = VOTRE CHOIX, VERT = CORRECT");
             }
 
             quizBox.getChildren().addAll(linkedLabel, topBar, questionLabel, optionsBox, footer);
@@ -158,8 +159,9 @@ public class PlayerQuizController {
         }
 
         boolean isCorrect = Character.toUpperCase(quiz.getCorrectAnswer()) == Character.toUpperCase(selectedAnswer);
+        int earnedXp = isCorrect ? QUIZ_XP_REWARD : 0;
         QuizService.QuizSubmissionStatus status = quizService != null
-                ? quizService.submitQuizResultOnce(userId, quiz.getId(), selectedAnswer, quiz.getCorrectAnswer(), 50)
+                ? quizService.submitQuizResultOnce(userId, quiz.getId(), selectedAnswer, quiz.getCorrectAnswer(), QUIZ_XP_REWARD)
                 : QuizService.QuizSubmissionStatus.FAILED;
 
         if (status == QuizService.QuizSubmissionStatus.ALREADY_SUBMITTED && userId != null && !userId.isBlank()) {
@@ -172,8 +174,8 @@ public class PlayerQuizController {
                 resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
                 resultLabel.getStyleClass().add(existing.isCorrect() ? "result-correct" : "result-wrong");
                 resultLabel.setText(existing.isCorrect()
-                        ? "DÉJÀ RÉSOLU : LA BONNE RÉPONSE EST ENREGISTRÉE"
-                        : "DÉJÀ SOUMIS : ROUGE = VOTRE CHOIX, VERT = CORRECT");
+                        ? "DÉJÀ RÉSOLU : AUCUN XP SUPPLÉMENTAIRE"
+                        : "DÉJÀ SOUMIS : AUCUN XP SUPPLÉMENTAIRE // ROUGE = VOTRE CHOIX, VERT = CORRECT");
                 return;
             }
         }
@@ -185,13 +187,22 @@ public class PlayerQuizController {
             return;
         }
 
+        if (status == QuizService.QuizSubmissionStatus.FAILED) {
+            resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
+            resultLabel.getStyleClass().add("result-wrong");
+            resultLabel.setText("ÉCHEC D'ENREGISTREMENT : STATS NON MISES À JOUR");
+            return;
+        }
+
         savedAttempts.put(quiz.getId(), new QuizService.QuizAttemptResult(selectedAnswer, isCorrect));
         revealAnswerState(optionsBox, quiz.getCorrectAnswer(), selectedAnswer);
         authenticateButton.setDisable(true);
         setAuthenticateResultState(authenticateButton, isCorrect);
         resultLabel.getStyleClass().removeAll("result-correct", "result-wrong");
         resultLabel.getStyleClass().add(isCorrect ? "result-correct" : "result-wrong");
-        resultLabel.setText(isCorrect ? "CORRECT : VOTRE CHOIX EST VALIDÉ" : "FAUX : ROUGE = VOTRE CHOIX, VERT = CORRECT");
+        resultLabel.setText(isCorrect
+                ? "CORRECT : +" + earnedXp + " XP"
+                : "FAUX : +" + earnedXp + " XP // ROUGE = VOTRE CHOIX, VERT = CORRECT");
     }
 
     private void styleSelectedOption(VBox optionsBox, char selectedAnswer) {

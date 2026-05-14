@@ -106,9 +106,9 @@
    <!-- Right Section: Actions -->
    <VBox styleClass="card-actions-section" spacing="10" alignment="CENTER">
       <children>
-         <Button fx:id="btnView" onAction="#handleView" styleClass="action-btn, view-btn" text="Voir" prefWidth="100" />
-         <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="action-btn, icon-btn" text="✎" prefWidth="100" />
-         <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="action-btn, icon-btn, delete-icon-btn" text="🗑" prefWidth="100" />
+         <Button fx:id="btnView" onAction="#handleView" styleClass="action-btn view-btn" text="Voir" prefWidth="100" />
+         <Button fx:id="btnEdit" onAction="#handleEdit" styleClass="action-btn icon-btn" text="✎" prefWidth="100" />
+         <Button fx:id="btnDelete" onAction="#handleDelete" styleClass="action-btn icon-btn delete-icon-btn" text="🗑" prefWidth="100" />
       </children>
    </VBox>
 

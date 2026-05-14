@@ -14,11 +14,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
@@ -89,7 +91,7 @@ public class TutorialDetailController {
         videosList.getChildren().clear();
         if (videos == null || videos.isEmpty()) {
             Label empty = new Label("Aucune vidéo dans ce module pour le moment.");
-            empty.setStyle("-fx-text-fill: #8e94af; -fx-font-style: italic; -fx-padding: 14;");
+            empty.getStyleClass().add("detail-empty-text");
             videosList.getChildren().add(empty);
             return;
         }
@@ -105,33 +107,34 @@ public class TutorialDetailController {
         HBox row = new HBox(12);
         row.setAlignment(Pos.CENTER_LEFT);
         row.setPadding(new Insets(12, 14, 12, 14));
-        String borderColor = done ? "#00C851" : "#1f2937";
-        row.setStyle("-fx-background-color: #0b0f14; -fx-border-color: " + borderColor + "; -fx-border-width: 1;");
+        row.getStyleClass().add("detail-video-row");
+        row.getStyleClass().add(done ? "detail-video-row-complete" : "detail-video-row-pending");
 
         Label num = new Label("#" + displayIndex);
-        num.setStyle("-fx-text-fill: #5c7cfa; -fx-font-family: 'Courier New'; -fx-font-size: 12px; -fx-font-weight: bold; -fx-min-width: 32;");
+        num.getStyleClass().add("detail-video-index");
+        num.setMinWidth(32);
 
         VBox titleBox = new VBox(2);
         Label name = new Label(v.getTitle() != null ? v.getTitle() : ("Vidéo " + displayIndex));
-        name.setStyle("-fx-text-fill: white; -fx-font-family: 'Arial Black'; -fx-font-style: italic; -fx-font-size: 14px;");
+        name.getStyleClass().add("detail-video-title");
         name.setWrapText(true);
         Label urlPreview = new Label(v.getVideoUrl());
-        urlPreview.setStyle("-fx-text-fill: #5e6480; -fx-font-family: 'Courier New'; -fx-font-size: 10px;");
+        urlPreview.getStyleClass().add("detail-video-url");
         urlPreview.setWrapText(true);
         titleBox.getChildren().addAll(name, urlPreview);
 
         HBox.setHgrow(titleBox, Priority.ALWAYS);
 
         Label status = new Label(done ? "TERMINÉ" : "EN ATTENTE");
-        status.setStyle("-fx-text-fill: " + (done ? "#00C851" : "#8e94af") + "; -fx-font-family: 'Courier New'; -fx-font-size: 10px; -fx-letter-spacing: 0.25em; -fx-font-weight: bold;");
+        status.getStyleClass().add("detail-video-status");
+        status.getStyleClass().add(done ? "detail-video-status-complete" : "detail-video-status-pending");
 
         Button watchBtn = new Button("▶ REGARDER");
-        watchBtn.setStyle("-fx-background-color: #1a56f5; -fx-text-fill: white; -fx-font-family: 'Courier New'; -fx-font-weight: bold; -fx-letter-spacing: 0.2em; -fx-padding: 8 14 8 14;");
+        watchBtn.getStyleClass().addAll("tutorial-inline-btn", "tutorial-inline-btn-blue");
         watchBtn.setOnAction(e -> launchVideoPlayer(v));
 
         Button toggleBtn = new Button(done ? "ANNULER" : "MARQUER TERMINÉ");
-        String toggleColor = done ? "#5f0b0b" : "#8B0D0D";
-        toggleBtn.setStyle("-fx-background-color: " + toggleColor + "; -fx-text-fill: white; -fx-font-family: 'Courier New'; -fx-font-weight: bold; -fx-letter-spacing: 0.2em; -fx-padding: 8 14 8 14;");
+        toggleBtn.getStyleClass().addAll("tutorial-inline-btn", done ? "tutorial-inline-btn-red" : "tutorial-inline-btn-amber");
         toggleBtn.setOnAction(e -> toggleCompletion(v, !done));
 
         row.getChildren().addAll(num, titleBox, status, watchBtn, toggleBtn);
@@ -187,12 +190,14 @@ public class TutorialDetailController {
             ratingHint.setText(existing != null
                     ? "Vous avez déjà noté ce module. Vous pouvez ajuster votre évaluation."
                     : "Toutes les vidéos sont terminées. Donnez votre verdict !");
-            ratingHint.setStyle("-fx-text-fill: #cbd5e1; -fx-font-size: 12px;");
+            ratingHint.getStyleClass().removeAll("detail-hint-muted", "detail-hint-active");
+            ratingHint.getStyleClass().add("detail-hint-active");
             submitRatingBtn.setDisable(false);
             commentField.setDisable(false);
         } else {
             ratingHint.setText("Terminez toutes les vidéos pour débloquer la notation. (" + doneCount + "/" + total + ")");
-            ratingHint.setStyle("-fx-text-fill: #8e94af; -fx-font-size: 12px; -fx-font-style: italic;");
+            ratingHint.getStyleClass().removeAll("detail-hint-muted", "detail-hint-active");
+            ratingHint.getStyleClass().add("detail-hint-muted");
             submitRatingBtn.setDisable(true);
             commentField.setDisable(true);
         }
@@ -215,20 +220,23 @@ public class TutorialDetailController {
     @FXML
     private void handleSubmitRating() {
         if (currentStars < 1 || currentStars > 5) {
-            ratingStatusLabel.setStyle("-fx-text-fill: #ff4444; -fx-font-family: 'Courier New'; -fx-font-size: 11px;");
+            ratingStatusLabel.getStyleClass().removeAll("detail-status-success", "detail-status-error");
+            ratingStatusLabel.getStyleClass().add("detail-status-error");
             ratingStatusLabel.setText("Sélectionnez au moins 1 étoile.");
             return;
         }
         String playerId = SessionManager.getInstance().getCurrentUserId();
         if (playerId == null) {
-            ratingStatusLabel.setStyle("-fx-text-fill: #ff4444; -fx-font-family: 'Courier New'; -fx-font-size: 11px;");
+            ratingStatusLabel.getStyleClass().removeAll("detail-status-success", "detail-status-error");
+            ratingStatusLabel.getStyleClass().add("detail-status-error");
             ratingStatusLabel.setText("Session expirée.");
             return;
         }
         TutorialRating r = new TutorialRating(playerId, tutorial.getId(), currentStars,
                 commentField.getText() == null ? null : commentField.getText().trim());
         ratingService.upsert(r);
-        ratingStatusLabel.setStyle("-fx-text-fill: #00C851; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-letter-spacing: 0.2em;");
+        ratingStatusLabel.getStyleClass().removeAll("detail-status-success", "detail-status-error");
+        ratingStatusLabel.getStyleClass().add("detail-status-success");
         ratingStatusLabel.setText("ÉVALUATION ENREGISTRÉE");
         renderHeader(); // met a jour la moyenne affichee
     }
@@ -253,6 +261,7 @@ public class TutorialDetailController {
             Stage stage = new Stage();
             stage.setTitle(v.getTitle() != null ? v.getTitle() : "Lecteur vidéo");
             stage.setScene(new Scene(root, 1280, 720));
+            applyWindowIcon(stage);
             stage.setResizable(true);
             stage.setOnShown(event -> controller.setTutorial(proxy, stage));
             stage.show();
@@ -268,5 +277,13 @@ public class TutorialDetailController {
     @FXML
     private void handleClose() {
         if (parentStage != null) parentStage.close();
+    }
+
+    private void applyWindowIcon(Stage stage) {
+        URL logoUrl = getClass().getResource("/Images/logo.png");
+        if (logoUrl == null) {
+            return;
+        }
+        stage.getIcons().setAll(new Image(logoUrl.toExternalForm()));
     }
 }

@@ -16,8 +16,13 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class QuizService implements ICrud<Quiz> {
 
@@ -25,11 +30,17 @@ public class QuizService implements ICrud<Quiz> {
     private boolean quizAttemptTrackingAvailable;
     private static final Map<String, Map<Integer, QuizAttemptResult>> LOCAL_ATTEMPTS = new ConcurrentHashMap<>();
     private static final Object LOCAL_ATTEMPT_FILE_LOCK = new Object();
+    private static final Object PLAYER_STATS_BACKFILL_LOCK = new Object();
     private static final String LOCAL_ATTEMPT_DIR = ".genex";
+    private static final Pattern LOCAL_ATTEMPT_FILE_PATTERN = Pattern.compile("^quiz_attempts_(.+)\\.properties$");
+    private static final int QUIZ_XP_PER_CORRECT = 50;
+    private static volatile boolean playerStatsBackfillDone = false;
 
     public QuizService() {
         cnx = Myconnection.getInstance().getCnx();
         quizAttemptTrackingAvailable = ensureQuizAttemptTable();
+        ensurePlayerStatsColumns();
+        runPlayerStatsBackfillOnce();
     }
 
     @Override
@@ -188,9 +199,9 @@ public class QuizService implements ICrud<Quiz> {
      */
     public void submitQuizResult(String userId, boolean isCorrect, int xpReward) {
         String query = "UPDATE players SET " +
-                "total_attempts = total_attempts + 1, " +
-                "correct_answers = correct_answers + ?, " +
-                "tactical_xp = tactical_xp + ? " +
+                "total_attempts = COALESCE(total_attempts, 0) + 1, " +
+                "correct_answers = COALESCE(correct_answers, 0) + ?, " +
+                "tactical_xp = COALESCE(tactical_xp, 0) + ? " +
                 "WHERE user_id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(query)) {
             ps.setInt(1, isCorrect ? 1 : 0);
@@ -231,20 +242,14 @@ public class QuizService implements ICrud<Quiz> {
             return attemptStatus;
         }
         cacheAttempt(userId, quizId, selectedAnswer, isCorrect);
-        boolean localSaved = saveLocalAttemptIfMissing(userId, quizId, selectedAnswer, isCorrect);
+        saveLocalAttemptIfMissing(userId, quizId, selectedAnswer, isCorrect);
 
         boolean statsUpdated = incrementPlayerStats(userId, isCorrect, xpReward);
         if (statsUpdated) {
             refreshSessionStats(userId, isCorrect, xpReward);
             return QuizSubmissionStatus.SAVED;
         }
-
-        // Keep UX deterministic even if storage schema is inconsistent:
-        // treat the attempt as accepted so the quiz can be locked immediately.
-        if (attemptStatus == QuizSubmissionStatus.FAILED && !localSaved) {
-            return QuizSubmissionStatus.FAILED;
-        }
-        return QuizSubmissionStatus.SAVED;
+        return QuizSubmissionStatus.FAILED;
     }
 
     public QuizAttemptResult getUserQuizAttempt(String userId, int quizId) {
@@ -303,6 +308,9 @@ public class QuizService implements ICrud<Quiz> {
     }
 
     public Player getPlayerStatsByUserId(String userId) {
+        if (!ensurePlayerStatsColumns()) {
+            return null;
+        }
         String query = "SELECT tactical_xp, total_attempts, correct_answers FROM players WHERE user_id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(query)) {
             ps.setString(1, userId);
@@ -321,9 +329,12 @@ public class QuizService implements ICrud<Quiz> {
     }
 
     public int getGlobalRankByXp(String userId) {
+        if (!ensurePlayerStatsColumns()) {
+            return 0;
+        }
         String rankQuery = "SELECT CASE " +
                 "WHEN EXISTS(SELECT 1 FROM players WHERE user_id = ?) " +
-                "THEN 1 + (SELECT COUNT(*) FROM players p WHERE p.tactical_xp > (SELECT tactical_xp FROM players WHERE user_id = ?)) " +
+                "THEN 1 + (SELECT COUNT(*) FROM players p WHERE COALESCE(p.tactical_xp, 0) > (SELECT COALESCE(tactical_xp, 0) FROM players WHERE user_id = ?)) " +
                 "ELSE 0 END AS player_rank";
         try (PreparedStatement ps = cnx.prepareStatement(rankQuery)) {
             ps.setString(1, userId);
@@ -733,10 +744,13 @@ public class QuizService implements ICrud<Quiz> {
     }
 
     private boolean incrementPlayerStats(String userId, boolean isCorrect, int xpReward) {
+        if (!ensurePlayerStatsColumns()) {
+            return false;
+        }
         String updateStats = "UPDATE players SET " +
-                "total_attempts = total_attempts + 1, " +
-                "correct_answers = correct_answers + ?, " +
-                "tactical_xp = tactical_xp + ? " +
+                "total_attempts = COALESCE(total_attempts, 0) + 1, " +
+                "correct_answers = COALESCE(correct_answers, 0) + ?, " +
+                "tactical_xp = COALESCE(tactical_xp, 0) + ? " +
                 "WHERE user_id = ?";
         try (PreparedStatement updatePs = cnx.prepareStatement(updateStats)) {
             updatePs.setInt(1, isCorrect ? 1 : 0);
@@ -782,6 +796,246 @@ public class QuizService implements ICrud<Quiz> {
             return false;
         }
         return true;
+    }
+
+    private boolean ensurePlayerStatsColumns() {
+        if (cnx == null) {
+            return false;
+        }
+        try {
+            addColumnIfMissing("players", "tactical_xp", "INT NOT NULL DEFAULT 0");
+            addColumnIfMissing("players", "total_attempts", "INT NOT NULL DEFAULT 0");
+            addColumnIfMissing("players", "correct_answers", "INT NOT NULL DEFAULT 0");
+            normalizeNullPlayerStats();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Failed ensuring player stats columns: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private void addColumnIfMissing(String tableName, String columnName, String columnDefinition) throws SQLException {
+        if (hasColumn(tableName, columnName)) {
+            return;
+        }
+        String alterSql = "ALTER TABLE " + quoteIdentifier(tableName) +
+                " ADD COLUMN " + quoteIdentifier(columnName) + " " + columnDefinition;
+        try (Statement statement = cnx.createStatement()) {
+            statement.execute(alterSql);
+        } catch (SQLException e) {
+            if (!hasColumn(tableName, columnName)) {
+                throw e;
+            }
+        }
+    }
+
+    private boolean hasColumn(String tableName, String columnName) throws SQLException {
+        DatabaseMetaData metaData = cnx.getMetaData();
+        try (ResultSet rs = metaData.getColumns(cnx.getCatalog(), null, tableName, columnName)) {
+            if (rs.next()) {
+                return true;
+            }
+        }
+        try (ResultSet rs = metaData.getColumns(cnx.getCatalog(), null, tableName.toUpperCase(), columnName.toUpperCase())) {
+            return rs.next();
+        }
+    }
+
+    private void normalizeNullPlayerStats() throws SQLException {
+        String fixNulls = "UPDATE players SET " +
+                "tactical_xp = COALESCE(tactical_xp, 0), " +
+                "total_attempts = COALESCE(total_attempts, 0), " +
+                "correct_answers = COALESCE(correct_answers, 0) " +
+                "WHERE tactical_xp IS NULL OR total_attempts IS NULL OR correct_answers IS NULL";
+        try (Statement statement = cnx.createStatement()) {
+            statement.executeUpdate(fixNulls);
+        }
+    }
+
+    private void runPlayerStatsBackfillOnce() {
+        if (playerStatsBackfillDone) {
+            return;
+        }
+        synchronized (PLAYER_STATS_BACKFILL_LOCK) {
+            if (playerStatsBackfillDone) {
+                return;
+            }
+            try {
+                backfillAllPlayerStatsFromAttempts();
+                playerStatsBackfillDone = true;
+            } catch (SQLException e) {
+                System.err.println("Failed backfilling player stats: " + e.getMessage());
+            }
+        }
+    }
+
+    private void backfillAllPlayerStatsFromAttempts() throws SQLException {
+        List<AttemptStorage> storages = resolveAllAttemptStorages();
+        Map<String, AttemptStat> localAttemptStats = loadLocalAttemptStatsByUser();
+        if (storages.isEmpty() && localAttemptStats.isEmpty()) {
+            return;
+        }
+
+        String aggregateSql = buildAllAttemptsAggregateSql(storages);
+
+        boolean previousAutoCommit = cnx.getAutoCommit();
+        cnx.setAutoCommit(false);
+        try {
+            String resetSql = "UPDATE players SET total_attempts = 0, correct_answers = 0, tactical_xp = 0";
+            try (Statement reset = cnx.createStatement()) {
+                reset.executeUpdate(resetSql);
+            }
+
+            if (aggregateSql != null && !aggregateSql.isBlank()) {
+                String updateSql = "UPDATE players p " +
+                        "JOIN (" + aggregateSql + ") s ON s.user_id = p.user_id " +
+                        "SET p.total_attempts = s.total_attempts, " +
+                        "p.correct_answers = s.correct_answers, " +
+                        "p.tactical_xp = s.correct_answers * ?";
+                try (PreparedStatement update = cnx.prepareStatement(updateSql)) {
+                    update.setInt(1, QUIZ_XP_PER_CORRECT);
+                    update.executeUpdate();
+                }
+            }
+
+            if (!localAttemptStats.isEmpty()) {
+                String upsertFromLocalSql = "UPDATE players SET total_attempts = ?, correct_answers = ?, tactical_xp = ? " +
+                        "WHERE user_id = ? AND COALESCE(total_attempts, 0) = 0 AND COALESCE(correct_answers, 0) = 0 AND COALESCE(tactical_xp, 0) = 0";
+                try (PreparedStatement updateLocal = cnx.prepareStatement(upsertFromLocalSql)) {
+                    for (Map.Entry<String, AttemptStat> entry : localAttemptStats.entrySet()) {
+                        String userId = entry.getKey();
+                        AttemptStat stat = entry.getValue();
+                        updateLocal.setInt(1, stat.totalAttempts);
+                        updateLocal.setInt(2, stat.correctAnswers);
+                        updateLocal.setInt(3, stat.correctAnswers * QUIZ_XP_PER_CORRECT);
+                        updateLocal.setString(4, userId);
+                        updateLocal.addBatch();
+                    }
+                    updateLocal.executeBatch();
+                }
+            }
+
+            cnx.commit();
+        } catch (SQLException e) {
+            cnx.rollback();
+            throw e;
+        } finally {
+            cnx.setAutoCommit(previousAutoCommit);
+        }
+    }
+
+    private List<AttemptStorage> resolveAllAttemptStorages() throws SQLException {
+        List<AttemptStorage> storages = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        DatabaseMetaData metaData = cnx.getMetaData();
+        try (ResultSet tables = metaData.getTables(cnx.getCatalog(), null, "%", new String[]{"TABLE"})) {
+            while (tables.next()) {
+                String table = tables.getString("TABLE_NAME");
+                if (table == null) {
+                    continue;
+                }
+                String lowered = table.toLowerCase();
+                if (!lowered.contains("quiz") || !(lowered.contains("attempt") || lowered.contains("submission"))) {
+                    continue;
+                }
+                AttemptStorage storage = buildAttemptStorageForTable(metaData, table);
+                if (storage == null) {
+                    continue;
+                }
+                String tableKey = storage.tableName.toLowerCase();
+                if (seen.add(tableKey)) {
+                    storages.add(storage);
+                }
+            }
+        }
+        return storages;
+    }
+
+    private String buildAllAttemptsAggregateSql(List<AttemptStorage> storages) {
+        List<String> parts = new ArrayList<>();
+        for (AttemptStorage storage : storages) {
+            String userExpr = storage.userType == UserColumnType.USER_ID
+                    ? "a." + quoteIdentifier(storage.userColumn)
+                    : "(SELECT p2.user_id FROM players p2 WHERE p2.id = a." + quoteIdentifier(storage.userColumn) + " LIMIT 1)";
+            String quizExpr = "a." + quoteIdentifier(storage.quizColumn);
+            String answerExpr = "a." + quoteIdentifier(storage.answerColumn);
+            String correctExpr;
+            if (storage.correctColumn != null) {
+                correctExpr = "CASE WHEN a." + quoteIdentifier(storage.correctColumn) + " IS NULL " +
+                        "THEN CASE WHEN UPPER(" + answerExpr + ") = UPPER(q.correct_answer) THEN 1 ELSE 0 END " +
+                        "ELSE CASE WHEN a." + quoteIdentifier(storage.correctColumn) + " <> 0 THEN 1 ELSE 0 END END";
+            } else {
+                correctExpr = "CASE WHEN UPPER(" + answerExpr + ") = UPPER(q.correct_answer) THEN 1 ELSE 0 END";
+            }
+            String part = "SELECT " + userExpr + " AS user_id, " +
+                    quizExpr + " AS quiz_id, " +
+                    correctExpr + " AS is_correct " +
+                    "FROM " + quoteIdentifier(storage.tableName) + " a " +
+                    "JOIN quiz q ON q.id = " + quizExpr + " " +
+                    "WHERE " + userExpr + " IS NOT NULL";
+            parts.add(part);
+        }
+        if (parts.isEmpty()) {
+            return null;
+        }
+        String unionSql = String.join(" UNION ALL ", parts);
+        return "SELECT d.user_id, COUNT(*) AS total_attempts, SUM(d.is_correct) AS correct_answers " +
+                "FROM (" +
+                "SELECT r.user_id, r.quiz_id, MAX(r.is_correct) AS is_correct " +
+                "FROM (" + unionSql + ") r " +
+                "GROUP BY r.user_id, r.quiz_id" +
+                ") d " +
+                "GROUP BY d.user_id";
+    }
+
+    private Map<String, AttemptStat> loadLocalAttemptStatsByUser() {
+        Map<String, AttemptStat> byUser = new HashMap<>();
+        Path folder = Paths.get(System.getProperty("user.home"), LOCAL_ATTEMPT_DIR);
+        if (!Files.exists(folder)) {
+            return byUser;
+        }
+        synchronized (LOCAL_ATTEMPT_FILE_LOCK) {
+            try (Stream<Path> files = Files.list(folder)) {
+                files.filter(Files::isRegularFile).forEach(file -> {
+                    String userId = extractUserIdFromLocalAttemptFile(file.getFileName().toString());
+                    if (userId == null || userId.isBlank()) {
+                        return;
+                    }
+                    Map<Integer, QuizAttemptResult> attempts = loadLocalAttempts(userId);
+                    if (attempts.isEmpty()) {
+                        return;
+                    }
+                    AttemptStat stat = new AttemptStat();
+                    stat.totalAttempts = attempts.size();
+                    int correct = 0;
+                    for (QuizAttemptResult attempt : attempts.values()) {
+                        if (attempt.isCorrect()) {
+                            correct++;
+                        }
+                    }
+                    stat.correctAnswers = correct;
+                    byUser.put(userId, stat);
+                });
+            } catch (Exception ignored) {
+            }
+        }
+        return byUser;
+    }
+
+    private String extractUserIdFromLocalAttemptFile(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        Matcher matcher = LOCAL_ATTEMPT_FILE_PATTERN.matcher(fileName);
+        if (!matcher.matches()) {
+            return null;
+        }
+        return matcher.group(1);
+    }
+
+    private static class AttemptStat {
+        private int totalAttempts;
+        private int correctAnswers;
     }
 
     private boolean isUniqueConstraintViolation(SQLException e) {

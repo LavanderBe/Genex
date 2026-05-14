@@ -89,3 +89,82 @@
     -fx-padding: 80 40;
     -fx-background-color: transparent;
 }
+
+/* Games-inspired center HUD */
+.main-content,
+.center-hub {
+    -fx-background-color: transparent;
+}
+
+.module-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 13, 13, 0.45), 10, 0, 0, 0);
+}
+
+.module-subtitle {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #5c7cfa;
+}
+
+.search-field {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #444466;
+    -fx-font-family: "Consolas";
+    -fx-padding: 8 5;
+}
+
+.search-field:focused {
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-background-color: rgba(139, 13, 13, 0.06);
+}
+
+.action-blue-button {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.action-blue-button:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+    -fx-translate-y: -2;
+}
+
+.icon-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #5C7CFA;
+    -fx-text-fill: #5C7CFA;
+    -fx-font-family: "Arial Black";
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-shape: "M 0 0 L 100 0 L 90 100 L 0 100 Z";
+}
+
+.icon-btn:hover {
+    -fx-background-color: #5C7CFA;
+    -fx-text-fill: white;
+}
+
+.scroll-pane .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}
+
+.empty-label {
+    -fx-text-fill: #8e94af;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+}

@@ -3,9 +3,9 @@ package Genex.services;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class VideoService {
     private static final String YOUTUBE_API_BASE = "https://www.youtube.com/embed/";
@@ -59,6 +59,37 @@ public class VideoService {
         }
 
         return null;
+    }
+
+    public boolean isValidYouTubeUrl(String videoUrl) {
+        if (videoUrl == null || videoUrl.isBlank()) {
+            return false;
+        }
+
+        String candidate = videoUrl.trim();
+        if (!candidate.startsWith("http://") && !candidate.startsWith("https://")) {
+            return false;
+        }
+
+        try {
+            URI uri = new URI(candidate);
+            String host = uri.getHost();
+            if (host == null || host.isBlank()) {
+                return false;
+            }
+
+            String normalizedHost = host.toLowerCase();
+            if (normalizedHost.startsWith("www.")) normalizedHost = normalizedHost.substring(4);
+            if (normalizedHost.startsWith("m.")) normalizedHost = normalizedHost.substring(2);
+
+            boolean youtubeHost = "youtube.com".equals(normalizedHost)
+                    || "youtu.be".equals(normalizedHost)
+                    || "music.youtube.com".equals(normalizedHost);
+
+            return youtubeHost && extractVideoId(candidate) != null;
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 
     /**

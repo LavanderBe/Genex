@@ -137,3 +137,93 @@
 .scroll-pane .track {
     -fx-background-color: transparent;
 }
+
+/* Games-inspired center drawer */
+.overlay-bg {
+    -fx-background-color: rgba(0, 0, 0, 0.88);
+}
+
+.drawer {
+    -fx-background-color: #050508;
+    -fx-border-color: #8B0D0D;
+    -fx-border-width: 2 0 2 2;
+    -fx-effect: dropshadow(three-pass-box, #8B0D0D, 20, 0, 0, 0);
+}
+
+.drawer-title {
+    -fx-font-family: "Impact";
+    -fx-letter-spacing: 1.5px;
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+.drawer-subtitle {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #5c7cfa;
+}
+
+.drawer-sep {
+    -fx-background-color: #1F1E4E;
+}
+
+.field-label {
+    -fx-font-family: "Consolas";
+    -fx-text-fill: #8e94af;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1px;
+}
+
+.input-field {
+    -fx-background-color: rgba(31, 30, 78, 0.20);
+    -fx-background-radius: 0;
+    -fx-border-color: transparent transparent #1F1E4E transparent;
+    -fx-border-radius: 0;
+    -fx-border-width: 0 0 2 0;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #444466;
+    -fx-font-family: "Consolas";
+}
+
+.input-field:focused {
+    -fx-background-color: rgba(139, 13, 13, 0.06);
+    -fx-border-color: transparent transparent #8B0D0D transparent;
+    -fx-effect: none;
+}
+
+.btn-primary {
+    -fx-background-color: #5c7cfa;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 0 0 L 90 0 L 100 10 L 100 40 L 10 40 L 0 30 Z";
+    -fx-effect: dropshadow(gaussian, #5c7cfa, 12, 0, 0, 0);
+}
+
+.btn-primary:hover {
+    -fx-background-color: #7d97ff;
+    -fx-effect: dropshadow(three-pass-box, #5C7CFA, 15, 0, 0, 0);
+}
+
+.btn-secondary,
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: #FF5252;
+    -fx-border-radius: 0;
+    -fx-text-fill: #FF5252;
+    -fx-font-family: "Arial Black";
+    -fx-shape: "M 5 0 L 100 0 L 100 100 L 0 100 L 0 10 Z";
+    -fx-effect: none;
+}
+
+.btn-secondary:hover,
+.btn-close:hover {
+    -fx-background-color: rgba(255, 82, 82, 0.10);
+    -fx-effect: dropshadow(three-pass-box, rgba(248, 124, 124, 0.22), 15, 0, 0, 0);
+}
+
+.scroll-pane .thumb {
+    -fx-background-color: #8B0D0D;
+    -fx-background-radius: 0;
+}

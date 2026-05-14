@@ -18,7 +18,10 @@
         </padding>
 
         <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="page-title" text="Centres" />
+            <VBox>
+                <Label styleClass="module-title" text="NEURAL_LINK // CENTER_DATABASE" textFill="WHITE" />
+                <Label styleClass="module-subtitle" text="MANAGE_ARENA_LOCATIONS" textFill="#5c7cfa" />
+            </VBox>
             <Region HBox.hgrow="ALWAYS" />
 
             <Button fx:id="btnAddCenter" onAction="#openAddCenterModal" styleClass="action-blue-button" stylesheets="@CenterHub.css" text="+ Nouveau Centre" />
@@ -31,7 +34,7 @@
             <content>
                 <VBox fx:id="centerCardsContainer" spacing="20" styleClass="centers-container">
                     <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="10" visible="false">
-                        <Label style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 16;" text="Aucun centre trouvé" />
+                        <Label styleClass="empty-label" text="Aucun centre trouvé" />
                     </VBox>
                 </VBox>
             </content>

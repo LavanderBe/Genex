@@ -63,7 +63,7 @@ public class CoachManagementController {
         VBox info = new VBox(2);
         Label nick = new Label(p.getNickname().toUpperCase());
         nick.setStyle("-fx-text-fill: white; -fx-font-family: 'Arial Black'; -fx-font-size: 14px;");
-        Label details = new Label("VERIFIED_COACH // UID: " + p.getId());
+        Label details = new Label("COACH_CERTIFIE // EMAIL: " + p.getEmail());
         details.setStyle("-fx-text-fill: #5c7cfa; -fx-font-family: 'Consolas'; -fx-font-size: 9px;");
         info.getChildren().addAll(nick, details);
 

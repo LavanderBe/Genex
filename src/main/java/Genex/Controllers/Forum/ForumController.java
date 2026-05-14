@@ -225,7 +225,7 @@ public class ForumController {
                 descriptionArea.setText(generatedDesc);
                 generateDescButton.setDisable(false);
                 generateDescButton.setText("✨ GÉNÉRER");
-                showAlert(Alert.AlertType.INFORMATION, "Succès ✓", "Description générée par IA Groq !");
+                showAlert(Alert.AlertType.INFORMATION, "Succès ✓", "Description Générée");
             });
         })
         .exceptionally(e -> {

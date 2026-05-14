@@ -19,7 +19,7 @@
    
    <children>
       <!-- Modal Title -->
-      <Text styleClass="modal-title" text="REPORTER LE RÉSULTAT" />
+      <Text styleClass="modal-title" text="MATCH_REPORT // SCORE_UPLOAD" />
       
       <!-- Match Info -->
       <VBox spacing="10" alignment="CENTER">

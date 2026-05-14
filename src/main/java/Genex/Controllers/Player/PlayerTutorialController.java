@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,6 +232,7 @@ public class PlayerTutorialController {
             Stage detailStage = new Stage();
             detailStage.setTitle(tutorial.getTitle() != null ? tutorial.getTitle() : "Module");
             detailStage.setScene(new Scene(root, 980, 760));
+            applyWindowIcon(detailStage);
             detailStage.setResizable(true);
             detailStage.setOnShown(event -> controller.setTutorial(tutorial, detailStage));
             detailStage.setOnHidden(event -> loadModules()); // rafraichit la progression au retour
@@ -272,5 +274,13 @@ public class PlayerTutorialController {
             case "EXPERT", "HARD" -> "EXPERT";
             default -> difficulty.toUpperCase();
         };
+    }
+
+    private void applyWindowIcon(Stage stage) {
+        URL logoUrl = getClass().getResource("/Images/logo.png");
+        if (logoUrl == null) {
+            return;
+        }
+        stage.getIcons().setAll(new Image(logoUrl.toExternalForm()));
     }
 }

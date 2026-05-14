@@ -222,7 +222,7 @@ public class PlayerTeamBrowserController {
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Button btnCreate = new Button("＋  Créer une équipe");
+            Button btnCreate = new Button("＋ Créer une équipe");
             btnCreate.setStyle(
                 "-fx-background-color: #8B0D0D;" +
                 "-fx-text-fill: white;" +
@@ -238,6 +238,10 @@ public class PlayerTeamBrowserController {
             header.getChildren().addAll(title, spacer, btnCreate);
             wrapper.getChildren().add(header);
 
+            if (SessionManager.getInstance().getCurrentPlayer().getRole().equals("player")){
+                btnCreate.setDisable(true);
+                btnCreate.setVisible(false);
+            }
             // ── Team cards grid ──────────────────────────────────────
             FlowPane flow = new FlowPane();
             flow.setHgap(20);
