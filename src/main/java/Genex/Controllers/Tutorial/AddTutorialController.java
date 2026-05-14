@@ -6,6 +6,7 @@ import Genex.entities.User;
 import Genex.services.CrudTutorialVideo;
 import Genex.services.CrudUser;
 import Genex.services.TutorialService;
+import Genex.services.VideoService;
 import Genex.utils.EmailSystem;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,6 +37,7 @@ public class AddTutorialController implements Initializable {
 
     private final TutorialService tutorialService = new TutorialService();
     private final CrudTutorialVideo videoService = new CrudTutorialVideo();
+    private final VideoService youtubeService = new VideoService();
     private boolean isEditMode = false;
     private Tutorial currentTutorial;
     private Runnable onSaveCallback;
@@ -188,9 +190,17 @@ public class AddTutorialController implements Initializable {
 
         List<TutorialVideo> videos = collectVideos();
         if (videos.isEmpty()) { showAlert("ERREUR DE VALIDATION", "Au moins une vidéo est requise."); return; }
-        for (TutorialVideo v : videos) {
+        for (int i = 0; i < videos.size(); i++) {
+            TutorialVideo v = videos.get(i);
             if (v.getVideoUrl() == null || v.getVideoUrl().isBlank()) {
                 showAlert("ERREUR DE VALIDATION", "Toutes les vidéos doivent avoir une URL.");
+                return;
+            }
+            if (!youtubeService.isValidYouTubeUrl(v.getVideoUrl())) {
+                showAlert(
+                        "ERREUR DE VALIDATION",
+                        "L'URL de la vidéo #" + (i + 1) + " doit être un lien YouTube valide (https://youtube.com/... ou https://youtu.be/...)."
+                );
                 return;
             }
         }
