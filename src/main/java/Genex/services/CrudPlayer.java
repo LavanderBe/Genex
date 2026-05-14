@@ -316,6 +316,121 @@ public class CrudPlayer {
         }
     }
 
+    public List<Player> getCoaches(){
+        String requete = "SELECT p.*, u.username, u.email, u.role " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "WHERE u.role='coach' ";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete)) {
+            ResultSet rs = pst.executeQuery();
+            List <Player> allp=new ArrayList<>();
+            while (rs.next()) {
+                Player player = new Player();
+                player.setId(rs.getString("user_id"));
+
+                player.setUsername(rs.getString("username"));
+                player.setEmail(rs.getString("email"));
+                player.setRole(rs.getString("role"));
+
+                player.setPrenom(rs.getString("first_name"));
+                player.setNom(rs.getString("last_name"));
+                player.setNickname(rs.getString("nickname"));
+                player.setCin(rs.getString("cin"));
+
+                Date birthDate = rs.getDate("date_of_birth");
+
+                player.setBirthday(birthDate.toLocalDate());
+                player.setNationality(rs.getString("nationality"));
+                player.setCity(rs.getString("city"));
+                player.setAvatar_url(rs.getString("avatar_url"));
+                allp.add(player);
+            }
+            return allp;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Player> getPromotionRequesters(){
+        String requete="SELECT \n" +
+                "    u.id,\n" +
+                "    u.username,\n" +
+                "    u.email,\n" +
+                "    u.role,\n" +
+                "    u.created_at AS account_created_at,\n" +
+                "    p.first_name,\n" +
+                "    p.last_name,\n" +
+                "    p.nickname,\n" +
+                "    p.cin,\n" +
+                "    p.date_of_birth,\n" +
+                "    p.nationality,\n" +
+                "    p.city,\n" +
+                "    p.avatar_url,\n" +
+                "    pr.date AS request_date,\n" +
+                "    pr.status AS promotion_status\n" +
+                "FROM promotion_requests pr\n" +
+                "JOIN users u ON pr.player_id = u.id\n" +
+                "JOIN players p ON pr.player_id = p.user_id\n" +
+                "ORDER BY pr.date DESC;";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete)) {
+            ResultSet rs = pst.executeQuery();
+            List <Player> allp=new ArrayList<>();
+            while (rs.next()) {
+                Player player = new Player();
+                player.setId(rs.getString("id"));
+
+                player.setUsername(rs.getString("username"));
+                player.setEmail(rs.getString("email"));
+                player.setRole(rs.getString("role"));
+
+                player.setPrenom(rs.getString("first_name"));
+                player.setNom(rs.getString("last_name"));
+                player.setNickname(rs.getString("nickname"));
+                player.setCin(rs.getString("cin"));
+
+                Date birthDate = rs.getDate("date_of_birth");
+
+                player.setBirthday(birthDate.toLocalDate());
+                player.setNationality(rs.getString("nationality"));
+                player.setCity(rs.getString("city"));
+                player.setAvatar_url(rs.getString("avatar_url"));
+                player.setStatus(rs.getString("promotion_status"));
+                Date Request_date=rs.getDate("request_date");
+                player.setRequest_date(Request_date.toLocalDate());
+                allp.add(player);
+            }
+            return allp;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void acceptRequest(Player p){
+        String requete="UPDATE promotion_requests " +
+                "SET status='approved' " +
+                "WHERE player_id=?";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setString(1, p.getId());
+            pst.executeUpdate();
+            System.out.println("request accepted successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void rejectRequest(Player p){
+        String requete="UPDATE promotion_requests " +
+                "SET status='rejected' " +
+                "WHERE player_id=?";
+        try (PreparedStatement pst = Myconnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setString(1, p.getId());
+            pst.executeUpdate();
+            System.out.println("Request rejected successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }

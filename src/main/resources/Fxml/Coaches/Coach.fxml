@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="coachRoot" prefHeight="750.0" prefWidth="1150.0" style="-fx-background-color: transparent;" stylesheets="@Coach.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Genex.Controllers.Coach.CoachManagementController">
+    <children>
+        <VBox spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding>
+                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+            </padding>
+            <children>
+
+                <!-- MODULE HEADER -->
+                <HBox alignment="BOTTOM_LEFT" spacing="25.0">
+                    <children>
+                        <VBox>
+                            <children>
+                                <Label styleClass="neon-title" text="ADMIN // GESTIONNAIRE DE COACH" textFill="WHITE">
+                                    <font>
+                                        <Font name="Impact" size="34.0" />
+                                    </font>
+                                </Label>
+                                <Label style="-fx-font-size: 10px; -fx-letter-spacing: 3px;" text="PROTOCOL_v4.5 // SECURE_UPLINK_ESTABLISHED" textFill="#5c7cfa" />
+                            </children>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <!-- STATUS CAPSULE -->
+                        <HBox alignment="CENTER" spacing="10.0" styleClass="status-capsule">
+                            <padding>
+                                <Insets left="15.0" right="15.0" />
+                            </padding>
+                        </HBox>
+                    </children>
+                </HBox>
+
+                <!-- MAIN WORKSPACE -->
+                <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                    <children>
+
+                        <!-- LEFT WING: ACTIVE ROSTER -->
+                        <VBox prefWidth="550.0" spacing="15.0" styleClass="roster-pane" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                    <children>
+                                        <Label styleClass="pane-header" text="[ ELITE_COACH_ROSTER ]" textFill="#5c7cfa" />
+                                        <Separator opacity="0.1" HBox.hgrow="ALWAYS" />
+                                    </children>
+                                </HBox>
+
+                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="cyber-scrollpane" VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox fx:id="coachesList" spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;">
+                                            <!-- Dynamic Coach Blades injected here -->
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                            </padding>
+                        </VBox>
+
+                        <!-- RIGHT WING: PENDING QUEUE -->
+                        <VBox prefWidth="480.0" spacing="15.0" styleClass="request-pane">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                    <children>
+                                        <Region prefHeight="15.0" prefWidth="4.0" style="-fx-background-color: #8B0D0D;" />
+                                        <Label styleClass="pane-header" text="[ AUTHORIZATION_QUEUE ]" textFill="#8B0D0D" />
+                                    </children>
+                                </HBox>
+
+                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="cyber-scrollpane-red" VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox fx:id="requestsList" spacing="15.0" style="-fx-background-color: transparent; -fx-padding: 10;">
+                                            <!-- Dynamic Request Shards injected here -->
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                                <!-- QUEUE SUMMARY -->
+                                <HBox alignment="CENTER_RIGHT" prefHeight="30.0" spacing="10.0" style="-fx-opacity: 0.5;">
+                                    <children>
+                                        <Label style="-fx-font-family: 'Consolas'; -fx-font-size: 9px;" text="WAITING_PACKETS:" textFill="#8e94af" />
+                                        <Label fx:id="queueCount" style="-fx-font-family: 'Consolas'; -fx-font-size: 10px; -fx-font-weight: bold;" text="0" textFill="#8B0D0D" />
+                                    </children>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+                            </padding>
+                        </VBox>
+
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

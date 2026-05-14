@@ -17,6 +17,9 @@ public class Player extends User {
 
     private List<Game> games_played=new ArrayList<>();
 
+    private LocalDate request_date;
+    private String Status;
+
     // Stats for accuracy and progression
     private int tacticalXp;
     private int totalAttempts;
@@ -118,6 +121,22 @@ public class Player extends User {
 
     public void setGames_played(List<Game> games_played) {
         this.games_played = games_played;
+    }
+
+    public LocalDate getRequest_date() {
+        return request_date;
+    }
+
+    public void setRequest_date(LocalDate request_date) {
+        this.request_date = request_date;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
     // Stats methods

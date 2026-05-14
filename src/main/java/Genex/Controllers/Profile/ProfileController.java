@@ -91,7 +91,11 @@ public class ProfileController {
                 tag.getStyleClass().add("game-data-tag");
                 gamesFlowPane.getChildren().add(tag);
             }
-            if (cp.isPromotionSent(current)){
+            if (current.getRole().equals("coach")){
+                btnPromote.setDisable(true);
+                btnPromote.setText("VOUS ÊTES DEJA COACH");
+            }
+            else if (cp.isPromotionSent(current)){
                 btnPromote.setDisable(true);
                 btnPromote.setText("DEMANDE_EN_COUR_DE_TRAITEMENT");
             }

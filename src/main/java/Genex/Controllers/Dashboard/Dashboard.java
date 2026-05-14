@@ -184,10 +184,12 @@ public class Dashboard {
         loadModule("/Fxml/Games/Games_admin.fxml");
     }
 
-    /**
-     * Called when the FINANCES sidebar button is clicked.
-     * Loads the Finance hub (ComboBox + sub-view) into the content area.
-     */
+    @FXML
+    void navCoachBtn(ActionEvent event){
+        setActiveButton((Button) event.getSource());
+        loadModule("/Fxml/Coaches/Coach.fxml");
+    }
+
     @FXML
     private void navFinancesBtn(ActionEvent event) {
         setActiveButton((Button) event.getSource());
