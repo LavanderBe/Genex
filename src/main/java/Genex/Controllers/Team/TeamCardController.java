@@ -186,7 +186,7 @@ public class TeamCardController {
                 System.out.println("Logo: " + freshTeam.getLogoImage());
                 System.out.println("Jersey: " + freshTeam.getJerseyImage());
             }
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Team/TeamDetail.fxml"));
             Parent detailRoot = loader.load();
 
@@ -194,22 +194,16 @@ public class TeamCardController {
             TeamDetailController controller = loader.getController();
             controller.setTeam(freshTeam);
 
-            // If we have a content container reference, load in same window
-            if (contentContainer != null) {
+
                 System.out.println("✓ Loading team detail in SAME WINDOW...");
-                contentContainer.getChildren().clear();
-                contentContainer.getChildren().add(detailRoot);
-                
-                // Anchor to fill the container
-                if (contentContainer instanceof javafx.scene.layout.AnchorPane) {
-                    javafx.scene.layout.AnchorPane.setTopAnchor(detailRoot, 0.0);
-                    javafx.scene.layout.AnchorPane.setBottomAnchor(detailRoot, 0.0);
-                    javafx.scene.layout.AnchorPane.setLeftAnchor(detailRoot, 0.0);
-                    javafx.scene.layout.AnchorPane.setRightAnchor(detailRoot, 0.0);
-                }
-                
+            rootStackPane.getChildren().clear();
+            rootStackPane.getChildren().add(detailRoot);
+                javafx.scene.layout.AnchorPane.setTopAnchor(detailRoot, 0.0);
+                javafx.scene.layout.AnchorPane.setBottomAnchor(detailRoot, 0.0);
+                javafx.scene.layout.AnchorPane.setLeftAnchor(detailRoot, 0.0);
+                javafx.scene.layout.AnchorPane.setRightAnchor(detailRoot, 0.0);
                 System.out.println("✓ Team detail loaded successfully in same window!");
-            } else {
+            /*} else {
                 // Fallback: Open in new window (old behavior)
                 System.out.println("✗ Content container is NULL - opening in NEW WINDOW (fallback)...");
                 Stage detailStage = new Stage();
@@ -225,8 +219,8 @@ public class TeamCardController {
                 // Refresh after closing detail page
                 if (onUpdateCallback != null) {
                     onUpdateCallback.run();
-                }
-            }
+                }*/
+
 
         } catch (Exception e) {
             System.err.println("ERROR opening team detail page");
