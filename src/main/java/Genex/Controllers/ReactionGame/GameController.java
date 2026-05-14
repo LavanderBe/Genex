@@ -1,5 +1,6 @@
 package Genex.Controllers.ReactionGame;
 
+import Genex.utils.SessionManager;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -47,6 +48,7 @@ public class GameController {
 
     @FXML
     public void initialize() {
+        playerLabel.setText("JOUEUR :"+SessionManager.getInstance().getCurrentUser().getUsername());
         List<Label> allSlots = Arrays.asList(slot0, slot1, slot2, slot3, slot4, slot5, slot6, slot7);
         Thread gameThread = new Thread(() -> {
             runGameLogic(allSlots);

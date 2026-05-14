@@ -102,7 +102,7 @@ public class Accounts {
                 User u=crudUser.getUser_withmail(newVal.getEmail());
                 sideUsername.setText(u.getUsername());
                 hashLabel.setText(u.getPassword_hash());
-                uidLabel.setText((u.getId()).toUpperCase());
+                uidLabel.setText("ACCESS INTERDIT");
 
                 // Assuming your User entity has getSalt() and getId()
                 saltLabel.setText(u.getSalt());
