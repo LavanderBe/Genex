@@ -36,8 +36,8 @@
 
 ### 🏆 Tournament System
 - Create and manage multiple tournaments
-- **Challonge Integration** - Automatic bracket generation and tournament hosting
-- **Public Tournament URLs** - Share tournaments via Challonge links and embedded modules
+- Challonge Integration - Automatic bracket generation and tournament hosting
+- Public Tournament URLs - Share tournaments via Challonge links and embedded modules
 - Sponsor integration and partnerships
 - Participant ranking and statistics
 - Real-time tournament updates
