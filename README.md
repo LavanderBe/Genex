@@ -1,5 +1,3 @@
-
-
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -22,7 +20,7 @@
 
 **Genex** is a sophisticated management platform designed for esports organizations, training centers, and tournament organizers. It provides a complete ecosystem for:
 
-- 🎮 **Tournament Management** - Create, organize, and manage esports tournaments
+- 🎮 **Tournament Management** - Create, organize, and manage esports tournaments with Challonge integration
 - 👥 **Team Management** - Build and manage esports teams with real-time rankings
 - 🏋️ **Training Programs** - Schedule and track player training sessions
 - 🎥 **Video Content** - Tutorial videos and player progress tracking
@@ -38,6 +36,8 @@
 
 ### 🏆 Tournament System
 - Create and manage multiple tournaments
+- **Challonge Integration** - Automatic bracket generation and tournament hosting
+- **Public Tournament URLs** - Share tournaments via Challonge links and embedded modules
 - Sponsor integration and partnerships
 - Participant ranking and statistics
 - Real-time tournament updates
@@ -91,6 +91,7 @@
 
 ### Libraries & Services
 - **Machine Learning**: Weka 3.8.6 (Toxicity Detection)
+- **Tournament Management**: Challonge API
 - **Payments**: Stripe Java SDK 32.1.0
 - **Email**: SendGrid 4.10.1
 - **Authentication**: Google OAuth 2.0
@@ -109,6 +110,7 @@
 - Maven 3.8+
 - MySQL 8.0+
 - Git
+- Challonge account (for tournament management)
 
 ### Setup Steps
 
