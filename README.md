@@ -17,9 +17,7 @@
 ---
 
 ## 🎯 Overview
-
 **Genex** is a sophisticated management platform designed for esports organizations, training centers, and tournament organizers. It provides a complete ecosystem for:
-
 - 🎮 **Tournament Management** - Create, organize, and manage esports tournaments with Challonge integration
 - 👥 **Team Management** - Build and manage esports teams with real-time rankings
 - 🏋️ **Training Programs** - Schedule and track player training sessions
@@ -29,6 +27,7 @@
 - 📊 **Analytics Dashboard** - Real-time statistics and reporting
 - 👤 **User Authentication** - Google OAuth 2.0 integration
 - 💬 **Communication** - Team messaging and notifications
+- 🧠 **Reflex Training** - Cognitive reflex mini-game based on the Stroop Effect
 
 ---
 
@@ -78,6 +77,12 @@
 - QR code generation and scanning
 - Voice integration (Vosk)
 
+### 🧠 Reflex Training Game
+- Cognitive reflex mini-game based on the Stroop Effect
+- Tests and improves player reaction time and mental agility
+- Tracks performance scores over time
+- Designed to sharpen in-game decision-making skills
+
 ---
 
 ## 🛠️ Tech Stack
@@ -113,8 +118,8 @@
 - Challonge account (for tournament management)
 
 ### Setup Steps
-
 1. **Clone the repository**
 ```bash
 git clone https://github.com/LavanderBe/Genex.git
 cd Genex
+```
