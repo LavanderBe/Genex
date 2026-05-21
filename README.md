@@ -28,6 +28,9 @@
 - 👤 **User Authentication** - Google OAuth 2.0 integration
 - 💬 **Communication** - Team messaging and notifications
 - 🧠 **Reflex Training** - Cognitive reflex mini-game based on the Stroop Effect
+- 👕 **Jersey Generation** - Automatic team jersey generation with custom logo overlay
+- 🖼️ **Avatar Generation** - AI-powered automatic player avatar generation
+- 📡 **Ping Service** - Real-time network latency monitoring for players
 
 ---
 
@@ -83,6 +86,24 @@
 - Tracks performance scores over time
 - Designed to sharpen in-game decision-making skills
 
+### 👕 Automatic Jersey Generation
+- Auto-generate team jerseys with custom color schemes
+- Overlay team logo automatically onto jersey templates
+- Export ready-to-use jersey visuals per player
+- Personalized with player name and number
+
+### 🖼️ Automatic Avatar Generation
+- AI-powered unique avatar generation per player
+- Customizable style based on player profile
+- Instant generation on account creation
+- Used across player profiles, team pages, and leaderboards
+
+### 📡 Ping Service
+- Real-time network latency monitoring for players
+- Display live ping status within the platform
+- Alert system for high latency detection
+- Helps players and coaches assess connection quality before matches
+
 ---
 
 ## 🛠️ Tech Stack
@@ -101,10 +122,13 @@
 - **Email**: SendGrid 4.10.1
 - **Authentication**: Google OAuth 2.0
 - **AI**: Google Cloud AI Platform (Gemini)
+- **Avatar Generation**: DiceBear API
+- **Jersey Generation**: Java 2D Graphics (BufferedImage + ImageIO)
 - **Calendar**: Google Calendar API
 - **QR Codes**: ZXing 3.5.3
 - **Voice**: Vosk 0.3.45
 - **PDF**: OpenPDF 2.0.3
+- **Ping Service**: Java InetAddress / ICMP
 
 ---
 
